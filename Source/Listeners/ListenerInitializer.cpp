@@ -1,0 +1,129 @@
+// ReSharper disable CppExpressionWithoutSideEffects
+#include "ListenerInitializer.h"
+
+
+ListenerInitializer::ListenerInitializer ()
+{
+    bankLoadListeners -> getListeners ();
+    bankNewListeners -> getListeners ();
+    bankProgramChangedListeners -> getListeners ();
+    bankRefreshLive -> getListeners ();
+    bankRepaintWaveformListeners -> getListeners ();
+    bankSaveListeners -> getListeners ();
+    bankSaveAsListeners -> getListeners ();
+    bankStartSaveAsListeners -> getListeners ();
+    bankTreeChangedListeners -> getListeners ();
+
+    exportAttackChanged -> getListeners ();
+    exportBandPassChanged -> getListeners ();
+    exportCutoffChanged -> getListeners ();
+    exportDecayChanged -> getListeners ();
+    exportHighPassChanged -> getListeners ();
+    exportLowPassChanged -> getListeners ();
+    exportPatchChanged -> getListeners ();
+    exportPitchBendChanged -> getListeners ();
+    exportPulseWidthChanged -> getListeners ();
+    exportReleaseChanged -> getListeners ();
+    exportResonanceChanged -> getListeners ();
+    exportSustainChanged -> getListeners ();
+    exportTremoloAmountChanged -> getListeners ();
+    exportTremoloSpeedChanged -> getListeners ();
+    exportVibratoAmountChanged -> getListeners ();
+    exportVibratoSpeedChanged -> getListeners ();
+    exportVoiceFilterChanged -> getListeners ();
+    exportVolumeChanged -> getListeners ();
+
+    liveAddPatchClickedListeners -> getListeners ();
+    liveArtistChangedListeners -> getListeners ();
+    liveAttackChangedListeners -> getListeners ();
+    liveBandPassChangedListeners -> getListeners ();
+    liveCutoffChangedListeners -> getListeners ();
+    liveDecayChangedListeners -> getListeners ();
+    liveDoneExportingListeners -> getListeners ();
+    liveExportArmedListeners -> getListeners ();
+    liveHighPassChangedListeners -> getListeners ();
+    liveLowPassChangedListeners -> getListeners ();
+    livePatchChangedListeners -> getListeners ();
+    livePatchEditorModeClickedListeners -> getListeners ();
+    livePatchListChangedListeners -> getListeners ();
+    livePatchListModeListeners -> getListeners ();
+    livePatchListSelectedIndexChangedListeners -> getListeners ();
+    livePatchSelectedListeners -> getListeners ();
+    livePitchBendChangedListeners -> getListeners ();
+    livePulseWidthChangedListeners -> getListeners ();
+    liveReleaseChangedListeners -> getListeners ();
+    liveRemovePatchClickedListeners -> getListeners ();
+    liveReplacePatchClickedListeners -> getListeners ();
+    liveResonanceChangedListeners -> getListeners ();
+    liveSustainChangedListeners -> getListeners ();
+    liveTitleChangedListeners -> getListeners ();
+    liveTremoloAmountChangedListeners -> getListeners ();
+    liveTremoloSpeedChangedListeners -> getListeners ();
+    liveVibratoAmountChangedListeners -> getListeners ();
+    liveVibratoDelayChangedListeners -> getListeners ();
+    liveVibratoSpeedChangedListeners -> getListeners ();
+    liveVoiceFilterChangedListeners -> getListeners ();
+    liveVolumeChangedListeners -> getListeners ();
+    loadLivePatchListeners -> getListeners ();
+
+    midiSignalListeners -> getListeners ();
+    noteOnListeners -> getListeners ();
+    noteOffListeners -> getListeners ();
+    pitchBendListeners -> getListeners ();
+    quarterNoteTickListeners -> getListeners ();
+
+    attackParameterChangedListeners -> getListeners ();
+    bandPassParameterChangedListeners -> getListeners ();
+    cutoffParameterChangedListeners -> getListeners ();
+    decayParameterChangedListeners -> getListeners ();
+    filterVoiceParameterChangedListeners -> getListeners ();
+    highPassParameterChangedListeners -> getListeners ();
+    lowPassParameterChangedListeners -> getListeners ();
+    pitchBendParameterChangedListeners -> getListeners ();
+    programParameterChangedListeners -> getListeners ();
+    pulseWidthParameterChangedListeners -> getListeners ();
+    releaseParameterChangedListeners -> getListeners ();
+    resonanceParameterChangedListeners -> getListeners ();
+    sustainParameterChangedListeners -> getListeners ();
+    tremoloAmountParameterChangedListeners -> getListeners ();
+    tremoloSpeedParameterChangedListeners -> getListeners ();
+    vibratoAmountParameterChangedListeners -> getListeners ();
+    vibratoDelayParameterChangedListeners -> getListeners ();
+    vibratoSpeedParameterChangedListeners -> getListeners ();
+    volumeParameterChangedListeners -> getListeners ();
+
+    patchEditorAttackChangedListeners -> getListeners ();
+    patchEditorDecayChangedListeners -> getListeners ();
+    patchEditorDeleteWavetableRowClickedListeners -> getListeners ();
+    patchEditorLiveModeClickedListeners -> getListeners ();
+    patchEditorNameChangedListeners -> getListeners ();
+    patchEditorNewWavetableCommandClickedListeners -> getListeners ();
+    patchEditorNewWavetableRowClickedListeners -> getListeners ();
+    patchEditorPitchBendRangeChangedListeners -> getListeners ();
+    patchEditorPulseWidthCenterChangedListeners -> getListeners ();
+    patchEditorPulseWidthDefaultChangedListeners -> getListeners ();
+    patchEditorPulseWidthRangeChangedListeners -> getListeners ();
+    patchEditorReleaseChangedListeners -> getListeners ();
+    patchEditorShowNoteTableListeners -> getListeners ();
+    patchEditorShowPulseTableListeners -> getListeners ();
+    patchEditorShowWaveTableListeners -> getListeners ();
+    patchEditorSustainChangedListeners -> getListeners ();
+    patchEditorTremoloDefaultAmountChangedListeners -> getListeners ();
+    patchEditorTremoloDefaultSpeedChangedListeners -> getListeners ();
+    patchEditorTremoloRangeChangedListeners -> getListeners ();
+    patchEditorTremoloSpeedChangedListeners -> getListeners ();
+    patchEditorVibratoDefaultAmountChangedListeners -> getListeners ();
+    patchEditorVibratoDefaultSpeedChangedListeners -> getListeners ();
+    patchEditorVibratoDelayChangedListeners -> getListeners ();
+    patchEditorVibratoRangeChangedListeners -> getListeners ();
+    patchEditorVibratoSpeedChangedListeners -> getListeners ();
+
+    frameListeners -> getListeners ();
+    noteTableRowChangedListeners -> getListeners ();
+    noteTableSelectionChangedListeners -> getListeners ();
+    pulseTableRowChangedListeners -> getListeners ();
+    pulseTableSelectionChangedListeners -> getListeners ();
+    sampleRateChangedListeners -> getListeners ();
+    wavetableRowChangedListeners -> getListeners ();
+    wavetableSelectionChangedListeners -> getListeners ();
+}

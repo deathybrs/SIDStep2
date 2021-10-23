@@ -1,0 +1,10 @@
+Add 2 frame release delay to patch editor too
+Tweak wavetable editor so inserts renumber
+Implement bands in waveform preview to indicate frames
+Implement Tremolo
+Implement NTSC support
+Implement Envelope overlay in waveform view
+Expand categorization in bank management menu (free-type subcategories?)
+Additional wavetable commands - Loop x Times to
+Add delete and revert functionality to bank management menu
+Implement half-speed arps

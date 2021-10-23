@@ -1,0 +1,554 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<JUCERPROJECT id="t7NArW" name="SIDStep2" projectType="audioplug" version="1.0.0"
+              bundleIdentifier="com.BAS.SIDStep2" includeBinaryInAppConfig="1"
+              buildVST="1" buildVST3="0" buildAU="0" buildAUv3="0" buildRTAS="0"
+              buildAAX="0" pluginName="SIDStep2" pluginDesc="SIDStep2" pluginManufacturer="BAS"
+              pluginManufacturerCode="BAS_" pluginCode="SDST" pluginChannelConfigs="{0, 1}"
+              pluginIsSynth="1" pluginWantsMidiIn="1" pluginProducesMidiOut="0"
+              pluginIsMidiEffectPlugin="0" pluginEditorRequiresKeys="0" pluginAUExportPrefix="SIDStep2AU"
+              pluginRTASCategory="" aaxIdentifier="com.yourcompany.SIDStep2"
+              pluginAAXCategory="2" pluginFormats="buildVST" pluginCharacteristicsValue="pluginIsSynth,pluginWantsMidiIn"
+              displaySplashScreen="1" jucerFormatVersion="1">
+  <MAINGROUP id="pUQeKF" name="SIDStep2">
+    <GROUP id="{233056E4-712F-D77C-4F88-AA92D07486A2}" name="reSID">
+      <FILE id="E0ld18" name="envelope.cc" compile="1" resource="0" file="Requirements/resid-0.16/envelope.cc"/>
+      <FILE id="CMS5F7" name="envelope.h" compile="0" resource="0" file="Requirements/resid-0.16/envelope.h"/>
+      <FILE id="QQUjKD" name="extfilt.cc" compile="1" resource="0" file="Requirements/resid-0.16/extfilt.cc"/>
+      <FILE id="lNXU6h" name="extfilt.h" compile="0" resource="0" file="Requirements/resid-0.16/extfilt.h"/>
+      <FILE id="rHwIxR" name="filter.cc" compile="1" resource="0" file="Requirements/resid-0.16/filter.cc"/>
+      <FILE id="N4FdZv" name="filter.h" compile="0" resource="0" file="Requirements/resid-0.16/filter.h"/>
+      <FILE id="AGgW3n" name="pot.cc" compile="1" resource="0" file="Requirements/resid-0.16/pot.cc"/>
+      <FILE id="hcLpl9" name="pot.h" compile="0" resource="0" file="Requirements/resid-0.16/pot.h"/>
+      <FILE id="hh1KkN" name="sid.cc" compile="1" resource="0" file="Requirements/resid-0.16/sid.cc"/>
+      <FILE id="YgcFE8" name="sid.h" compile="0" resource="0" file="Requirements/resid-0.16/sid.h"/>
+      <FILE id="eurfNC" name="siddefs.h" compile="0" resource="0" file="Requirements/resid-0.16/siddefs.h"/>
+      <FILE id="vlUpPl" name="spline.h" compile="0" resource="0" file="Requirements/resid-0.16/spline.h"/>
+      <FILE id="l1a8aZ" name="version.cc" compile="1" resource="0" file="Requirements/resid-0.16/version.cc"/>
+      <FILE id="pwSzaJ" name="voice.cc" compile="1" resource="0" file="Requirements/resid-0.16/voice.cc"/>
+      <FILE id="qTaxCU" name="voice.h" compile="0" resource="0" file="Requirements/resid-0.16/voice.h"/>
+      <FILE id="hQH4FG" name="wave.cc" compile="1" resource="0" file="Requirements/resid-0.16/wave.cc"/>
+      <FILE id="b7LHQZ" name="wave.h" compile="0" resource="0" file="Requirements/resid-0.16/wave.h"/>
+      <FILE id="QSZsR1" name="wave6581__ST.cc" compile="1" resource="0" file="Requirements/resid-0.16/wave6581__ST.cc"/>
+      <FILE id="IxS8Me" name="wave6581_P_T.cc" compile="1" resource="0" file="Requirements/resid-0.16/wave6581_P_T.cc"/>
+      <FILE id="nifgWF" name="wave6581_PS_.cc" compile="1" resource="0" file="Requirements/resid-0.16/wave6581_PS_.cc"/>
+      <FILE id="yyZHWv" name="wave6581_PST.cc" compile="1" resource="0" file="Requirements/resid-0.16/wave6581_PST.cc"/>
+      <FILE id="Rul13b" name="wave8580__ST.cc" compile="1" resource="0" file="Requirements/resid-0.16/wave8580__ST.cc"/>
+      <FILE id="uZNNsO" name="wave8580_P_T.cc" compile="1" resource="0" file="Requirements/resid-0.16/wave8580_P_T.cc"/>
+      <FILE id="Tb19aj" name="wave8580_PS_.cc" compile="1" resource="0" file="Requirements/resid-0.16/wave8580_PS_.cc"/>
+      <FILE id="dByhyO" name="wave8580_PST.cc" compile="1" resource="0" file="Requirements/resid-0.16/wave8580_PST.cc"/>
+    </GROUP>
+    <GROUP id="{7C1D86DB-8EB5-467E-5D78-9FFFA81EF60F}" name="Source">
+      <FILE id="CQXQho" name="SIDEvent.h" compile="0" resource="0" file="Source/SIDEvent.h"/>
+      <GROUP id="{3EA062C4-4326-BEA5-1059-08713DE34790}" name="Commands">
+        <FILE id="BBUMzf" name="Attack.h" compile="0" resource="0" file="Source/Commands/Attack.h"/>
+        <FILE id="CKHUoA" name="Command.cpp" compile="1" resource="0" file="Source/Commands/Command.cpp"/>
+        <FILE id="BzWpT2" name="Command.h" compile="0" resource="0" file="Source/Commands/Command.h"/>
+        <FILE id="yVnwfx" name="Cutoff.h" compile="0" resource="0" file="Source/Commands/Cutoff.h"/>
+        <FILE id="ezr4SP" name="Decay.h" compile="0" resource="0" file="Source/Commands/Decay.h"/>
+        <FILE id="HHNOfe" name="Filter.h" compile="0" resource="0" file="Source/Commands/Filter.h"/>
+        <FILE id="aCuBD6" name="FilterType.h" compile="0" resource="0" file="Source/Commands/FilterType.h"/>
+        <FILE id="pmkrPX" name="Note.h" compile="0" resource="0" file="Source/Commands/Note.h"/>
+        <FILE id="dUbNEQ" name="NybbleCommand.cpp" compile="1" resource="0"
+              file="Source/Commands/NybbleCommand.cpp"/>
+        <FILE id="hZ32Fa" name="NybbleCommand.h" compile="0" resource="0" file="Source/Commands/NybbleCommand.h"/>
+        <FILE id="gv53rN" name="Pattern.cpp" compile="1" resource="0" file="Source/Commands/Pattern.cpp"/>
+        <FILE id="siSvsZ" name="Pattern.h" compile="0" resource="0" file="Source/Commands/Pattern.h"/>
+        <FILE id="ihqJfq" name="PitchBend.h" compile="0" resource="0" file="Source/Commands/PitchBend.h"/>
+        <FILE id="H1ow7i" name="ProgramChange.h" compile="0" resource="0" file="Source/Commands/ProgramChange.h"/>
+        <FILE id="kr1XmV" name="PulseWidth.h" compile="0" resource="0" file="Source/Commands/PulseWidth.h"/>
+        <FILE id="nCTznS" name="Release.h" compile="0" resource="0" file="Source/Commands/Release.h"/>
+        <FILE id="JIWqqX" name="Resonance.h" compile="0" resource="0" file="Source/Commands/Resonance.h"/>
+        <FILE id="pjXHxn" name="SignedShortCommand.cpp" compile="1" resource="0"
+              file="Source/Commands/SignedShortCommand.cpp"/>
+        <FILE id="Ym4Dhv" name="SignedShortCommand.h" compile="0" resource="0"
+              file="Source/Commands/SignedShortCommand.h"/>
+        <FILE id="vJQwZX" name="Sustain.h" compile="0" resource="0" file="Source/Commands/Sustain.h"/>
+        <FILE id="td8uom" name="TremoloAmount.h" compile="0" resource="0" file="Source/Commands/TremoloAmount.h"/>
+        <FILE id="Yr49vT" name="TremoloSpeed.h" compile="0" resource="0" file="Source/Commands/TremoloSpeed.h"/>
+        <FILE id="Ws7IhN" name="UnsignedShortCommand.cpp" compile="1" resource="0"
+              file="Source/Commands/UnsignedShortCommand.cpp"/>
+        <FILE id="hjqKQg" name="UnsignedShortCommand.h" compile="0" resource="0"
+              file="Source/Commands/UnsignedShortCommand.h"/>
+        <FILE id="a43HJ4" name="VibratoAmount.h" compile="0" resource="0" file="Source/Commands/VibratoAmount.h"/>
+        <FILE id="jpUyYN" name="VibratoSpeed.h" compile="0" resource="0" file="Source/Commands/VibratoSpeed.h"/>
+        <FILE id="BLsvsi" name="Volume.h" compile="0" resource="0" file="Source/Commands/Volume.h"/>
+      </GROUP>
+      <FILE id="O2CuEz" name="Encoder.cpp" compile="1" resource="0" file="Source/Encoder.cpp"/>
+      <FILE id="p86TVW" name="Encoder.h" compile="0" resource="0" file="Source/Encoder.h"/>
+      <FILE id="vHaBaF" name="Packer.cpp" compile="1" resource="0" file="Source/Packer.cpp"/>
+      <FILE id="dGmj4Y" name="Packer.h" compile="0" resource="0" file="Source/Packer.h"/>
+      <FILE id="PMD5t8" name="Renderer.cpp" compile="1" resource="0" file="Source/Renderer.cpp"/>
+      <FILE id="IAj3OX" name="Renderer.h" compile="0" resource="0" file="Source/Renderer.h"/>
+      <GROUP id="{D2F12EFB-4B36-22CC-03A2-922931012C1B}" name="Listeners">
+        <FILE id="fwo5SD" name="PulseTableSelectionChanged.h" compile="0" resource="0"
+              file="Source/Listeners/PulseTableSelectionChanged.h"/>
+        <FILE id="Srtbbd" name="PulseTableRowChanged.h" compile="0" resource="0"
+              file="Source/Listeners/PulseTableRowChanged.h"/>
+        <FILE id="LjVOlt" name="NoteTableSelectionChanged.h" compile="0" resource="0"
+              file="Source/Listeners/NoteTableSelectionChanged.h"/>
+        <FILE id="c695Yi" name="NoteTableRowChanged.h" compile="0" resource="0"
+              file="Source/Listeners/NoteTableRowChanged.h"/>
+        <GROUP id="{979C4475-DD3A-F80F-D41E-5E22AFAC3436}" name="Export">
+          <FILE id="Uljpf9" name="ExportAttackChanged.h" compile="0" resource="0"
+                file="Source/Listeners/Export/ExportAttackChanged.h"/>
+          <FILE id="xZvMES" name="ExportBandPassChanged.h" compile="0" resource="0"
+                file="Source/Listeners/Export/ExportBandPassChanged.h"/>
+          <FILE id="Y3K0K3" name="ExportCutoffChanged.h" compile="0" resource="0"
+                file="Source/Listeners/Export/ExportCutoffChanged.h"/>
+          <FILE id="ncruFG" name="ExportDecayChanged.h" compile="0" resource="0"
+                file="Source/Listeners/Export/ExportDecayChanged.h"/>
+          <FILE id="EmGEMh" name="ExportHighPassChanged.h" compile="0" resource="0"
+                file="Source/Listeners/Export/ExportHighPassChanged.h"/>
+          <FILE id="SeRHuf" name="ExportLowPassChanged.h" compile="0" resource="0"
+                file="Source/Listeners/Export/ExportLowPassChanged.h"/>
+          <FILE id="h5yydx" name="ExportPatchChanged.h" compile="0" resource="0"
+                file="Source/Listeners/Export/ExportPatchChanged.h"/>
+          <FILE id="Lvw0RX" name="ExportPitchBendChanged.h" compile="0" resource="0"
+                file="Source/Listeners/Export/ExportPitchBendChanged.h"/>
+          <FILE id="SbXD0P" name="ExportPulseWIdthChanged.h" compile="0" resource="0"
+                file="Source/Listeners/Export/ExportPulseWIdthChanged.h"/>
+          <FILE id="x76N1M" name="ExportReleaseChanged.h" compile="0" resource="0"
+                file="Source/Listeners/Export/ExportReleaseChanged.h"/>
+          <FILE id="ywflLG" name="ExportResonanceChanged.h" compile="0" resource="0"
+                file="Source/Listeners/Export/ExportResonanceChanged.h"/>
+          <FILE id="dlb6xD" name="ExportSustainChanged.h" compile="0" resource="0"
+                file="Source/Listeners/Export/ExportSustainChanged.h"/>
+          <FILE id="z1A3Yz" name="ExportTremoloAmountChanged.h" compile="0" resource="0"
+                file="Source/Listeners/Export/ExportTremoloAmountChanged.h"/>
+          <FILE id="Y3E0pq" name="ExportTremoloSpeedChanged.h" compile="0" resource="0"
+                file="Source/Listeners/Export/ExportTremoloSpeedChanged.h"/>
+          <FILE id="c9Rb34" name="ExportVibratoAmountChanged.h" compile="0" resource="0"
+                file="Source/Listeners/Export/ExportVibratoAmountChanged.h"/>
+          <FILE id="eFB7bJ" name="ExportVibratoSpeedChanged.h" compile="0" resource="0"
+                file="Source/Listeners/Export/ExportVibratoSpeedChanged.h"/>
+          <FILE id="GA0XLy" name="ExportVoiceFilterChanged.h" compile="0" resource="0"
+                file="Source/Listeners/Export/ExportVoiceFilterChanged.h"/>
+          <FILE id="flUczZ" name="ExportVolumeChanged.h" compile="0" resource="0"
+                file="Source/Listeners/Export/ExportVolumeChanged.h"/>
+        </GROUP>
+        <GROUP id="{BEB1A623-1720-718B-043A-FC3B4689CEFD}" name="MIDI">
+          <FILE id="MCAwBU" name="MidiSignal.h" compile="0" resource="0" file="Source/Listeners/MIDI/MidiSignal.h"/>
+          <FILE id="krWVpy" name="NoteOff.h" compile="0" resource="0" file="Source/Listeners/MIDI/NoteOff.h"/>
+          <FILE id="SSocsR" name="NoteOn.h" compile="0" resource="0" file="Source/Listeners/MIDI/NoteOn.h"/>
+          <FILE id="EAUsdP" name="PitchBend.h" compile="0" resource="0" file="Source/Listeners/MIDI/PitchBend.h"/>
+          <FILE id="lla2UI" name="QuarterNoteTick.h" compile="0" resource="0"
+                file="Source/Listeners/MIDI/QuarterNoteTick.h"/>
+        </GROUP>
+        <FILE id="jWdjQk" name="Frame.h" compile="0" resource="0" file="Source/Listeners/Frame.h"/>
+        <GROUP id="{AFE974F0-5E65-8985-C3EE-B043C1D4DA23}" name="Parameters">
+          <FILE id="kpdbkG" name="AttackParameterChanged.h" compile="0" resource="0"
+                file="Source/Listeners/Parameters/AttackParameterChanged.h"/>
+          <FILE id="bVqvqd" name="BandPassParameterChanged.h" compile="0" resource="0"
+                file="Source/Listeners/Parameters/BandPassParameterChanged.h"/>
+          <FILE id="gtAXgY" name="CutoffParameterChanged.h" compile="0" resource="0"
+                file="Source/Listeners/Parameters/CutoffParameterChanged.h"/>
+          <FILE id="NT2UUZ" name="DecayParameterChanged.h" compile="0" resource="0"
+                file="Source/Listeners/Parameters/DecayParameterChanged.h"/>
+          <FILE id="frnHd3" name="FilterVoiceParameterChanged.h" compile="0"
+                resource="0" file="Source/Listeners/Parameters/FilterVoiceParameterChanged.h"/>
+          <FILE id="CxsfJi" name="HighPassParameterChanged.h" compile="0" resource="0"
+                file="Source/Listeners/Parameters/HighPassParameterChanged.h"/>
+          <FILE id="apbz1v" name="LowPassParameterChanged.h" compile="0" resource="0"
+                file="Source/Listeners/Parameters/LowPassParameterChanged.h"/>
+          <FILE id="hb66vj" name="PitchBendParameterChanged.h" compile="0" resource="0"
+                file="Source/Listeners/Parameters/PitchBendParameterChanged.h"/>
+          <FILE id="TUuM8r" name="ProgramParameterChanged.h" compile="0" resource="0"
+                file="Source/Listeners/Parameters/ProgramParameterChanged.h"/>
+          <FILE id="oQ0KDs" name="PulseWidthParameterChanged.h" compile="0" resource="0"
+                file="Source/Listeners/Parameters/PulseWidthParameterChanged.h"/>
+          <FILE id="geLzSy" name="ReleaseParameterChanged.h" compile="0" resource="0"
+                file="Source/Listeners/Parameters/ReleaseParameterChanged.h"/>
+          <FILE id="EH0TbI" name="ResonanceParameterChanged.h" compile="0" resource="0"
+                file="Source/Listeners/Parameters/ResonanceParameterChanged.h"/>
+          <FILE id="NVoIBo" name="SustainParameterChanged.h" compile="0" resource="0"
+                file="Source/Listeners/Parameters/SustainParameterChanged.h"/>
+          <FILE id="ZTGOgJ" name="TremoloAmountParameterChanged.h" compile="0"
+                resource="0" file="Source/Listeners/Parameters/TremoloAmountParameterChanged.h"/>
+          <FILE id="WNOTiJ" name="TremoloSpeedParameterChanged.h" compile="0"
+                resource="0" file="Source/Listeners/Parameters/TremoloSpeedParameterChanged.h"/>
+          <FILE id="kuOLrW" name="VibratoDelayParameterChanged.h" compile="0"
+                resource="0" file="Source/Listeners/Parameters/VibratoDelayParameterChanged.h"/>
+          <FILE id="R5W6aq" name="VibratoAmountParameterChanged.h" compile="0"
+                resource="0" file="Source/Listeners/Parameters/VibratoAmountParameterChanged.h"/>
+          <FILE id="XXrKmK" name="VibratoSpeedParameterChanged.h" compile="0"
+                resource="0" file="Source/Listeners/Parameters/VibratoSpeedParameterChanged.h"/>
+          <FILE id="uQnjtw" name="VolumeParameterChanged.h" compile="0" resource="0"
+                file="Source/Listeners/Parameters/VolumeParameterChanged.h"/>
+        </GROUP>
+        <FILE id="CP6IL9" name="ListenerInitializer.cpp" compile="1" resource="0"
+              file="Source/Listeners/ListenerInitializer.cpp"/>
+        <FILE id="Qh9Kgx" name="ListenerInitializer.h" compile="0" resource="0"
+              file="Source/Listeners/ListenerInitializer.h"/>
+        <FILE id="kIjHtW" name="SampleRateChanged.h" compile="0" resource="0"
+              file="Source/Listeners/SampleRateChanged.h"/>
+        <FILE id="tfcicO" name="WavetableRowChanged.h" compile="0" resource="0"
+              file="Source/Listeners/WavetableRowChanged.h"/>
+        <FILE id="GrVYxd" name="WavetableSelectionChanged.h" compile="0" resource="0"
+              file="Source/Listeners/WavetableSelectionChanged.h"/>
+        <GROUP id="{3E261911-5F49-D9C6-FB04-6EF673F93CA2}" name="Patch Editor">
+          <FILE id="RTBm5t" name="PatchEditorAttackChanged.h" compile="0" resource="0"
+                file="Source/Listeners/Patch Editor/PatchEditorAttackChanged.h"/>
+          <FILE id="ILjsgf" name="PatchEditorDecayChanged.h" compile="0" resource="0"
+                file="Source/Listeners/Patch Editor/PatchEditorDecayChanged.h"/>
+          <FILE id="rKJ9xx" name="PatchEditorDeleteWavetableRowClicked.h" compile="0"
+                resource="0" file="Source/Listeners/Patch Editor/PatchEditorDeleteWavetableRowClicked.h"/>
+          <FILE id="GrG82z" name="PatchEditorLiveModeClicked.h" compile="0" resource="0"
+                file="Source/Listeners/Patch Editor/PatchEditorLiveModeClicked.h"/>
+          <FILE id="IQhgNe" name="PatchEditorNameChanged.h" compile="0" resource="0"
+                file="Source/Listeners/Patch Editor/PatchEditorNameChanged.h"/>
+          <FILE id="uqAyKk" name="PatchEditorNewWavetableCommandClicked.h" compile="0"
+                resource="0" file="Source/Listeners/Patch Editor/PatchEditorNewWavetableCommandClicked.h"/>
+          <FILE id="zAJuLZ" name="PatchEditorNewWavetableRowClicked.h" compile="0"
+                resource="0" file="Source/Listeners/Patch Editor/PatchEditorNewWavetableRowClicked.h"/>
+          <FILE id="J0Q9tB" name="PatchEditorPitchBendRangeChanged.h" compile="0"
+                resource="0" file="Source/Listeners/Patch Editor/PatchEditorPitchBendRangeChanged.h"/>
+          <FILE id="YZOatt" name="PatchEditorPulseWidthCenterChanged.h" compile="0"
+                resource="0" file="Source/Listeners/Patch Editor/PatchEditorPulseWidthCenterChanged.h"/>
+          <FILE id="ieY6MO" name="PatchEditorPulseWidthDefaultChanged.h" compile="0"
+                resource="0" file="Source/Listeners/Patch Editor/PatchEditorPulseWidthDefaultChanged.h"/>
+          <FILE id="ntVIrO" name="PatchEditorPulseWidthRangeChanged.h" compile="0"
+                resource="0" file="Source/Listeners/Patch Editor/PatchEditorPulseWidthRangeChanged.h"/>
+          <FILE id="KFq2U2" name="PatchEditorReleaseChanged.h" compile="0" resource="0"
+                file="Source/Listeners/Patch Editor/PatchEditorReleaseChanged.h"/>
+          <FILE id="lS0Pbj" name="PatchEditorShowNoteTable.h" compile="0" resource="0"
+                file="Source/Listeners/Patch Editor/PatchEditorShowNoteTable.h"/>
+          <FILE id="SJ8KeZ" name="PatchEditorShowPulseTable.h" compile="0" resource="0"
+                file="Source/Listeners/Patch Editor/PatchEditorShowPulseTable.h"/>
+          <FILE id="mLOVls" name="PatchEditorShowWavetable.h" compile="0" resource="0"
+                file="Source/Listeners/Patch Editor/PatchEditorShowWavetable.h"/>
+          <FILE id="q04XoN" name="PatchEditorSustainChanged.h" compile="0" resource="0"
+                file="Source/Listeners/Patch Editor/PatchEditorSustainChanged.h"/>
+          <FILE id="Hn48qt" name="PatchEditorTremoloDefaultAmountChanged.h" compile="0"
+                resource="0" file="Source/Listeners/Patch Editor/PatchEditorTremoloDefaultAmountChanged.h"/>
+          <FILE id="nibJgb" name="PatchEditorTremoloDefaultSpeedChanged.h" compile="0"
+                resource="0" file="Source/Listeners/Patch Editor/PatchEditorTremoloDefaultSpeedChanged.h"/>
+          <FILE id="tuo7ir" name="PatchEditorTremoloRangeChanged.h" compile="0"
+                resource="0" file="Source/Listeners/Patch Editor/PatchEditorTremoloRangeChanged.h"/>
+          <FILE id="spXSia" name="PatchEditorTremoloSpeedChanged.h" compile="0"
+                resource="0" file="Source/Listeners/Patch Editor/PatchEditorTremoloSpeedChanged.h"/>
+          <FILE id="bRZ7lv" name="PatchEditorVibratoDefaultAmountChanged.h" compile="0"
+                resource="0" file="Source/Listeners/Patch Editor/PatchEditorVibratoDefaultAmountChanged.h"/>
+          <FILE id="v03ooO" name="PatchEditorVibratoDefaultSpeedChanged.h" compile="0"
+                resource="0" file="Source/Listeners/Patch Editor/PatchEditorVibratoDefaultSpeedChanged.h"/>
+          <FILE id="QHdPXL" name="PatchEditorVibratoDelayChanged.h" compile="0"
+                resource="0" file="Source/Listeners/Patch Editor/PatchEditorVibratoDelayChanged.h"/>
+          <FILE id="DFuOQm" name="PatchEditorVibratoRangeChanged.h" compile="0"
+                resource="0" file="Source/Listeners/Patch Editor/PatchEditorVibratoRangeChanged.h"/>
+          <FILE id="JZMwmh" name="PatchEditorVibratoSpeedChanged.h" compile="0"
+                resource="0" file="Source/Listeners/Patch Editor/PatchEditorVibratoSpeedChanged.h"/>
+        </GROUP>
+        <GROUP id="{E4329BF9-F924-C414-6956-6FF2217517AA}" name="Live">
+          <FILE id="Bv4cEs" name="LiveAddPatchClicked.h" compile="0" resource="0"
+                file="Source/Listeners/Live/LiveAddPatchClicked.h"/>
+          <FILE id="aG8x6x" name="LiveArtistChanged.h" compile="0" resource="0"
+                file="Source/Listeners/Live/LiveArtistChanged.h"/>
+          <FILE id="mVbwSM" name="LiveAttackChanged.h" compile="0" resource="0"
+                file="Source/Listeners/Live/LiveAttackChanged.h"/>
+          <FILE id="JvG3jc" name="LiveBandPassChanged.h" compile="0" resource="0"
+                file="Source/Listeners/Live/LiveBandPassChanged.h"/>
+          <FILE id="effVHX" name="LiveCutoffChanged.h" compile="0" resource="0"
+                file="Source/Listeners/Live/LiveCutoffChanged.h"/>
+          <FILE id="yB0sWY" name="LiveDecayChanged.h" compile="0" resource="0"
+                file="Source/Listeners/Live/LiveDecayChanged.h"/>
+          <FILE id="PVZV50" name="LiveDoneExporting.h" compile="0" resource="0"
+                file="Source/Listeners/Live/LiveDoneExporting.h"/>
+          <FILE id="BEvPU2" name="LiveExportArmed.h" compile="0" resource="0"
+                file="Source/Listeners/Live/LiveExportArmed.h"/>
+          <FILE id="vAyMrF" name="LiveHighPassChanged.h" compile="0" resource="0"
+                file="Source/Listeners/Live/LiveHighPassChanged.h"/>
+          <FILE id="zRV2Fs" name="LiveLowPassChanged.h" compile="0" resource="0"
+                file="Source/Listeners/Live/LiveLowPassChanged.h"/>
+          <FILE id="mdaR7m" name="LivePatchChanged.h" compile="0" resource="0"
+                file="Source/Listeners/Live/LivePatchChanged.h"/>
+          <FILE id="ny3Yd2" name="LivePatchEditorModeClicked.h" compile="0" resource="0"
+                file="Source/Listeners/Live/LivePatchEditorModeClicked.h"/>
+          <FILE id="SaNddT" name="LivePatchListChanged.h" compile="0" resource="0"
+                file="Source/Listeners/Live/LivePatchListChanged.h"/>
+          <FILE id="zcCGlh" name="LivePatchListMode.h" compile="0" resource="0"
+                file="Source/Listeners/Live/LivePatchListMode.h"/>
+          <FILE id="UrbTJc" name="LivePatchListSelectedIndexChanged.h" compile="0"
+                resource="0" file="Source/Listeners/Live/LivePatchListSelectedIndexChanged.h"/>
+          <FILE id="OtCja3" name="LivePatchSelected.h" compile="0" resource="0"
+                file="Source/Listeners/Live/LivePatchSelected.h"/>
+          <FILE id="hgOTDo" name="LivePitchBendChanged.h" compile="0" resource="0"
+                file="Source/Listeners/Live/LivePitchBendChanged.h"/>
+          <FILE id="w5YNnM" name="LivePulseWidthChanged.h" compile="0" resource="0"
+                file="Source/Listeners/Live/LivePulseWidthChanged.h"/>
+          <FILE id="BQjsb2" name="LiveReleaseChanged.h" compile="0" resource="0"
+                file="Source/Listeners/Live/LiveReleaseChanged.h"/>
+          <FILE id="bgiCon" name="LiveRemovePatchClicked.h" compile="0" resource="0"
+                file="Source/Listeners/Live/LiveRemovePatchClicked.h"/>
+          <FILE id="oBawQp" name="LiveReplacePatchClicked.h" compile="0" resource="0"
+                file="Source/Listeners/Live/LiveReplacePatchClicked.h"/>
+          <FILE id="nu0bhE" name="LiveResonanceChanged.h" compile="0" resource="0"
+                file="Source/Listeners/Live/LiveResonanceChanged.h"/>
+          <FILE id="RFbLEl" name="LiveSustainChanged.h" compile="0" resource="0"
+                file="Source/Listeners/Live/LiveSustainChanged.h"/>
+          <FILE id="LY9OZl" name="LiveTitleChanged.h" compile="0" resource="0"
+                file="Source/Listeners/Live/LiveTitleChanged.h"/>
+          <FILE id="cK1VLw" name="LiveTremoloAmountChanged.h" compile="0" resource="0"
+                file="Source/Listeners/Live/LiveTremoloAmountChanged.h"/>
+          <FILE id="Twbzq3" name="LiveTremoloSpeedChanged.h" compile="0" resource="0"
+                file="Source/Listeners/Live/LiveTremoloSpeedChanged.h"/>
+          <FILE id="wsZJXb" name="LiveVibratoAmountChanged.h" compile="0" resource="0"
+                file="Source/Listeners/Live/LiveVibratoAmountChanged.h"/>
+          <FILE id="tg4NAl" name="LiveVibratoDelayChanged.h" compile="0" resource="0"
+                file="Source/Listeners/Live/LiveVibratoDelayChanged.h"/>
+          <FILE id="bAI0dz" name="LiveVibratoSpeedChanged.h" compile="0" resource="0"
+                file="Source/Listeners/Live/LiveVibratoSpeedChanged.h"/>
+          <FILE id="vQuB0s" name="LiveVoiceFilterChanged.h" compile="0" resource="0"
+                file="Source/Listeners/Live/LiveVoiceFilterChanged.h"/>
+          <FILE id="wpJisn" name="LiveVolumeChanged.h" compile="0" resource="0"
+                file="Source/Listeners/Live/LiveVolumeChanged.h"/>
+          <FILE id="EdaGE4" name="LoadLivePatch.h" compile="0" resource="0" file="Source/Listeners/Live/LoadLivePatch.h"/>
+        </GROUP>
+        <GROUP id="{8D1F9DCA-68E1-17A6-CE0F-DF1C0A70D9CD}" name="Bank">
+          <FILE id="aGZbOu" name="BankLoad.h" compile="0" resource="0" file="Source/Listeners/Bank/BankLoad.h"/>
+          <FILE id="Vm8PFe" name="BankNew.h" compile="0" resource="0" file="Source/Listeners/Bank/BankNew.h"/>
+          <FILE id="bxPEvr" name="BankProgramChanged.h" compile="0" resource="0"
+                file="Source/Listeners/Bank/BankProgramChanged.h"/>
+          <FILE id="Z1IWJm" name="BankRefreshLive.h" compile="0" resource="0"
+                file="Source/Listeners/Bank/BankRefreshLive.h"/>
+          <FILE id="WZgetP" name="BankRepaintWaveform.h" compile="0" resource="0"
+                file="Source/Listeners/Bank/BankRepaintWaveform.h"/>
+          <FILE id="H1AqDq" name="BankSave.h" compile="0" resource="0" file="Source/Listeners/Bank/BankSave.h"/>
+          <FILE id="NieV8f" name="BankSaveAs.h" compile="0" resource="0" file="Source/Listeners/Bank/BankSaveAs.h"/>
+          <FILE id="vA52zo" name="BankStartSaveAs.h" compile="0" resource="0"
+                file="Source/Listeners/Bank/BankStartSaveAs.h"/>
+          <FILE id="CCOhij" name="BankTreeChanged.h" compile="0" resource="0"
+                file="Source/Listeners/Bank/BankTreeChanged.h"/>
+        </GROUP>
+      </GROUP>
+      <FILE id="lX6ID6" name="SharedProperties.cpp" compile="1" resource="0"
+            file="Source/SharedProperties.cpp"/>
+      <FILE id="t0Hnmc" name="SharedProperties.h" compile="0" resource="0"
+            file="Source/SharedProperties.h"/>
+      <FILE id="ApF1dz" name="ParameterProcessor.cpp" compile="1" resource="0"
+            file="Source/ParameterProcessor.cpp"/>
+      <FILE id="f570ov" name="ParameterProcessor.h" compile="0" resource="0"
+            file="Source/ParameterProcessor.h"/>
+      <FILE id="QVhzZO" name="SIDRegisters.cpp" compile="1" resource="0"
+            file="Source/SIDRegisters.cpp"/>
+      <FILE id="hbmCPU" name="SIDRegisters.h" compile="0" resource="0" file="Source/SIDRegisters.h"/>
+      <FILE id="m8o9By" name="MIDIProcessor.cpp" compile="1" resource="0"
+            file="Source/MIDIProcessor.cpp"/>
+      <FILE id="QThpiz" name="MIDIProcessor.h" compile="0" resource="0" file="Source/MIDIProcessor.h"/>
+      <GROUP id="{F3CA80A9-E217-029B-3CCD-A5708060C672}" name="Programs">
+        <FILE id="mReQv8" name="ArpRow.cpp" compile="1" resource="0" file="Source/Programs/ArpRow.cpp"/>
+        <FILE id="hb8s6w" name="ArpRow.h" compile="0" resource="0" file="Source/Programs/ArpRow.h"/>
+        <FILE id="eZ2u3A" name="Bank.cpp" compile="1" resource="0" file="Source/Programs/Bank.cpp"/>
+        <FILE id="ubJeyA" name="Bank.h" compile="0" resource="0" file="Source/Programs/Bank.h"/>
+        <FILE id="SGpHE3" name="Categories.h" compile="0" resource="0" file="Source/Programs/Categories.h"/>
+        <FILE id="rvMtId" name="Envelope.h" compile="0" resource="0" file="Source/Programs/Envelope.h"/>
+        <FILE id="BoSWV2" name="Expression.cpp" compile="1" resource="0" file="Source/Programs/Expression.cpp"/>
+        <FILE id="FhGLYc" name="Expression.h" compile="0" resource="0" file="Source/Programs/Expression.h"/>
+        <FILE id="k4BSqb" name="NoteTable.cpp" compile="1" resource="0" file="Source/Programs/NoteTable.cpp"/>
+        <FILE id="yAaatE" name="NoteTable.h" compile="0" resource="0" file="Source/Programs/NoteTable.h"/>
+        <FILE id="d9z01F" name="PatchTreeBuilder.cpp" compile="1" resource="0"
+              file="Source/Programs/PatchTreeBuilder.cpp"/>
+        <FILE id="f03aHK" name="PatchTreeBuilder.h" compile="0" resource="0"
+              file="Source/Programs/PatchTreeBuilder.h"/>
+        <FILE id="pawsOv" name="PulseTable.cpp" compile="1" resource="0" file="Source/Programs/PulseTable.cpp"/>
+        <FILE id="OVcML4" name="PulseTable.h" compile="0" resource="0" file="Source/Programs/PulseTable.h"/>
+        <FILE id="F6WTUZ" name="sEnvelope.cpp" compile="1" resource="0" file="Source/Programs/sEnvelope.cpp"/>
+        <FILE id="P75nwo" name="SIDProgram.cpp" compile="1" resource="0" file="Source/SIDProgram.cpp"/>
+        <FILE id="T0LmNO" name="SIDProgram.h" compile="0" resource="0" file="Source/SIDProgram.h"/>
+        <FILE id="FELR6F" name="Tremolo.cpp" compile="1" resource="0" file="Source/Programs/Tremolo.cpp"/>
+        <FILE id="h0miB4" name="Tremolo.h" compile="0" resource="0" file="Source/Programs/Tremolo.h"/>
+        <FILE id="cKwHHA" name="Vibrato.cpp" compile="1" resource="0" file="Source/Programs/Vibrato.cpp"/>
+        <FILE id="MFkQf5" name="Vibrato.h" compile="0" resource="0" file="Source/Programs/Vibrato.h"/>
+        <FILE id="kfgHVz" name="Wavetable.cpp" compile="1" resource="0" file="Source/Programs/Wavetable.cpp"/>
+        <FILE id="LREXqh" name="Wavetable.h" compile="0" resource="0" file="Source/Programs/Wavetable.h"/>
+      </GROUP>
+      <FILE id="L0qKGh" name="Defines.h" compile="0" resource="0" file="Source/Defines.h"/>
+      <GROUP id="{648AA494-A810-D26C-1278-F60B673CDFC1}" name="Parameters">
+        <FILE id="DP4hHK" name="BooleanParameter.cpp" compile="1" resource="0"
+              file="Source/Parameters/BooleanParameter.cpp"/>
+        <FILE id="LRRwFc" name="BooleanParameter.h" compile="0" resource="0"
+              file="Source/Parameters/BooleanParameter.h"/>
+        <FILE id="hAb76x" name="SignedPercentParameter.cpp" compile="1" resource="0"
+              file="Source/Parameters/SignedPercentParameter.cpp"/>
+        <FILE id="I4605L" name="SignedPercentParameter.h" compile="0" resource="0"
+              file="Source/Parameters/SignedPercentParameter.h"/>
+        <FILE id="ZcxKvR" name="UnsignedIntParameter.cpp" compile="1" resource="0"
+              file="Source/Parameters/UnsignedIntParameter.cpp"/>
+        <FILE id="AJHgFt" name="UnsignedIntParameter.h" compile="0" resource="0"
+              file="Source/Parameters/UnsignedIntParameter.h"/>
+        <FILE id="j3oTu4" name="UnsignedPercentParameter.cpp" compile="1" resource="0"
+              file="Source/Parameters/UnsignedPercentParameter.cpp"/>
+        <FILE id="YSSItP" name="UnsignedPercentParameter.h" compile="0" resource="0"
+              file="Source/Parameters/UnsignedPercentParameter.h"/>
+      </GROUP>
+      <GROUP id="{37FAE092-0D5E-F550-9798-CFA728F740D9}" name="UI">
+        <FILE id="yrMQTL" name="AbstractNoteTableRow.cpp" compile="1" resource="0"
+              file="Source/UI/AbstractNoteTableRow.cpp"/>
+        <FILE id="jsqxUy" name="AbstractNoteTableRow.h" compile="0" resource="0"
+              file="Source/UI/AbstractNoteTableRow.h"/>
+        <FILE id="KUzDI9" name="AbstractPulseTableRow.cpp" compile="1" resource="0"
+              file="Source/UI/AbstractPulseTableRow.cpp"/>
+        <FILE id="DZKoWN" name="AbstractPulseTableRow.h" compile="0" resource="0"
+              file="Source/UI/AbstractPulseTableRow.h"/>
+        <FILE id="Q8KjXO" name="AbstractWavetableRow.cpp" compile="1" resource="0"
+              file="Source/UI/AbstractWavetableRow.cpp"/>
+        <FILE id="PZX68C" name="AbstractWavetableRow.h" compile="0" resource="0"
+              file="Source/UI/AbstractWavetableRow.h"/>
+        <FILE id="gXFOK6" name="BankMenu.cpp" compile="1" resource="0" file="Source/UI/BankMenu.cpp"/>
+        <FILE id="IvNCEJ" name="BankMenu.h" compile="0" resource="0" file="Source/UI/BankMenu.h"/>
+        <FILE id="pWY2j1" name="LiveMode.cpp" compile="1" resource="0" file="Source/UI/LiveMode.cpp"/>
+        <FILE id="kNxZ9h" name="LiveMode.h" compile="0" resource="0" file="Source/UI/LiveMode.h"/>
+        <FILE id="VsQRdj" name="NoteTableCommandRow.cpp" compile="1" resource="0"
+              file="Source/UI/NoteTableCommandRow.cpp"/>
+        <FILE id="IlpbHt" name="NoteTableCommandRow.h" compile="0" resource="0"
+              file="Source/UI/NoteTableCommandRow.h"/>
+        <FILE id="Iz7DKx" name="NoteTableRow.cpp" compile="1" resource="0"
+              file="Source/UI/NoteTableRow.cpp"/>
+        <FILE id="uL1NyB" name="NoteTableRow.h" compile="0" resource="0" file="Source/UI/NoteTableRow.h"/>
+        <FILE id="nn6XBz" name="NoteTableText.cpp" compile="1" resource="0"
+              file="Source/UI/NoteTableText.cpp"/>
+        <FILE id="hGA2u8" name="NoteTableText.h" compile="0" resource="0" file="Source/UI/NoteTableText.h"/>
+        <FILE id="RpHTPi" name="NoteTableView.cpp" compile="1" resource="0"
+              file="Source/UI/NoteTableView.cpp"/>
+        <FILE id="wWp1sR" name="NoteTableView.h" compile="0" resource="0" file="Source/UI/NoteTableView.h"/>
+        <FILE id="PeMpsH" name="PatchEditor.cpp" compile="1" resource="0" file="Source/UI/PatchEditor.cpp"/>
+        <FILE id="lsgeIc" name="PatchEditor.h" compile="0" resource="0" file="Source/UI/PatchEditor.h"/>
+        <FILE id="ff5l3l" name="Patches.cpp" compile="1" resource="0" file="Source/UI/Patches.cpp"/>
+        <FILE id="cKbuew" name="Patches.h" compile="0" resource="0" file="Source/UI/Patches.h"/>
+        <FILE id="DyyHDE" name="PatchRow.cpp" compile="1" resource="0" file="Source/UI/PatchRow.cpp"/>
+        <FILE id="is576j" name="PatchRow.h" compile="0" resource="0" file="Source/UI/PatchRow.h"/>
+        <FILE id="hariK4" name="PatchSelector.cpp" compile="1" resource="0"
+              file="Source/UI/PatchSelector.cpp"/>
+        <FILE id="C4lQOq" name="PatchSelector.h" compile="0" resource="0" file="Source/UI/PatchSelector.h"/>
+        <FILE id="zpCyjD" name="PatchTreeViewLeaf.cpp" compile="1" resource="0"
+              file="Source/UI/PatchTreeViewLeaf.cpp"/>
+        <FILE id="Rp8DgB" name="PatchTreeViewLeaf.h" compile="0" resource="0"
+              file="Source/UI/PatchTreeViewLeaf.h"/>
+        <FILE id="we89zT" name="PatchTreeViewNode.h" compile="0" resource="0"
+              file="Source/UI/PatchTreeViewNode.h"/>
+        <FILE id="IjZCOt" name="PatchTreeViewNode.cpp" compile="1" resource="0"
+              file="Source/UI/PatchTreeViewNode.cpp"/>
+        <FILE id="xBz0bp" name="PulseTableCommandRow.cpp" compile="1" resource="0"
+              file="Source/UI/PulseTableCommandRow.cpp"/>
+        <FILE id="UecSn1" name="PulseTableCommandRow.h" compile="0" resource="0"
+              file="Source/UI/PulseTableCommandRow.h"/>
+        <FILE id="l30YKy" name="PulseTableRow.cpp" compile="1" resource="0"
+              file="Source/UI/PulseTableRow.cpp"/>
+        <FILE id="QD7i5a" name="PulseTableRow.h" compile="0" resource="0" file="Source/UI/PulseTableRow.h"/>
+        <FILE id="EL3PC4" name="PulseTableText.cpp" compile="1" resource="0"
+              file="Source/UI/PulseTableText.cpp"/>
+        <FILE id="ABIYTb" name="PulseTableText.h" compile="0" resource="0"
+              file="Source/UI/PulseTableText.h"/>
+        <FILE id="f2xCRt" name="PulseTableView.cpp" compile="1" resource="0"
+              file="Source/UI/PulseTableView.cpp"/>
+        <FILE id="o3doxa" name="PulseTableView.h" compile="0" resource="0"
+              file="Source/UI/PulseTableView.h"/>
+        <FILE id="eBckxT" name="SavePatchAsDialog.cpp" compile="1" resource="0"
+              file="Source/UI/SavePatchAsDialog.cpp"/>
+        <FILE id="uqwPeg" name="SavePatchAsDialog.h" compile="0" resource="0"
+              file="Source/UI/SavePatchAsDialog.h"/>
+        <FILE id="rrRAJ2" name="SIDStepLookAndFeel.cpp" compile="1" resource="0"
+              file="Source/UI/SIDStepLookAndFeel.cpp"/>
+        <FILE id="jOgsfU" name="SIDStepLookAndFeel.h" compile="0" resource="0"
+              file="Source/UI/SIDStepLookAndFeel.h"/>
+        <FILE id="oqdmrz" name="WaveformView.cpp" compile="1" resource="0"
+              file="Source/UI/WaveformView.cpp"/>
+        <FILE id="QH4uJf" name="WaveformView.h" compile="0" resource="0" file="Source/UI/WaveformView.h"/>
+        <FILE id="Hdg1Jk" name="WavetableCommandRow.cpp" compile="1" resource="0"
+              file="Source/UI/WavetableCommandRow.cpp"/>
+        <FILE id="YiLbho" name="WavetableCommandRow.h" compile="0" resource="0"
+              file="Source/UI/WavetableCommandRow.h"/>
+        <FILE id="qkxIWX" name="WavetableRow.cpp" compile="1" resource="0"
+              file="Source/UI/WavetableRow.cpp"/>
+        <FILE id="qwYzPg" name="WavetableRow.h" compile="0" resource="0" file="Source/UI/WavetableRow.h"/>
+        <FILE id="ACaD1Z" name="WavetableText.cpp" compile="1" resource="0"
+              file="Source/UI/WavetableText.cpp"/>
+        <FILE id="V9YQyp" name="WavetableText.h" compile="0" resource="0" file="Source/UI/WavetableText.h"/>
+        <FILE id="Z2SyDw" name="WavetableView.cpp" compile="1" resource="0"
+              file="Source/UI/WavetableView.cpp"/>
+        <FILE id="EsI4gw" name="WavetableView.h" compile="0" resource="0" file="Source/UI/WavetableView.h"/>
+      </GROUP>
+      <FILE id="r4G1Ph" name="Note.h" compile="0" resource="0" file="Source/Note.h"/>
+      <FILE id="GtakIb" name="SIDStep2.cpp" compile="1" resource="0" file="Source/SIDStep2.cpp"/>
+      <FILE id="pcWQT9" name="SIDStep2.h" compile="0" resource="0" file="Source/SIDStep2.h"/>
+      <FILE id="vWjUet" name="PluginProcessor.cpp" compile="1" resource="0"
+            file="Source/PluginProcessor.cpp"/>
+      <FILE id="nOjoIn" name="PluginProcessor.h" compile="0" resource="0"
+            file="Source/PluginProcessor.h"/>
+      <FILE id="ZxeW7q" name="PluginEditor.cpp" compile="1" resource="0"
+            file="Source/PluginEditor.cpp"/>
+      <FILE id="BpFBKh" name="PluginEditor.h" compile="0" resource="0" file="Source/PluginEditor.h"/>
+    </GROUP>
+    <FILE id="hE77uk" name="TODO.txt" compile="0" resource="0" file="TODO.txt"/>
+  </MAINGROUP>
+  <EXPORTFORMATS>
+    <VS2015 targetFolder="Builds/VisualStudio2015" vstFolder="C:\Users\Skye\Documents\SpiderOak\Projects\SIDStep2\Requirements\VST3 SDK">
+      <CONFIGURATIONS>
+        <CONFIGURATION name="Debug" winWarningLevel="4" generateManifest="1" winArchitecture="x64"
+                       isDebug="1" optimisation="1" targetName="SIDStep2" binaryPath="C:\Users\Skye\Documents\VSTs"
+                       headerPath="C:\Users\Skye\Documents\SpiderOak\Projects\SIDStep2\Requirements\JUCE\modules"/>
+        <CONFIGURATION name="Release" winWarningLevel="4" generateManifest="1" winArchitecture="x64"
+                       isDebug="0" optimisation="3" targetName="SIDStep2" binaryPath="C:\Users\Skye\Documents\VSTs"
+                       headerPath="C:\Users\Skye\Documents\SpiderOak\Projects\SIDStep2\Requirements\JUCE\modules"
+                       useRuntimeLibDLL="0"/>
+        <CONFIGURATION name="Debug32" winWarningLevel="4" generateManifest="1" winArchitecture="32-bit"
+                       isDebug="1" optimisation="1" targetName="SIDStep2" binaryPath="C:\Users\Skye\Documents\VSTs"
+                       headerPath="C:\Users\Skye\Documents\SpiderOak\Projects\SIDStep2\Requirements\JUCE\modules"/>
+        <CONFIGURATION name="Release32" winWarningLevel="4" generateManifest="1" winArchitecture="32-bit"
+                       isDebug="0" optimisation="3" targetName="SIDStep2" binaryPath="C:\Users\Skye\Documents\VSTs"
+                       headerPath="C:\Users\Skye\Documents\SpiderOak\Projects\SIDStep2\Requirements\JUCE\modules"
+                       useRuntimeLibDLL="0"/>
+      </CONFIGURATIONS>
+      <MODULEPATHS>
+        <MODULEPATH id="juce_core" path="Requirements/JUCE/modules"/>
+        <MODULEPATH id="juce_events" path="Requirements/JUCE/modules"/>
+        <MODULEPATH id="juce_graphics" path="Requirements/JUCE/modules"/>
+        <MODULEPATH id="juce_data_structures" path="Requirements/JUCE/modules"/>
+        <MODULEPATH id="juce_gui_basics" path="Requirements/JUCE/modules"/>
+        <MODULEPATH id="juce_gui_extra" path="Requirements/JUCE/modules"/>
+        <MODULEPATH id="juce_audio_basics" path="Requirements/JUCE/modules"/>
+        <MODULEPATH id="juce_audio_devices" path="Requirements/JUCE/modules"/>
+        <MODULEPATH id="juce_audio_formats" path="Requirements/JUCE/modules"/>
+        <MODULEPATH id="juce_audio_processors" path="Requirements/JUCE/modules"/>
+        <MODULEPATH id="juce_audio_plugin_client" path="Requirements/JUCE/modules"/>
+      </MODULEPATHS>
+    </VS2015>
+    <VS2019 targetFolder="Builds/VisualStudio2019">
+      <CONFIGURATIONS>
+        <CONFIGURATION isDebug="1" name="Debug" binaryPath="D:\My Documents\VSTs\64b"
+                       headerPath="D:\VST3 SDK"/>
+        <CONFIGURATION isDebug="0" name="Release" binaryPath="D:\My Documents\VSTs\64b"
+                       headerPath="D:\VST3 SDK"/>
+      </CONFIGURATIONS>
+      <MODULEPATHS>
+        <MODULEPATH id="juce_gui_extra" path="D:\JUCE-Multiversions\juce-6.0.4-windows\JUCE\modules"/>
+        <MODULEPATH id="juce_gui_basics" path="D:\JUCE-Multiversions\juce-6.0.4-windows\JUCE\modules"/>
+        <MODULEPATH id="juce_graphics" path="D:\JUCE-Multiversions\juce-6.0.4-windows\JUCE\modules"/>
+        <MODULEPATH id="juce_events" path="D:\JUCE-Multiversions\juce-6.0.4-windows\JUCE\modules"/>
+        <MODULEPATH id="juce_data_structures" path="D:\JUCE-Multiversions\juce-6.0.4-windows\JUCE\modules"/>
+        <MODULEPATH id="juce_core" path="D:\JUCE-Multiversions\juce-6.0.4-windows\JUCE\modules"/>
+        <MODULEPATH id="juce_audio_processors" path="D:\JUCE-Multiversions\juce-6.0.4-windows\JUCE\modules"/>
+        <MODULEPATH id="juce_audio_plugin_client" path="D:\JUCE-Multiversions\juce-6.0.4-windows\JUCE\modules"/>
+        <MODULEPATH id="juce_audio_formats" path="D:\JUCE-Multiversions\juce-6.0.4-windows\JUCE\modules"/>
+        <MODULEPATH id="juce_audio_devices" path="D:\JUCE-Multiversions\juce-6.0.4-windows\JUCE\modules"/>
+        <MODULEPATH id="juce_audio_basics" path="D:\JUCE-Multiversions\juce-6.0.4-windows\JUCE\modules"/>
+      </MODULEPATHS>
+    </VS2019>
+  </EXPORTFORMATS>
+  <MODULES>
+    <MODULE id="juce_audio_basics" showAllCode="1" useLocalCopy="1"/>
+    <MODULE id="juce_audio_devices" showAllCode="1" useLocalCopy="1"/>
+    <MODULE id="juce_audio_formats" showAllCode="1" useLocalCopy="1"/>
+    <MODULE id="juce_audio_plugin_client" showAllCode="1" useLocalCopy="1"/>
+    <MODULE id="juce_audio_processors" showAllCode="1" useLocalCopy="1"/>
+    <MODULE id="juce_core" showAllCode="1" useLocalCopy="1"/>
+    <MODULE id="juce_data_structures" showAllCode="1" useLocalCopy="1"/>
+    <MODULE id="juce_events" showAllCode="1" useLocalCopy="1"/>
+    <MODULE id="juce_graphics" showAllCode="1" useLocalCopy="1"/>
+    <MODULE id="juce_gui_basics" showAllCode="1" useLocalCopy="1"/>
+    <MODULE id="juce_gui_extra" showAllCode="1" useLocalCopy="1"/>
+  </MODULES>
+  <JUCEOPTIONS JUCE_QUICKTIME="0"/>
+  <LIVE_SETTINGS>
+    <WINDOWS/>
+  </LIVE_SETTINGS>
+</JUCERPROJECT>

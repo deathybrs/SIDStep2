@@ -1,0 +1,10 @@
+#ifndef LIVEREMOVEPATCHCLICKED_H_INCLUDED
+#define LIVEREMOVEPATCHCLICKED_H_INCLUDED
+
+
+#include "../../Defines.h"
+
+EVENT(LiveRemovePatchClicked,())
+
+
+#endif  // LIVEREMOVEPATCHCLICKED_H_INCLUDED

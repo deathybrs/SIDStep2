@@ -1,0 +1,13 @@
+#ifndef BANDPASSPARAMETERCHANGED_H_INCLUDED
+#define BANDPASSPARAMETERCHANGED_H_INCLUDED
+
+
+#include "../../Defines.h"
+
+
+EVENT(BandPassParameterChanged, (bool value))
+
+
+
+
+#endif  // BANDPASSPARAMETERCHANGED_H_INCLUDED
