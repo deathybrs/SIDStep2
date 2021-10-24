@@ -1,0 +1,208 @@
+Howdy, all, deathy here!
+
+Welcome to the next alpha phase for SIDStep2.  This is a VSTi that uses resid 
+to emulate the SID chip in any DAW you wish to use, but here is the important 
+part - when you are done, it will export your song so that it can be loaded 
+onto a real C64 and used in games or demos!
+
+There WILL be bugs.
+
+My goal is to try to bridge the gap and make it so that people who want to make
+SIDs but are intimidated by the traditional methods of making such a song can 
+use a workflow that they are more comfortable with.  That, and the fact that I 
+am lazy and prefer working in a modern DAW.
+
+I'm going to list known bugs first:
+
+1. There is a bug in the hard restart.  For those that don't know, what that 
+   means is that you may find that your notes don't start properly or sound all
+   wonky.  This bug has been tasking me, but rather than delay the start of 
+   testing, I figured I would go ahead and release this version.  Fixing the 
+   hard restart is my #1 priority.
+2. The export currently produces approximately 4x as much data as its supposed 
+   to, and as a result also replays far too slowly.
+3. The notetable and pulsetables sometimes eat the last command rows.
+
+OK, so... how to set it up:
+
+You will use 4 tracks/channels... One to contain the actual VST, and the other 
+3 to be each of the 3 voice channels of the SID.  All of those channels need to
+be MIDI, if your DAW differentiates.  The 3 voice channels must direct their 
+output into the SIDStep2 VST on its channel, and aimed at MIDI channels 1 
+through 3, matching the voice number.  I will be trying to release template 
+files and/or blank pre-made projects for different DAWs aas I can to help make 
+this faster and easier.
+
+Once you have it set up, you will be able to open the editor.  It has 2 modes -
+Live mode and Patch Editor mode.  
+
+I have tried to keep things as user friendly as I could, so in the Patch Editor
+you will see a live updated waveform view of what your instrument looks like 
+when playing a middle-A (440Hz).  You will find an editor for the attack, 
+decay, sustain and release - each goes from 0 to 15.  You can easily see the 
+changes in the preview, although if your sustain is set to 15, then decay will 
+appear to do nothing.
+
+The expression numbers, like Pitch Bend, Pulse Width and Vibrato, are all the 
+ranges and defaults for those.  For the time being, if these are not clear to 
+you, you can generally just ignore them (I still mostly do).
+
+The trickier parts are the tables - there is a wavetable, notetable and 
+pulsetable.
+
+The wavetable is used to select the played waveform at each screen refresh, and
+the list is stepped through.  The first four check-boxes are the selectable 
+waveforms, Triangle, Sawtooth, Pulse and Noise.  The SID model used is an 8580,
+so these can be combined to generate sometimes nice sounds (and sometimes, not 
+so nice).  Note that you cannot combine a waveform with noise, it will just 
+generate silence.  The other 4 bits are test, ring, sync and gate.  Test causes
+the generator to freeze for that frame and not make any sound at all.  The Ring
+Modulator causes the sound of this channel to be modulated by the previous 
+channel (or 3, if the instrument is played in 1).  This isn't easy to explain, 
+but when used properly, makes the sound different.  Sync is basically the same,
+in that its use makes the sound different and it is synced with the same 
+different channel as ring modulation.  This is again hard to explain, sorry.  
+There will be better documentation once we leave alpha.
+
+Finally, the gate means "note is on" if checked.  MOST of the time, you will 
+want this checked for the part of the wavetable that is intended to be played
+when key is pressed.  It will automatically flip that bit in live mode.  
+
+You can add as many of these rows as you want, as well as command rows.  
+Commands include end, which stops advancing the table so that you are left with
+the waveforms and commands of the last row until you release the note.  The 
+next option is that you can GOTO any row - this will of coz cause your table to
+loop back to that point until it's released.  FINALLY, you have SUSTAIN TO, 
+which causes it to loop until you release the note, and then will play what is 
+after the SUSTAIN TO.  You will probably want to make sure the gate bit is 
+clear for the rows after the sustain loop.
+
+The notetable is NOT for note arpeggiation, that will be explained later... but
+for drumsounds especially, you need to precisely move the frequencies to get 
+the right sound.  So, in here, you can enter either a relative offset, the 
+default row, as +/- semitones.  Or, check the box and it switches to absolute 
+mode, where you can enter either a note (using A-4, A#4 and Bb4 notation) or a 
+specific frequency.  The rest is like the wavetable, as many rows as you want, 
+with the same commands.
+
+Finally, the pulsetable which modulates the pulse width which, if your 
+instrument is a square/pulse waveform, changes the sound in a way that sounds 
+very cool.  Note that this is available here, but you can also do pulsewidth 
+modulation in Live mode.
+
+Finally, there is a combo box from which you can load a saved patch from your 
+preset banks (the final will come with a very loaded factory preset bank for 
+those who are not ready to do patch design), save your currently working 
+instrument, or save your current patch under a different name.  You will note 
+the lack of a delete.  Sorry, that is to be added but was low priority.  You 
+will find an xml file in your APPDATA/roaminglow folder where these presets are
+saved and if you need to delete, you can delete it from that file.
+
+You will need to use the "New" command to create new instruments, this is not 
+done from the Live Screen... this is not the greatest workflow, but again, 
+lower priority than the bugs right now.
+
+So, that should give you at least some idea how the patch editor works.  Now on
+to Live Mode:
+
+KNOBS.  SO.  Many.  KNOBS!
+
+It can be a bit daunting to look at, but it's not actually as bad as you might 
+think.
+
+The first thing to look at is the Patch List.  This is where you load the 
+instruments you are going to use in your song.  There isn't a real limit to the
+length of the song, though honestly I haven't actually TESTED it with really 
+long lists so... it may well crap out at some Very Big Number of patches.  
+Anyhow, it will by default include one "init patch," which is basically just a 
+pulse wave with no attack or decay, max sustain, and no release.  It sounds 
+pretty terrible, but then, all VST's init patch sounds terrible, so why should 
+this one be any different?
+
+Under, you see commands for Adding, Replacing and Removing.  Adding does NOT 
+add a blank patch, instead, it is used to add a patch from your saved patch 
+banks.  This is not super clear, and I should maybe add in an option to also 
+add an init patch there, will think about that later.  Replacing is pretty 
+obvious, replace any patch with a different one.  Remove of course deletes the 
+patch from the list (but of coz not from your patch banks).
+
+If you click on a patch before you click the Patch Editor, then you should find
+yourself editing that patch, and when you switch back to live mode, then your 
+changes should propagate back.  However, this is a little flakey, so be sure in
+the patch editor that you save your patch before switching back just to make 
+sure you don't lose your work.  If you switch back, and it didn't update 
+properly, then you can use the "Replace" button.
+
+To the left of the patch list, you'll see the filter controls.  These are 
+pretty straight forward - cutoff, resonance, which voices that are currently 
+being filters, and what kind of filter (Low Pass, Band Pass, and High Pass).  
+Other than the voice selection, these are not saved so be sure you set these 
+with automation.  They are not saved because they change so much over the 
+course of most songs that saving them would probably lead to making things more
+broken, not less.
+
+OK, now, the top of the window is Volume, which is 0-15, a Record button, which
+is used to export the song (which will be explained later in the docs), the 
+Title and the Artist.  If you include a title and/or artist, then those will be
+embedded in the export so that the song will have your mark embedded in it.
+
+Finally, there are three rows of identical knobs, one for each voice.  The 
+first selects the patch/program.  This is here because not all DAWs properly 
+support sending Program Changes via MIDI, and even when they do, it can be a 
+real pain in the butt (I'm looking at >YOU,< Ableton!), so this allows changing
+instrument on the channel.  
+
+Next 4 knobs allow you to change the Attack/Decay/Sustain/Release value from 
+the instruments default for the note being played... this can allow for a lot 
+of expressiveness by having some notes swell more slowly, some notes play maybe
+quieter or louder, etc.
+
+Next is pitch bend... this is pretty straightforward.  It is, of coz, also 
+possible to use the MIDI pitchbend, which will have the same constraints.
+
+Next is Vibrato, which lets you adjust how deep the vibrato is, how fast it is,
+and how many frames delay before the vibrato starts.  Most of these are as 
+percentages of the maximum specified in the patch editor.
+
+Finally is Pulse Width, which lets you adjust the pulse witdh of pulse waves.  
+It will do nothing if you do not have any pulse waves in the instrument at all,
+but if you do, then it will give you this nice progressive crunchy sound.
+
+So, you will not usually use these knobs directly, but instead will use them as
+parameters for your automation in your DAW.  In particular, the program change 
+is a pain in some DAWs no matter how you do it, as it is a percentage of 127, 
+which means program changes can sometimes be pretty time moves.  The rest of 
+them shouldn't be too bad, though.
+
+If you want to enter a note arpeggiation, instead of using the note table, or 
+using an arp command, just play a chord and it will auto-arp.  This may 
+sometimes mean that your arp sounds funny because you have too many notes in 
+the arp, so if you don't like how it sounds, try removing or adding notes to 
+your chord.
+
+Finally, exporting.  This doesn't work PROPERLY right this minute, but when it 
+does... to export, you will reset your song to the beginning.  If you set it to
+loop, then this will be how your song will loop on the 64 when exported, and if
+you have no loop, then the song will only play once.  (I have not a working 
+unlooping player right now, but that is super easy - just need to get the data 
+export fixed before I bother.)
+
+When ready, press the Record button.  Then, Play the song in your DAW.  When it
+loops, or when you press stop (if you stop it, be sure you let the notes settle
+down first or else the exported version may not get all of your calming down), 
+then it will pop up a dialog allowing you to save your song for C64.  The file 
+type exported at this time is Acme assembly source code, so that your coder can
+easily make any tweaks they want to to the replayer before including it.
+
+That should cover the functionality.  If you are a tester, then you should be 
+present in the Discord channel, so please ask any questions you have there and 
+I will try to answer them, and if necessary will also update the documentation.
+This is also how I would like bugs reported, please.
+
+Once the first version is ready for prime time, I will go ahead and release the
+source as an open source project on GIT, but I'd prefer to have it working 
+properly before I do that.
+
+Thank you for your help testing it!
+
+deathy/Style+Brainstorm+BAS+Starz+ehrm... are there any more?  Probably.
