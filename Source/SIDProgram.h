@@ -1,22 +1,16 @@
 #pragma once
-
-
 #include "JuceHeader.h"
-
-
 #include "Listeners/ListenerInitializer.h"
-
 #include "Programs/Envelope.h"
 #include "Programs/Expression.h"
 #include "Programs/NoteTable.h"
 #include "Programs/PulseTable.h"
 #include "Programs/Wavetable.h"
 
-
 class SidProgram final
-        : public ReferenceCountedObject ,
-          public BankProgramChanged ,
-          public PatchEditorNameChanged
+        : public ReferenceCountedObject
+        , public BankProgramChanged
+        , public PatchEditorNameChanged
 {
 public:
     SidProgram ();
@@ -143,13 +137,11 @@ private:
     ReferenceCountedObjectPtr < Wavetable >   wavetable;
     ReferenceCountedObjectPtr < Expressions > expression;
     bool                                      factoryPreset {
-                    false
-            };
-
+            false
+    };
     bool selected {
-                    false
-            };
-    int forVoice {};
-
+            false
+    };
+    int              forVoice {};
     static const int PATCH_VERSION = 1;
 };

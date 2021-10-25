@@ -18,9 +18,9 @@
 */
 
 //[Headers] You can add your own extra header files here...
-#include "SIDStepLookAndFeel.h"
-#include "Patches.h"
 #include "../SIDProgram.h"
+#include "Patches.h"
+#include "SIDStepLookAndFeel.h"
 //[/Headers]
 
 #include "LiveMode.h"
@@ -31,851 +31,2301 @@
 
 //==============================================================================
 LiveMode::LiveMode ()
+    :
+    ProgramParameterChanged ()
 {
     //[Constructor_pre] You can add your own custom stuff here..
     look = new SIDStepLookAndFeel;
     setLookAndFeel (
-                    look
-                   );
+                    look );
     armed = false;
     //[/Constructor_pre]
 
-    volumeSlider.reset (new juce::Slider ("new slider"));
-    addAndMakeVisible (volumeSlider.get());
-    volumeSlider->setRange (0, 15, 1);
-    volumeSlider->setSliderStyle (juce::Slider::RotaryHorizontalVerticalDrag);
-    volumeSlider->setTextBoxStyle (juce::Slider::NoTextBox, true, 80, 20);
-    volumeSlider->addListener (this);
-
-    volumeSlider->setBounds (384, 32, 48, 48);
-
-    volumeLabel.reset (new juce::Label ("new label",
-                                        TRANS("0")));
-    addAndMakeVisible (volumeLabel.get());
-    volumeLabel->setFont (juce::Font ("C64 Pro", 12.00f, juce::Font::plain).withTypefaceStyle ("Regular"));
-    volumeLabel->setJustificationType (juce::Justification::centred);
-    volumeLabel->setEditable (false, false, false);
-    volumeLabel->setColour (juce::Label::textColourId, juce::Colour (0xff5090d0));
-    volumeLabel->setColour (juce::TextEditor::textColourId, juce::Colours::black);
-    volumeLabel->setColour (juce::TextEditor::backgroundColourId, juce::Colour (0x00000000));
-
-    volumeLabel->setBounds (384, 8, 48, 18);
-
-    patch1Slider.reset (new juce::Slider ("new slider"));
-    addAndMakeVisible (patch1Slider.get());
-    patch1Slider->setRange (1, 2, 1);
-    patch1Slider->setSliderStyle (juce::Slider::RotaryHorizontalVerticalDrag);
-    patch1Slider->setTextBoxStyle (juce::Slider::NoTextBox, true, 80, 20);
-    patch1Slider->addListener (this);
-
-    patch1Slider->setBounds (32, 120, 48, 48);
-
-    attack1Slider.reset (new juce::Slider ("new slider"));
-    addAndMakeVisible (attack1Slider.get());
-    attack1Slider->setRange (0, 15, 1);
-    attack1Slider->setSliderStyle (juce::Slider::RotaryHorizontalVerticalDrag);
-    attack1Slider->setTextBoxStyle (juce::Slider::NoTextBox, true, 80, 20);
-    attack1Slider->addListener (this);
-
-    attack1Slider->setBounds (144, 120, 48, 48);
-
-    decay1Slider.reset (new juce::Slider ("new slider"));
-    addAndMakeVisible (decay1Slider.get());
-    decay1Slider->setRange (0, 15, 1);
-    decay1Slider->setSliderStyle (juce::Slider::RotaryHorizontalVerticalDrag);
-    decay1Slider->setTextBoxStyle (juce::Slider::NoTextBox, true, 80, 20);
-    decay1Slider->addListener (this);
-
-    decay1Slider->setBounds (224, 120, 48, 48);
-
-    sustain1Slider.reset (new juce::Slider ("new slider"));
-    addAndMakeVisible (sustain1Slider.get());
-    sustain1Slider->setRange (0, 15, 1);
-    sustain1Slider->setSliderStyle (juce::Slider::RotaryHorizontalVerticalDrag);
-    sustain1Slider->setTextBoxStyle (juce::Slider::NoTextBox, true, 80, 20);
-    sustain1Slider->addListener (this);
-
-    sustain1Slider->setBounds (304, 120, 48, 48);
-
-    release1Slider.reset (new juce::Slider ("new slider"));
-    addAndMakeVisible (release1Slider.get());
-    release1Slider->setRange (0, 15, 1);
-    release1Slider->setSliderStyle (juce::Slider::RotaryHorizontalVerticalDrag);
-    release1Slider->setTextBoxStyle (juce::Slider::NoTextBox, true, 80, 20);
-    release1Slider->addListener (this);
-
-    release1Slider->setBounds (384, 120, 48, 48);
-
-    pitchBend1Slider.reset (new juce::Slider ("new slider"));
-    addAndMakeVisible (pitchBend1Slider.get());
-    pitchBend1Slider->setRange (-100, 100, 1);
-    pitchBend1Slider->setSliderStyle (juce::Slider::RotaryHorizontalVerticalDrag);
-    pitchBend1Slider->setTextBoxStyle (juce::Slider::NoTextBox, true, 80, 20);
-    pitchBend1Slider->addListener (this);
-
-    pitchBend1Slider->setBounds (472, 120, 48, 48);
-
-    vibratoAmount1Slider.reset (new juce::Slider ("new slider"));
-    addAndMakeVisible (vibratoAmount1Slider.get());
-    vibratoAmount1Slider->setRange (0, 100, 1);
-    vibratoAmount1Slider->setSliderStyle (juce::Slider::RotaryHorizontalVerticalDrag);
-    vibratoAmount1Slider->setTextBoxStyle (juce::Slider::NoTextBox, true, 80, 20);
-    vibratoAmount1Slider->addListener (this);
-
-    vibratoAmount1Slider->setBounds (584, 120, 48, 48);
-
-    vibratoSpeed1Slider.reset (new juce::Slider ("new slider"));
-    addAndMakeVisible (vibratoSpeed1Slider.get());
-    vibratoSpeed1Slider->setRange (0, 100, 1);
-    vibratoSpeed1Slider->setSliderStyle (juce::Slider::RotaryHorizontalVerticalDrag);
-    vibratoSpeed1Slider->setTextBoxStyle (juce::Slider::NoTextBox, true, 80, 20);
-    vibratoSpeed1Slider->addListener (this);
-
-    vibratoSpeed1Slider->setBounds (664, 120, 48, 48);
-
-    pulseWidth1Slider.reset (new juce::Slider ("new slider"));
-    addAndMakeVisible (pulseWidth1Slider.get());
-    pulseWidth1Slider->setRange (-100, 100, 1);
-    pulseWidth1Slider->setSliderStyle (juce::Slider::RotaryHorizontalVerticalDrag);
-    pulseWidth1Slider->setTextBoxStyle (juce::Slider::NoTextBox, true, 80, 20);
-    pulseWidth1Slider->addListener (this);
-
-    pulseWidth1Slider->setBounds (831, 120, 48, 48);
-
-    vibratoDelay1Slider.reset (new juce::Slider ("new slider"));
-    addAndMakeVisible (vibratoDelay1Slider.get());
-    vibratoDelay1Slider->setRange (0, 15, 1);
-    vibratoDelay1Slider->setSliderStyle (juce::Slider::RotaryHorizontalVerticalDrag);
-    vibratoDelay1Slider->setTextBoxStyle (juce::Slider::NoTextBox, true, 80, 20);
-    vibratoDelay1Slider->addListener (this);
-
-    vibratoDelay1Slider->setBounds (745, 120, 48, 48);
-
-    patch2Slider.reset (new juce::Slider ("new slider"));
-    addAndMakeVisible (patch2Slider.get());
-    patch2Slider->setRange (1, 2, 1);
-    patch2Slider->setSliderStyle (juce::Slider::RotaryHorizontalVerticalDrag);
-    patch2Slider->setTextBoxStyle (juce::Slider::NoTextBox, true, 80, 20);
-    patch2Slider->addListener (this);
-
-    patch2Slider->setBounds (32, 208, 48, 48);
-
-    attack2Slider.reset (new juce::Slider ("new slider"));
-    addAndMakeVisible (attack2Slider.get());
-    attack2Slider->setRange (0, 15, 1);
-    attack2Slider->setSliderStyle (juce::Slider::RotaryHorizontalVerticalDrag);
-    attack2Slider->setTextBoxStyle (juce::Slider::NoTextBox, true, 80, 20);
-    attack2Slider->addListener (this);
-
-    attack2Slider->setBounds (144, 208, 48, 48);
-
-    decay2Slider.reset (new juce::Slider ("new slider"));
-    addAndMakeVisible (decay2Slider.get());
-    decay2Slider->setRange (0, 15, 1);
-    decay2Slider->setSliderStyle (juce::Slider::RotaryHorizontalVerticalDrag);
-    decay2Slider->setTextBoxStyle (juce::Slider::NoTextBox, true, 80, 20);
-    decay2Slider->addListener (this);
-
-    decay2Slider->setBounds (224, 208, 48, 48);
-
-    sustain2Slider.reset (new juce::Slider ("new slider"));
-    addAndMakeVisible (sustain2Slider.get());
-    sustain2Slider->setRange (0, 15, 1);
-    sustain2Slider->setSliderStyle (juce::Slider::RotaryHorizontalVerticalDrag);
-    sustain2Slider->setTextBoxStyle (juce::Slider::NoTextBox, true, 80, 20);
-    sustain2Slider->addListener (this);
-
-    sustain2Slider->setBounds (304, 208, 48, 48);
-
-    release2Slider.reset (new juce::Slider ("new slider"));
-    addAndMakeVisible (release2Slider.get());
-    release2Slider->setRange (0, 15, 1);
-    release2Slider->setSliderStyle (juce::Slider::RotaryHorizontalVerticalDrag);
-    release2Slider->setTextBoxStyle (juce::Slider::NoTextBox, true, 80, 20);
-    release2Slider->addListener (this);
-
-    release2Slider->setBounds (384, 208, 48, 48);
-
-    pitchBend2Slider.reset (new juce::Slider ("new slider"));
-    addAndMakeVisible (pitchBend2Slider.get());
-    pitchBend2Slider->setRange (-100, 100, 1);
-    pitchBend2Slider->setSliderStyle (juce::Slider::RotaryHorizontalVerticalDrag);
-    pitchBend2Slider->setTextBoxStyle (juce::Slider::NoTextBox, true, 80, 20);
-    pitchBend2Slider->addListener (this);
-
-    pitchBend2Slider->setBounds (472, 208, 48, 48);
-
-    vibratoAmount2Slider.reset (new juce::Slider ("new slider"));
-    addAndMakeVisible (vibratoAmount2Slider.get());
-    vibratoAmount2Slider->setRange (0, 100, 1);
-    vibratoAmount2Slider->setSliderStyle (juce::Slider::RotaryHorizontalVerticalDrag);
-    vibratoAmount2Slider->setTextBoxStyle (juce::Slider::NoTextBox, true, 80, 20);
-    vibratoAmount2Slider->addListener (this);
-
-    vibratoAmount2Slider->setBounds (584, 208, 48, 48);
-
-    vibratoSpeed2Slider.reset (new juce::Slider ("new slider"));
-    addAndMakeVisible (vibratoSpeed2Slider.get());
-    vibratoSpeed2Slider->setRange (0, 100, 1);
-    vibratoSpeed2Slider->setSliderStyle (juce::Slider::RotaryHorizontalVerticalDrag);
-    vibratoSpeed2Slider->setTextBoxStyle (juce::Slider::NoTextBox, true, 80, 20);
-    vibratoSpeed2Slider->addListener (this);
-
-    vibratoSpeed2Slider->setBounds (664, 208, 48, 48);
-
-    pulseWidth2Slider.reset (new juce::Slider ("new slider"));
-    addAndMakeVisible (pulseWidth2Slider.get());
-    pulseWidth2Slider->setRange (-100, 100, 1);
-    pulseWidth2Slider->setSliderStyle (juce::Slider::RotaryHorizontalVerticalDrag);
-    pulseWidth2Slider->setTextBoxStyle (juce::Slider::NoTextBox, true, 80, 20);
-    pulseWidth2Slider->addListener (this);
-
-    pulseWidth2Slider->setBounds (831, 208, 48, 48);
-
-    vibratoDelay2Slider.reset (new juce::Slider ("new slider"));
-    addAndMakeVisible (vibratoDelay2Slider.get());
-    vibratoDelay2Slider->setRange (0, 15, 1);
-    vibratoDelay2Slider->setSliderStyle (juce::Slider::RotaryHorizontalVerticalDrag);
-    vibratoDelay2Slider->setTextBoxStyle (juce::Slider::NoTextBox, true, 80, 20);
-    vibratoDelay2Slider->addListener (this);
-
-    vibratoDelay2Slider->setBounds (745, 208, 48, 48);
-
-    patch3Slider.reset (new juce::Slider ("new slider"));
-    addAndMakeVisible (patch3Slider.get());
-    patch3Slider->setRange (1, 2, 1);
-    patch3Slider->setSliderStyle (juce::Slider::RotaryHorizontalVerticalDrag);
-    patch3Slider->setTextBoxStyle (juce::Slider::NoTextBox, true, 80, 20);
-    patch3Slider->addListener (this);
-
-    patch3Slider->setBounds (32, 296, 48, 48);
-
-    attack3Slider.reset (new juce::Slider ("new slider"));
-    addAndMakeVisible (attack3Slider.get());
-    attack3Slider->setRange (0, 15, 1);
-    attack3Slider->setSliderStyle (juce::Slider::RotaryHorizontalVerticalDrag);
-    attack3Slider->setTextBoxStyle (juce::Slider::NoTextBox, true, 80, 20);
-    attack3Slider->addListener (this);
-
-    attack3Slider->setBounds (144, 296, 48, 48);
-
-    decay3Slider.reset (new juce::Slider ("new slider"));
-    addAndMakeVisible (decay3Slider.get());
-    decay3Slider->setRange (0, 15, 1);
-    decay3Slider->setSliderStyle (juce::Slider::RotaryHorizontalVerticalDrag);
-    decay3Slider->setTextBoxStyle (juce::Slider::NoTextBox, true, 80, 20);
-    decay3Slider->addListener (this);
-
-    decay3Slider->setBounds (224, 296, 48, 48);
-
-    sustain3Slider.reset (new juce::Slider ("new slider"));
-    addAndMakeVisible (sustain3Slider.get());
-    sustain3Slider->setRange (0, 15, 1);
-    sustain3Slider->setSliderStyle (juce::Slider::RotaryHorizontalVerticalDrag);
-    sustain3Slider->setTextBoxStyle (juce::Slider::NoTextBox, true, 80, 20);
-    sustain3Slider->addListener (this);
-
-    sustain3Slider->setBounds (304, 296, 48, 48);
-
-    release3Slider.reset (new juce::Slider ("new slider"));
-    addAndMakeVisible (release3Slider.get());
-    release3Slider->setRange (0, 15, 1);
-    release3Slider->setSliderStyle (juce::Slider::RotaryHorizontalVerticalDrag);
-    release3Slider->setTextBoxStyle (juce::Slider::NoTextBox, true, 80, 20);
-    release3Slider->addListener (this);
-
-    release3Slider->setBounds (384, 296, 48, 48);
-
-    pitchBend3Slider.reset (new juce::Slider ("new slider"));
-    addAndMakeVisible (pitchBend3Slider.get());
-    pitchBend3Slider->setRange (-100, 100, 1);
-    pitchBend3Slider->setSliderStyle (juce::Slider::RotaryHorizontalVerticalDrag);
-    pitchBend3Slider->setTextBoxStyle (juce::Slider::NoTextBox, true, 80, 20);
-    pitchBend3Slider->addListener (this);
-
-    pitchBend3Slider->setBounds (472, 296, 48, 48);
-
-    vibratoAmount3Slider.reset (new juce::Slider ("new slider"));
-    addAndMakeVisible (vibratoAmount3Slider.get());
-    vibratoAmount3Slider->setRange (0, 100, 1);
-    vibratoAmount3Slider->setSliderStyle (juce::Slider::RotaryHorizontalVerticalDrag);
-    vibratoAmount3Slider->setTextBoxStyle (juce::Slider::NoTextBox, true, 80, 20);
-    vibratoAmount3Slider->addListener (this);
-
-    vibratoAmount3Slider->setBounds (584, 296, 48, 48);
-
-    vibratoSpeed3Slider.reset (new juce::Slider ("new slider"));
-    addAndMakeVisible (vibratoSpeed3Slider.get());
-    vibratoSpeed3Slider->setRange (0, 100, 1);
-    vibratoSpeed3Slider->setSliderStyle (juce::Slider::RotaryHorizontalVerticalDrag);
-    vibratoSpeed3Slider->setTextBoxStyle (juce::Slider::NoTextBox, true, 80, 20);
-    vibratoSpeed3Slider->addListener (this);
-
-    vibratoSpeed3Slider->setBounds (664, 296, 48, 48);
-
-    pulseWidth3Slider.reset (new juce::Slider ("new slider"));
-    addAndMakeVisible (pulseWidth3Slider.get());
-    pulseWidth3Slider->setRange (-100, 100, 1);
-    pulseWidth3Slider->setSliderStyle (juce::Slider::RotaryHorizontalVerticalDrag);
-    pulseWidth3Slider->setTextBoxStyle (juce::Slider::NoTextBox, true, 80, 20);
-    pulseWidth3Slider->addListener (this);
-
-    pulseWidth3Slider->setBounds (831, 296, 48, 48);
-
-    vibratoDelay3Slider.reset (new juce::Slider ("new slider"));
-    addAndMakeVisible (vibratoDelay3Slider.get());
-    vibratoDelay3Slider->setRange (0, 15, 1);
-    vibratoDelay3Slider->setSliderStyle (juce::Slider::RotaryHorizontalVerticalDrag);
-    vibratoDelay3Slider->setTextBoxStyle (juce::Slider::NoTextBox, true, 80, 20);
-    vibratoDelay3Slider->addListener (this);
-
-    vibratoDelay3Slider->setBounds (743, 296, 48, 48);
-
-    cutoffSlider.reset (new juce::Slider ("new slider"));
-    addAndMakeVisible (cutoffSlider.get());
-    cutoffSlider->setRange (0, 2047, 1);
-    cutoffSlider->setSliderStyle (juce::Slider::RotaryHorizontalVerticalDrag);
-    cutoffSlider->setTextBoxStyle (juce::Slider::NoTextBox, true, 80, 20);
-    cutoffSlider->addListener (this);
-
-    cutoffSlider->setBounds (32, 384, 48, 48);
-
-    resonanceSlider.reset (new juce::Slider ("new slider"));
-    addAndMakeVisible (resonanceSlider.get());
-    resonanceSlider->setRange (0, 15, 1);
-    resonanceSlider->setSliderStyle (juce::Slider::RotaryHorizontalVerticalDrag);
-    resonanceSlider->setTextBoxStyle (juce::Slider::NoTextBox, true, 80, 20);
-    resonanceSlider->addListener (this);
-
-    resonanceSlider->setBounds (32, 472, 48, 48);
-
-    patch1Label.reset (new juce::Label ("new label",
-                                        TRANS("1")));
-    addAndMakeVisible (patch1Label.get());
-    patch1Label->setFont (juce::Font ("C64 Pro", 12.00f, juce::Font::plain).withTypefaceStyle ("Regular"));
-    patch1Label->setJustificationType (juce::Justification::centred);
-    patch1Label->setEditable (false, false, false);
-    patch1Label->setColour (juce::Label::textColourId, juce::Colour (0xff5090d0));
-    patch1Label->setColour (juce::TextEditor::textColourId, juce::Colours::black);
-    patch1Label->setColour (juce::TextEditor::backgroundColourId, juce::Colour (0x00000000));
-
-    patch1Label->setBounds (32, 96, 48, 18);
-
-    attack1Label.reset (new juce::Label ("new label",
-                                         TRANS("0")));
-    addAndMakeVisible (attack1Label.get());
-    attack1Label->setFont (juce::Font ("C64 Pro", 12.00f, juce::Font::plain).withTypefaceStyle ("Regular"));
-    attack1Label->setJustificationType (juce::Justification::centred);
-    attack1Label->setEditable (false, false, false);
-    attack1Label->setColour (juce::Label::textColourId, juce::Colour (0xff5090d0));
-    attack1Label->setColour (juce::TextEditor::textColourId, juce::Colours::black);
-    attack1Label->setColour (juce::TextEditor::backgroundColourId, juce::Colour (0x00000000));
-
-    attack1Label->setBounds (144, 96, 48, 18);
-
-    decay1Label.reset (new juce::Label ("new label",
-                                        TRANS("0")));
-    addAndMakeVisible (decay1Label.get());
-    decay1Label->setFont (juce::Font ("C64 Pro", 12.00f, juce::Font::plain).withTypefaceStyle ("Regular"));
-    decay1Label->setJustificationType (juce::Justification::centred);
-    decay1Label->setEditable (false, false, false);
-    decay1Label->setColour (juce::Label::textColourId, juce::Colour (0xff5090d0));
-    decay1Label->setColour (juce::TextEditor::textColourId, juce::Colours::black);
-    decay1Label->setColour (juce::TextEditor::backgroundColourId, juce::Colour (0x00000000));
-
-    decay1Label->setBounds (224, 96, 48, 18);
-
-    sustain1Label.reset (new juce::Label ("new label",
-                                          TRANS("0")));
-    addAndMakeVisible (sustain1Label.get());
-    sustain1Label->setFont (juce::Font ("C64 Pro", 12.00f, juce::Font::plain).withTypefaceStyle ("Regular"));
-    sustain1Label->setJustificationType (juce::Justification::centred);
-    sustain1Label->setEditable (false, false, false);
-    sustain1Label->setColour (juce::Label::textColourId, juce::Colour (0xff5090d0));
-    sustain1Label->setColour (juce::TextEditor::textColourId, juce::Colours::black);
-    sustain1Label->setColour (juce::TextEditor::backgroundColourId, juce::Colour (0x00000000));
-
-    sustain1Label->setBounds (304, 96, 48, 18);
-
-    release1Label.reset (new juce::Label ("new label",
-                                          TRANS("0")));
-    addAndMakeVisible (release1Label.get());
-    release1Label->setFont (juce::Font ("C64 Pro", 12.00f, juce::Font::plain).withTypefaceStyle ("Regular"));
-    release1Label->setJustificationType (juce::Justification::centred);
-    release1Label->setEditable (false, false, false);
-    release1Label->setColour (juce::Label::textColourId, juce::Colour (0xff5090d0));
-    release1Label->setColour (juce::TextEditor::textColourId, juce::Colours::black);
-    release1Label->setColour (juce::TextEditor::backgroundColourId, juce::Colour (0x00000000));
-
-    release1Label->setBounds (384, 96, 48, 18);
-
-    pitchBend1Label.reset (new juce::Label ("new label",
-                                            TRANS("0%")));
-    addAndMakeVisible (pitchBend1Label.get());
-    pitchBend1Label->setFont (juce::Font ("C64 Pro", 12.00f, juce::Font::plain).withTypefaceStyle ("Regular"));
-    pitchBend1Label->setJustificationType (juce::Justification::centred);
-    pitchBend1Label->setEditable (false, false, false);
-    pitchBend1Label->setColour (juce::Label::textColourId, juce::Colour (0xff5090d0));
-    pitchBend1Label->setColour (juce::TextEditor::textColourId, juce::Colours::black);
-    pitchBend1Label->setColour (juce::TextEditor::backgroundColourId, juce::Colour (0x00000000));
-
-    pitchBend1Label->setBounds (472, 96, 48, 18);
-
-    vibratoAmount1Label.reset (new juce::Label ("new label",
-                                                TRANS("0%")));
-    addAndMakeVisible (vibratoAmount1Label.get());
-    vibratoAmount1Label->setFont (juce::Font ("C64 Pro", 12.00f, juce::Font::plain).withTypefaceStyle ("Regular"));
-    vibratoAmount1Label->setJustificationType (juce::Justification::centred);
-    vibratoAmount1Label->setEditable (false, false, false);
-    vibratoAmount1Label->setColour (juce::Label::textColourId, juce::Colour (0xff5090d0));
-    vibratoAmount1Label->setColour (juce::TextEditor::textColourId, juce::Colours::black);
-    vibratoAmount1Label->setColour (juce::TextEditor::backgroundColourId, juce::Colour (0x00000000));
-
-    vibratoAmount1Label->setBounds (584, 96, 48, 18);
-
-    vibratoSpeed1Label.reset (new juce::Label ("new label",
-                                               TRANS("0%")));
-    addAndMakeVisible (vibratoSpeed1Label.get());
-    vibratoSpeed1Label->setFont (juce::Font ("C64 Pro", 12.00f, juce::Font::plain).withTypefaceStyle ("Regular"));
-    vibratoSpeed1Label->setJustificationType (juce::Justification::centred);
-    vibratoSpeed1Label->setEditable (false, false, false);
-    vibratoSpeed1Label->setColour (juce::Label::textColourId, juce::Colour (0xff5090d0));
-    vibratoSpeed1Label->setColour (juce::TextEditor::textColourId, juce::Colours::black);
-    vibratoSpeed1Label->setColour (juce::TextEditor::backgroundColourId, juce::Colour (0x00000000));
-
-    vibratoSpeed1Label->setBounds (664, 96, 48, 18);
-
-    pulseWidth1Label.reset (new juce::Label ("new label",
-                                             TRANS("0%")));
-    addAndMakeVisible (pulseWidth1Label.get());
-    pulseWidth1Label->setFont (juce::Font ("C64 Pro", 12.00f, juce::Font::plain).withTypefaceStyle ("Regular"));
-    pulseWidth1Label->setJustificationType (juce::Justification::centred);
-    pulseWidth1Label->setEditable (false, false, false);
-    pulseWidth1Label->setColour (juce::Label::textColourId, juce::Colour (0xff5090d0));
-    pulseWidth1Label->setColour (juce::TextEditor::textColourId, juce::Colours::black);
-    pulseWidth1Label->setColour (juce::TextEditor::backgroundColourId, juce::Colour (0x00000000));
-
-    pulseWidth1Label->setBounds (831, 96, 48, 18);
-
-    vibratoDelay1Label.reset (new juce::Label ("new label",
-                                               TRANS("0")));
-    addAndMakeVisible (vibratoDelay1Label.get());
-    vibratoDelay1Label->setFont (juce::Font ("C64 Pro", 12.00f, juce::Font::plain).withTypefaceStyle ("Regular"));
-    vibratoDelay1Label->setJustificationType (juce::Justification::centred);
-    vibratoDelay1Label->setEditable (false, false, false);
-    vibratoDelay1Label->setColour (juce::Label::textColourId, juce::Colour (0xff5090d0));
-    vibratoDelay1Label->setColour (juce::TextEditor::textColourId, juce::Colours::black);
-    vibratoDelay1Label->setColour (juce::TextEditor::backgroundColourId, juce::Colour (0x00000000));
-
-    vibratoDelay1Label->setBounds (745, 96, 48, 18);
-
-    patch2Label.reset (new juce::Label ("new label",
-                                        TRANS("1")));
-    addAndMakeVisible (patch2Label.get());
-    patch2Label->setFont (juce::Font ("C64 Pro", 12.00f, juce::Font::plain).withTypefaceStyle ("Regular"));
-    patch2Label->setJustificationType (juce::Justification::centred);
-    patch2Label->setEditable (false, false, false);
-    patch2Label->setColour (juce::Label::textColourId, juce::Colour (0xff5090d0));
-    patch2Label->setColour (juce::TextEditor::textColourId, juce::Colours::black);
-    patch2Label->setColour (juce::TextEditor::backgroundColourId, juce::Colour (0x00000000));
-
-    patch2Label->setBounds (32, 184, 48, 18);
-
-    attack2Label.reset (new juce::Label ("new label",
-                                         TRANS("0")));
-    addAndMakeVisible (attack2Label.get());
-    attack2Label->setFont (juce::Font ("C64 Pro", 12.00f, juce::Font::plain).withTypefaceStyle ("Regular"));
-    attack2Label->setJustificationType (juce::Justification::centred);
-    attack2Label->setEditable (false, false, false);
-    attack2Label->setColour (juce::Label::textColourId, juce::Colour (0xff5090d0));
-    attack2Label->setColour (juce::TextEditor::textColourId, juce::Colours::black);
-    attack2Label->setColour (juce::TextEditor::backgroundColourId, juce::Colour (0x00000000));
-
-    attack2Label->setBounds (144, 184, 48, 18);
-
-    decay2Label.reset (new juce::Label ("new label",
-                                        TRANS("0")));
-    addAndMakeVisible (decay2Label.get());
-    decay2Label->setFont (juce::Font ("C64 Pro", 12.00f, juce::Font::plain).withTypefaceStyle ("Regular"));
-    decay2Label->setJustificationType (juce::Justification::centred);
-    decay2Label->setEditable (false, false, false);
-    decay2Label->setColour (juce::Label::textColourId, juce::Colour (0xff5090d0));
-    decay2Label->setColour (juce::TextEditor::textColourId, juce::Colours::black);
-    decay2Label->setColour (juce::TextEditor::backgroundColourId, juce::Colour (0x00000000));
-
-    decay2Label->setBounds (224, 184, 48, 18);
-
-    sustain2Label.reset (new juce::Label ("new label",
-                                          TRANS("0")));
-    addAndMakeVisible (sustain2Label.get());
-    sustain2Label->setFont (juce::Font ("C64 Pro", 12.00f, juce::Font::plain).withTypefaceStyle ("Regular"));
-    sustain2Label->setJustificationType (juce::Justification::centred);
-    sustain2Label->setEditable (false, false, false);
-    sustain2Label->setColour (juce::Label::textColourId, juce::Colour (0xff5090d0));
-    sustain2Label->setColour (juce::TextEditor::textColourId, juce::Colours::black);
-    sustain2Label->setColour (juce::TextEditor::backgroundColourId, juce::Colour (0x00000000));
-
-    sustain2Label->setBounds (304, 184, 48, 18);
-
-    release2Label.reset (new juce::Label ("new label",
-                                          TRANS("0")));
-    addAndMakeVisible (release2Label.get());
-    release2Label->setFont (juce::Font ("C64 Pro", 12.00f, juce::Font::plain).withTypefaceStyle ("Regular"));
-    release2Label->setJustificationType (juce::Justification::centred);
-    release2Label->setEditable (false, false, false);
-    release2Label->setColour (juce::Label::textColourId, juce::Colour (0xff5090d0));
-    release2Label->setColour (juce::TextEditor::textColourId, juce::Colours::black);
-    release2Label->setColour (juce::TextEditor::backgroundColourId, juce::Colour (0x00000000));
-
-    release2Label->setBounds (384, 184, 48, 18);
-
-    pitchBend2Label.reset (new juce::Label ("new label",
-                                            TRANS("0%")));
-    addAndMakeVisible (pitchBend2Label.get());
-    pitchBend2Label->setFont (juce::Font ("C64 Pro", 12.00f, juce::Font::plain).withTypefaceStyle ("Regular"));
-    pitchBend2Label->setJustificationType (juce::Justification::centred);
-    pitchBend2Label->setEditable (false, false, false);
-    pitchBend2Label->setColour (juce::Label::textColourId, juce::Colour (0xff5090d0));
-    pitchBend2Label->setColour (juce::TextEditor::textColourId, juce::Colours::black);
-    pitchBend2Label->setColour (juce::TextEditor::backgroundColourId, juce::Colour (0x00000000));
-
-    pitchBend2Label->setBounds (472, 184, 48, 18);
-
-    vibratoAmount2Label.reset (new juce::Label ("new label",
-                                                TRANS("0%")));
-    addAndMakeVisible (vibratoAmount2Label.get());
-    vibratoAmount2Label->setFont (juce::Font ("C64 Pro", 12.00f, juce::Font::plain).withTypefaceStyle ("Regular"));
-    vibratoAmount2Label->setJustificationType (juce::Justification::centred);
-    vibratoAmount2Label->setEditable (false, false, false);
-    vibratoAmount2Label->setColour (juce::Label::textColourId, juce::Colour (0xff5090d0));
-    vibratoAmount2Label->setColour (juce::TextEditor::textColourId, juce::Colours::black);
-    vibratoAmount2Label->setColour (juce::TextEditor::backgroundColourId, juce::Colour (0x00000000));
-
-    vibratoAmount2Label->setBounds (584, 184, 48, 18);
-
-    vibratoSpeed2Label.reset (new juce::Label ("new label",
-                                               TRANS("0%")));
-    addAndMakeVisible (vibratoSpeed2Label.get());
-    vibratoSpeed2Label->setFont (juce::Font ("C64 Pro", 12.00f, juce::Font::plain).withTypefaceStyle ("Regular"));
-    vibratoSpeed2Label->setJustificationType (juce::Justification::centred);
-    vibratoSpeed2Label->setEditable (false, false, false);
-    vibratoSpeed2Label->setColour (juce::Label::textColourId, juce::Colour (0xff5090d0));
-    vibratoSpeed2Label->setColour (juce::TextEditor::textColourId, juce::Colours::black);
-    vibratoSpeed2Label->setColour (juce::TextEditor::backgroundColourId, juce::Colour (0x00000000));
-
-    vibratoSpeed2Label->setBounds (664, 184, 48, 18);
-
-    pulseWidth2Label.reset (new juce::Label ("new label",
-                                             TRANS("0%")));
-    addAndMakeVisible (pulseWidth2Label.get());
-    pulseWidth2Label->setFont (juce::Font ("C64 Pro", 12.00f, juce::Font::plain).withTypefaceStyle ("Regular"));
-    pulseWidth2Label->setJustificationType (juce::Justification::centred);
-    pulseWidth2Label->setEditable (false, false, false);
-    pulseWidth2Label->setColour (juce::Label::textColourId, juce::Colour (0xff5090d0));
-    pulseWidth2Label->setColour (juce::TextEditor::textColourId, juce::Colours::black);
-    pulseWidth2Label->setColour (juce::TextEditor::backgroundColourId, juce::Colour (0x00000000));
-
-    pulseWidth2Label->setBounds (831, 184, 48, 18);
-
-    vibratoDelay2Label.reset (new juce::Label ("new label",
-                                               TRANS("0")));
-    addAndMakeVisible (vibratoDelay2Label.get());
-    vibratoDelay2Label->setFont (juce::Font ("C64 Pro", 12.00f, juce::Font::plain).withTypefaceStyle ("Regular"));
-    vibratoDelay2Label->setJustificationType (juce::Justification::centred);
-    vibratoDelay2Label->setEditable (false, false, false);
-    vibratoDelay2Label->setColour (juce::Label::textColourId, juce::Colour (0xff5090d0));
-    vibratoDelay2Label->setColour (juce::TextEditor::textColourId, juce::Colours::black);
-    vibratoDelay2Label->setColour (juce::TextEditor::backgroundColourId, juce::Colour (0x00000000));
-
-    vibratoDelay2Label->setBounds (745, 184, 48, 18);
-
-    patch3Label.reset (new juce::Label ("new label",
-                                        TRANS("1")));
-    addAndMakeVisible (patch3Label.get());
-    patch3Label->setFont (juce::Font ("C64 Pro", 12.00f, juce::Font::plain).withTypefaceStyle ("Regular"));
-    patch3Label->setJustificationType (juce::Justification::centred);
-    patch3Label->setEditable (false, false, false);
-    patch3Label->setColour (juce::Label::textColourId, juce::Colour (0xff5090d0));
-    patch3Label->setColour (juce::TextEditor::textColourId, juce::Colours::black);
-    patch3Label->setColour (juce::TextEditor::backgroundColourId, juce::Colour (0x00000000));
-
-    patch3Label->setBounds (32, 272, 48, 18);
-
-    attack3Label.reset (new juce::Label ("new label",
-                                         TRANS("0")));
-    addAndMakeVisible (attack3Label.get());
-    attack3Label->setFont (juce::Font ("C64 Pro", 12.00f, juce::Font::plain).withTypefaceStyle ("Regular"));
-    attack3Label->setJustificationType (juce::Justification::centred);
-    attack3Label->setEditable (false, false, false);
-    attack3Label->setColour (juce::Label::textColourId, juce::Colour (0xff5090d0));
-    attack3Label->setColour (juce::TextEditor::textColourId, juce::Colours::black);
-    attack3Label->setColour (juce::TextEditor::backgroundColourId, juce::Colour (0x00000000));
-
-    attack3Label->setBounds (144, 272, 48, 18);
-
-    decay3Label.reset (new juce::Label ("new label",
-                                        TRANS("0")));
-    addAndMakeVisible (decay3Label.get());
-    decay3Label->setFont (juce::Font ("C64 Pro", 12.00f, juce::Font::plain).withTypefaceStyle ("Regular"));
-    decay3Label->setJustificationType (juce::Justification::centred);
-    decay3Label->setEditable (false, false, false);
-    decay3Label->setColour (juce::Label::textColourId, juce::Colour (0xff5090d0));
-    decay3Label->setColour (juce::TextEditor::textColourId, juce::Colours::black);
-    decay3Label->setColour (juce::TextEditor::backgroundColourId, juce::Colour (0x00000000));
-
-    decay3Label->setBounds (224, 272, 48, 18);
-
-    sustain3Label.reset (new juce::Label ("new label",
-                                          TRANS("0")));
-    addAndMakeVisible (sustain3Label.get());
-    sustain3Label->setFont (juce::Font ("C64 Pro", 12.00f, juce::Font::plain).withTypefaceStyle ("Regular"));
-    sustain3Label->setJustificationType (juce::Justification::centred);
-    sustain3Label->setEditable (false, false, false);
-    sustain3Label->setColour (juce::Label::textColourId, juce::Colour (0xff5090d0));
-    sustain3Label->setColour (juce::TextEditor::textColourId, juce::Colours::black);
-    sustain3Label->setColour (juce::TextEditor::backgroundColourId, juce::Colour (0x00000000));
-
-    sustain3Label->setBounds (304, 272, 48, 18);
-
-    release3Label.reset (new juce::Label ("new label",
-                                          TRANS("0")));
-    addAndMakeVisible (release3Label.get());
-    release3Label->setFont (juce::Font ("C64 Pro", 12.00f, juce::Font::plain).withTypefaceStyle ("Regular"));
-    release3Label->setJustificationType (juce::Justification::centred);
-    release3Label->setEditable (false, false, false);
-    release3Label->setColour (juce::Label::textColourId, juce::Colour (0xff5090d0));
-    release3Label->setColour (juce::TextEditor::textColourId, juce::Colours::black);
-    release3Label->setColour (juce::TextEditor::backgroundColourId, juce::Colour (0x00000000));
-
-    release3Label->setBounds (384, 272, 48, 18);
-
-    pitchBend3Label.reset (new juce::Label ("new label",
-                                            TRANS("0%")));
-    addAndMakeVisible (pitchBend3Label.get());
-    pitchBend3Label->setFont (juce::Font ("C64 Pro", 12.00f, juce::Font::plain).withTypefaceStyle ("Regular"));
-    pitchBend3Label->setJustificationType (juce::Justification::centred);
-    pitchBend3Label->setEditable (false, false, false);
-    pitchBend3Label->setColour (juce::Label::textColourId, juce::Colour (0xff5090d0));
-    pitchBend3Label->setColour (juce::TextEditor::textColourId, juce::Colours::black);
-    pitchBend3Label->setColour (juce::TextEditor::backgroundColourId, juce::Colour (0x00000000));
-
-    pitchBend3Label->setBounds (472, 272, 48, 18);
-
-    vibratoAmount3Label.reset (new juce::Label ("new label",
-                                                TRANS("0%")));
-    addAndMakeVisible (vibratoAmount3Label.get());
-    vibratoAmount3Label->setFont (juce::Font ("C64 Pro", 12.00f, juce::Font::plain).withTypefaceStyle ("Regular"));
-    vibratoAmount3Label->setJustificationType (juce::Justification::centred);
-    vibratoAmount3Label->setEditable (false, false, false);
-    vibratoAmount3Label->setColour (juce::Label::textColourId, juce::Colour (0xff5090d0));
-    vibratoAmount3Label->setColour (juce::TextEditor::textColourId, juce::Colours::black);
-    vibratoAmount3Label->setColour (juce::TextEditor::backgroundColourId, juce::Colour (0x00000000));
-
-    vibratoAmount3Label->setBounds (584, 272, 48, 18);
-
-    vibratoSpeed3Label.reset (new juce::Label ("new label",
-                                               TRANS("0%")));
-    addAndMakeVisible (vibratoSpeed3Label.get());
-    vibratoSpeed3Label->setFont (juce::Font ("C64 Pro", 12.00f, juce::Font::plain).withTypefaceStyle ("Regular"));
-    vibratoSpeed3Label->setJustificationType (juce::Justification::centred);
-    vibratoSpeed3Label->setEditable (false, false, false);
-    vibratoSpeed3Label->setColour (juce::Label::textColourId, juce::Colour (0xff5090d0));
-    vibratoSpeed3Label->setColour (juce::TextEditor::textColourId, juce::Colours::black);
-    vibratoSpeed3Label->setColour (juce::TextEditor::backgroundColourId, juce::Colour (0x00000000));
-
-    vibratoSpeed3Label->setBounds (664, 272, 48, 18);
-
-    pulseWidth3Label.reset (new juce::Label ("new label",
-                                             TRANS("0%")));
-    addAndMakeVisible (pulseWidth3Label.get());
-    pulseWidth3Label->setFont (juce::Font ("C64 Pro", 12.00f, juce::Font::plain).withTypefaceStyle ("Regular"));
-    pulseWidth3Label->setJustificationType (juce::Justification::centred);
-    pulseWidth3Label->setEditable (false, false, false);
-    pulseWidth3Label->setColour (juce::Label::textColourId, juce::Colour (0xff5090d0));
-    pulseWidth3Label->setColour (juce::TextEditor::textColourId, juce::Colours::black);
-    pulseWidth3Label->setColour (juce::TextEditor::backgroundColourId, juce::Colour (0x00000000));
-
-    pulseWidth3Label->setBounds (831, 272, 48, 18);
-
-    vibratoDelay3Label.reset (new juce::Label ("new label",
-                                               TRANS("0")));
-    addAndMakeVisible (vibratoDelay3Label.get());
-    vibratoDelay3Label->setFont (juce::Font ("C64 Pro", 12.00f, juce::Font::plain).withTypefaceStyle ("Regular"));
-    vibratoDelay3Label->setJustificationType (juce::Justification::centred);
-    vibratoDelay3Label->setEditable (false, false, false);
-    vibratoDelay3Label->setColour (juce::Label::textColourId, juce::Colour (0xff5090d0));
-    vibratoDelay3Label->setColour (juce::TextEditor::textColourId, juce::Colours::black);
-    vibratoDelay3Label->setColour (juce::TextEditor::backgroundColourId, juce::Colour (0x00000000));
-
-    vibratoDelay3Label->setBounds (745, 272, 48, 18);
-
-    cutoffLabel.reset (new juce::Label ("new label",
-                                        TRANS("0")));
-    addAndMakeVisible (cutoffLabel.get());
-    cutoffLabel->setFont (juce::Font ("C64 Pro", 12.00f, juce::Font::plain).withTypefaceStyle ("Regular"));
-    cutoffLabel->setJustificationType (juce::Justification::centred);
-    cutoffLabel->setEditable (false, false, false);
-    cutoffLabel->setColour (juce::Label::textColourId, juce::Colour (0xff5090d0));
-    cutoffLabel->setColour (juce::TextEditor::textColourId, juce::Colours::black);
-    cutoffLabel->setColour (juce::TextEditor::backgroundColourId, juce::Colour (0x00000000));
-
-    cutoffLabel->setBounds (32, 360, 48, 18);
-
-    resonanceLabel.reset (new juce::Label ("new label",
-                                           TRANS("0")));
-    addAndMakeVisible (resonanceLabel.get());
-    resonanceLabel->setFont (juce::Font ("C64 Pro", 12.00f, juce::Font::plain).withTypefaceStyle ("Regular"));
-    resonanceLabel->setJustificationType (juce::Justification::centred);
-    resonanceLabel->setEditable (false, false, false);
-    resonanceLabel->setColour (juce::Label::textColourId, juce::Colour (0xff5090d0));
-    resonanceLabel->setColour (juce::TextEditor::textColourId, juce::Colours::black);
-    resonanceLabel->setColour (juce::TextEditor::backgroundColourId, juce::Colour (0x00000000));
-
-    resonanceLabel->setBounds (32, 448, 48, 18);
-
-    titleLabel.reset (new juce::Label ("new label",
-                                       juce::String()));
-    addAndMakeVisible (titleLabel.get());
-    titleLabel->setFont (juce::Font ("C64 Pro", 14.00f, juce::Font::plain).withTypefaceStyle ("Regular"));
-    titleLabel->setJustificationType (juce::Justification::centredLeft);
-    titleLabel->setEditable (true, true, false);
-    titleLabel->setColour (juce::Label::textColourId, juce::Colour (0xff5090d0));
-    titleLabel->setColour (juce::TextEditor::textColourId, juce::Colour (0xff5090d0));
-    titleLabel->setColour (juce::TextEditor::backgroundColourId, juce::Colour (0x00000000));
-    titleLabel->addListener (this);
-
-    titleLabel->setBounds (632, 8, 368, 32);
-
-    artistLabel.reset (new juce::Label ("new label",
-                                        juce::String()));
-    addAndMakeVisible (artistLabel.get());
-    artistLabel->setFont (juce::Font ("C64 Pro", 14.00f, juce::Font::plain).withTypefaceStyle ("Regular"));
-    artistLabel->setJustificationType (juce::Justification::centredLeft);
-    artistLabel->setEditable (true, true, false);
-    artistLabel->setColour (juce::Label::textColourId, juce::Colour (0xff5090d0));
-    artistLabel->setColour (juce::TextEditor::textColourId, juce::Colour (0xff5090d0));
-    artistLabel->setColour (juce::TextEditor::backgroundColourId, juce::Colour (0x00000000));
-    artistLabel->addListener (this);
-
-    artistLabel->setBounds (632, 48, 368, 32);
-
-    exportButton.reset (new juce::ImageButton ("new button"));
-    addAndMakeVisible (exportButton.get());
-    exportButton->addListener (this);
-
-    exportButton->setImages (false, true, true,
-                             juce::ImageCache::getFromMemory (recordnormal_png, recordnormal_pngSize), 1.000f, juce::Colour (0x00000000),
-                             juce::ImageCache::getFromMemory (recordover_png, recordover_pngSize), 1.000f, juce::Colour (0x00000000),
-                             juce::ImageCache::getFromMemory (recorddown_png, recorddown_pngSize), 1.000f, juce::Colour (0x00000000));
-    exportButton->setBounds (480, 40, 32, 32);
-
-    patchesViewport.reset (new juce::Viewport ("new viewport"));
-    addAndMakeVisible (patchesViewport.get());
-    patchesViewport->setScrollBarsShown (true, false);
-    patchesViewport->setScrollBarThickness (16);
-
-    patchesViewport->setBounds (496, 368, 512, 192);
-
-    filter1Checkbox.reset (new juce::ToggleButton ("new toggle button"));
-    addAndMakeVisible (filter1Checkbox.get());
-    filter1Checkbox->setButtonText (juce::String());
-    filter1Checkbox->addListener (this);
-
-    filter1Checkbox->setBounds (120, 376, 48, 48);
-
-    filter2Checkbox.reset (new juce::ToggleButton ("new toggle button"));
-    addAndMakeVisible (filter2Checkbox.get());
-    filter2Checkbox->setButtonText (juce::String());
-    filter2Checkbox->addListener (this);
-
-    filter2Checkbox->setBounds (240, 376, 48, 48);
-
-    filter3Checkbox.reset (new juce::ToggleButton ("new toggle button"));
-    addAndMakeVisible (filter3Checkbox.get());
-    filter3Checkbox->setButtonText (juce::String());
-    filter3Checkbox->addListener (this);
-
-    filter3Checkbox->setBounds (352, 376, 48, 48);
-
-    filterLowPassCheckbox.reset (new juce::ToggleButton ("new toggle button"));
-    addAndMakeVisible (filterLowPassCheckbox.get());
-    filterLowPassCheckbox->setButtonText (juce::String());
-    filterLowPassCheckbox->addListener (this);
-
-    filterLowPassCheckbox->setBounds (120, 456, 48, 48);
-
-    filterBandPassCheckbox.reset (new juce::ToggleButton ("new toggle button"));
-    addAndMakeVisible (filterBandPassCheckbox.get());
-    filterBandPassCheckbox->setButtonText (juce::String());
-    filterBandPassCheckbox->addListener (this);
-
-    filterBandPassCheckbox->setBounds (240, 456, 48, 48);
-
-    FilterHighPassCheckbox.reset (new juce::ToggleButton ("new toggle button"));
-    addAndMakeVisible (FilterHighPassCheckbox.get());
-    FilterHighPassCheckbox->setButtonText (juce::String());
-    FilterHighPassCheckbox->addListener (this);
-
-    FilterHighPassCheckbox->setBounds (352, 456, 48, 48);
-
-    patchEditorButton.reset (new juce::ImageButton ("new button"));
-    addAndMakeVisible (patchEditorButton.get());
-    patchEditorButton->addListener (this);
-
-    patchEditorButton->setImages (false, true, true,
-                                  juce::ImageCache::getFromMemory (patchEditorButtonNormal_png, patchEditorButtonNormal_pngSize), 1.000f, juce::Colour (0x00000000),
-                                  juce::ImageCache::getFromMemory (patchEditorButtonOver_png, patchEditorButtonOver_pngSize), 1.000f, juce::Colour (0x00000000),
-                                  juce::ImageCache::getFromMemory (patchEditorButtonDown_png, patchEditorButtonDown_pngSize), 1.000f, juce::Colour (0x00000000));
-    patchEditorButton->setBounds (208, 544, 154, 26);
-
-    addPatchButton.reset (new juce::ImageButton ("new button"));
-    addAndMakeVisible (addPatchButton.get());
-    addPatchButton->addListener (this);
-
-    addPatchButton->setImages (false, true, true,
-                               juce::ImageCache::getFromMemory (addButtonNormal_png, addButtonNormal_pngSize), 1.000f, juce::Colour (0x00000000),
-                               juce::ImageCache::getFromMemory (addButtonOver_png, addButtonOver_pngSize), 1.000f, juce::Colour (0x00000000),
-                               juce::ImageCache::getFromMemory (addButtonDown_png, addButtonDown_pngSize), 1.000f, juce::Colour (0x00000000));
-    addPatchButton->setBounds (488, 544, 154, 26);
-
-    replacePatchButton.reset (new juce::ImageButton ("new button"));
-    addAndMakeVisible (replacePatchButton.get());
-    replacePatchButton->addListener (this);
-
-    replacePatchButton->setImages (false, true, true,
-                                   juce::ImageCache::getFromMemory (replaceButtonNormal_png, replaceButtonNormal_pngSize), 1.000f, juce::Colour (0x00000000),
-                                   juce::ImageCache::getFromMemory (replaceButtonOver_png, replaceButtonOver_pngSize), 1.000f, juce::Colour (0x00000000),
-                                   juce::ImageCache::getFromMemory (replaceButtonDown_png, replaceButtonDown_pngSize), 1.000f, juce::Colour (0x00000000));
-    replacePatchButton->setBounds (656, 544, 154, 26);
-
-    removePatchButton.reset (new juce::ImageButton ("new button"));
-    addAndMakeVisible (removePatchButton.get());
-    removePatchButton->addListener (this);
-
-    removePatchButton->setImages (false, true, true,
-                                  juce::ImageCache::getFromMemory (removeButtonNormal_png, removeButtonNormal_pngSize), 1.000f, juce::Colour (0x00000000),
-                                  juce::ImageCache::getFromMemory (removeButtonOver_png, removeButtonOver_pngSize), 1.000f, juce::Colour (0x00000000),
-                                  juce::ImageCache::getFromMemory (removeButtonDown_png, removeButtonDown_pngSize), 1.000f, juce::Colour (0x00000000));
-    removePatchButton->setBounds (824, 544, 154, 26);
-
-    patchSelector.reset (new PatchSelector());
-    addAndMakeVisible (patchSelector.get());
-    patchSelector->setBounds (488, 368, 322, 176);
-
-    cachedImage_liveModeBackdrop_png_1 = juce::ImageCache::getFromMemory (liveModeBackdrop_png, liveModeBackdrop_pngSize);
-    cachedImage_recordIndicator_png_2 = juce::ImageCache::getFromMemory (recordIndicator_png, recordIndicator_pngSize);
-    cachedImage_liveModeButtonDown_png_3 = juce::ImageCache::getFromMemory (liveModeButtonDown_png, liveModeButtonDown_pngSize);
-    cachedImage_recordIndicatorblink_png_4 = juce::ImageCache::getFromMemory (recordIndicatorblink_png, recordIndicatorblink_pngSize);
+    volumeSlider = std::make_unique < Slider > (
+                                                "new slider" );
+    addAndMakeVisible (
+                       volumeSlider . get () );
+    volumeSlider -> setRange (
+                              0
+                            , 15
+                            , 1 );
+    volumeSlider -> setSliderStyle (
+                                    Slider::RotaryHorizontalVerticalDrag );
+    volumeSlider -> setTextBoxStyle (
+                                     Slider::NoTextBox
+                                   , true
+                                   , 80
+                                   , 20 );
+    volumeSlider -> addListener (
+                                 this );
+    volumeSlider -> setBounds (
+                               384
+                             , 32
+                             , 48
+                             , 48 );
+    volumeLabel . reset (
+                         new Label (
+                                    "new label"
+                                  , TRANS (
+                                           "0" ) ) );
+    addAndMakeVisible (
+                       volumeLabel . get () );
+    volumeLabel -> setFont (
+                            Font (
+                                  "C64 Pro"
+                                , 12.00f
+                                , Font::plain ) . withTypefaceStyle (
+                                                                     "Regular" ) );
+    volumeLabel -> setJustificationType (
+                                         Justification::centred );
+    volumeLabel -> setEditable (
+                                false
+                              , false
+                              , false );
+    volumeLabel -> setColour (
+                              Label::textColourId
+                            , Colour (
+                                      0xff5090d0 ) );
+    volumeLabel -> setColour (
+                              TextEditor::textColourId
+                            , Colours::black );
+    volumeLabel -> setColour (
+                              TextEditor::backgroundColourId
+                            , Colour (
+                                      0x00000000 ) );
+    volumeLabel -> setBounds (
+                              384
+                            , 8
+                            , 48
+                            , 18 );
+    patch1Slider . reset (
+                          new Slider (
+                                      "new slider" ) );
+    addAndMakeVisible (
+                       patch1Slider . get () );
+    patch1Slider -> setRange (
+                              1
+                            , 2
+                            , 1 );
+    patch1Slider -> setSliderStyle (
+                                    Slider::RotaryHorizontalVerticalDrag );
+    patch1Slider -> setTextBoxStyle (
+                                     Slider::NoTextBox
+                                   , true
+                                   , 80
+                                   , 20 );
+    patch1Slider -> addListener (
+                                 this );
+    patch1Slider -> setBounds (
+                               32
+                             , 120
+                             , 48
+                             , 48 );
+    attack1Slider . reset (
+                           new Slider (
+                                       "new slider" ) );
+    addAndMakeVisible (
+                       attack1Slider . get () );
+    attack1Slider -> setRange (
+                               0
+                             , 15
+                             , 1 );
+    attack1Slider -> setSliderStyle (
+                                     Slider::RotaryHorizontalVerticalDrag );
+    attack1Slider -> setTextBoxStyle (
+                                      Slider::NoTextBox
+                                    , true
+                                    , 80
+                                    , 20 );
+    attack1Slider -> addListener (
+                                  this );
+    attack1Slider -> setBounds (
+                                144
+                              , 120
+                              , 48
+                              , 48 );
+    decay1Slider . reset (
+                          new Slider (
+                                      "new slider" ) );
+    addAndMakeVisible (
+                       decay1Slider . get () );
+    decay1Slider -> setRange (
+                              0
+                            , 15
+                            , 1 );
+    decay1Slider -> setSliderStyle (
+                                    Slider::RotaryHorizontalVerticalDrag );
+    decay1Slider -> setTextBoxStyle (
+                                     Slider::NoTextBox
+                                   , true
+                                   , 80
+                                   , 20 );
+    decay1Slider -> addListener (
+                                 this );
+    decay1Slider -> setBounds (
+                               224
+                             , 120
+                             , 48
+                             , 48 );
+    sustain1Slider . reset (
+                            new Slider (
+                                        "new slider" ) );
+    addAndMakeVisible (
+                       sustain1Slider . get () );
+    sustain1Slider -> setRange (
+                                0
+                              , 15
+                              , 1 );
+    sustain1Slider -> setSliderStyle (
+                                      Slider::RotaryHorizontalVerticalDrag );
+    sustain1Slider -> setTextBoxStyle (
+                                       Slider::NoTextBox
+                                     , true
+                                     , 80
+                                     , 20 );
+    sustain1Slider -> addListener (
+                                   this );
+    sustain1Slider -> setBounds (
+                                 304
+                               , 120
+                               , 48
+                               , 48 );
+    release1Slider . reset (
+                            new Slider (
+                                        "new slider" ) );
+    addAndMakeVisible (
+                       release1Slider . get () );
+    release1Slider -> setRange (
+                                0
+                              , 15
+                              , 1 );
+    release1Slider -> setSliderStyle (
+                                      Slider::RotaryHorizontalVerticalDrag );
+    release1Slider -> setTextBoxStyle (
+                                       Slider::NoTextBox
+                                     , true
+                                     , 80
+                                     , 20 );
+    release1Slider -> addListener (
+                                   this );
+    release1Slider -> setBounds (
+                                 384
+                               , 120
+                               , 48
+                               , 48 );
+    pitchBend1Slider . reset (
+                              new Slider (
+                                          "new slider" ) );
+    addAndMakeVisible (
+                       pitchBend1Slider . get () );
+    pitchBend1Slider -> setRange (
+                                  -100
+                                , 100
+                                , 1 );
+    pitchBend1Slider -> setSliderStyle (
+                                        Slider::RotaryHorizontalVerticalDrag );
+    pitchBend1Slider -> setTextBoxStyle (
+                                         Slider::NoTextBox
+                                       , true
+                                       , 80
+                                       , 20 );
+    pitchBend1Slider -> addListener (
+                                     this );
+    pitchBend1Slider -> setBounds (
+                                   472
+                                 , 120
+                                 , 48
+                                 , 48 );
+    vibratoAmount1Slider . reset (
+                                  new Slider (
+                                              "new slider" ) );
+    addAndMakeVisible (
+                       vibratoAmount1Slider . get () );
+    vibratoAmount1Slider -> setRange (
+                                      0
+                                    , 100
+                                    , 1 );
+    vibratoAmount1Slider -> setSliderStyle (
+                                            Slider::RotaryHorizontalVerticalDrag );
+    vibratoAmount1Slider -> setTextBoxStyle (
+                                             Slider::NoTextBox
+                                           , true
+                                           , 80
+                                           , 20 );
+    vibratoAmount1Slider -> addListener (
+                                         this );
+    vibratoAmount1Slider -> setBounds (
+                                       584
+                                     , 120
+                                     , 48
+                                     , 48 );
+    vibratoSpeed1Slider . reset (
+                                 new Slider (
+                                             "new slider" ) );
+    addAndMakeVisible (
+                       vibratoSpeed1Slider . get () );
+    vibratoSpeed1Slider -> setRange (
+                                     0
+                                   , 100
+                                   , 1 );
+    vibratoSpeed1Slider -> setSliderStyle (
+                                           Slider::RotaryHorizontalVerticalDrag );
+    vibratoSpeed1Slider -> setTextBoxStyle (
+                                            Slider::NoTextBox
+                                          , true
+                                          , 80
+                                          , 20 );
+    vibratoSpeed1Slider -> addListener (
+                                        this );
+    vibratoSpeed1Slider -> setBounds (
+                                      664
+                                    , 120
+                                    , 48
+                                    , 48 );
+    pulseWidth1Slider . reset (
+                               new Slider (
+                                           "new slider" ) );
+    addAndMakeVisible (
+                       pulseWidth1Slider . get () );
+    pulseWidth1Slider -> setRange (
+                                   -100
+                                 , 100
+                                 , 1 );
+    pulseWidth1Slider -> setSliderStyle (
+                                         Slider::RotaryHorizontalVerticalDrag );
+    pulseWidth1Slider -> setTextBoxStyle (
+                                          Slider::NoTextBox
+                                        , true
+                                        , 80
+                                        , 20 );
+    pulseWidth1Slider -> addListener (
+                                      this );
+    pulseWidth1Slider -> setBounds (
+                                    831
+                                  , 120
+                                  , 48
+                                  , 48 );
+    vibratoDelay1Slider . reset (
+                                 new Slider (
+                                             "new slider" ) );
+    addAndMakeVisible (
+                       vibratoDelay1Slider . get () );
+    vibratoDelay1Slider -> setRange (
+                                     0
+                                   , 15
+                                   , 1 );
+    vibratoDelay1Slider -> setSliderStyle (
+                                           Slider::RotaryHorizontalVerticalDrag );
+    vibratoDelay1Slider -> setTextBoxStyle (
+                                            Slider::NoTextBox
+                                          , true
+                                          , 80
+                                          , 20 );
+    vibratoDelay1Slider -> addListener (
+                                        this );
+    vibratoDelay1Slider -> setBounds (
+                                      745
+                                    , 120
+                                    , 48
+                                    , 48 );
+    patch2Slider . reset (
+                          new Slider (
+                                      "new slider" ) );
+    addAndMakeVisible (
+                       patch2Slider . get () );
+    patch2Slider -> setRange (
+                              1
+                            , 2
+                            , 1 );
+    patch2Slider -> setSliderStyle (
+                                    Slider::RotaryHorizontalVerticalDrag );
+    patch2Slider -> setTextBoxStyle (
+                                     Slider::NoTextBox
+                                   , true
+                                   , 80
+                                   , 20 );
+    patch2Slider -> addListener (
+                                 this );
+    patch2Slider -> setBounds (
+                               32
+                             , 208
+                             , 48
+                             , 48 );
+    attack2Slider . reset (
+                           new Slider (
+                                       "new slider" ) );
+    addAndMakeVisible (
+                       attack2Slider . get () );
+    attack2Slider -> setRange (
+                               0
+                             , 15
+                             , 1 );
+    attack2Slider -> setSliderStyle (
+                                     Slider::RotaryHorizontalVerticalDrag );
+    attack2Slider -> setTextBoxStyle (
+                                      Slider::NoTextBox
+                                    , true
+                                    , 80
+                                    , 20 );
+    attack2Slider -> addListener (
+                                  this );
+    attack2Slider -> setBounds (
+                                144
+                              , 208
+                              , 48
+                              , 48 );
+    decay2Slider . reset (
+                          new Slider (
+                                      "new slider" ) );
+    addAndMakeVisible (
+                       decay2Slider . get () );
+    decay2Slider -> setRange (
+                              0
+                            , 15
+                            , 1 );
+    decay2Slider -> setSliderStyle (
+                                    Slider::RotaryHorizontalVerticalDrag );
+    decay2Slider -> setTextBoxStyle (
+                                     Slider::NoTextBox
+                                   , true
+                                   , 80
+                                   , 20 );
+    decay2Slider -> addListener (
+                                 this );
+    decay2Slider -> setBounds (
+                               224
+                             , 208
+                             , 48
+                             , 48 );
+    sustain2Slider . reset (
+                            new Slider (
+                                        "new slider" ) );
+    addAndMakeVisible (
+                       sustain2Slider . get () );
+    sustain2Slider -> setRange (
+                                0
+                              , 15
+                              , 1 );
+    sustain2Slider -> setSliderStyle (
+                                      Slider::RotaryHorizontalVerticalDrag );
+    sustain2Slider -> setTextBoxStyle (
+                                       Slider::NoTextBox
+                                     , true
+                                     , 80
+                                     , 20 );
+    sustain2Slider -> addListener (
+                                   this );
+    sustain2Slider -> setBounds (
+                                 304
+                               , 208
+                               , 48
+                               , 48 );
+    release2Slider . reset (
+                            new Slider (
+                                        "new slider" ) );
+    addAndMakeVisible (
+                       release2Slider . get () );
+    release2Slider -> setRange (
+                                0
+                              , 15
+                              , 1 );
+    release2Slider -> setSliderStyle (
+                                      Slider::RotaryHorizontalVerticalDrag );
+    release2Slider -> setTextBoxStyle (
+                                       Slider::NoTextBox
+                                     , true
+                                     , 80
+                                     , 20 );
+    release2Slider -> addListener (
+                                   this );
+    release2Slider -> setBounds (
+                                 384
+                               , 208
+                               , 48
+                               , 48 );
+    pitchBend2Slider . reset (
+                              new Slider (
+                                          "new slider" ) );
+    addAndMakeVisible (
+                       pitchBend2Slider . get () );
+    pitchBend2Slider -> setRange (
+                                  -100
+                                , 100
+                                , 1 );
+    pitchBend2Slider -> setSliderStyle (
+                                        Slider::RotaryHorizontalVerticalDrag );
+    pitchBend2Slider -> setTextBoxStyle (
+                                         Slider::NoTextBox
+                                       , true
+                                       , 80
+                                       , 20 );
+    pitchBend2Slider -> addListener (
+                                     this );
+    pitchBend2Slider -> setBounds (
+                                   472
+                                 , 208
+                                 , 48
+                                 , 48 );
+    vibratoAmount2Slider . reset (
+                                  new Slider (
+                                              "new slider" ) );
+    addAndMakeVisible (
+                       vibratoAmount2Slider . get () );
+    vibratoAmount2Slider -> setRange (
+                                      0
+                                    , 100
+                                    , 1 );
+    vibratoAmount2Slider -> setSliderStyle (
+                                            Slider::RotaryHorizontalVerticalDrag );
+    vibratoAmount2Slider -> setTextBoxStyle (
+                                             Slider::NoTextBox
+                                           , true
+                                           , 80
+                                           , 20 );
+    vibratoAmount2Slider -> addListener (
+                                         this );
+    vibratoAmount2Slider -> setBounds (
+                                       584
+                                     , 208
+                                     , 48
+                                     , 48 );
+    vibratoSpeed2Slider . reset (
+                                 new Slider (
+                                             "new slider" ) );
+    addAndMakeVisible (
+                       vibratoSpeed2Slider . get () );
+    vibratoSpeed2Slider -> setRange (
+                                     0
+                                   , 100
+                                   , 1 );
+    vibratoSpeed2Slider -> setSliderStyle (
+                                           Slider::RotaryHorizontalVerticalDrag );
+    vibratoSpeed2Slider -> setTextBoxStyle (
+                                            Slider::NoTextBox
+                                          , true
+                                          , 80
+                                          , 20 );
+    vibratoSpeed2Slider -> addListener (
+                                        this );
+    vibratoSpeed2Slider -> setBounds (
+                                      664
+                                    , 208
+                                    , 48
+                                    , 48 );
+    pulseWidth2Slider . reset (
+                               new Slider (
+                                           "new slider" ) );
+    addAndMakeVisible (
+                       pulseWidth2Slider . get () );
+    pulseWidth2Slider -> setRange (
+                                   -100
+                                 , 100
+                                 , 1 );
+    pulseWidth2Slider -> setSliderStyle (
+                                         Slider::RotaryHorizontalVerticalDrag );
+    pulseWidth2Slider -> setTextBoxStyle (
+                                          Slider::NoTextBox
+                                        , true
+                                        , 80
+                                        , 20 );
+    pulseWidth2Slider -> addListener (
+                                      this );
+    pulseWidth2Slider -> setBounds (
+                                    831
+                                  , 208
+                                  , 48
+                                  , 48 );
+    vibratoDelay2Slider . reset (
+                                 new Slider (
+                                             "new slider" ) );
+    addAndMakeVisible (
+                       vibratoDelay2Slider . get () );
+    vibratoDelay2Slider -> setRange (
+                                     0
+                                   , 15
+                                   , 1 );
+    vibratoDelay2Slider -> setSliderStyle (
+                                           Slider::RotaryHorizontalVerticalDrag );
+    vibratoDelay2Slider -> setTextBoxStyle (
+                                            Slider::NoTextBox
+                                          , true
+                                          , 80
+                                          , 20 );
+    vibratoDelay2Slider -> addListener (
+                                        this );
+    vibratoDelay2Slider -> setBounds (
+                                      745
+                                    , 208
+                                    , 48
+                                    , 48 );
+    patch3Slider . reset (
+                          new Slider (
+                                      "new slider" ) );
+    addAndMakeVisible (
+                       patch3Slider . get () );
+    patch3Slider -> setRange (
+                              1
+                            , 2
+                            , 1 );
+    patch3Slider -> setSliderStyle (
+                                    Slider::RotaryHorizontalVerticalDrag );
+    patch3Slider -> setTextBoxStyle (
+                                     Slider::NoTextBox
+                                   , true
+                                   , 80
+                                   , 20 );
+    patch3Slider -> addListener (
+                                 this );
+    patch3Slider -> setBounds (
+                               32
+                             , 296
+                             , 48
+                             , 48 );
+    attack3Slider . reset (
+                           new Slider (
+                                       "new slider" ) );
+    addAndMakeVisible (
+                       attack3Slider . get () );
+    attack3Slider -> setRange (
+                               0
+                             , 15
+                             , 1 );
+    attack3Slider -> setSliderStyle (
+                                     Slider::RotaryHorizontalVerticalDrag );
+    attack3Slider -> setTextBoxStyle (
+                                      Slider::NoTextBox
+                                    , true
+                                    , 80
+                                    , 20 );
+    attack3Slider -> addListener (
+                                  this );
+    attack3Slider -> setBounds (
+                                144
+                              , 296
+                              , 48
+                              , 48 );
+    decay3Slider . reset (
+                          new Slider (
+                                      "new slider" ) );
+    addAndMakeVisible (
+                       decay3Slider . get () );
+    decay3Slider -> setRange (
+                              0
+                            , 15
+                            , 1 );
+    decay3Slider -> setSliderStyle (
+                                    Slider::RotaryHorizontalVerticalDrag );
+    decay3Slider -> setTextBoxStyle (
+                                     Slider::NoTextBox
+                                   , true
+                                   , 80
+                                   , 20 );
+    decay3Slider -> addListener (
+                                 this );
+    decay3Slider -> setBounds (
+                               224
+                             , 296
+                             , 48
+                             , 48 );
+    sustain3Slider . reset (
+                            new Slider (
+                                        "new slider" ) );
+    addAndMakeVisible (
+                       sustain3Slider . get () );
+    sustain3Slider -> setRange (
+                                0
+                              , 15
+                              , 1 );
+    sustain3Slider -> setSliderStyle (
+                                      Slider::RotaryHorizontalVerticalDrag );
+    sustain3Slider -> setTextBoxStyle (
+                                       Slider::NoTextBox
+                                     , true
+                                     , 80
+                                     , 20 );
+    sustain3Slider -> addListener (
+                                   this );
+    sustain3Slider -> setBounds (
+                                 304
+                               , 296
+                               , 48
+                               , 48 );
+    release3Slider . reset (
+                            new Slider (
+                                        "new slider" ) );
+    addAndMakeVisible (
+                       release3Slider . get () );
+    release3Slider -> setRange (
+                                0
+                              , 15
+                              , 1 );
+    release3Slider -> setSliderStyle (
+                                      Slider::RotaryHorizontalVerticalDrag );
+    release3Slider -> setTextBoxStyle (
+                                       Slider::NoTextBox
+                                     , true
+                                     , 80
+                                     , 20 );
+    release3Slider -> addListener (
+                                   this );
+    release3Slider -> setBounds (
+                                 384
+                               , 296
+                               , 48
+                               , 48 );
+    pitchBend3Slider . reset (
+                              new Slider (
+                                          "new slider" ) );
+    addAndMakeVisible (
+                       pitchBend3Slider . get () );
+    pitchBend3Slider -> setRange (
+                                  -100
+                                , 100
+                                , 1 );
+    pitchBend3Slider -> setSliderStyle (
+                                        Slider::RotaryHorizontalVerticalDrag );
+    pitchBend3Slider -> setTextBoxStyle (
+                                         Slider::NoTextBox
+                                       , true
+                                       , 80
+                                       , 20 );
+    pitchBend3Slider -> addListener (
+                                     this );
+    pitchBend3Slider -> setBounds (
+                                   472
+                                 , 296
+                                 , 48
+                                 , 48 );
+    vibratoAmount3Slider . reset (
+                                  new Slider (
+                                              "new slider" ) );
+    addAndMakeVisible (
+                       vibratoAmount3Slider . get () );
+    vibratoAmount3Slider -> setRange (
+                                      0
+                                    , 100
+                                    , 1 );
+    vibratoAmount3Slider -> setSliderStyle (
+                                            Slider::RotaryHorizontalVerticalDrag );
+    vibratoAmount3Slider -> setTextBoxStyle (
+                                             Slider::NoTextBox
+                                           , true
+                                           , 80
+                                           , 20 );
+    vibratoAmount3Slider -> addListener (
+                                         this );
+    vibratoAmount3Slider -> setBounds (
+                                       584
+                                     , 296
+                                     , 48
+                                     , 48 );
+    vibratoSpeed3Slider . reset (
+                                 new Slider (
+                                             "new slider" ) );
+    addAndMakeVisible (
+                       vibratoSpeed3Slider . get () );
+    vibratoSpeed3Slider -> setRange (
+                                     0
+                                   , 100
+                                   , 1 );
+    vibratoSpeed3Slider -> setSliderStyle (
+                                           Slider::RotaryHorizontalVerticalDrag );
+    vibratoSpeed3Slider -> setTextBoxStyle (
+                                            Slider::NoTextBox
+                                          , true
+                                          , 80
+                                          , 20 );
+    vibratoSpeed3Slider -> addListener (
+                                        this );
+    vibratoSpeed3Slider -> setBounds (
+                                      664
+                                    , 296
+                                    , 48
+                                    , 48 );
+    pulseWidth3Slider . reset (
+                               new Slider (
+                                           "new slider" ) );
+    addAndMakeVisible (
+                       pulseWidth3Slider . get () );
+    pulseWidth3Slider -> setRange (
+                                   -100
+                                 , 100
+                                 , 1 );
+    pulseWidth3Slider -> setSliderStyle (
+                                         Slider::RotaryHorizontalVerticalDrag );
+    pulseWidth3Slider -> setTextBoxStyle (
+                                          Slider::NoTextBox
+                                        , true
+                                        , 80
+                                        , 20 );
+    pulseWidth3Slider -> addListener (
+                                      this );
+    pulseWidth3Slider -> setBounds (
+                                    831
+                                  , 296
+                                  , 48
+                                  , 48 );
+    vibratoDelay3Slider . reset (
+                                 new Slider (
+                                             "new slider" ) );
+    addAndMakeVisible (
+                       vibratoDelay3Slider . get () );
+    vibratoDelay3Slider -> setRange (
+                                     0
+                                   , 15
+                                   , 1 );
+    vibratoDelay3Slider -> setSliderStyle (
+                                           Slider::RotaryHorizontalVerticalDrag );
+    vibratoDelay3Slider -> setTextBoxStyle (
+                                            Slider::NoTextBox
+                                          , true
+                                          , 80
+                                          , 20 );
+    vibratoDelay3Slider -> addListener (
+                                        this );
+    vibratoDelay3Slider -> setBounds (
+                                      743
+                                    , 296
+                                    , 48
+                                    , 48 );
+    cutoffSlider . reset (
+                          new Slider (
+                                      "new slider" ) );
+    addAndMakeVisible (
+                       cutoffSlider . get () );
+    cutoffSlider -> setRange (
+                              0
+                            , 2047
+                            , 1 );
+    cutoffSlider -> setSliderStyle (
+                                    Slider::RotaryHorizontalVerticalDrag );
+    cutoffSlider -> setTextBoxStyle (
+                                     Slider::NoTextBox
+                                   , true
+                                   , 80
+                                   , 20 );
+    cutoffSlider -> addListener (
+                                 this );
+    cutoffSlider -> setBounds (
+                               32
+                             , 384
+                             , 48
+                             , 48 );
+    resonanceSlider . reset (
+                             new Slider (
+                                         "new slider" ) );
+    addAndMakeVisible (
+                       resonanceSlider . get () );
+    resonanceSlider -> setRange (
+                                 0
+                               , 15
+                               , 1 );
+    resonanceSlider -> setSliderStyle (
+                                       Slider::RotaryHorizontalVerticalDrag );
+    resonanceSlider -> setTextBoxStyle (
+                                        Slider::NoTextBox
+                                      , true
+                                      , 80
+                                      , 20 );
+    resonanceSlider -> addListener (
+                                    this );
+    resonanceSlider -> setBounds (
+                                  32
+                                , 472
+                                , 48
+                                , 48 );
+    patch1Label . reset (
+                         new Label (
+                                    "new label"
+                                  , TRANS (
+                                           "1" ) ) );
+    addAndMakeVisible (
+                       patch1Label . get () );
+    patch1Label -> setFont (
+                            Font (
+                                  "C64 Pro"
+                                , 12.00f
+                                , Font::plain ) . withTypefaceStyle (
+                                                                     "Regular" ) );
+    patch1Label -> setJustificationType (
+                                         Justification::centred );
+    patch1Label -> setEditable (
+                                false
+                              , false
+                              , false );
+    patch1Label -> setColour (
+                              Label::textColourId
+                            , Colour (
+                                      0xff5090d0 ) );
+    patch1Label -> setColour (
+                              TextEditor::textColourId
+                            , Colours::black );
+    patch1Label -> setColour (
+                              TextEditor::backgroundColourId
+                            , Colour (
+                                      0x00000000 ) );
+    patch1Label -> setBounds (
+                              32
+                            , 96
+                            , 48
+                            , 18 );
+    attack1Label . reset (
+                          new Label (
+                                     "new label"
+                                   , TRANS (
+                                            "0" ) ) );
+    addAndMakeVisible (
+                       attack1Label . get () );
+    attack1Label -> setFont (
+                             Font (
+                                   "C64 Pro"
+                                 , 12.00f
+                                 , Font::plain ) . withTypefaceStyle (
+                                                                      "Regular" ) );
+    attack1Label -> setJustificationType (
+                                          Justification::centred );
+    attack1Label -> setEditable (
+                                 false
+                               , false
+                               , false );
+    attack1Label -> setColour (
+                               Label::textColourId
+                             , Colour (
+                                       0xff5090d0 ) );
+    attack1Label -> setColour (
+                               TextEditor::textColourId
+                             , Colours::black );
+    attack1Label -> setColour (
+                               TextEditor::backgroundColourId
+                             , Colour (
+                                       0x00000000 ) );
+    attack1Label -> setBounds (
+                               144
+                             , 96
+                             , 48
+                             , 18 );
+    decay1Label . reset (
+                         new Label (
+                                    "new label"
+                                  , TRANS (
+                                           "0" ) ) );
+    addAndMakeVisible (
+                       decay1Label . get () );
+    decay1Label -> setFont (
+                            Font (
+                                  "C64 Pro"
+                                , 12.00f
+                                , Font::plain ) . withTypefaceStyle (
+                                                                     "Regular" ) );
+    decay1Label -> setJustificationType (
+                                         Justification::centred );
+    decay1Label -> setEditable (
+                                false
+                              , false
+                              , false );
+    decay1Label -> setColour (
+                              Label::textColourId
+                            , Colour (
+                                      0xff5090d0 ) );
+    decay1Label -> setColour (
+                              TextEditor::textColourId
+                            , Colours::black );
+    decay1Label -> setColour (
+                              TextEditor::backgroundColourId
+                            , Colour (
+                                      0x00000000 ) );
+    decay1Label -> setBounds (
+                              224
+                            , 96
+                            , 48
+                            , 18 );
+    sustain1Label . reset (
+                           new Label (
+                                      "new label"
+                                    , TRANS (
+                                             "0" ) ) );
+    addAndMakeVisible (
+                       sustain1Label . get () );
+    sustain1Label -> setFont (
+                              Font (
+                                    "C64 Pro"
+                                  , 12.00f
+                                  , Font::plain ) . withTypefaceStyle (
+                                                                       "Regular" ) );
+    sustain1Label -> setJustificationType (
+                                           Justification::centred );
+    sustain1Label -> setEditable (
+                                  false
+                                , false
+                                , false );
+    sustain1Label -> setColour (
+                                Label::textColourId
+                              , Colour (
+                                        0xff5090d0 ) );
+    sustain1Label -> setColour (
+                                TextEditor::textColourId
+                              , Colours::black );
+    sustain1Label -> setColour (
+                                TextEditor::backgroundColourId
+                              , Colour (
+                                        0x00000000 ) );
+    sustain1Label -> setBounds (
+                                304
+                              , 96
+                              , 48
+                              , 18 );
+    release1Label . reset (
+                           new Label (
+                                      "new label"
+                                    , TRANS (
+                                             "0" ) ) );
+    addAndMakeVisible (
+                       release1Label . get () );
+    release1Label -> setFont (
+                              Font (
+                                    "C64 Pro"
+                                  , 12.00f
+                                  , Font::plain ) . withTypefaceStyle (
+                                                                       "Regular" ) );
+    release1Label -> setJustificationType (
+                                           Justification::centred );
+    release1Label -> setEditable (
+                                  false
+                                , false
+                                , false );
+    release1Label -> setColour (
+                                Label::textColourId
+                              , Colour (
+                                        0xff5090d0 ) );
+    release1Label -> setColour (
+                                TextEditor::textColourId
+                              , Colours::black );
+    release1Label -> setColour (
+                                TextEditor::backgroundColourId
+                              , Colour (
+                                        0x00000000 ) );
+    release1Label -> setBounds (
+                                384
+                              , 96
+                              , 48
+                              , 18 );
+    pitchBend1Label . reset (
+                             new Label (
+                                        "new label"
+                                      , TRANS (
+                                               "0%" ) ) );
+    addAndMakeVisible (
+                       pitchBend1Label . get () );
+    pitchBend1Label -> setFont (
+                                Font (
+                                      "C64 Pro"
+                                    , 12.00f
+                                    , Font::plain ) . withTypefaceStyle (
+                                                                         "Regular" ) );
+    pitchBend1Label -> setJustificationType (
+                                             Justification::centred );
+    pitchBend1Label -> setEditable (
+                                    false
+                                  , false
+                                  , false );
+    pitchBend1Label -> setColour (
+                                  Label::textColourId
+                                , Colour (
+                                          0xff5090d0 ) );
+    pitchBend1Label -> setColour (
+                                  TextEditor::textColourId
+                                , Colours::black );
+    pitchBend1Label -> setColour (
+                                  TextEditor::backgroundColourId
+                                , Colour (
+                                          0x00000000 ) );
+    pitchBend1Label -> setBounds (
+                                  472
+                                , 96
+                                , 48
+                                , 18 );
+    vibratoAmount1Label . reset (
+                                 new Label (
+                                            "new label"
+                                          , TRANS (
+                                                   "0%" ) ) );
+    addAndMakeVisible (
+                       vibratoAmount1Label . get () );
+    vibratoAmount1Label -> setFont (
+                                    Font (
+                                          "C64 Pro"
+                                        , 12.00f
+                                        , Font::plain ) . withTypefaceStyle (
+                                                                             "Regular" ) );
+    vibratoAmount1Label -> setJustificationType (
+                                                 Justification::centred );
+    vibratoAmount1Label -> setEditable (
+                                        false
+                                      , false
+                                      , false );
+    vibratoAmount1Label -> setColour (
+                                      Label::textColourId
+                                    , Colour (
+                                              0xff5090d0 ) );
+    vibratoAmount1Label -> setColour (
+                                      TextEditor::textColourId
+                                    , Colours::black );
+    vibratoAmount1Label -> setColour (
+                                      TextEditor::backgroundColourId
+                                    , Colour (
+                                              0x00000000 ) );
+    vibratoAmount1Label -> setBounds (
+                                      584
+                                    , 96
+                                    , 48
+                                    , 18 );
+    vibratoSpeed1Label . reset (
+                                new Label (
+                                           "new label"
+                                         , TRANS (
+                                                  "0%" ) ) );
+    addAndMakeVisible (
+                       vibratoSpeed1Label . get () );
+    vibratoSpeed1Label -> setFont (
+                                   Font (
+                                         "C64 Pro"
+                                       , 12.00f
+                                       , Font::plain ) . withTypefaceStyle (
+                                                                            "Regular" ) );
+    vibratoSpeed1Label -> setJustificationType (
+                                                Justification::centred );
+    vibratoSpeed1Label -> setEditable (
+                                       false
+                                     , false
+                                     , false );
+    vibratoSpeed1Label -> setColour (
+                                     Label::textColourId
+                                   , Colour (
+                                             0xff5090d0 ) );
+    vibratoSpeed1Label -> setColour (
+                                     TextEditor::textColourId
+                                   , Colours::black );
+    vibratoSpeed1Label -> setColour (
+                                     TextEditor::backgroundColourId
+                                   , Colour (
+                                             0x00000000 ) );
+    vibratoSpeed1Label -> setBounds (
+                                     664
+                                   , 96
+                                   , 48
+                                   , 18 );
+    pulseWidth1Label . reset (
+                              new Label (
+                                         "new label"
+                                       , TRANS (
+                                                "0%" ) ) );
+    addAndMakeVisible (
+                       pulseWidth1Label . get () );
+    pulseWidth1Label -> setFont (
+                                 Font (
+                                       "C64 Pro"
+                                     , 12.00f
+                                     , Font::plain ) . withTypefaceStyle (
+                                                                          "Regular" ) );
+    pulseWidth1Label -> setJustificationType (
+                                              Justification::centred );
+    pulseWidth1Label -> setEditable (
+                                     false
+                                   , false
+                                   , false );
+    pulseWidth1Label -> setColour (
+                                   Label::textColourId
+                                 , Colour (
+                                           0xff5090d0 ) );
+    pulseWidth1Label -> setColour (
+                                   TextEditor::textColourId
+                                 , Colours::black );
+    pulseWidth1Label -> setColour (
+                                   TextEditor::backgroundColourId
+                                 , Colour (
+                                           0x00000000 ) );
+    pulseWidth1Label -> setBounds (
+                                   831
+                                 , 96
+                                 , 48
+                                 , 18 );
+    vibratoDelay1Label . reset (
+                                new Label (
+                                           "new label"
+                                         , TRANS (
+                                                  "0" ) ) );
+    addAndMakeVisible (
+                       vibratoDelay1Label . get () );
+    vibratoDelay1Label -> setFont (
+                                   Font (
+                                         "C64 Pro"
+                                       , 12.00f
+                                       , Font::plain ) . withTypefaceStyle (
+                                                                            "Regular" ) );
+    vibratoDelay1Label -> setJustificationType (
+                                                Justification::centred );
+    vibratoDelay1Label -> setEditable (
+                                       false
+                                     , false
+                                     , false );
+    vibratoDelay1Label -> setColour (
+                                     Label::textColourId
+                                   , Colour (
+                                             0xff5090d0 ) );
+    vibratoDelay1Label -> setColour (
+                                     TextEditor::textColourId
+                                   , Colours::black );
+    vibratoDelay1Label -> setColour (
+                                     TextEditor::backgroundColourId
+                                   , Colour (
+                                             0x00000000 ) );
+    vibratoDelay1Label -> setBounds (
+                                     745
+                                   , 96
+                                   , 48
+                                   , 18 );
+    patch2Label . reset (
+                         new Label (
+                                    "new label"
+                                  , TRANS (
+                                           "1" ) ) );
+    addAndMakeVisible (
+                       patch2Label . get () );
+    patch2Label -> setFont (
+                            Font (
+                                  "C64 Pro"
+                                , 12.00f
+                                , Font::plain ) . withTypefaceStyle (
+                                                                     "Regular" ) );
+    patch2Label -> setJustificationType (
+                                         Justification::centred );
+    patch2Label -> setEditable (
+                                false
+                              , false
+                              , false );
+    patch2Label -> setColour (
+                              Label::textColourId
+                            , Colour (
+                                      0xff5090d0 ) );
+    patch2Label -> setColour (
+                              TextEditor::textColourId
+                            , Colours::black );
+    patch2Label -> setColour (
+                              TextEditor::backgroundColourId
+                            , Colour (
+                                      0x00000000 ) );
+    patch2Label -> setBounds (
+                              32
+                            , 184
+                            , 48
+                            , 18 );
+    attack2Label . reset (
+                          new Label (
+                                     "new label"
+                                   , TRANS (
+                                            "0" ) ) );
+    addAndMakeVisible (
+                       attack2Label . get () );
+    attack2Label -> setFont (
+                             Font (
+                                   "C64 Pro"
+                                 , 12.00f
+                                 , Font::plain ) . withTypefaceStyle (
+                                                                      "Regular" ) );
+    attack2Label -> setJustificationType (
+                                          Justification::centred );
+    attack2Label -> setEditable (
+                                 false
+                               , false
+                               , false );
+    attack2Label -> setColour (
+                               Label::textColourId
+                             , Colour (
+                                       0xff5090d0 ) );
+    attack2Label -> setColour (
+                               TextEditor::textColourId
+                             , Colours::black );
+    attack2Label -> setColour (
+                               TextEditor::backgroundColourId
+                             , Colour (
+                                       0x00000000 ) );
+    attack2Label -> setBounds (
+                               144
+                             , 184
+                             , 48
+                             , 18 );
+    decay2Label . reset (
+                         new Label (
+                                    "new label"
+                                  , TRANS (
+                                           "0" ) ) );
+    addAndMakeVisible (
+                       decay2Label . get () );
+    decay2Label -> setFont (
+                            Font (
+                                  "C64 Pro"
+                                , 12.00f
+                                , Font::plain ) . withTypefaceStyle (
+                                                                     "Regular" ) );
+    decay2Label -> setJustificationType (
+                                         Justification::centred );
+    decay2Label -> setEditable (
+                                false
+                              , false
+                              , false );
+    decay2Label -> setColour (
+                              Label::textColourId
+                            , Colour (
+                                      0xff5090d0 ) );
+    decay2Label -> setColour (
+                              TextEditor::textColourId
+                            , Colours::black );
+    decay2Label -> setColour (
+                              TextEditor::backgroundColourId
+                            , Colour (
+                                      0x00000000 ) );
+    decay2Label -> setBounds (
+                              224
+                            , 184
+                            , 48
+                            , 18 );
+    sustain2Label . reset (
+                           new Label (
+                                      "new label"
+                                    , TRANS (
+                                             "0" ) ) );
+    addAndMakeVisible (
+                       sustain2Label . get () );
+    sustain2Label -> setFont (
+                              Font (
+                                    "C64 Pro"
+                                  , 12.00f
+                                  , Font::plain ) . withTypefaceStyle (
+                                                                       "Regular" ) );
+    sustain2Label -> setJustificationType (
+                                           Justification::centred );
+    sustain2Label -> setEditable (
+                                  false
+                                , false
+                                , false );
+    sustain2Label -> setColour (
+                                Label::textColourId
+                              , Colour (
+                                        0xff5090d0 ) );
+    sustain2Label -> setColour (
+                                TextEditor::textColourId
+                              , Colours::black );
+    sustain2Label -> setColour (
+                                TextEditor::backgroundColourId
+                              , Colour (
+                                        0x00000000 ) );
+    sustain2Label -> setBounds (
+                                304
+                              , 184
+                              , 48
+                              , 18 );
+    release2Label . reset (
+                           new Label (
+                                      "new label"
+                                    , TRANS (
+                                             "0" ) ) );
+    addAndMakeVisible (
+                       release2Label . get () );
+    release2Label -> setFont (
+                              Font (
+                                    "C64 Pro"
+                                  , 12.00f
+                                  , Font::plain ) . withTypefaceStyle (
+                                                                       "Regular" ) );
+    release2Label -> setJustificationType (
+                                           Justification::centred );
+    release2Label -> setEditable (
+                                  false
+                                , false
+                                , false );
+    release2Label -> setColour (
+                                Label::textColourId
+                              , Colour (
+                                        0xff5090d0 ) );
+    release2Label -> setColour (
+                                TextEditor::textColourId
+                              , Colours::black );
+    release2Label -> setColour (
+                                TextEditor::backgroundColourId
+                              , Colour (
+                                        0x00000000 ) );
+    release2Label -> setBounds (
+                                384
+                              , 184
+                              , 48
+                              , 18 );
+    pitchBend2Label . reset (
+                             new Label (
+                                        "new label"
+                                      , TRANS (
+                                               "0%" ) ) );
+    addAndMakeVisible (
+                       pitchBend2Label . get () );
+    pitchBend2Label -> setFont (
+                                Font (
+                                      "C64 Pro"
+                                    , 12.00f
+                                    , Font::plain ) . withTypefaceStyle (
+                                                                         "Regular" ) );
+    pitchBend2Label -> setJustificationType (
+                                             Justification::centred );
+    pitchBend2Label -> setEditable (
+                                    false
+                                  , false
+                                  , false );
+    pitchBend2Label -> setColour (
+                                  Label::textColourId
+                                , Colour (
+                                          0xff5090d0 ) );
+    pitchBend2Label -> setColour (
+                                  TextEditor::textColourId
+                                , Colours::black );
+    pitchBend2Label -> setColour (
+                                  TextEditor::backgroundColourId
+                                , Colour (
+                                          0x00000000 ) );
+    pitchBend2Label -> setBounds (
+                                  472
+                                , 184
+                                , 48
+                                , 18 );
+    vibratoAmount2Label . reset (
+                                 new Label (
+                                            "new label"
+                                          , TRANS (
+                                                   "0%" ) ) );
+    addAndMakeVisible (
+                       vibratoAmount2Label . get () );
+    vibratoAmount2Label -> setFont (
+                                    Font (
+                                          "C64 Pro"
+                                        , 12.00f
+                                        , Font::plain ) . withTypefaceStyle (
+                                                                             "Regular" ) );
+    vibratoAmount2Label -> setJustificationType (
+                                                 Justification::centred );
+    vibratoAmount2Label -> setEditable (
+                                        false
+                                      , false
+                                      , false );
+    vibratoAmount2Label -> setColour (
+                                      Label::textColourId
+                                    , Colour (
+                                              0xff5090d0 ) );
+    vibratoAmount2Label -> setColour (
+                                      TextEditor::textColourId
+                                    , Colours::black );
+    vibratoAmount2Label -> setColour (
+                                      TextEditor::backgroundColourId
+                                    , Colour (
+                                              0x00000000 ) );
+    vibratoAmount2Label -> setBounds (
+                                      584
+                                    , 184
+                                    , 48
+                                    , 18 );
+    vibratoSpeed2Label . reset (
+                                new Label (
+                                           "new label"
+                                         , TRANS (
+                                                  "0%" ) ) );
+    addAndMakeVisible (
+                       vibratoSpeed2Label . get () );
+    vibratoSpeed2Label -> setFont (
+                                   Font (
+                                         "C64 Pro"
+                                       , 12.00f
+                                       , Font::plain ) . withTypefaceStyle (
+                                                                            "Regular" ) );
+    vibratoSpeed2Label -> setJustificationType (
+                                                Justification::centred );
+    vibratoSpeed2Label -> setEditable (
+                                       false
+                                     , false
+                                     , false );
+    vibratoSpeed2Label -> setColour (
+                                     Label::textColourId
+                                   , Colour (
+                                             0xff5090d0 ) );
+    vibratoSpeed2Label -> setColour (
+                                     TextEditor::textColourId
+                                   , Colours::black );
+    vibratoSpeed2Label -> setColour (
+                                     TextEditor::backgroundColourId
+                                   , Colour (
+                                             0x00000000 ) );
+    vibratoSpeed2Label -> setBounds (
+                                     664
+                                   , 184
+                                   , 48
+                                   , 18 );
+    pulseWidth2Label . reset (
+                              new Label (
+                                         "new label"
+                                       , TRANS (
+                                                "0%" ) ) );
+    addAndMakeVisible (
+                       pulseWidth2Label . get () );
+    pulseWidth2Label -> setFont (
+                                 Font (
+                                       "C64 Pro"
+                                     , 12.00f
+                                     , Font::plain ) . withTypefaceStyle (
+                                                                          "Regular" ) );
+    pulseWidth2Label -> setJustificationType (
+                                              Justification::centred );
+    pulseWidth2Label -> setEditable (
+                                     false
+                                   , false
+                                   , false );
+    pulseWidth2Label -> setColour (
+                                   Label::textColourId
+                                 , Colour (
+                                           0xff5090d0 ) );
+    pulseWidth2Label -> setColour (
+                                   TextEditor::textColourId
+                                 , Colours::black );
+    pulseWidth2Label -> setColour (
+                                   TextEditor::backgroundColourId
+                                 , Colour (
+                                           0x00000000 ) );
+    pulseWidth2Label -> setBounds (
+                                   831
+                                 , 184
+                                 , 48
+                                 , 18 );
+    vibratoDelay2Label . reset (
+                                new Label (
+                                           "new label"
+                                         , TRANS (
+                                                  "0" ) ) );
+    addAndMakeVisible (
+                       vibratoDelay2Label . get () );
+    vibratoDelay2Label -> setFont (
+                                   Font (
+                                         "C64 Pro"
+                                       , 12.00f
+                                       , Font::plain ) . withTypefaceStyle (
+                                                                            "Regular" ) );
+    vibratoDelay2Label -> setJustificationType (
+                                                Justification::centred );
+    vibratoDelay2Label -> setEditable (
+                                       false
+                                     , false
+                                     , false );
+    vibratoDelay2Label -> setColour (
+                                     Label::textColourId
+                                   , Colour (
+                                             0xff5090d0 ) );
+    vibratoDelay2Label -> setColour (
+                                     TextEditor::textColourId
+                                   , Colours::black );
+    vibratoDelay2Label -> setColour (
+                                     TextEditor::backgroundColourId
+                                   , Colour (
+                                             0x00000000 ) );
+    vibratoDelay2Label -> setBounds (
+                                     745
+                                   , 184
+                                   , 48
+                                   , 18 );
+    patch3Label . reset (
+                         new Label (
+                                    "new label"
+                                  , TRANS (
+                                           "1" ) ) );
+    addAndMakeVisible (
+                       patch3Label . get () );
+    patch3Label -> setFont (
+                            Font (
+                                  "C64 Pro"
+                                , 12.00f
+                                , Font::plain ) . withTypefaceStyle (
+                                                                     "Regular" ) );
+    patch3Label -> setJustificationType (
+                                         Justification::centred );
+    patch3Label -> setEditable (
+                                false
+                              , false
+                              , false );
+    patch3Label -> setColour (
+                              Label::textColourId
+                            , Colour (
+                                      0xff5090d0 ) );
+    patch3Label -> setColour (
+                              TextEditor::textColourId
+                            , Colours::black );
+    patch3Label -> setColour (
+                              TextEditor::backgroundColourId
+                            , Colour (
+                                      0x00000000 ) );
+    patch3Label -> setBounds (
+                              32
+                            , 272
+                            , 48
+                            , 18 );
+    attack3Label . reset (
+                          new Label (
+                                     "new label"
+                                   , TRANS (
+                                            "0" ) ) );
+    addAndMakeVisible (
+                       attack3Label . get () );
+    attack3Label -> setFont (
+                             Font (
+                                   "C64 Pro"
+                                 , 12.00f
+                                 , Font::plain ) . withTypefaceStyle (
+                                                                      "Regular" ) );
+    attack3Label -> setJustificationType (
+                                          Justification::centred );
+    attack3Label -> setEditable (
+                                 false
+                               , false
+                               , false );
+    attack3Label -> setColour (
+                               Label::textColourId
+                             , Colour (
+                                       0xff5090d0 ) );
+    attack3Label -> setColour (
+                               TextEditor::textColourId
+                             , Colours::black );
+    attack3Label -> setColour (
+                               TextEditor::backgroundColourId
+                             , Colour (
+                                       0x00000000 ) );
+    attack3Label -> setBounds (
+                               144
+                             , 272
+                             , 48
+                             , 18 );
+    decay3Label . reset (
+                         new Label (
+                                    "new label"
+                                  , TRANS (
+                                           "0" ) ) );
+    addAndMakeVisible (
+                       decay3Label . get () );
+    decay3Label -> setFont (
+                            Font (
+                                  "C64 Pro"
+                                , 12.00f
+                                , Font::plain ) . withTypefaceStyle (
+                                                                     "Regular" ) );
+    decay3Label -> setJustificationType (
+                                         Justification::centred );
+    decay3Label -> setEditable (
+                                false
+                              , false
+                              , false );
+    decay3Label -> setColour (
+                              Label::textColourId
+                            , Colour (
+                                      0xff5090d0 ) );
+    decay3Label -> setColour (
+                              TextEditor::textColourId
+                            , Colours::black );
+    decay3Label -> setColour (
+                              TextEditor::backgroundColourId
+                            , Colour (
+                                      0x00000000 ) );
+    decay3Label -> setBounds (
+                              224
+                            , 272
+                            , 48
+                            , 18 );
+    sustain3Label . reset (
+                           new Label (
+                                      "new label"
+                                    , TRANS (
+                                             "0" ) ) );
+    addAndMakeVisible (
+                       sustain3Label . get () );
+    sustain3Label -> setFont (
+                              Font (
+                                    "C64 Pro"
+                                  , 12.00f
+                                  , Font::plain ) . withTypefaceStyle (
+                                                                       "Regular" ) );
+    sustain3Label -> setJustificationType (
+                                           Justification::centred );
+    sustain3Label -> setEditable (
+                                  false
+                                , false
+                                , false );
+    sustain3Label -> setColour (
+                                Label::textColourId
+                              , Colour (
+                                        0xff5090d0 ) );
+    sustain3Label -> setColour (
+                                TextEditor::textColourId
+                              , Colours::black );
+    sustain3Label -> setColour (
+                                TextEditor::backgroundColourId
+                              , Colour (
+                                        0x00000000 ) );
+    sustain3Label -> setBounds (
+                                304
+                              , 272
+                              , 48
+                              , 18 );
+    release3Label . reset (
+                           new Label (
+                                      "new label"
+                                    , TRANS (
+                                             "0" ) ) );
+    addAndMakeVisible (
+                       release3Label . get () );
+    release3Label -> setFont (
+                              Font (
+                                    "C64 Pro"
+                                  , 12.00f
+                                  , Font::plain ) . withTypefaceStyle (
+                                                                       "Regular" ) );
+    release3Label -> setJustificationType (
+                                           Justification::centred );
+    release3Label -> setEditable (
+                                  false
+                                , false
+                                , false );
+    release3Label -> setColour (
+                                Label::textColourId
+                              , Colour (
+                                        0xff5090d0 ) );
+    release3Label -> setColour (
+                                TextEditor::textColourId
+                              , Colours::black );
+    release3Label -> setColour (
+                                TextEditor::backgroundColourId
+                              , Colour (
+                                        0x00000000 ) );
+    release3Label -> setBounds (
+                                384
+                              , 272
+                              , 48
+                              , 18 );
+    pitchBend3Label . reset (
+                             new Label (
+                                        "new label"
+                                      , TRANS (
+                                               "0%" ) ) );
+    addAndMakeVisible (
+                       pitchBend3Label . get () );
+    pitchBend3Label -> setFont (
+                                Font (
+                                      "C64 Pro"
+                                    , 12.00f
+                                    , Font::plain ) . withTypefaceStyle (
+                                                                         "Regular" ) );
+    pitchBend3Label -> setJustificationType (
+                                             Justification::centred );
+    pitchBend3Label -> setEditable (
+                                    false
+                                  , false
+                                  , false );
+    pitchBend3Label -> setColour (
+                                  Label::textColourId
+                                , Colour (
+                                          0xff5090d0 ) );
+    pitchBend3Label -> setColour (
+                                  TextEditor::textColourId
+                                , Colours::black );
+    pitchBend3Label -> setColour (
+                                  TextEditor::backgroundColourId
+                                , Colour (
+                                          0x00000000 ) );
+    pitchBend3Label -> setBounds (
+                                  472
+                                , 272
+                                , 48
+                                , 18 );
+    vibratoAmount3Label . reset (
+                                 new Label (
+                                            "new label"
+                                          , TRANS (
+                                                   "0%" ) ) );
+    addAndMakeVisible (
+                       vibratoAmount3Label . get () );
+    vibratoAmount3Label -> setFont (
+                                    Font (
+                                          "C64 Pro"
+                                        , 12.00f
+                                        , Font::plain ) . withTypefaceStyle (
+                                                                             "Regular" ) );
+    vibratoAmount3Label -> setJustificationType (
+                                                 Justification::centred );
+    vibratoAmount3Label -> setEditable (
+                                        false
+                                      , false
+                                      , false );
+    vibratoAmount3Label -> setColour (
+                                      Label::textColourId
+                                    , Colour (
+                                              0xff5090d0 ) );
+    vibratoAmount3Label -> setColour (
+                                      TextEditor::textColourId
+                                    , Colours::black );
+    vibratoAmount3Label -> setColour (
+                                      TextEditor::backgroundColourId
+                                    , Colour (
+                                              0x00000000 ) );
+    vibratoAmount3Label -> setBounds (
+                                      584
+                                    , 272
+                                    , 48
+                                    , 18 );
+    vibratoSpeed3Label . reset (
+                                new Label (
+                                           "new label"
+                                         , TRANS (
+                                                  "0%" ) ) );
+    addAndMakeVisible (
+                       vibratoSpeed3Label . get () );
+    vibratoSpeed3Label -> setFont (
+                                   Font (
+                                         "C64 Pro"
+                                       , 12.00f
+                                       , Font::plain ) . withTypefaceStyle (
+                                                                            "Regular" ) );
+    vibratoSpeed3Label -> setJustificationType (
+                                                Justification::centred );
+    vibratoSpeed3Label -> setEditable (
+                                       false
+                                     , false
+                                     , false );
+    vibratoSpeed3Label -> setColour (
+                                     Label::textColourId
+                                   , Colour (
+                                             0xff5090d0 ) );
+    vibratoSpeed3Label -> setColour (
+                                     TextEditor::textColourId
+                                   , Colours::black );
+    vibratoSpeed3Label -> setColour (
+                                     TextEditor::backgroundColourId
+                                   , Colour (
+                                             0x00000000 ) );
+    vibratoSpeed3Label -> setBounds (
+                                     664
+                                   , 272
+                                   , 48
+                                   , 18 );
+    pulseWidth3Label . reset (
+                              new Label (
+                                         "new label"
+                                       , TRANS (
+                                                "0%" ) ) );
+    addAndMakeVisible (
+                       pulseWidth3Label . get () );
+    pulseWidth3Label -> setFont (
+                                 Font (
+                                       "C64 Pro"
+                                     , 12.00f
+                                     , Font::plain ) . withTypefaceStyle (
+                                                                          "Regular" ) );
+    pulseWidth3Label -> setJustificationType (
+                                              Justification::centred );
+    pulseWidth3Label -> setEditable (
+                                     false
+                                   , false
+                                   , false );
+    pulseWidth3Label -> setColour (
+                                   Label::textColourId
+                                 , Colour (
+                                           0xff5090d0 ) );
+    pulseWidth3Label -> setColour (
+                                   TextEditor::textColourId
+                                 , Colours::black );
+    pulseWidth3Label -> setColour (
+                                   TextEditor::backgroundColourId
+                                 , Colour (
+                                           0x00000000 ) );
+    pulseWidth3Label -> setBounds (
+                                   831
+                                 , 272
+                                 , 48
+                                 , 18 );
+    vibratoDelay3Label . reset (
+                                new Label (
+                                           "new label"
+                                         , TRANS (
+                                                  "0" ) ) );
+    addAndMakeVisible (
+                       vibratoDelay3Label . get () );
+    vibratoDelay3Label -> setFont (
+                                   Font (
+                                         "C64 Pro"
+                                       , 12.00f
+                                       , Font::plain ) . withTypefaceStyle (
+                                                                            "Regular" ) );
+    vibratoDelay3Label -> setJustificationType (
+                                                Justification::centred );
+    vibratoDelay3Label -> setEditable (
+                                       false
+                                     , false
+                                     , false );
+    vibratoDelay3Label -> setColour (
+                                     Label::textColourId
+                                   , Colour (
+                                             0xff5090d0 ) );
+    vibratoDelay3Label -> setColour (
+                                     TextEditor::textColourId
+                                   , Colours::black );
+    vibratoDelay3Label -> setColour (
+                                     TextEditor::backgroundColourId
+                                   , Colour (
+                                             0x00000000 ) );
+    vibratoDelay3Label -> setBounds (
+                                     745
+                                   , 272
+                                   , 48
+                                   , 18 );
+    cutoffLabel . reset (
+                         new Label (
+                                    "new label"
+                                  , TRANS (
+                                           "0" ) ) );
+    addAndMakeVisible (
+                       cutoffLabel . get () );
+    cutoffLabel -> setFont (
+                            Font (
+                                  "C64 Pro"
+                                , 12.00f
+                                , Font::plain ) . withTypefaceStyle (
+                                                                     "Regular" ) );
+    cutoffLabel -> setJustificationType (
+                                         Justification::centred );
+    cutoffLabel -> setEditable (
+                                false
+                              , false
+                              , false );
+    cutoffLabel -> setColour (
+                              Label::textColourId
+                            , Colour (
+                                      0xff5090d0 ) );
+    cutoffLabel -> setColour (
+                              TextEditor::textColourId
+                            , Colours::black );
+    cutoffLabel -> setColour (
+                              TextEditor::backgroundColourId
+                            , Colour (
+                                      0x00000000 ) );
+    cutoffLabel -> setBounds (
+                              32
+                            , 360
+                            , 48
+                            , 18 );
+    resonanceLabel . reset (
+                            new Label (
+                                       "new label"
+                                     , TRANS (
+                                              "0" ) ) );
+    addAndMakeVisible (
+                       resonanceLabel . get () );
+    resonanceLabel -> setFont (
+                               Font (
+                                     "C64 Pro"
+                                   , 12.00f
+                                   , Font::plain ) . withTypefaceStyle (
+                                                                        "Regular" ) );
+    resonanceLabel -> setJustificationType (
+                                            Justification::centred );
+    resonanceLabel -> setEditable (
+                                   false
+                                 , false
+                                 , false );
+    resonanceLabel -> setColour (
+                                 Label::textColourId
+                               , Colour (
+                                         0xff5090d0 ) );
+    resonanceLabel -> setColour (
+                                 TextEditor::textColourId
+                               , Colours::black );
+    resonanceLabel -> setColour (
+                                 TextEditor::backgroundColourId
+                               , Colour (
+                                         0x00000000 ) );
+    resonanceLabel -> setBounds (
+                                 32
+                               , 448
+                               , 48
+                               , 18 );
+    titleLabel . reset (
+                        new Label (
+                                   "new label"
+                                 , String () ) );
+    addAndMakeVisible (
+                       titleLabel . get () );
+    titleLabel -> setFont (
+                           Font (
+                                 "C64 Pro"
+                               , 14.00f
+                               , Font::plain ) . withTypefaceStyle (
+                                                                    "Regular" ) );
+    titleLabel -> setJustificationType (
+                                        Justification::centredLeft );
+    titleLabel -> setEditable (
+                               true
+                             , true
+                             , false );
+    titleLabel -> setColour (
+                             Label::textColourId
+                           , Colour (
+                                     0xff5090d0 ) );
+    titleLabel -> setColour (
+                             TextEditor::textColourId
+                           , Colour (
+                                     0xff5090d0 ) );
+    titleLabel -> setColour (
+                             TextEditor::backgroundColourId
+                           , Colour (
+                                     0x00000000 ) );
+    titleLabel -> addListener (
+                               this );
+    titleLabel -> setBounds (
+                             632
+                           , 8
+                           , 368
+                           , 32 );
+    artistLabel . reset (
+                         new Label (
+                                    "new label"
+                                  , String () ) );
+    addAndMakeVisible (
+                       artistLabel . get () );
+    artistLabel -> setFont (
+                            Font (
+                                  "C64 Pro"
+                                , 14.00f
+                                , Font::plain ) . withTypefaceStyle (
+                                                                     "Regular" ) );
+    artistLabel -> setJustificationType (
+                                         Justification::centredLeft );
+    artistLabel -> setEditable (
+                                true
+                              , true
+                              , false );
+    artistLabel -> setColour (
+                              Label::textColourId
+                            , Colour (
+                                      0xff5090d0 ) );
+    artistLabel -> setColour (
+                              TextEditor::textColourId
+                            , Colour (
+                                      0xff5090d0 ) );
+    artistLabel -> setColour (
+                              TextEditor::backgroundColourId
+                            , Colour (
+                                      0x00000000 ) );
+    artistLabel -> addListener (
+                                this );
+    artistLabel -> setBounds (
+                              632
+                            , 48
+                            , 368
+                            , 32 );
+    exportButton . reset (
+                          new ImageButton (
+                                           "new button" ) );
+    addAndMakeVisible (
+                       exportButton . get () );
+    exportButton -> addListener (
+                                 this );
+    exportButton -> setImages (
+                               false
+                             , true
+                             , true
+                             , ImageCache::getFromMemory (
+                                                          recordnormal_png
+                                                        , recordnormal_pngSize )
+                             , 1.000f
+                             , Colour (
+                                       0x00000000 )
+                             , ImageCache::getFromMemory (
+                                                          recordover_png
+                                                        , recordover_pngSize )
+                             , 1.000f
+                             , Colour (
+                                       0x00000000 )
+                             , ImageCache::getFromMemory (
+                                                          recorddown_png
+                                                        , recorddown_pngSize )
+                             , 1.000f
+                             , Colour (
+                                       0x00000000 ) );
+    exportButton -> setBounds (
+                               480
+                             , 40
+                             , 32
+                             , 32 );
+    patchesViewport . reset (
+                             new Viewport (
+                                           "new viewport" ) );
+    addAndMakeVisible (
+                       patchesViewport . get () );
+    patchesViewport -> setScrollBarsShown (
+                                           true
+                                         , false );
+    patchesViewport -> setScrollBarThickness (
+                                              16 );
+    patchesViewport -> setBounds (
+                                  496
+                                , 368
+                                , 512
+                                , 192 );
+    filter1Checkbox . reset (
+                             new ToggleButton (
+                                               "new toggle button" ) );
+    addAndMakeVisible (
+                       filter1Checkbox . get () );
+    filter1Checkbox -> setButtonText (
+                                      String () );
+    filter1Checkbox -> addListener (
+                                    this );
+    filter1Checkbox -> setBounds (
+                                  120
+                                , 376
+                                , 48
+                                , 48 );
+    filter2Checkbox . reset (
+                             new ToggleButton (
+                                               "new toggle button" ) );
+    addAndMakeVisible (
+                       filter2Checkbox . get () );
+    filter2Checkbox -> setButtonText (
+                                      String () );
+    filter2Checkbox -> addListener (
+                                    this );
+    filter2Checkbox -> setBounds (
+                                  240
+                                , 376
+                                , 48
+                                , 48 );
+    filter3Checkbox . reset (
+                             new ToggleButton (
+                                               "new toggle button" ) );
+    addAndMakeVisible (
+                       filter3Checkbox . get () );
+    filter3Checkbox -> setButtonText (
+                                      String () );
+    filter3Checkbox -> addListener (
+                                    this );
+    filter3Checkbox -> setBounds (
+                                  352
+                                , 376
+                                , 48
+                                , 48 );
+    filterLowPassCheckbox . reset (
+                                   new ToggleButton (
+                                                     "new toggle button" ) );
+    addAndMakeVisible (
+                       filterLowPassCheckbox . get () );
+    filterLowPassCheckbox -> setButtonText (
+                                            String () );
+    filterLowPassCheckbox -> addListener (
+                                          this );
+    filterLowPassCheckbox -> setBounds (
+                                        120
+                                      , 456
+                                      , 48
+                                      , 48 );
+    filterBandPassCheckbox . reset (
+                                    new ToggleButton (
+                                                      "new toggle button" ) );
+    addAndMakeVisible (
+                       filterBandPassCheckbox . get () );
+    filterBandPassCheckbox -> setButtonText (
+                                             String () );
+    filterBandPassCheckbox -> addListener (
+                                           this );
+    filterBandPassCheckbox -> setBounds (
+                                         240
+                                       , 456
+                                       , 48
+                                       , 48 );
+    filterHighPassCheckbox . reset (
+                                    new ToggleButton (
+                                                      "new toggle button" ) );
+    addAndMakeVisible (
+                       filterHighPassCheckbox . get () );
+    filterHighPassCheckbox -> setButtonText (
+                                             String () );
+    filterHighPassCheckbox -> addListener (
+                                           this );
+    filterHighPassCheckbox -> setBounds (
+                                         352
+                                       , 456
+                                       , 48
+                                       , 48 );
+    patchEditorButton . reset (
+                               new ImageButton (
+                                                "new button" ) );
+    addAndMakeVisible (
+                       patchEditorButton . get () );
+    patchEditorButton -> addListener (
+                                      this );
+    patchEditorButton -> setImages (
+                                    false
+                                  , true
+                                  , true
+                                  , ImageCache::getFromMemory (
+                                                               patchEditorButtonNormal_png
+                                                             , patchEditorButtonNormal_pngSize )
+                                  , 1.000f
+                                  , Colour (
+                                            0x00000000 )
+                                  , ImageCache::getFromMemory (
+                                                               patchEditorButtonOver_png
+                                                             , patchEditorButtonOver_pngSize )
+                                  , 1.000f
+                                  , Colour (
+                                            0x00000000 )
+                                  , ImageCache::getFromMemory (
+                                                               patchEditorButtonDown_png
+                                                             , patchEditorButtonDown_pngSize )
+                                  , 1.000f
+                                  , Colour (
+                                            0x00000000 ) );
+    patchEditorButton -> setBounds (
+                                    208
+                                  , 544
+                                  , 154
+                                  , 26 );
+    addPatchButton . reset (
+                            new ImageButton (
+                                             "new button" ) );
+    addAndMakeVisible (
+                       addPatchButton . get () );
+    addPatchButton -> addListener (
+                                   this );
+    addPatchButton -> setImages (
+                                 false
+                               , true
+                               , true
+                               , ImageCache::getFromMemory (
+                                                            addButtonNormal_png
+                                                          , addButtonNormal_pngSize )
+                               , 1.000f
+                               , Colour (
+                                         0x00000000 )
+                               , ImageCache::getFromMemory (
+                                                            addButtonOver_png
+                                                          , addButtonOver_pngSize )
+                               , 1.000f
+                               , Colour (
+                                         0x00000000 )
+                               , ImageCache::getFromMemory (
+                                                            addButtonDown_png
+                                                          , addButtonDown_pngSize )
+                               , 1.000f
+                               , Colour (
+                                         0x00000000 ) );
+    addPatchButton -> setBounds (
+                                 488
+                               , 544
+                               , 154
+                               , 26 );
+    replacePatchButton . reset (
+                                new ImageButton (
+                                                 "new button" ) );
+    addAndMakeVisible (
+                       replacePatchButton . get () );
+    replacePatchButton -> addListener (
+                                       this );
+    replacePatchButton -> setImages (
+                                     false
+                                   , true
+                                   , true
+                                   , ImageCache::getFromMemory (
+                                                                replaceButtonNormal_png
+                                                              , replaceButtonNormal_pngSize )
+                                   , 1.000f
+                                   , Colour (
+                                             0x00000000 )
+                                   , ImageCache::getFromMemory (
+                                                                replaceButtonOver_png
+                                                              , replaceButtonOver_pngSize )
+                                   , 1.000f
+                                   , Colour (
+                                             0x00000000 )
+                                   , ImageCache::getFromMemory (
+                                                                replaceButtonDown_png
+                                                              , replaceButtonDown_pngSize )
+                                   , 1.000f
+                                   , Colour (
+                                             0x00000000 ) );
+    replacePatchButton -> setBounds (
+                                     656
+                                   , 544
+                                   , 154
+                                   , 26 );
+    removePatchButton . reset (
+                               new ImageButton (
+                                                "new button" ) );
+    addAndMakeVisible (
+                       removePatchButton . get () );
+    removePatchButton -> addListener (
+                                      this );
+    removePatchButton -> setImages (
+                                    false
+                                  , true
+                                  , true
+                                  , ImageCache::getFromMemory (
+                                                               removeButtonNormal_png
+                                                             , removeButtonNormal_pngSize )
+                                  , 1.000f
+                                  , Colour (
+                                            0x00000000 )
+                                  , ImageCache::getFromMemory (
+                                                               removeButtonOver_png
+                                                             , removeButtonOver_pngSize )
+                                  , 1.000f
+                                  , Colour (
+                                            0x00000000 )
+                                  , ImageCache::getFromMemory (
+                                                               removeButtonDown_png
+                                                             , removeButtonDown_pngSize )
+                                  , 1.000f
+                                  , Colour (
+                                            0x00000000 ) );
+    removePatchButton -> setBounds (
+                                    824
+                                  , 544
+                                  , 154
+                                  , 26 );
+    patchSelector . reset (
+                           new PatchSelector () );
+    addAndMakeVisible (
+                       patchSelector . get () );
+    patchSelector -> setBounds (
+                                488
+                              , 368
+                              , 322
+                              , 176 );
+    cachedImage_liveModeBackdrop_png_1 = ImageCache::getFromMemory (
+                                                                    liveModeBackdrop_png
+                                                                  , liveModeBackdrop_pngSize );
+    cachedImage_recordIndicator_png_2 = ImageCache::getFromMemory (
+                                                                   recordIndicator_png
+                                                                 , recordIndicator_pngSize );
+    cachedImage_liveModeButtonDown_png_3 = ImageCache::getFromMemory (
+                                                                      liveModeButtonDown_png
+                                                                    , liveModeButtonDown_pngSize );
+    cachedImage_recordIndicatorblink_png_4 = ImageCache::getFromMemory (
+                                                                        recordIndicatorblink_png
+                                                                      , recordIndicatorblink_pngSize );
 
     //[UserPreSize]
     volumeSlider -> setValue (
                               15
-                            , dontSendNotification
-                             );
+                            , dontSendNotification );
     volumeLabel -> setText (
                             "15"
-                          , dontSendNotification
-                           );
+                          , dontSendNotification );
 
     //cutoffSlider -> setSkewFactorFromMidPoint (
     //                                           32
@@ -883,240 +2333,197 @@ LiveMode::LiveMode ()
 
     patches = new Patches ();
     patchesViewport -> setViewedComponent (
-                                           patches
-                                          );
+                                           patches );
     patchesViewport -> getVerticalScrollBar () -> setAutoHide (
-                                                               false
-                                                              );
+                                                               false );
     patchSelector -> setVisible (
-                                 false
-                                );
-
+                                 false );
     SharedResourcePointer < ListenerList < BankProgramChanged > > () -> add (
-                                                                             this
-                                                                            );
+                                                                             this );
     SharedResourcePointer < ListenerList < AttackParameterChanged > > () -> add (
-                                                                                 this
-                                                                                );
+                                                                                 this );
     SharedResourcePointer < ListenerList < BandPassParameterChanged > > () -> add (
-                                                                                   this
-                                                                                  );
+                                                                                   this );
     SharedResourcePointer < ListenerList < CutoffParameterChanged > > () -> add (
-                                                                                 this
-                                                                                );
+                                                                                 this );
     SharedResourcePointer < ListenerList < DecayParameterChanged > > () -> add (
-                                                                                this
-                                                                               );
+                                                                                this );
     SharedResourcePointer < ListenerList < FilterVoiceParameterChanged > > () -> add (
-                                                                                      this
-                                                                                     );
+                                                                                      this );
     SharedResourcePointer < ListenerList < HighPassParameterChanged > > () -> add (
-                                                                                   this
-                                                                                  );
+                                                                                   this );
     SharedResourcePointer < ListenerList < LowPassParameterChanged > > () -> add (
-                                                                                  this
-                                                                                 );
+                                                                                  this );
     SharedResourcePointer < ListenerList < PitchBendParameterChanged > > () -> add (
-                                                                                    this
-                                                                                   );
+                                                                                    this );
     SharedResourcePointer < ListenerList < ProgramParameterChanged > > () -> add (
-                                                                                  this
-                                                                                 );
+                                                                                  this );
     SharedResourcePointer < ListenerList < PulseWidthParameterChanged > > () -> add (
-                                                                                     this
-                                                                                    );
+                                                                                     this );
     SharedResourcePointer < ListenerList < ReleaseParameterChanged > > () -> add (
-                                                                                  this
-                                                                                 );
+                                                                                  this );
     SharedResourcePointer < ListenerList < ResonanceParameterChanged > > () -> add (
-                                                                                    this
-                                                                                   );
+                                                                                    this );
     SharedResourcePointer < ListenerList < SustainParameterChanged > > () -> add (
-                                                                                  this
-                                                                                 );
+                                                                                  this );
     SharedResourcePointer < ListenerList < VibratoAmountParameterChanged > > () -> add (
-                                                                                        this
-                                                                                       );
+                                                                                        this );
     SharedResourcePointer < ListenerList < VibratoSpeedParameterChanged > > () -> add (
-                                                                                       this
-                                                                                      );
+                                                                                       this );
     SharedResourcePointer < ListenerList < VolumeParameterChanged > > () -> add (
-                                                                                 this
-                                                                                );
+                                                                                 this );
     SharedResourcePointer < ListenerList < PatchEditorLiveModeClicked > > () -> add (
-                                                                                     this
-                                                                                    );
+                                                                                     this );
     SharedResourcePointer < ListenerList < LivePatchListChanged > > () -> add (
-                                                                               this
-                                                                              );
+                                                                               this );
     SharedResourcePointer < ListenerList < LiveTitleChanged > > () -> add (
                                                                            this );
     SharedResourcePointer < ListenerList < LiveArtistChanged > > () -> add (
                                                                             this );
     SharedResourcePointer < ListenerList < QuarterNoteTick > > () -> add (
-                                                                          this
-                                                                         );
+                                                                          this );
     //[/UserPreSize]
 
-    setSize (1024, 576);
+    setSize (
+             1024
+           , 576 );
 
 
     //[Constructor] You can add your own custom stuff here..
     //[/Constructor]
 }
 
-LiveMode::~LiveMode()
+LiveMode::~LiveMode ()
 {
     //[Destructor_pre]. You can add your own custom destruction code here..
     SharedResourcePointer < ListenerList < BankProgramChanged > > () -> remove (
-                                                                                this
-                                                                               );
+                                                                                this );
     SharedResourcePointer < ListenerList < AttackParameterChanged > > () -> remove (
-                                                                                    this
-                                                                                   );
+                                                                                    this );
     SharedResourcePointer < ListenerList < BandPassParameterChanged > > () -> remove (
-                                                                                      this
-                                                                                     );
+                                                                                      this );
     SharedResourcePointer < ListenerList < CutoffParameterChanged > > () -> remove (
-                                                                                    this
-                                                                                   );
+                                                                                    this );
     SharedResourcePointer < ListenerList < DecayParameterChanged > > () -> remove (
-                                                                                   this
-                                                                                  );
+                                                                                   this );
     SharedResourcePointer < ListenerList < FilterVoiceParameterChanged > > () -> remove (
-                                                                                         this
-                                                                                        );
+                                                                                         this );
     SharedResourcePointer < ListenerList < HighPassParameterChanged > > () -> remove (
-                                                                                      this
-                                                                                     );
+                                                                                      this );
     SharedResourcePointer < ListenerList < LowPassParameterChanged > > () -> remove (
-                                                                                     this
-                                                                                    );
+                                                                                     this );
     SharedResourcePointer < ListenerList < PitchBendParameterChanged > > () -> remove (
-                                                                                       this
-                                                                                      );
+                                                                                       this );
     SharedResourcePointer < ListenerList < ProgramParameterChanged > > () -> remove (
-                                                                                     this
-                                                                                    );
+                                                                                     this );
     SharedResourcePointer < ListenerList < PulseWidthParameterChanged > > () -> remove (
-                                                                                        this
-                                                                                       );
+                                                                                        this );
     SharedResourcePointer < ListenerList < ReleaseParameterChanged > > () -> remove (
-                                                                                     this
-                                                                                    );
+                                                                                     this );
     SharedResourcePointer < ListenerList < ResonanceParameterChanged > > () -> remove (
-                                                                                       this
-                                                                                      );
+                                                                                       this );
     SharedResourcePointer < ListenerList < SustainParameterChanged > > () -> remove (
-                                                                                     this
-                                                                                    );
+                                                                                     this );
     SharedResourcePointer < ListenerList < VibratoAmountParameterChanged > > () -> remove (
-                                                                                           this
-                                                                                          );
+                                                                                           this );
     SharedResourcePointer < ListenerList < VibratoSpeedParameterChanged > > () -> remove (
-                                                                                          this
-                                                                                         );
+                                                                                          this );
     SharedResourcePointer < ListenerList < VolumeParameterChanged > > () -> remove (
-                                                                                    this
-                                                                                   );
+                                                                                    this );
     SharedResourcePointer < ListenerList < PatchEditorLiveModeClicked > > () -> remove (
-                                                                                        this
-                                                                                       );
+                                                                                        this );
     SharedResourcePointer < ListenerList < LivePatchListChanged > > () -> remove (
-                                                                                  this
-                                                                                 );
+                                                                                  this );
     SharedResourcePointer < ListenerList < LiveTitleChanged > > () -> remove (
                                                                               this );
     SharedResourcePointer < ListenerList < LiveArtistChanged > > () -> remove (
                                                                                this );
     SharedResourcePointer < ListenerList < QuarterNoteTick > > () -> remove (
-                                                                             this
-                                                                            );
-
+                                                                             this );
     patches = nullptr;
     //[/Destructor_pre]
 
-    volumeSlider = nullptr;
-    volumeLabel = nullptr;
-    patch1Slider = nullptr;
-    attack1Slider = nullptr;
-    decay1Slider = nullptr;
-    sustain1Slider = nullptr;
-    release1Slider = nullptr;
-    pitchBend1Slider = nullptr;
-    vibratoAmount1Slider = nullptr;
-    vibratoSpeed1Slider = nullptr;
-    pulseWidth1Slider = nullptr;
-    vibratoDelay1Slider = nullptr;
-    patch2Slider = nullptr;
-    attack2Slider = nullptr;
-    decay2Slider = nullptr;
-    sustain2Slider = nullptr;
-    release2Slider = nullptr;
-    pitchBend2Slider = nullptr;
-    vibratoAmount2Slider = nullptr;
-    vibratoSpeed2Slider = nullptr;
-    pulseWidth2Slider = nullptr;
-    vibratoDelay2Slider = nullptr;
-    patch3Slider = nullptr;
-    attack3Slider = nullptr;
-    decay3Slider = nullptr;
-    sustain3Slider = nullptr;
-    release3Slider = nullptr;
-    pitchBend3Slider = nullptr;
-    vibratoAmount3Slider = nullptr;
-    vibratoSpeed3Slider = nullptr;
-    pulseWidth3Slider = nullptr;
-    vibratoDelay3Slider = nullptr;
-    cutoffSlider = nullptr;
-    resonanceSlider = nullptr;
-    patch1Label = nullptr;
-    attack1Label = nullptr;
-    decay1Label = nullptr;
-    sustain1Label = nullptr;
-    release1Label = nullptr;
-    pitchBend1Label = nullptr;
-    vibratoAmount1Label = nullptr;
-    vibratoSpeed1Label = nullptr;
-    pulseWidth1Label = nullptr;
-    vibratoDelay1Label = nullptr;
-    patch2Label = nullptr;
-    attack2Label = nullptr;
-    decay2Label = nullptr;
-    sustain2Label = nullptr;
-    release2Label = nullptr;
-    pitchBend2Label = nullptr;
-    vibratoAmount2Label = nullptr;
-    vibratoSpeed2Label = nullptr;
-    pulseWidth2Label = nullptr;
-    vibratoDelay2Label = nullptr;
-    patch3Label = nullptr;
-    attack3Label = nullptr;
-    decay3Label = nullptr;
-    sustain3Label = nullptr;
-    release3Label = nullptr;
-    pitchBend3Label = nullptr;
-    vibratoAmount3Label = nullptr;
-    vibratoSpeed3Label = nullptr;
-    pulseWidth3Label = nullptr;
-    vibratoDelay3Label = nullptr;
-    cutoffLabel = nullptr;
-    resonanceLabel = nullptr;
-    titleLabel = nullptr;
-    artistLabel = nullptr;
-    exportButton = nullptr;
-    patchesViewport = nullptr;
-    filter1Checkbox = nullptr;
-    filter2Checkbox = nullptr;
-    filter3Checkbox = nullptr;
-    filterLowPassCheckbox = nullptr;
+    volumeSlider           = nullptr;
+    volumeLabel            = nullptr;
+    patch1Slider           = nullptr;
+    attack1Slider          = nullptr;
+    decay1Slider           = nullptr;
+    sustain1Slider         = nullptr;
+    release1Slider         = nullptr;
+    pitchBend1Slider       = nullptr;
+    vibratoAmount1Slider   = nullptr;
+    vibratoSpeed1Slider    = nullptr;
+    pulseWidth1Slider      = nullptr;
+    vibratoDelay1Slider    = nullptr;
+    patch2Slider           = nullptr;
+    attack2Slider          = nullptr;
+    decay2Slider           = nullptr;
+    sustain2Slider         = nullptr;
+    release2Slider         = nullptr;
+    pitchBend2Slider       = nullptr;
+    vibratoAmount2Slider   = nullptr;
+    vibratoSpeed2Slider    = nullptr;
+    pulseWidth2Slider      = nullptr;
+    vibratoDelay2Slider    = nullptr;
+    patch3Slider           = nullptr;
+    attack3Slider          = nullptr;
+    decay3Slider           = nullptr;
+    sustain3Slider         = nullptr;
+    release3Slider         = nullptr;
+    pitchBend3Slider       = nullptr;
+    vibratoAmount3Slider   = nullptr;
+    vibratoSpeed3Slider    = nullptr;
+    pulseWidth3Slider      = nullptr;
+    vibratoDelay3Slider    = nullptr;
+    cutoffSlider           = nullptr;
+    resonanceSlider        = nullptr;
+    patch1Label            = nullptr;
+    attack1Label           = nullptr;
+    decay1Label            = nullptr;
+    sustain1Label          = nullptr;
+    release1Label          = nullptr;
+    pitchBend1Label        = nullptr;
+    vibratoAmount1Label    = nullptr;
+    vibratoSpeed1Label     = nullptr;
+    pulseWidth1Label       = nullptr;
+    vibratoDelay1Label     = nullptr;
+    patch2Label            = nullptr;
+    attack2Label           = nullptr;
+    decay2Label            = nullptr;
+    sustain2Label          = nullptr;
+    release2Label          = nullptr;
+    pitchBend2Label        = nullptr;
+    vibratoAmount2Label    = nullptr;
+    vibratoSpeed2Label     = nullptr;
+    pulseWidth2Label       = nullptr;
+    vibratoDelay2Label     = nullptr;
+    patch3Label            = nullptr;
+    attack3Label           = nullptr;
+    decay3Label            = nullptr;
+    sustain3Label          = nullptr;
+    release3Label          = nullptr;
+    pitchBend3Label        = nullptr;
+    vibratoAmount3Label    = nullptr;
+    vibratoSpeed3Label     = nullptr;
+    pulseWidth3Label       = nullptr;
+    vibratoDelay3Label     = nullptr;
+    cutoffLabel            = nullptr;
+    resonanceLabel         = nullptr;
+    titleLabel             = nullptr;
+    artistLabel            = nullptr;
+    exportButton           = nullptr;
+    patchesViewport        = nullptr;
+    filter1Checkbox        = nullptr;
+    filter2Checkbox        = nullptr;
+    filter3Checkbox        = nullptr;
+    filterLowPassCheckbox  = nullptr;
     filterBandPassCheckbox = nullptr;
-    FilterHighPassCheckbox = nullptr;
-    patchEditorButton = nullptr;
-    addPatchButton = nullptr;
-    replacePatchButton = nullptr;
-    removePatchButton = nullptr;
-    patchSelector = nullptr;
+    filterHighPassCheckbox = nullptr;
+    patchEditorButton      = nullptr;
+    addPatchButton         = nullptr;
+    replacePatchButton     = nullptr;
+    removePatchButton      = nullptr;
+    patchSelector          = nullptr;
 
 
     //[Destructor]. You can add your own custom destruction code here..
@@ -1125,59 +2532,91 @@ LiveMode::~LiveMode()
 }
 
 //==============================================================================
-void LiveMode::paint (juce::Graphics& g)
+void
+    LiveMode::paint (
+            Graphics& g
+            )
 {
     //[UserPrePaint] Add your own custom painting code here..
     //[/UserPrePaint]
 
-    g.fillAll (juce::Colours::white);
-
+    g . fillAll (
+                 Colours::white );
     {
         int x = 0, y = 0, width = 1024, height = 576;
         //[UserPaintCustomArguments] Customize the painting arguments here..
         //[/UserPaintCustomArguments]
-        g.setColour (juce::Colours::black);
-        g.drawImage (cachedImage_liveModeBackdrop_png_1,
-                     x, y, width, height,
-                     0, 0, cachedImage_liveModeBackdrop_png_1.getWidth(), cachedImage_liveModeBackdrop_png_1.getHeight());
+        g . setColour (
+                       Colours::black );
+        g . drawImage (
+                       cachedImage_liveModeBackdrop_png_1
+                     , x
+                     , y
+                     , width
+                     , height
+                     , 0
+                     , 0
+                     , cachedImage_liveModeBackdrop_png_1 . getWidth ()
+                     , cachedImage_liveModeBackdrop_png_1 . getHeight () );
     }
-
     {
         int x = 472, y = 6, width = 50, height = 22;
         //[UserPaintCustomArguments] Customize the painting arguments here..
         //[/UserPaintCustomArguments]
-        g.setColour (juce::Colours::black);
-        g.drawImage (cachedImage_recordIndicator_png_2,
-                     x, y, width, height,
-                     0, 0, cachedImage_recordIndicator_png_2.getWidth(), cachedImage_recordIndicator_png_2.getHeight());
+        g . setColour (
+                       Colours::black );
+        g . drawImage (
+                       cachedImage_recordIndicator_png_2
+                     , x
+                     , y
+                     , width
+                     , height
+                     , 0
+                     , 0
+                     , cachedImage_recordIndicator_png_2 . getWidth ()
+                     , cachedImage_recordIndicator_png_2 . getHeight () );
     }
-
     {
         int x = 32, y = 544, width = 154, height = 26;
         //[UserPaintCustomArguments] Customize the painting arguments here..
         //[/UserPaintCustomArguments]
-        g.setColour (juce::Colours::black);
-        g.drawImage (cachedImage_liveModeButtonDown_png_3,
-                     x, y, width, height,
-                     0, 0, cachedImage_liveModeButtonDown_png_3.getWidth(), cachedImage_liveModeButtonDown_png_3.getHeight());
+        g . setColour (
+                       Colours::black );
+        g . drawImage (
+                       cachedImage_liveModeButtonDown_png_3
+                     , x
+                     , y
+                     , width
+                     , height
+                     , 0
+                     , 0
+                     , cachedImage_liveModeButtonDown_png_3 . getWidth ()
+                     , cachedImage_liveModeButtonDown_png_3 . getHeight () );
     }
-
     {
         int x = 472, y = 6, width = 50, height = 22;
         //[UserPaintCustomArguments] Customize the painting arguments here..
         //[/UserPaintCustomArguments]
-        g.setColour (juce::Colours::black.withAlpha (0.001f));
-        g.drawImage (cachedImage_recordIndicatorblink_png_4,
-                     x, y, width, height,
-                     0, 0, cachedImage_recordIndicatorblink_png_4.getWidth(), cachedImage_recordIndicatorblink_png_4.getHeight());
+        g . setColour (
+                       Colours::black . withAlpha (
+                                                         0.001f ) );
+        g . drawImage (
+                       cachedImage_recordIndicatorblink_png_4
+                     , x
+                     , y
+                     , width
+                     , height
+                     , 0
+                     , 0
+                     , cachedImage_recordIndicatorblink_png_4 . getWidth ()
+                     , cachedImage_recordIndicatorblink_png_4 . getHeight () );
     }
 
     //[UserPaint] Add your own custom painting code here..
     if ( armed && quarterNoteTicked )
     {
         g . setColour (
-                       Colours::black
-                      );
+                       Colours::black );
         g . drawImage (
                        cachedImage_recordIndicatorblink_png_4
                      , 472
@@ -1187,13 +2626,13 @@ void LiveMode::paint (juce::Graphics& g)
                      , 0
                      , 0
                      , cachedImage_recordIndicatorblink_png_4 . getWidth ()
-                     , cachedImage_recordIndicatorblink_png_4 . getHeight ()
-                      );
+                     , cachedImage_recordIndicatorblink_png_4 . getHeight () );
     }
     //[/UserPaint]
 }
 
-void LiveMode::resized()
+void
+    LiveMode::resized ()
 {
     //[UserPreResize] Add your own custom resize code here..
     //[/UserPreResize]
@@ -1202,819 +2641,555 @@ void LiveMode::resized()
     //[/UserResized]
 }
 
-void LiveMode::sliderValueChanged (juce::Slider* sliderThatWasMoved)
+void
+    LiveMode::sliderValueChanged (
+            Slider* slider_that_was_moved
+            )
 {
     //[UsersliderValueChanged_Pre]
     //[/UsersliderValueChanged_Pre]
 
-    if (sliderThatWasMoved == volumeSlider.get())
+    if ( slider_that_was_moved == volumeSlider . get () )
     {
         //[UserSliderCode_volumeSlider] -- add your slider handling code here..
-                                       volumeLabel -> setText (
-                                                               volumeSlider -> getTextFromValue (
-                                                                                                 volumeSlider -> getValue ()
-                                                                                                )
-                                                             , dontSendNotification
-                                                              );
-                                       SharedResourcePointer < ListenerList < LiveVolumeChanged > > () -> call (
-                                                                                                                &LiveVolumeChanged::onLiveVolumeChanged
-                                                                                                              , static_cast < unsigned int > ( volumeSlider
-                                                                                                                 -> getValue () )
-                                                                                                               );
-                                       SharedResourcePointer < ListenerList < ExportVolumeChanged > > () -> call (
-                                                                                                                  &ExportVolumeChanged::
-                                                                                                                  onExportVolumeChanged
-                                                                                                                , static_cast < unsigned int > (
-                                                                                                                      volumeSlider
-                                                                                                                   -> getValue () )
-                                                                                                                 );
+        volumeLabel -> setText (
+                                volumeSlider -> getTextFromValue (
+                                                                  volumeSlider -> getValue () )
+                              , dontSendNotification );
+        SharedResourcePointer < ListenerList < LiveVolumeChanged > > () -> call (
+                                                                                 &LiveVolumeChanged::onLiveVolumeChanged
+                                                                               , static_cast < unsigned int > ( volumeSlider -> getValue () ) );
+        SharedResourcePointer < ListenerList < ExportVolumeChanged > > () -> call (
+                                                                                   &ExportVolumeChanged::onExportVolumeChanged
+                                                                                 , static_cast < unsigned int > ( volumeSlider -> getValue () ) );
         //[/UserSliderCode_volumeSlider]
     }
-    else if (sliderThatWasMoved == patch1Slider.get())
+    else if ( slider_that_was_moved == patch1Slider . get () )
     {
         //[UserSliderCode_patch1Slider] -- add your slider handling code here..
-                                       patch1Label -> setText (
-                                                               patch1Slider -> getTextFromValue (
-                                                                                                 patch1Slider -> getValue ()
-                                                                                                )
-                                                             , dontSendNotification
-                                                              );
-                                       SharedResourcePointer < ListenerList < LivePatchChanged > > () -> call (
-                                                                                                               &LivePatchChanged::onLivePatchChanged
-                                                                                                             , SID_VOICE_1
-                                                                                                             , static_cast < unsigned int > ( patch1Slider
-                                                                                                                -> getValue () ) - 1
-                                                                                                              );
-                                       SharedResourcePointer < ListenerList < ExportPatchChanged > > () -> call (
-                                                                                                                 &ExportPatchChanged::onExportPatchChanged
-                                                                                                               , SID_VOICE_1
-                                                                                                               , static_cast < unsigned int > (
-                                                                                                                     patch1Slider
-                                                                                                                  -> getValue () ) - 1
-                                                                                                                );
+        patch1Label -> setText (
+                                patch1Slider -> getTextFromValue (
+                                                                  patch1Slider -> getValue () )
+                              , dontSendNotification );
+        SharedResourcePointer < ListenerList < LivePatchChanged > > () -> call (
+                                                                                &LivePatchChanged::onLivePatchChanged
+                                                                              , SID_VOICE_1
+                                                                              , static_cast < unsigned int > ( patch1Slider -> getValue () ) - 1 );
+        SharedResourcePointer < ListenerList < ExportPatchChanged > > () -> call (
+                                                                                  &ExportPatchChanged::onExportPatchChanged
+                                                                                , SID_VOICE_1
+                                                                                , static_cast < unsigned int > ( patch1Slider -> getValue () ) - 1 );
         //[/UserSliderCode_patch1Slider]
     }
-    else if (sliderThatWasMoved == attack1Slider.get())
+    else if ( slider_that_was_moved == attack1Slider . get () )
     {
         //[UserSliderCode_attack1Slider] -- add your slider handling code here..
-                                       attack1Label -> setText (
-                                                                attack1Slider -> getTextFromValue (
-                                                                                                   attack1Slider -> getValue ()
-                                                                                                  )
-                                                              , dontSendNotification
-                                                               );
-                                       SharedResourcePointer < ListenerList < LiveAttackChanged > > () -> call (
-                                                                                                                &LiveAttackChanged::onLiveAttackChanged
-                                                                                                              , SID_VOICE_1
-                                                                                                              , static_cast < unsigned int > (
-                                                                                                                    attack1Slider -> getValue () )
-                                                                                                               );
-                                       SharedResourcePointer < ListenerList < ExportAttackChanged > > () -> call (
-                                                                                                                  &ExportAttackChanged::
-                                                                                                                  onExportAttackChanged
-                                                                                                                , SID_VOICE_1
-                                                                                                                , static_cast < unsigned int > (
-                                                                                                                      attack1Slider -> getValue () )
-                                                                                                                 );
+        attack1Label -> setText (
+                                 attack1Slider -> getTextFromValue (
+                                                                    attack1Slider -> getValue () )
+                               , dontSendNotification );
+        SharedResourcePointer < ListenerList < LiveAttackChanged > > () -> call (
+                                                                                 &LiveAttackChanged::onLiveAttackChanged
+                                                                               , SID_VOICE_1
+                                                                               , static_cast < unsigned int > ( attack1Slider -> getValue () ) );
+        SharedResourcePointer < ListenerList < ExportAttackChanged > > () -> call (
+                                                                                   &ExportAttackChanged::onExportAttackChanged
+                                                                                 , SID_VOICE_1
+                                                                                 , static_cast < unsigned int > ( attack1Slider -> getValue () ) );
         //[/UserSliderCode_attack1Slider]
     }
-    else if (sliderThatWasMoved == decay1Slider.get())
+    else if ( slider_that_was_moved == decay1Slider . get () )
     {
         //[UserSliderCode_decay1Slider] -- add your slider handling code here..
-                                       decay1Label -> setText (
-                                                               decay1Slider -> getTextFromValue (
-                                                                                                 decay1Slider -> getValue ()
-                                                                                                )
-                                                             , dontSendNotification
-                                                              );
-                                       SharedResourcePointer < ListenerList < LiveDecayChanged > > () -> call (
-                                                                                                               &LiveDecayChanged::onLiveDecayChanged
-                                                                                                             , SID_VOICE_1
-                                                                                                             , static_cast < unsigned int > ( decay1Slider
-                                                                                                                -> getValue () )
-                                                                                                              );
-                                       SharedResourcePointer < ListenerList < ExportDecayChanged > > () -> call (
-                                                                                                                 &ExportDecayChanged::onExportDecayChanged
-                                                                                                               , SID_VOICE_1
-                                                                                                               , static_cast < unsigned int > (
-                                                                                                                     decay1Slider
-                                                                                                                  -> getValue () )
-                                                                                                                );
+        decay1Label -> setText (
+                                decay1Slider -> getTextFromValue (
+                                                                  decay1Slider -> getValue () )
+                              , dontSendNotification );
+        SharedResourcePointer < ListenerList < LiveDecayChanged > > () -> call (
+                                                                                &LiveDecayChanged::onLiveDecayChanged
+                                                                              , SID_VOICE_1
+                                                                              , static_cast < unsigned int > ( decay1Slider -> getValue () ) );
+        SharedResourcePointer < ListenerList < ExportDecayChanged > > () -> call (
+                                                                                  &ExportDecayChanged::onExportDecayChanged
+                                                                                , SID_VOICE_1
+                                                                                , static_cast < unsigned int > ( decay1Slider -> getValue () ) );
         //[/UserSliderCode_decay1Slider]
     }
-    else if (sliderThatWasMoved == sustain1Slider.get())
+    else if ( slider_that_was_moved == sustain1Slider . get () )
     {
         //[UserSliderCode_sustain1Slider] -- add your slider handling code here..
-                                       sustain1Label -> setText (
-                                                                 sustain1Slider -> getTextFromValue (
-                                                                                                     sustain1Slider -> getValue ()
-                                                                                                    )
-                                                               , dontSendNotification
-                                                                );
-                                       SharedResourcePointer < ListenerList < LiveSustainChanged > > () -> call (
-                                                                                                                 &LiveSustainChanged::onLiveSustainChanged
-                                                                                                               , SID_VOICE_1
-                                                                                                               , static_cast < unsigned int > (
-                                                                                                                     sustain1Slider -> getValue () )
-                                                                                                                );
-                                       SharedResourcePointer < ListenerList < ExportSustainChanged > > () -> call (
-                                                                                                                   &ExportSustainChanged::
-                                                                                                                   onExportSustainChanged
-                                                                                                                 , SID_VOICE_1
-                                                                                                                 , static_cast < unsigned int > (
-                                                                                                                       sustain1Slider -> getValue () )
-                                                                                                                  );
+        sustain1Label -> setText (
+                                  sustain1Slider -> getTextFromValue (
+                                                                      sustain1Slider -> getValue () )
+                                , dontSendNotification );
+        SharedResourcePointer < ListenerList < LiveSustainChanged > > () -> call (
+                                                                                  &LiveSustainChanged::onLiveSustainChanged
+                                                                                , SID_VOICE_1
+                                                                                , static_cast < unsigned int > ( sustain1Slider -> getValue () ) );
+        SharedResourcePointer < ListenerList < ExportSustainChanged > > () -> call (
+                                                                                    &ExportSustainChanged::onExportSustainChanged
+                                                                                  , SID_VOICE_1
+                                                                                  , static_cast < unsigned int > ( sustain1Slider -> getValue () ) );
         //[/UserSliderCode_sustain1Slider]
     }
-    else if (sliderThatWasMoved == release1Slider.get())
+    else if ( slider_that_was_moved == release1Slider . get () )
     {
         //[UserSliderCode_release1Slider] -- add your slider handling code here..
-                                       release1Label -> setText (
-                                                                 release1Slider -> getTextFromValue (
-                                                                                                     release1Slider -> getValue ()
-                                                                                                    )
-                                                               , dontSendNotification
-                                                                );
-                                       SharedResourcePointer < ListenerList < LiveReleaseChanged > > () -> call (
-                                                                                                                 &LiveReleaseChanged::onLiveReleaseChanged
-                                                                                                               , SID_VOICE_1
-                                                                                                               , static_cast < unsigned int > (
-                                                                                                                     release1Slider -> getValue () )
-                                                                                                                );
-                                       SharedResourcePointer < ListenerList < ExportReleaseChanged > > () -> call (
-                                                                                                                   &ExportReleaseChanged::
-                                                                                                                   onExportReleaseChanged
-                                                                                                                 , SID_VOICE_1
-                                                                                                                 , static_cast < unsigned int > (
-                                                                                                                       release1Slider -> getValue () )
-                                                                                                                  );
+        release1Label -> setText (
+                                  release1Slider -> getTextFromValue (
+                                                                      release1Slider -> getValue () )
+                                , dontSendNotification );
+        SharedResourcePointer < ListenerList < LiveReleaseChanged > > () -> call (
+                                                                                  &LiveReleaseChanged::onLiveReleaseChanged
+                                                                                , SID_VOICE_1
+                                                                                , static_cast < unsigned int > ( release1Slider -> getValue () ) );
+        SharedResourcePointer < ListenerList < ExportReleaseChanged > > () -> call (
+                                                                                    &ExportReleaseChanged::onExportReleaseChanged
+                                                                                  , SID_VOICE_1
+                                                                                  , static_cast < unsigned int > ( release1Slider -> getValue () ) );
         //[/UserSliderCode_release1Slider]
     }
-    else if (sliderThatWasMoved == pitchBend1Slider.get())
+    else if ( slider_that_was_moved == pitchBend1Slider . get () )
     {
         //[UserSliderCode_pitchBend1Slider] -- add your slider handling code here..
-                                       pitchBend1Label -> setText (
-                                                                   pitchBend1Slider -> getTextFromValue (
-                                                                                                         pitchBend1Slider -> getValue ()
-                                                                                                        ) + "%"
-                                                                 , dontSendNotification
-                                                                  );
-                                       SharedResourcePointer < ListenerList < LivePitchBendChanged > > () -> call (
-                                                                                                                   &LivePitchBendChanged::
-                                                                                                                   onLivePitchBendChanged
-                                                                                                                 , SID_VOICE_1
-                                                                                                                 , static_cast < float > ( pitchBend1Slider
-                                                                                                                    -> getValue () / 100.0 )
-                                                                                                                  );
-                                       SharedResourcePointer < ListenerList < ExportPitchBendChanged > > () -> call (
-                                                                                                                     &ExportPitchBendChanged::
-                                                                                                                     onExportPitchBendChanged
-                                                                                                                   , SID_VOICE_1
-                                                                                                                   , static_cast < float > (
-                                                                                                                         pitchBend1Slider
-                                                                                                                      -> getValue () / 100.0 )
-                                                                                                                    );
+        pitchBend1Label -> setText (
+                                    pitchBend1Slider -> getTextFromValue (
+                                                                          pitchBend1Slider -> getValue () ) + "%"
+                                  , dontSendNotification );
+        SharedResourcePointer < ListenerList < LivePitchBendChanged > > () -> call (
+                                                                                    &LivePitchBendChanged::onLivePitchBendChanged
+                                                                                  , SID_VOICE_1
+                                                                                  , static_cast < float > ( pitchBend1Slider -> getValue () / 100.0 ) );
+        SharedResourcePointer < ListenerList < ExportPitchBendChanged > > () -> call (
+                                                                                      &ExportPitchBendChanged::onExportPitchBendChanged
+                                                                                    , SID_VOICE_1
+                                                                                    , static_cast < float > ( pitchBend1Slider -> getValue () / 100.0 ) );
         //[/UserSliderCode_pitchBend1Slider]
     }
-    else if (sliderThatWasMoved == vibratoAmount1Slider.get())
+    else if ( slider_that_was_moved == vibratoAmount1Slider . get () )
     {
         //[UserSliderCode_vibratoAmount1Slider] -- add your slider handling code here..
-                                       vibratoAmount1Label -> setText (
-                                                                       vibratoAmount1Slider -> getTextFromValue (
-                                                                                                                 vibratoAmount1Slider -> getValue ()
-                                                                                                                ) + "%"
-                                                                     , dontSendNotification
-                                                                      );
-                                       SharedResourcePointer < ListenerList < LiveVibratoAmountChanged > > () -> call (
-                                                                                                                       &LiveVibratoAmountChanged::
-                                                                                                                       onLiveVibratoAmountChanged
-                                                                                                                     , SID_VOICE_1
-                                                                                                                     , static_cast < float > (
-                                                                                                                           vibratoAmount1Slider ->
-                                                                                                                           getValue () / 100.0 )
-                                                                                                                      );
-                                       SharedResourcePointer < ListenerList < ExportVibratoAmountChanged > > () -> call (
-                                                                                                                         &ExportVibratoAmountChanged::
-                                                                                                                         onExportVibratoAmountChanged
-                                                                                                                       , SID_VOICE_1
-                                                                                                                       , static_cast < float > (
-                                                                                                                             vibratoAmount1Slider ->
-                                                                                                                             getValue () / 100.0 )
-                                                                                                                        );
+        vibratoAmount1Label -> setText (
+                                        vibratoAmount1Slider -> getTextFromValue (
+                                                                                  vibratoAmount1Slider -> getValue () ) + "%"
+                                      , dontSendNotification );
+        SharedResourcePointer < ListenerList < LiveVibratoAmountChanged > > () -> call (
+                                                                                        &LiveVibratoAmountChanged::onLiveVibratoAmountChanged
+                                                                                      , SID_VOICE_1
+                                                                                      , static_cast < float > ( vibratoAmount1Slider -> getValue () / 100.0 ) );
+        SharedResourcePointer < ListenerList < ExportVibratoAmountChanged > > () -> call (
+                                                                                          &ExportVibratoAmountChanged::onExportVibratoAmountChanged
+                                                                                        , SID_VOICE_1
+                                                                                        , static_cast < float > ( vibratoAmount1Slider -> getValue () / 100.0 ) );
         //[/UserSliderCode_vibratoAmount1Slider]
     }
-    else if (sliderThatWasMoved == vibratoSpeed1Slider.get())
+    else if ( slider_that_was_moved == vibratoSpeed1Slider . get () )
     {
         //[UserSliderCode_vibratoSpeed1Slider] -- add your slider handling code here..
-                                       vibratoSpeed1Label -> setText (
-                                                                      vibratoSpeed1Slider -> getTextFromValue (
-                                                                                                               vibratoSpeed1Slider -> getValue ()
-                                                                                                              ) + "%"
-                                                                    , dontSendNotification
-                                                                     );
-                                       SharedResourcePointer < ListenerList < LiveVibratoSpeedChanged > > () -> call (
-                                                                                                                      &LiveVibratoSpeedChanged::
-                                                                                                                      onLiveVibratoSpeedChanged
-                                                                                                                    , SID_VOICE_1
-                                                                                                                    , static_cast < float > (
-                                                                                                                          vibratoSpeed1Slider ->
-                                                                                                                          getValue () / 100.0 )
-                                                                                                                     );
-                                       SharedResourcePointer < ListenerList < ExportVibratoSpeedChanged > > () -> call (
-                                                                                                                        &ExportVibratoSpeedChanged::
-                                                                                                                        onExportVibratoSpeedChanged
-                                                                                                                      , SID_VOICE_1
-                                                                                                                      , static_cast < float > (
-                                                                                                                            vibratoSpeed1Slider ->
-                                                                                                                            getValue () / 100.0 )
-                                                                                                                       );
+        vibratoSpeed1Label -> setText (
+                                       vibratoSpeed1Slider -> getTextFromValue (
+                                                                                vibratoSpeed1Slider -> getValue () ) + "%"
+                                     , dontSendNotification );
+        SharedResourcePointer < ListenerList < LiveVibratoSpeedChanged > > () -> call (
+                                                                                       &LiveVibratoSpeedChanged::onLiveVibratoSpeedChanged
+                                                                                     , SID_VOICE_1
+                                                                                     , static_cast < float > ( vibratoSpeed1Slider -> getValue () / 100.0 ) );
+        SharedResourcePointer < ListenerList < ExportVibratoSpeedChanged > > () -> call (
+                                                                                         &ExportVibratoSpeedChanged::onExportVibratoSpeedChanged
+                                                                                       , SID_VOICE_1
+                                                                                       , static_cast < float > ( vibratoSpeed1Slider -> getValue () / 100.0 ) );
         //[/UserSliderCode_vibratoSpeed1Slider]
     }
-    else if (sliderThatWasMoved == pulseWidth1Slider.get())
+    else if ( slider_that_was_moved == pulseWidth1Slider . get () )
     {
         //[UserSliderCode_pulseWidth1Slider] -- add your slider handling code here..
-                                       pulseWidth1Label -> setText (
-                                                                    pulseWidth1Slider -> getTextFromValue (
-                                                                                                           pulseWidth1Slider -> getValue ()
-                                                                                                          ) + "%"
-                                                                  , dontSendNotification
-                                                                   );
-                                       SharedResourcePointer < ListenerList < LivePulseWidthChanged > > () -> call (
-                                                                                                                    &LivePulseWidthChanged::
-                                                                                                                    onLivePulseWidthChanged
-                                                                                                                  , SID_VOICE_1
-                                                                                                                  , static_cast < float > (
-                                                                                                                        pulseWidth1Slider -> getValue () /
-                                                                                                                        100.0 )
-                                                                                                                   );
-                                       SharedResourcePointer < ListenerList < ExportPulseWidthChanged > > () -> call (
-                                                                                                                      &ExportPulseWidthChanged::
-                                                                                                                      onExportPulseWidthChanged
-                                                                                                                    , SID_VOICE_1
-                                                                                                                    , static_cast < float > (
-                                                                                                                          pulseWidth1Slider -> getValue ()
-                                                                                                                          /
-                                                                                                                          100.0 )
-                                                                                                                     );
+        pulseWidth1Label -> setText (
+                                     pulseWidth1Slider -> getTextFromValue (
+                                                                            pulseWidth1Slider -> getValue () ) + "%"
+                                   , dontSendNotification );
+        SharedResourcePointer < ListenerList < LivePulseWidthChanged > > () -> call (
+                                                                                     &LivePulseWidthChanged::onLivePulseWidthChanged
+                                                                                   , SID_VOICE_1
+                                                                                   , static_cast < float > ( pulseWidth1Slider -> getValue () / 100.0 ) );
+        SharedResourcePointer < ListenerList < ExportPulseWidthChanged > > () -> call (
+                                                                                       &ExportPulseWidthChanged::onExportPulseWidthChanged
+                                                                                     , SID_VOICE_1
+                                                                                     , static_cast < float > ( pulseWidth1Slider -> getValue () / 100.0 ) );
         //[/UserSliderCode_pulseWidth1Slider]
     }
-    else if (sliderThatWasMoved == vibratoDelay1Slider.get())
+    else if ( slider_that_was_moved == vibratoDelay1Slider . get () )
     {
         //[UserSliderCode_vibratoDelay1Slider] -- add your slider handling code here..
-                                       vibratoDelay1Label -> setText (
-                                                                       vibratoDelay1Slider -> getTextFromValue (
-                                                                                                                 vibratoDelay1Slider -> getValue ()
-                                                                                                                )
-                                                                     , dontSendNotification
-                                                                      );
-                                       SharedResourcePointer < ListenerList < LiveVibratoDelayChanged > > () -> call (
-                                                                                                                       &LiveVibratoDelayChanged::
-                                                                                                                       onLiveVibratoDelayChanged
-                                                                                                                     , SID_VOICE_1
-                                                                                                                     , static_cast < unsigned int > (
-                                                                                                                           vibratoAmount1Slider ->
-                                                                                                                           getValue () )
-                                                                                                                      );
+        vibratoDelay1Label -> setText (
+                                       vibratoDelay1Slider -> getTextFromValue (
+                                                                                vibratoDelay1Slider -> getValue () )
+                                     , dontSendNotification );
+        SharedResourcePointer < ListenerList < LiveVibratoDelayChanged > > () -> call (
+                                                                                       &LiveVibratoDelayChanged::onLiveVibratoDelayChanged
+                                                                                     , SID_VOICE_1
+                                                                                     , static_cast < unsigned int > ( vibratoAmount1Slider -> getValue () ) );
         //[/UserSliderCode_vibratoDelay1Slider]
     }
-    else if (sliderThatWasMoved == patch2Slider.get())
+    else if ( slider_that_was_moved == patch2Slider . get () )
     {
         //[UserSliderCode_patch2Slider] -- add your slider handling code here..
-                                       patch2Label -> setText (
-                                                               patch2Slider -> getTextFromValue (
-                                                                                                 patch2Slider -> getValue ()
-                                                                                                )
-                                                             , dontSendNotification
-                                                              );
-                                       SharedResourcePointer < ListenerList < LivePatchChanged > > () -> call (
-                                                                                                               &LivePatchChanged::onLivePatchChanged
-                                                                                                             , SID_VOICE_2
-                                                                                                             , static_cast < unsigned int > ( patch2Slider
-                                                                                                                -> getValue () ) - 1
-                                                                                                              );
-                                       SharedResourcePointer < ListenerList < ExportPatchChanged > > () -> call (
-                                                                                                                 &ExportPatchChanged::onExportPatchChanged
-                                                                                                               , SID_VOICE_2
-                                                                                                               , static_cast < unsigned int > (
-                                                                                                                     patch2Slider
-                                                                                                                  -> getValue () ) - 1
-                                                                                                                );
+        patch2Label -> setText (
+                                patch2Slider -> getTextFromValue (
+                                                                  patch2Slider -> getValue () )
+                              , dontSendNotification );
+        SharedResourcePointer < ListenerList < LivePatchChanged > > () -> call (
+                                                                                &LivePatchChanged::onLivePatchChanged
+                                                                              , SID_VOICE_2
+                                                                              , static_cast < unsigned int > ( patch2Slider -> getValue () ) - 1 );
+        SharedResourcePointer < ListenerList < ExportPatchChanged > > () -> call (
+                                                                                  &ExportPatchChanged::onExportPatchChanged
+                                                                                , SID_VOICE_2
+                                                                                , static_cast < unsigned int > ( patch2Slider -> getValue () ) - 1 );
         //[/UserSliderCode_patch2Slider]
     }
-    else if (sliderThatWasMoved == attack2Slider.get())
+    else if ( slider_that_was_moved == attack2Slider . get () )
     {
         //[UserSliderCode_attack2Slider] -- add your slider handling code here..
-                                       attack2Label -> setText (
-                                                                attack2Slider -> getTextFromValue (
-                                                                                                   attack2Slider -> getValue ()
-                                                                                                  )
-                                                              , dontSendNotification
-                                                               );
-                                       SharedResourcePointer < ListenerList < LiveAttackChanged > > () -> call (
-                                                                                                                &LiveAttackChanged::onLiveAttackChanged
-                                                                                                              , SID_VOICE_2
-                                                                                                              , static_cast < unsigned int > (
-                                                                                                                    attack2Slider -> getValue () )
-                                                                                                               );
-                                       SharedResourcePointer < ListenerList < ExportAttackChanged > > () -> call (
-                                                                                                                  &ExportAttackChanged::
-                                                                                                                  onExportAttackChanged
-                                                                                                                , SID_VOICE_2
-                                                                                                                , static_cast < unsigned int > (
-                                                                                                                      attack2Slider -> getValue () )
-                                                                                                                 );
+        attack2Label -> setText (
+                                 attack2Slider -> getTextFromValue (
+                                                                    attack2Slider -> getValue () )
+                               , dontSendNotification );
+        SharedResourcePointer < ListenerList < LiveAttackChanged > > () -> call (
+                                                                                 &LiveAttackChanged::onLiveAttackChanged
+                                                                               , SID_VOICE_2
+                                                                               , static_cast < unsigned int > ( attack2Slider -> getValue () ) );
+        SharedResourcePointer < ListenerList < ExportAttackChanged > > () -> call (
+                                                                                   &ExportAttackChanged::onExportAttackChanged
+                                                                                 , SID_VOICE_2
+                                                                                 , static_cast < unsigned int > ( attack2Slider -> getValue () ) );
         //[/UserSliderCode_attack2Slider]
     }
-    else if (sliderThatWasMoved == decay2Slider.get())
+    else if ( slider_that_was_moved == decay2Slider . get () )
     {
         //[UserSliderCode_decay2Slider] -- add your slider handling code here..
-                                       decay2Label -> setText (
-                                                               decay2Slider -> getTextFromValue (
-                                                                                                 decay2Slider -> getValue ()
-                                                                                                )
-                                                             , dontSendNotification
-                                                              );
-                                       SharedResourcePointer < ListenerList < LiveDecayChanged > > () -> call (
-                                                                                                               &LiveDecayChanged::onLiveDecayChanged
-                                                                                                             , SID_VOICE_2
-                                                                                                             , static_cast < unsigned int > ( decay2Slider
-                                                                                                                -> getValue () )
-                                                                                                              );
-                                       SharedResourcePointer < ListenerList < ExportDecayChanged > > () -> call (
-                                                                                                                 &ExportDecayChanged::onExportDecayChanged
-                                                                                                               , SID_VOICE_2
-                                                                                                               , static_cast < unsigned int > (
-                                                                                                                     decay2Slider
-                                                                                                                  -> getValue () )
-                                                                                                                );
+        decay2Label -> setText (
+                                decay2Slider -> getTextFromValue (
+                                                                  decay2Slider -> getValue () )
+                              , dontSendNotification );
+        SharedResourcePointer < ListenerList < LiveDecayChanged > > () -> call (
+                                                                                &LiveDecayChanged::onLiveDecayChanged
+                                                                              , SID_VOICE_2
+                                                                              , static_cast < unsigned int > ( decay2Slider -> getValue () ) );
+        SharedResourcePointer < ListenerList < ExportDecayChanged > > () -> call (
+                                                                                  &ExportDecayChanged::onExportDecayChanged
+                                                                                , SID_VOICE_2
+                                                                                , static_cast < unsigned int > ( decay2Slider -> getValue () ) );
         //[/UserSliderCode_decay2Slider]
     }
-    else if (sliderThatWasMoved == sustain2Slider.get())
+    else if ( slider_that_was_moved == sustain2Slider . get () )
     {
         //[UserSliderCode_sustain2Slider] -- add your slider handling code here..
-                                       sustain2Label -> setText (
-                                                                 sustain2Slider -> getTextFromValue (
-                                                                                                     sustain2Slider -> getValue ()
-                                                                                                    )
-                                                               , dontSendNotification
-                                                                );
-                                       SharedResourcePointer < ListenerList < LiveSustainChanged > > () -> call (
-                                                                                                                 &LiveSustainChanged::onLiveSustainChanged
-                                                                                                               , SID_VOICE_2
-                                                                                                               , static_cast < unsigned int > (
-                                                                                                                     sustain2Slider -> getValue () )
-                                                                                                                );
-                                       SharedResourcePointer < ListenerList < ExportSustainChanged > > () -> call (
-                                                                                                                   &ExportSustainChanged::
-                                                                                                                   onExportSustainChanged
-                                                                                                                 , SID_VOICE_2
-                                                                                                                 , static_cast < unsigned int > (
-                                                                                                                       sustain2Slider -> getValue () )
-                                                                                                                  );
+        sustain2Label -> setText (
+                                  sustain2Slider -> getTextFromValue (
+                                                                      sustain2Slider -> getValue () )
+                                , dontSendNotification );
+        SharedResourcePointer < ListenerList < LiveSustainChanged > > () -> call (
+                                                                                  &LiveSustainChanged::onLiveSustainChanged
+                                                                                , SID_VOICE_2
+                                                                                , static_cast < unsigned int > ( sustain2Slider -> getValue () ) );
+        SharedResourcePointer < ListenerList < ExportSustainChanged > > () -> call (
+                                                                                    &ExportSustainChanged::onExportSustainChanged
+                                                                                  , SID_VOICE_2
+                                                                                  , static_cast < unsigned int > ( sustain2Slider -> getValue () ) );
         //[/UserSliderCode_sustain2Slider]
     }
-    else if (sliderThatWasMoved == release2Slider.get())
+    else if ( slider_that_was_moved == release2Slider . get () )
     {
         //[UserSliderCode_release2Slider] -- add your slider handling code here..
-                                       release2Label -> setText (
-                                                                 release2Slider -> getTextFromValue (
-                                                                                                     release2Slider -> getValue ()
-                                                                                                    )
-                                                               , dontSendNotification
-                                                                );
-                                       SharedResourcePointer < ListenerList < LiveReleaseChanged > > () -> call (
-                                                                                                                 &LiveReleaseChanged::onLiveReleaseChanged
-                                                                                                               , SID_VOICE_2
-                                                                                                               , static_cast < unsigned int > (
-                                                                                                                     release2Slider -> getValue () )
-                                                                                                                );
-                                       SharedResourcePointer < ListenerList < ExportReleaseChanged > > () -> call (
-                                                                                                                   &ExportReleaseChanged::
-                                                                                                                   onExportReleaseChanged
-                                                                                                                 , SID_VOICE_2
-                                                                                                                 , static_cast < unsigned int > (
-                                                                                                                       release2Slider -> getValue () )
-                                                                                                                  );
+        release2Label -> setText (
+                                  release2Slider -> getTextFromValue (
+                                                                      release2Slider -> getValue () )
+                                , dontSendNotification );
+        SharedResourcePointer < ListenerList < LiveReleaseChanged > > () -> call (
+                                                                                  &LiveReleaseChanged::onLiveReleaseChanged
+                                                                                , SID_VOICE_2
+                                                                                , static_cast < unsigned int > ( release2Slider -> getValue () ) );
+        SharedResourcePointer < ListenerList < ExportReleaseChanged > > () -> call (
+                                                                                    &ExportReleaseChanged::onExportReleaseChanged
+                                                                                  , SID_VOICE_2
+                                                                                  , static_cast < unsigned int > ( release2Slider -> getValue () ) );
         //[/UserSliderCode_release2Slider]
     }
-    else if (sliderThatWasMoved == pitchBend2Slider.get())
+    else if ( slider_that_was_moved == pitchBend2Slider . get () )
     {
         //[UserSliderCode_pitchBend2Slider] -- add your slider handling code here..
-                                       pitchBend2Label -> setText (
-                                                                   pitchBend2Slider -> getTextFromValue (
-                                                                                                         pitchBend2Slider -> getValue ()
-                                                                                                        ) + "%"
-                                                                 , dontSendNotification
-                                                                  );
-                                       SharedResourcePointer < ListenerList < LivePitchBendChanged > > () -> call (
-                                                                                                                   &LivePitchBendChanged::
-                                                                                                                   onLivePitchBendChanged
-                                                                                                                 , SID_VOICE_2
-                                                                                                                 , static_cast < float > ( pitchBend2Slider
-                                                                                                                    -> getValue () / 100.0 )
-                                                                                                                  );
-                                       SharedResourcePointer < ListenerList < ExportPitchBendChanged > > () -> call (
-                                                                                                                     &ExportPitchBendChanged::
-                                                                                                                     onExportPitchBendChanged
-                                                                                                                   , SID_VOICE_2
-                                                                                                                   , static_cast < float > (
-                                                                                                                         pitchBend2Slider
-                                                                                                                      -> getValue () / 100.0 )
-                                                                                                                    );
+        pitchBend2Label -> setText (
+                                    pitchBend2Slider -> getTextFromValue (
+                                                                          pitchBend2Slider -> getValue () ) + "%"
+                                  , dontSendNotification );
+        SharedResourcePointer < ListenerList < LivePitchBendChanged > > () -> call (
+                                                                                    &LivePitchBendChanged::onLivePitchBendChanged
+                                                                                  , SID_VOICE_2
+                                                                                  , static_cast < float > ( pitchBend2Slider -> getValue () / 100.0 ) );
+        SharedResourcePointer < ListenerList < ExportPitchBendChanged > > () -> call (
+                                                                                      &ExportPitchBendChanged::onExportPitchBendChanged
+                                                                                    , SID_VOICE_2
+                                                                                    , static_cast < float > ( pitchBend2Slider -> getValue () / 100.0 ) );
         //[/UserSliderCode_pitchBend2Slider]
     }
-    else if (sliderThatWasMoved == vibratoAmount2Slider.get())
+    else if ( slider_that_was_moved == vibratoAmount2Slider . get () )
     {
         //[UserSliderCode_vibratoAmount2Slider] -- add your slider handling code here..
-                                       vibratoAmount2Label -> setText (
-                                                                       vibratoAmount2Slider -> getTextFromValue (
-                                                                                                                 vibratoAmount2Slider -> getValue ()
-                                                                                                                ) + "%"
-                                                                     , dontSendNotification
-                                                                      );
-                                       SharedResourcePointer < ListenerList < LiveVibratoAmountChanged > > () -> call (
-                                                                                                                       &LiveVibratoAmountChanged::
-                                                                                                                       onLiveVibratoAmountChanged
-                                                                                                                     , SID_VOICE_2
-                                                                                                                     , static_cast < float > (
-                                                                                                                           vibratoAmount2Slider ->
-                                                                                                                           getValue () / 100.0 )
-                                                                                                                      );
-                                       SharedResourcePointer < ListenerList < ExportVibratoAmountChanged > > () -> call (
-                                                                                                                         &ExportVibratoAmountChanged::
-                                                                                                                         onExportVibratoAmountChanged
-                                                                                                                       , SID_VOICE_2
-                                                                                                                       , static_cast < float > (
-                                                                                                                             vibratoAmount2Slider ->
-                                                                                                                             getValue () / 100.0 )
-                                                                                                                        );
+        vibratoAmount2Label -> setText (
+                                        vibratoAmount2Slider -> getTextFromValue (
+                                                                                  vibratoAmount2Slider -> getValue () ) + "%"
+                                      , dontSendNotification );
+        SharedResourcePointer < ListenerList < LiveVibratoAmountChanged > > () -> call (
+                                                                                        &LiveVibratoAmountChanged::onLiveVibratoAmountChanged
+                                                                                      , SID_VOICE_2
+                                                                                      , static_cast < float > ( vibratoAmount2Slider -> getValue () / 100.0 ) );
+        SharedResourcePointer < ListenerList < ExportVibratoAmountChanged > > () -> call (
+                                                                                          &ExportVibratoAmountChanged::onExportVibratoAmountChanged
+                                                                                        , SID_VOICE_2
+                                                                                        , static_cast < float > ( vibratoAmount2Slider -> getValue () / 100.0 ) );
         //[/UserSliderCode_vibratoAmount2Slider]
     }
-    else if (sliderThatWasMoved == vibratoSpeed2Slider.get())
+    else if ( slider_that_was_moved == vibratoSpeed2Slider . get () )
     {
         //[UserSliderCode_vibratoSpeed2Slider] -- add your slider handling code here..
-                                       vibratoSpeed2Label -> setText (
-                                                                      vibratoSpeed2Slider -> getTextFromValue (
-                                                                                                               vibratoSpeed2Slider -> getValue ()
-                                                                                                              ) + "%"
-                                                                    , dontSendNotification
-                                                                     );
-                                       SharedResourcePointer < ListenerList < LiveVibratoSpeedChanged > > () -> call (
-                                                                                                                      &LiveVibratoSpeedChanged::
-                                                                                                                      onLiveVibratoSpeedChanged
-                                                                                                                    , SID_VOICE_2
-                                                                                                                    , static_cast < float > (
-                                                                                                                          vibratoSpeed2Slider ->
-                                                                                                                          getValue () / 100.0 )
-                                                                                                                     );
-                                       SharedResourcePointer < ListenerList < ExportVibratoSpeedChanged > > () -> call (
-                                                                                                                        &ExportVibratoSpeedChanged::
-                                                                                                                        onExportVibratoSpeedChanged
-                                                                                                                      , SID_VOICE_2
-                                                                                                                      , static_cast < float > (
-                                                                                                                            vibratoSpeed2Slider ->
-                                                                                                                            getValue () / 100.0 )
-                                                                                                                       );
+        vibratoSpeed2Label -> setText (
+                                       vibratoSpeed2Slider -> getTextFromValue (
+                                                                                vibratoSpeed2Slider -> getValue () ) + "%"
+                                     , dontSendNotification );
+        SharedResourcePointer < ListenerList < LiveVibratoSpeedChanged > > () -> call (
+                                                                                       &LiveVibratoSpeedChanged::onLiveVibratoSpeedChanged
+                                                                                     , SID_VOICE_2
+                                                                                     , static_cast < float > ( vibratoSpeed2Slider -> getValue () / 100.0 ) );
+        SharedResourcePointer < ListenerList < ExportVibratoSpeedChanged > > () -> call (
+                                                                                         &ExportVibratoSpeedChanged::onExportVibratoSpeedChanged
+                                                                                       , SID_VOICE_2
+                                                                                       , static_cast < float > ( vibratoSpeed2Slider -> getValue () / 100.0 ) );
         //[/UserSliderCode_vibratoSpeed2Slider]
     }
-    else if (sliderThatWasMoved == pulseWidth2Slider.get())
+    else if ( slider_that_was_moved == pulseWidth2Slider . get () )
     {
         //[UserSliderCode_pulseWidth2Slider] -- add your slider handling code here..
-                                       pulseWidth2Label -> setText (
-                                                                    pulseWidth2Slider -> getTextFromValue (
-                                                                                                           pulseWidth2Slider -> getValue ()
-                                                                                                          ) + "%"
-                                                                  , dontSendNotification
-                                                                   );
-                                       SharedResourcePointer < ListenerList < LivePulseWidthChanged > > () -> call (
-                                                                                                                    &LivePulseWidthChanged::
-                                                                                                                    onLivePulseWidthChanged
-                                                                                                                  , SID_VOICE_2
-                                                                                                                  , static_cast < float > (
-                                                                                                                        pulseWidth2Slider -> getValue () /
-                                                                                                                        100.0 )
-                                                                                                                   );
-                                       SharedResourcePointer < ListenerList < ExportPulseWidthChanged > > () -> call (
-                                                                                                                      &ExportPulseWidthChanged::
-                                                                                                                      onExportPulseWidthChanged
-                                                                                                                    , SID_VOICE_2
-                                                                                                                    , static_cast < float > (
-                                                                                                                          pulseWidth2Slider -> getValue ()
-                                                                                                                          /
-                                                                                                                          100.0 )
-                                                                                                                     );
+        pulseWidth2Label -> setText (
+                                     pulseWidth2Slider -> getTextFromValue (
+                                                                            pulseWidth2Slider -> getValue () ) + "%"
+                                   , dontSendNotification );
+        SharedResourcePointer < ListenerList < LivePulseWidthChanged > > () -> call (
+                                                                                     &LivePulseWidthChanged::onLivePulseWidthChanged
+                                                                                   , SID_VOICE_2
+                                                                                   , static_cast < float > ( pulseWidth2Slider -> getValue () / 100.0 ) );
+        SharedResourcePointer < ListenerList < ExportPulseWidthChanged > > () -> call (
+                                                                                       &ExportPulseWidthChanged::onExportPulseWidthChanged
+                                                                                     , SID_VOICE_2
+                                                                                     , static_cast < float > ( pulseWidth2Slider -> getValue () / 100.0 ) );
         //[/UserSliderCode_pulseWidth2Slider]
     }
-    else if (sliderThatWasMoved == vibratoDelay2Slider.get())
+    else if ( slider_that_was_moved == vibratoDelay2Slider . get () )
     {
         //[UserSliderCode_vibratoDelay2Slider] -- add your slider handling code here..
-                                       vibratoDelay2Label -> setText (
-                                                                       vibratoDelay2Slider -> getTextFromValue (
-                                                                                                                 vibratoDelay2Slider -> getValue ()
-                                                                                                                )
-                                                                     , dontSendNotification
-                                                                      );
-                                       SharedResourcePointer < ListenerList < LiveVibratoDelayChanged > > () -> call (
-                                                                                                                       &LiveVibratoDelayChanged::
-                                                                                                                       onLiveVibratoDelayChanged
-                                                                                                                     , SID_VOICE_2
-                                                                                                                     , static_cast < unsigned int > (
-                                                                                                                           vibratoAmount2Slider ->
-                                                                                                                           getValue () )
-                                                                                                                      );
+        vibratoDelay2Label -> setText (
+                                       vibratoDelay2Slider -> getTextFromValue (
+                                                                                vibratoDelay2Slider -> getValue () )
+                                     , dontSendNotification );
+        SharedResourcePointer < ListenerList < LiveVibratoDelayChanged > > () -> call (
+                                                                                       &LiveVibratoDelayChanged::onLiveVibratoDelayChanged
+                                                                                     , SID_VOICE_2
+                                                                                     , static_cast < unsigned int > ( vibratoAmount2Slider -> getValue () ) );
         //[/UserSliderCode_vibratoDelay2Slider]
     }
-    else if (sliderThatWasMoved == patch3Slider.get())
+    else if ( slider_that_was_moved == patch3Slider . get () )
     {
         //[UserSliderCode_patch3Slider] -- add your slider handling code here..
-                                       patch3Label -> setText (
-                                                               patch3Slider -> getTextFromValue (
-                                                                                                 patch3Slider -> getValue ()
-                                                                                                )
-                                                             , dontSendNotification
-                                                              );
-                                       SharedResourcePointer < ListenerList < LivePatchChanged > > () -> call (
-                                                                                                               &LivePatchChanged::onLivePatchChanged
-                                                                                                             , SID_VOICE_3
-                                                                                                             , static_cast < unsigned int > ( patch3Slider
-                                                                                                                -> getValue () ) - 1
-                                                                                                              );
-                                       SharedResourcePointer < ListenerList < ExportPatchChanged > > () -> call (
-                                                                                                                 &ExportPatchChanged::onExportPatchChanged
-                                                                                                               , SID_VOICE_3
-                                                                                                               , static_cast < unsigned int > (
-                                                                                                                     patch3Slider
-                                                                                                                  -> getValue () ) - 1
-                                                                                                                );
+        patch3Label -> setText (
+                                patch3Slider -> getTextFromValue (
+                                                                  patch3Slider -> getValue () )
+                              , dontSendNotification );
+        SharedResourcePointer < ListenerList < LivePatchChanged > > () -> call (
+                                                                                &LivePatchChanged::onLivePatchChanged
+                                                                              , SID_VOICE_3
+                                                                              , static_cast < unsigned int > ( patch3Slider -> getValue () ) - 1 );
+        SharedResourcePointer < ListenerList < ExportPatchChanged > > () -> call (
+                                                                                  &ExportPatchChanged::onExportPatchChanged
+                                                                                , SID_VOICE_3
+                                                                                , static_cast < unsigned int > ( patch3Slider -> getValue () ) - 1 );
         //[/UserSliderCode_patch3Slider]
     }
-    else if (sliderThatWasMoved == attack3Slider.get())
+    else if ( slider_that_was_moved == attack3Slider . get () )
     {
         //[UserSliderCode_attack3Slider] -- add your slider handling code here..
-                                       attack3Label -> setText (
-                                                                attack3Slider -> getTextFromValue (
-                                                                                                   attack3Slider -> getValue ()
-                                                                                                  )
-                                                              , dontSendNotification
-                                                               );
-                                       SharedResourcePointer < ListenerList < LiveAttackChanged > > () -> call (
-                                                                                                                &LiveAttackChanged::onLiveAttackChanged
-                                                                                                              , SID_VOICE_3
-                                                                                                              , static_cast < unsigned int > (
-                                                                                                                    attack3Slider -> getValue () )
-                                                                                                               );
-                                       SharedResourcePointer < ListenerList < ExportAttackChanged > > () -> call (
-                                                                                                                  &ExportAttackChanged::
-                                                                                                                  onExportAttackChanged
-                                                                                                                , SID_VOICE_3
-                                                                                                                , static_cast < unsigned int > (
-                                                                                                                      attack3Slider -> getValue () )
-                                                                                                                 );
+        attack3Label -> setText (
+                                 attack3Slider -> getTextFromValue (
+                                                                    attack3Slider -> getValue () )
+                               , dontSendNotification );
+        SharedResourcePointer < ListenerList < LiveAttackChanged > > () -> call (
+                                                                                 &LiveAttackChanged::onLiveAttackChanged
+                                                                               , SID_VOICE_3
+                                                                               , static_cast < unsigned int > ( attack3Slider -> getValue () ) );
+        SharedResourcePointer < ListenerList < ExportAttackChanged > > () -> call (
+                                                                                   &ExportAttackChanged::onExportAttackChanged
+                                                                                 , SID_VOICE_3
+                                                                                 , static_cast < unsigned int > ( attack3Slider -> getValue () ) );
         //[/UserSliderCode_attack3Slider]
     }
-    else if (sliderThatWasMoved == decay3Slider.get())
+    else if ( slider_that_was_moved == decay3Slider . get () )
     {
         //[UserSliderCode_decay3Slider] -- add your slider handling code here..
-                                       decay3Label -> setText (
-                                                               decay3Slider -> getTextFromValue (
-                                                                                                 decay3Slider -> getValue ()
-                                                                                                )
-                                                             , dontSendNotification
-                                                              );
-                                       SharedResourcePointer < ListenerList < LiveDecayChanged > > () -> call (
-                                                                                                               &LiveDecayChanged::onLiveDecayChanged
-                                                                                                             , SID_VOICE_3
-                                                                                                             , static_cast < unsigned int > ( decay3Slider
-                                                                                                                -> getValue () )
-                                                                                                              );
-                                       SharedResourcePointer < ListenerList < ExportDecayChanged > > () -> call (
-                                                                                                                 &ExportDecayChanged::onExportDecayChanged
-                                                                                                               , SID_VOICE_3
-                                                                                                               , static_cast < unsigned int > (
-                                                                                                                     decay3Slider
-                                                                                                                  -> getValue () )
-                                                                                                                );
+        decay3Label -> setText (
+                                decay3Slider -> getTextFromValue (
+                                                                  decay3Slider -> getValue () )
+                              , dontSendNotification );
+        SharedResourcePointer < ListenerList < LiveDecayChanged > > () -> call (
+                                                                                &LiveDecayChanged::onLiveDecayChanged
+                                                                              , SID_VOICE_3
+                                                                              , static_cast < unsigned int > ( decay3Slider -> getValue () ) );
+        SharedResourcePointer < ListenerList < ExportDecayChanged > > () -> call (
+                                                                                  &ExportDecayChanged::onExportDecayChanged
+                                                                                , SID_VOICE_3
+                                                                                , static_cast < unsigned int > ( decay3Slider -> getValue () ) );
         //[/UserSliderCode_decay3Slider]
     }
-    else if (sliderThatWasMoved == sustain3Slider.get())
+    else if ( slider_that_was_moved == sustain3Slider . get () )
     {
         //[UserSliderCode_sustain3Slider] -- add your slider handling code here..
-                                       sustain3Label -> setText (
-                                                                 sustain3Slider -> getTextFromValue (
-                                                                                                     sustain3Slider -> getValue ()
-                                                                                                    )
-                                                               , dontSendNotification
-                                                                );
-                                       SharedResourcePointer < ListenerList < LiveSustainChanged > > () -> call (
-                                                                                                                 &LiveSustainChanged::onLiveSustainChanged
-                                                                                                               , SID_VOICE_3
-                                                                                                               , static_cast < unsigned int > (
-                                                                                                                     sustain3Slider -> getValue () )
-                                                                                                                );
-                                       SharedResourcePointer < ListenerList < ExportSustainChanged > > () -> call (
-                                                                                                                   &ExportSustainChanged::
-                                                                                                                   onExportSustainChanged
-                                                                                                                 , SID_VOICE_3
-                                                                                                                 , static_cast < unsigned int > (
-                                                                                                                       sustain3Slider -> getValue () )
-                                                                                                                  );
+        sustain3Label -> setText (
+                                  sustain3Slider -> getTextFromValue (
+                                                                      sustain3Slider -> getValue () )
+                                , dontSendNotification );
+        SharedResourcePointer < ListenerList < LiveSustainChanged > > () -> call (
+                                                                                  &LiveSustainChanged::onLiveSustainChanged
+                                                                                , SID_VOICE_3
+                                                                                , static_cast < unsigned int > ( sustain3Slider -> getValue () ) );
+        SharedResourcePointer < ListenerList < ExportSustainChanged > > () -> call (
+                                                                                    &ExportSustainChanged::onExportSustainChanged
+                                                                                  , SID_VOICE_3
+                                                                                  , static_cast < unsigned int > ( sustain3Slider -> getValue () ) );
         //[/UserSliderCode_sustain3Slider]
     }
-    else if (sliderThatWasMoved == release3Slider.get())
+    else if ( slider_that_was_moved == release3Slider . get () )
     {
         //[UserSliderCode_release3Slider] -- add your slider handling code here..
-                                       release3Label -> setText (
-                                                                 release3Slider -> getTextFromValue (
-                                                                                                     release3Slider -> getValue ()
-                                                                                                    )
-                                                               , dontSendNotification
-                                                                );
-                                       SharedResourcePointer < ListenerList < LiveReleaseChanged > > () -> call (
-                                                                                                                 &LiveReleaseChanged::onLiveReleaseChanged
-                                                                                                               , SID_VOICE_3
-                                                                                                               , static_cast < unsigned int > (
-                                                                                                                     release3Slider -> getValue () )
-                                                                                                                );
-                                       SharedResourcePointer < ListenerList < ExportReleaseChanged > > () -> call (
-                                                                                                                   &ExportReleaseChanged::
-                                                                                                                   onExportReleaseChanged
-                                                                                                                 , SID_VOICE_3
-                                                                                                                 , static_cast < unsigned int > (
-                                                                                                                       release3Slider -> getValue () )
-                                                                                                                  );
+        release3Label -> setText (
+                                  release3Slider -> getTextFromValue (
+                                                                      release3Slider -> getValue () )
+                                , dontSendNotification );
+        SharedResourcePointer < ListenerList < LiveReleaseChanged > > () -> call (
+                                                                                  &LiveReleaseChanged::onLiveReleaseChanged
+                                                                                , SID_VOICE_3
+                                                                                , static_cast < unsigned int > ( release3Slider -> getValue () ) );
+        SharedResourcePointer < ListenerList < ExportReleaseChanged > > () -> call (
+                                                                                    &ExportReleaseChanged::onExportReleaseChanged
+                                                                                  , SID_VOICE_3
+                                                                                  , static_cast < unsigned int > ( release3Slider -> getValue () ) );
         //[/UserSliderCode_release3Slider]
     }
-    else if (sliderThatWasMoved == pitchBend3Slider.get())
+    else if ( slider_that_was_moved == pitchBend3Slider . get () )
     {
         //[UserSliderCode_pitchBend3Slider] -- add your slider handling code here..
-                                       pitchBend3Label -> setText (
-                                                                   pitchBend3Slider -> getTextFromValue (
-                                                                                                         pitchBend3Slider -> getValue ()
-                                                                                                        ) + "%"
-                                                                 , dontSendNotification
-                                                                  );
-                                       SharedResourcePointer < ListenerList < LivePitchBendChanged > > () -> call (
-                                                                                                                   &LivePitchBendChanged::
-                                                                                                                   onLivePitchBendChanged
-                                                                                                                 , SID_VOICE_3
-                                                                                                                 , static_cast < float > ( pitchBend3Slider
-                                                                                                                    -> getValue () / 100.0 )
-                                                                                                                  );
-                                       SharedResourcePointer < ListenerList < ExportPitchBendChanged > > () -> call (
-                                                                                                                     &ExportPitchBendChanged::
-                                                                                                                     onExportPitchBendChanged
-                                                                                                                   , SID_VOICE_3
-                                                                                                                   , static_cast < float > (
-                                                                                                                         pitchBend3Slider
-                                                                                                                      -> getValue () / 100.0 )
-                                                                                                                    );
+        pitchBend3Label -> setText (
+                                    pitchBend3Slider -> getTextFromValue (
+                                                                          pitchBend3Slider -> getValue () ) + "%"
+                                  , dontSendNotification );
+        SharedResourcePointer < ListenerList < LivePitchBendChanged > > () -> call (
+                                                                                    &LivePitchBendChanged::onLivePitchBendChanged
+                                                                                  , SID_VOICE_3
+                                                                                  , static_cast < float > ( pitchBend3Slider -> getValue () / 100.0 ) );
+        SharedResourcePointer < ListenerList < ExportPitchBendChanged > > () -> call (
+                                                                                      &ExportPitchBendChanged::onExportPitchBendChanged
+                                                                                    , SID_VOICE_3
+                                                                                    , static_cast < float > ( pitchBend3Slider -> getValue () / 100.0 ) );
         //[/UserSliderCode_pitchBend3Slider]
     }
-    else if (sliderThatWasMoved == vibratoAmount3Slider.get())
+    else if ( slider_that_was_moved == vibratoAmount3Slider . get () )
     {
         //[UserSliderCode_vibratoAmount3Slider] -- add your slider handling code here..
-                                       vibratoAmount3Label -> setText (
-                                                                       vibratoAmount3Slider -> getTextFromValue (
-                                                                                                                 vibratoAmount3Slider -> getValue ()
-                                                                                                                ) + "%"
-                                                                     , dontSendNotification
-                                                                      );
-                                       SharedResourcePointer < ListenerList < LiveVibratoAmountChanged > > () -> call (
-                                                                                                                       &LiveVibratoAmountChanged::
-                                                                                                                       onLiveVibratoAmountChanged
-                                                                                                                     , SID_VOICE_3
-                                                                                                                     , static_cast < float > (
-                                                                                                                           vibratoAmount3Slider ->
-                                                                                                                           getValue () / 100.0 )
-                                                                                                                      );
-                                       SharedResourcePointer < ListenerList < ExportVibratoAmountChanged > > () -> call (
-                                                                                                                         &ExportVibratoAmountChanged::
-                                                                                                                         onExportVibratoAmountChanged
-                                                                                                                       , SID_VOICE_3
-                                                                                                                       , static_cast < float > (
-                                                                                                                             vibratoAmount3Slider ->
-                                                                                                                             getValue () / 100.0 )
-                                                                                                                        );
+        vibratoAmount3Label -> setText (
+                                        vibratoAmount3Slider -> getTextFromValue (
+                                                                                  vibratoAmount3Slider -> getValue () ) + "%"
+                                      , dontSendNotification );
+        SharedResourcePointer < ListenerList < LiveVibratoAmountChanged > > () -> call (
+                                                                                        &LiveVibratoAmountChanged::onLiveVibratoAmountChanged
+                                                                                      , SID_VOICE_3
+                                                                                      , static_cast < float > ( vibratoAmount3Slider -> getValue () / 100.0 ) );
+        SharedResourcePointer < ListenerList < ExportVibratoAmountChanged > > () -> call (
+                                                                                          &ExportVibratoAmountChanged::onExportVibratoAmountChanged
+                                                                                        , SID_VOICE_3
+                                                                                        , static_cast < float > ( vibratoAmount3Slider -> getValue () / 100.0 ) );
         //[/UserSliderCode_vibratoAmount3Slider]
     }
-    else if (sliderThatWasMoved == vibratoSpeed3Slider.get())
+    else if ( slider_that_was_moved == vibratoSpeed3Slider . get () )
     {
         //[UserSliderCode_vibratoSpeed3Slider] -- add your slider handling code here..
-                                       vibratoSpeed3Label -> setText (
-                                                                      vibratoSpeed3Slider -> getTextFromValue (
-                                                                                                               vibratoSpeed3Slider -> getValue ()
-                                                                                                              ) + "%"
-                                                                    , dontSendNotification
-                                                                     );
-                                       SharedResourcePointer < ListenerList < LiveVibratoSpeedChanged > > () -> call (
-                                                                                                                      &LiveVibratoSpeedChanged::
-                                                                                                                      onLiveVibratoSpeedChanged
-                                                                                                                    , SID_VOICE_3
-                                                                                                                    , static_cast < float > (
-                                                                                                                          vibratoSpeed3Slider ->
-                                                                                                                          getValue () / 100.0 )
-                                                                                                                     );
-                                       SharedResourcePointer < ListenerList < ExportVibratoSpeedChanged > > () -> call (
-                                                                                                                        &ExportVibratoSpeedChanged::
-                                                                                                                        onExportVibratoSpeedChanged
-                                                                                                                      , SID_VOICE_3
-                                                                                                                      , static_cast < float > (
-                                                                                                                            vibratoSpeed3Slider ->
-                                                                                                                            getValue () / 100.0 )
-                                                                                                                       );
+        vibratoSpeed3Label -> setText (
+                                       vibratoSpeed3Slider -> getTextFromValue (
+                                                                                vibratoSpeed3Slider -> getValue () ) + "%"
+                                     , dontSendNotification );
+        SharedResourcePointer < ListenerList < LiveVibratoSpeedChanged > > () -> call (
+                                                                                       &LiveVibratoSpeedChanged::onLiveVibratoSpeedChanged
+                                                                                     , SID_VOICE_3
+                                                                                     , static_cast < float > ( vibratoSpeed3Slider -> getValue () / 100.0 ) );
+        SharedResourcePointer < ListenerList < ExportVibratoSpeedChanged > > () -> call (
+                                                                                         &ExportVibratoSpeedChanged::onExportVibratoSpeedChanged
+                                                                                       , SID_VOICE_3
+                                                                                       , static_cast < float > ( vibratoSpeed3Slider -> getValue () / 100.0 ) );
         //[/UserSliderCode_vibratoSpeed3Slider]
     }
-    else if (sliderThatWasMoved == pulseWidth3Slider.get())
+    else if ( slider_that_was_moved == pulseWidth3Slider . get () )
     {
         //[UserSliderCode_pulseWidth3Slider] -- add your slider handling code here..
-                                       pulseWidth3Label -> setText (
-                                                                    pulseWidth3Slider -> getTextFromValue (
-                                                                                                           pulseWidth3Slider -> getValue ()
-                                                                                                          ) + "%"
-                                                                  , dontSendNotification
-                                                                   );
-                                       SharedResourcePointer < ListenerList < LivePulseWidthChanged > > () -> call (
-                                                                                                                    &LivePulseWidthChanged::
-                                                                                                                    onLivePulseWidthChanged
-                                                                                                                  , SID_VOICE_3
-                                                                                                                  , static_cast < float > (
-                                                                                                                        pulseWidth3Slider -> getValue () /
-                                                                                                                        100.0 )
-                                                                                                                   );
-                                       SharedResourcePointer < ListenerList < ExportPulseWidthChanged > > () -> call (
-                                                                                                                      &ExportPulseWidthChanged::
-                                                                                                                      onExportPulseWidthChanged
-                                                                                                                    , SID_VOICE_3
-                                                                                                                    , static_cast < float > (
-                                                                                                                          pulseWidth3Slider -> getValue ()
-                                                                                                                          /
-                                                                                                                          100.0 )
-                                                                                                                     );
+        pulseWidth3Label -> setText (
+                                     pulseWidth3Slider -> getTextFromValue (
+                                                                            pulseWidth3Slider -> getValue () ) + "%"
+                                   , dontSendNotification );
+        SharedResourcePointer < ListenerList < LivePulseWidthChanged > > () -> call (
+                                                                                     &LivePulseWidthChanged::onLivePulseWidthChanged
+                                                                                   , SID_VOICE_3
+                                                                                   , static_cast < float > ( pulseWidth3Slider -> getValue () / 100.0 ) );
+        SharedResourcePointer < ListenerList < ExportPulseWidthChanged > > () -> call (
+                                                                                       &ExportPulseWidthChanged::onExportPulseWidthChanged
+                                                                                     , SID_VOICE_3
+                                                                                     , static_cast < float > ( pulseWidth3Slider -> getValue () / 100.0 ) );
         //[/UserSliderCode_pulseWidth3Slider]
     }
-    else if (sliderThatWasMoved == vibratoDelay3Slider.get())
+    else if ( slider_that_was_moved == vibratoDelay3Slider . get () )
     {
         //[UserSliderCode_vibratoDelay3Slider] -- add your slider handling code here..
-                                       vibratoDelay3Label -> setText (
-                                                                       vibratoDelay3Slider -> getTextFromValue (
-                                                                                                                 vibratoDelay3Slider -> getValue ()
-                                                                                                                )
-                                                                     , dontSendNotification
-                                                                      );
-                                       SharedResourcePointer < ListenerList < LiveVibratoDelayChanged > > () -> call (
-                                                                                                                       &LiveVibratoDelayChanged::
-                                                                                                                       onLiveVibratoDelayChanged
-                                                                                                                     , SID_VOICE_3
-                                                                                                                     , static_cast < unsigned int > (
-                                                                                                                           vibratoAmount3Slider ->
-                                                                                                                           getValue () )
-                                                                                                                      );
+        vibratoDelay3Label -> setText (
+                                       vibratoDelay3Slider -> getTextFromValue (
+                                                                                vibratoDelay3Slider -> getValue () )
+                                     , dontSendNotification );
+        SharedResourcePointer < ListenerList < LiveVibratoDelayChanged > > () -> call (
+                                                                                       &LiveVibratoDelayChanged::onLiveVibratoDelayChanged
+                                                                                     , SID_VOICE_3
+                                                                                     , static_cast < unsigned int > ( vibratoAmount3Slider -> getValue () ) );
         //[/UserSliderCode_vibratoDelay3Slider]
     }
-    else if (sliderThatWasMoved == cutoffSlider.get())
+    else if ( slider_that_was_moved == cutoffSlider . get () )
     {
         //[UserSliderCode_cutoffSlider] -- add your slider handling code here..
-                                       cutoffLabel -> setText (
-                                                               cutoffSlider -> getTextFromValue (
-                                                                                                 cutoffSlider -> getValue ()
-                                                                                                )
-                                                             , dontSendNotification
-                                                              );
-                                       SharedResourcePointer < ListenerList < LiveCutoffChanged > > () -> call (
-                                                                                                                &LiveCutoffChanged::onLiveCutoffChanged
-                                                                                                              , static_cast < unsigned int > ( cutoffSlider
-                                                                                                                 -> getValue () )
-                                                                                                               );
-                                       SharedResourcePointer < ListenerList < ExportCutoffChanged > > () -> call (
-                                                                                                                  &ExportCutoffChanged::
-                                                                                                                  onExportCutoffChanged
-                                                                                                                , static_cast < unsigned int > (
-                                                                                                                      cutoffSlider
-                                                                                                                   -> getValue () )
-                                                                                                                 );
+        cutoffLabel -> setText (
+                                cutoffSlider -> getTextFromValue (
+                                                                  cutoffSlider -> getValue () )
+                              , dontSendNotification );
+        SharedResourcePointer < ListenerList < LiveCutoffChanged > > () -> call (
+                                                                                 &LiveCutoffChanged::onLiveCutoffChanged
+                                                                               , static_cast < unsigned int > ( cutoffSlider -> getValue () ) );
+        SharedResourcePointer < ListenerList < ExportCutoffChanged > > () -> call (
+                                                                                   &ExportCutoffChanged::onExportCutoffChanged
+                                                                                 , static_cast < unsigned int > ( cutoffSlider -> getValue () ) );
         //[/UserSliderCode_cutoffSlider]
     }
-    else if (sliderThatWasMoved == resonanceSlider.get())
+    else if ( slider_that_was_moved == resonanceSlider . get () )
     {
         //[UserSliderCode_resonanceSlider] -- add your slider handling code here..
-                                       resonanceLabel -> setText (
-                                                                  resonanceSlider -> getTextFromValue (
-                                                                                                       resonanceSlider -> getValue ()
-                                                                                                      )
-                                                                , dontSendNotification
-                                                                 );
-                                       SharedResourcePointer < ListenerList < LiveResonanceChanged > > () -> call (
-                                                                                                                   &LiveResonanceChanged::
-                                                                                                                   onLiveResonanceChanged
-                                                                                                                 , static_cast < unsigned int > (
-                                                                                                                       resonanceSlider -> getValue () )
-                                                                                                                  );
-                                       SharedResourcePointer < ListenerList < ExportResonanceChanged > > () -> call (
-                                                                                                                     &ExportResonanceChanged::
-                                                                                                                     onExportResonanceChanged
-                                                                                                                   , static_cast < unsigned int > (
-                                                                                                                         resonanceSlider -> getValue () )
-                                                                                                                    );
+        resonanceLabel -> setText (
+                                   resonanceSlider -> getTextFromValue (
+                                                                        resonanceSlider -> getValue () )
+                                 , dontSendNotification );
+        SharedResourcePointer < ListenerList < LiveResonanceChanged > > () -> call (
+                                                                                    &LiveResonanceChanged::onLiveResonanceChanged
+                                                                                  , static_cast < unsigned int > ( resonanceSlider -> getValue () ) );
+        SharedResourcePointer < ListenerList < ExportResonanceChanged > > () -> call (
+                                                                                      &ExportResonanceChanged::onExportResonanceChanged
+                                                                                    , static_cast < unsigned int > ( resonanceSlider -> getValue () ) );
         //[/UserSliderCode_resonanceSlider]
     }
 
@@ -2022,27 +3197,28 @@ void LiveMode::sliderValueChanged (juce::Slider* sliderThatWasMoved)
     //[/UsersliderValueChanged_Post]
 }
 
-void LiveMode::labelTextChanged (juce::Label* labelThatHasChanged)
+void
+    LiveMode::labelTextChanged (
+            Label* label_that_has_changed
+            )
 {
     //[UserlabelTextChanged_Pre]
     //[/UserlabelTextChanged_Pre]
 
-    if (labelThatHasChanged == titleLabel.get())
+    if ( label_that_has_changed == titleLabel . get () )
     {
         //[UserLabelCode_titleLabel] -- add your label text handling code here..
-                                       SharedResourcePointer < ListenerList < LiveTitleChanged > > () -> call (
-                                                                                                               &LiveTitleChanged::onLiveTitleChanged
-                                                                                                             , titleLabel -> getText ()
-                                                                                                              );
+        SharedResourcePointer < ListenerList < LiveTitleChanged > > () -> call (
+                                                                                &LiveTitleChanged::onLiveTitleChanged
+                                                                              , titleLabel -> getText () );
         //[/UserLabelCode_titleLabel]
     }
-    else if (labelThatHasChanged == artistLabel.get())
+    else if ( label_that_has_changed == artistLabel . get () )
     {
         //[UserLabelCode_artistLabel] -- add your label text handling code here..
-                                       SharedResourcePointer < ListenerList < LiveArtistChanged > > () -> call (
-                                                                                                                &LiveArtistChanged::onLiveArtistChanged
-                                                                                                              , artistLabel -> getText ()
-                                                                                                               );
+        SharedResourcePointer < ListenerList < LiveArtistChanged > > () -> call (
+                                                                                 &LiveArtistChanged::onLiveArtistChanged
+                                                                               , artistLabel -> getText () );
         //[/UserLabelCode_artistLabel]
     }
 
@@ -2050,205 +3226,165 @@ void LiveMode::labelTextChanged (juce::Label* labelThatHasChanged)
     //[/UserlabelTextChanged_Post]
 }
 
-void LiveMode::buttonClicked (juce::Button* buttonThatWasClicked)
+void
+    LiveMode::buttonClicked (
+            Button* button_that_was_clicked
+            )
 {
     //[UserbuttonClicked_Pre]
     //[/UserbuttonClicked_Pre]
 
-    if (buttonThatWasClicked == exportButton.get())
+    if ( button_that_was_clicked == exportButton . get () )
     {
         //[UserButtonCode_exportButton] -- add your button handler code here..
-                                       // arm for recording
-                                       armed             = true;
-                                       quarterNoteTicked = true;
-                                       SharedResourcePointer < ListenerList < LiveExportArmed > > () -> call (
-                                                                                                              &LiveExportArmed::onLiveExportArmed
-                                                                                                             );
-                                       SendInit ();
-                                       repaint ();
+        // arm for recording
+        armed             = true;
+        quarterNoteTicked = true;
+        SharedResourcePointer < ListenerList < LiveExportArmed > > () -> call (
+                                                                               &LiveExportArmed::onLiveExportArmed );
+        SendInit ();
+        repaint ();
         //[/UserButtonCode_exportButton]
     }
-    else if (buttonThatWasClicked == filter1Checkbox.get())
+    else if ( button_that_was_clicked == filter1Checkbox . get () )
     {
         //[UserButtonCode_filter1Checkbox] -- add your button handler code here..
-                                       SharedResourcePointer < ListenerList < LiveVoiceFilterChanged > > () -> call (
-                                                                                                                     &LiveVoiceFilterChanged::
-                                                                                                                     onLiveVoiceFilterChanged
-                                                                                                                   , SID_VOICE_1
-                                                                                                                   , filter1Checkbox -> getToggleState ()
-                                                                                                                    );
-                                       SharedResourcePointer < ListenerList < ExportVoiceFilterChanged > > () -> call (
-                                                                                                                       &ExportVoiceFilterChanged::
-                                                                                                                       onExportVoiceFilterChanged
-                                                                                                                     , SID_VOICE_1
-                                                                                                                     , filter1Checkbox -> getToggleState ()
-                                                                                                                      );
+        SharedResourcePointer < ListenerList < LiveVoiceFilterChanged > > () -> call (
+                                                                                      &LiveVoiceFilterChanged::onLiveVoiceFilterChanged
+                                                                                    , SID_VOICE_1
+                                                                                    , filter1Checkbox -> getToggleState () );
+        SharedResourcePointer < ListenerList < ExportVoiceFilterChanged > > () -> call (
+                                                                                        &ExportVoiceFilterChanged::onExportVoiceFilterChanged
+                                                                                      , SID_VOICE_1
+                                                                                      , filter1Checkbox -> getToggleState () );
         //[/UserButtonCode_filter1Checkbox]
     }
-    else if (buttonThatWasClicked == filter2Checkbox.get())
+    else if ( button_that_was_clicked == filter2Checkbox . get () )
     {
         //[UserButtonCode_filter2Checkbox] -- add your button handler code here..
-                                       SharedResourcePointer < ListenerList < LiveVoiceFilterChanged > > () -> call (
-                                                                                                                     &LiveVoiceFilterChanged::
-                                                                                                                     onLiveVoiceFilterChanged
-                                                                                                                   , SID_VOICE_2
-                                                                                                                   , filter2Checkbox -> getToggleState ()
-                                                                                                                    );
-                                       SharedResourcePointer < ListenerList < ExportVoiceFilterChanged > > () -> call (
-                                                                                                                       &ExportVoiceFilterChanged::
-                                                                                                                       onExportVoiceFilterChanged
-                                                                                                                     , SID_VOICE_2
-                                                                                                                     , filter2Checkbox -> getToggleState ()
-                                                                                                                      );
+        SharedResourcePointer < ListenerList < LiveVoiceFilterChanged > > () -> call (
+                                                                                      &LiveVoiceFilterChanged::onLiveVoiceFilterChanged
+                                                                                    , SID_VOICE_2
+                                                                                    , filter2Checkbox -> getToggleState () );
+        SharedResourcePointer < ListenerList < ExportVoiceFilterChanged > > () -> call (
+                                                                                        &ExportVoiceFilterChanged::onExportVoiceFilterChanged
+                                                                                      , SID_VOICE_2
+                                                                                      , filter2Checkbox -> getToggleState () );
         //[/UserButtonCode_filter2Checkbox]
     }
-    else if (buttonThatWasClicked == filter3Checkbox.get())
+    else if ( button_that_was_clicked == filter3Checkbox . get () )
     {
         //[UserButtonCode_filter3Checkbox] -- add your button handler code here..
-                                       SharedResourcePointer < ListenerList < LiveVoiceFilterChanged > > () -> call (
-                                                                                                                     &LiveVoiceFilterChanged::
-                                                                                                                     onLiveVoiceFilterChanged
-                                                                                                                   , SID_VOICE_3
-                                                                                                                   , filter3Checkbox -> getToggleState ()
-                                                                                                                    );
-                                       SharedResourcePointer < ListenerList < ExportVoiceFilterChanged > > () -> call (
-                                                                                                                       &ExportVoiceFilterChanged::
-                                                                                                                       onExportVoiceFilterChanged
-                                                                                                                     , SID_VOICE_3
-                                                                                                                     , filter3Checkbox -> getToggleState ()
-                                                                                                                      );
+        SharedResourcePointer < ListenerList < LiveVoiceFilterChanged > > () -> call (
+                                                                                      &LiveVoiceFilterChanged::onLiveVoiceFilterChanged
+                                                                                    , SID_VOICE_3
+                                                                                    , filter3Checkbox -> getToggleState () );
+        SharedResourcePointer < ListenerList < ExportVoiceFilterChanged > > () -> call (
+                                                                                        &ExportVoiceFilterChanged::onExportVoiceFilterChanged
+                                                                                      , SID_VOICE_3
+                                                                                      , filter3Checkbox -> getToggleState () );
         //[/UserButtonCode_filter3Checkbox]
     }
-    else if (buttonThatWasClicked == filterLowPassCheckbox.get())
+    else if ( button_that_was_clicked == filterLowPassCheckbox . get () )
     {
         //[UserButtonCode_filterLowPassCheckbox] -- add your button handler code here..
-                                       SharedResourcePointer < ListenerList < LiveLowPassChanged > > () -> call (
-                                                                                                                 &LiveLowPassChanged::onLiveLowPassChanged
-                                                                                                               , filterLowPassCheckbox -> getToggleState ()
-                                                                                                                );
-                                       SharedResourcePointer < ListenerList < ExportLowPassChanged > > () -> call (
-                                                                                                                   &ExportLowPassChanged::
-                                                                                                                   onExportLowPassChanged
-                                                                                                                 , filterLowPassCheckbox ->
-                                                                                                                   getToggleState ()
-                                                                                                                  );
+        SharedResourcePointer < ListenerList < LiveLowPassChanged > > () -> call (
+                                                                                  &LiveLowPassChanged::onLiveLowPassChanged
+                                                                                , filterLowPassCheckbox -> getToggleState () );
+        SharedResourcePointer < ListenerList < ExportLowPassChanged > > () -> call (
+                                                                                    &ExportLowPassChanged::onExportLowPassChanged
+                                                                                  , filterLowPassCheckbox -> getToggleState () );
         //[/UserButtonCode_filterLowPassCheckbox]
     }
-    else if (buttonThatWasClicked == filterBandPassCheckbox.get())
+    else if ( button_that_was_clicked == filterBandPassCheckbox . get () )
     {
         //[UserButtonCode_filterBandPassCheckbox] -- add your button handler code here..
-                                       SharedResourcePointer < ListenerList < LiveBandPassChanged > > () -> call (
-                                                                                                                  &LiveBandPassChanged::
-                                                                                                                  onLiveBandPassChanged
-                                                                                                                , filterBandPassCheckbox ->
-                                                                                                                  getToggleState () * 2
-                                                                                                                 );
-                                       SharedResourcePointer < ListenerList < ExportBandPassChanged > > () -> call (
-                                                                                                                    &ExportBandPassChanged::
-                                                                                                                    onExportBandPassChanged
-                                                                                                                  , filterBandPassCheckbox ->
-                                                                                                                    getToggleState () * 2
-                                                                                                                   );
+        SharedResourcePointer < ListenerList < LiveBandPassChanged > > () -> call (
+                                                                                   &LiveBandPassChanged::onLiveBandPassChanged
+                                                                                 , filterBandPassCheckbox -> getToggleState () * 2 );
+        SharedResourcePointer < ListenerList < ExportBandPassChanged > > () -> call (
+                                                                                     &ExportBandPassChanged::onExportBandPassChanged
+                                                                                   , filterBandPassCheckbox -> getToggleState () * 2 );
         //[/UserButtonCode_filterBandPassCheckbox]
     }
-    else if (buttonThatWasClicked == FilterHighPassCheckbox.get())
+    else if ( button_that_was_clicked == filterHighPassCheckbox . get () )
     {
         //[UserButtonCode_FilterHighPassCheckbox] -- add your button handler code here..
-                                       SharedResourcePointer < ListenerList < LiveHighPassChanged > > () -> call (
-                                                                                                                  &LiveHighPassChanged::
-                                                                                                                  onLiveHighPassChanged
-                                                                                                                , FilterHighPassCheckbox ->
-                                                                                                                  getToggleState () * 4
-                                                                                                                 );
-                                       SharedResourcePointer < ListenerList < ExportHighPassChanged > > () -> call (
-                                                                                                                    &ExportHighPassChanged::
-                                                                                                                    onExportHighPassChanged
-                                                                                                                  , FilterHighPassCheckbox ->
-                                                                                                                    getToggleState () * 4
-                                                                                                                   );
+        SharedResourcePointer < ListenerList < LiveHighPassChanged > > () -> call (
+                                                                                   &LiveHighPassChanged::onLiveHighPassChanged
+                                                                                 , filterHighPassCheckbox -> getToggleState () * 4 );
+        SharedResourcePointer < ListenerList < ExportHighPassChanged > > () -> call (
+                                                                                     &ExportHighPassChanged::onExportHighPassChanged
+                                                                                   , filterHighPassCheckbox -> getToggleState () * 4 );
         //[/UserButtonCode_FilterHighPassCheckbox]
     }
-    else if (buttonThatWasClicked == patchEditorButton.get())
+    else if ( button_that_was_clicked == patchEditorButton . get () )
     {
         //[UserButtonCode_patchEditorButton] -- add your button handler code here..
-                                       SharedResourcePointer < ListenerList < LivePatchEditorModeClicked > > () -> call (
-                                                                                                                         &LivePatchEditorModeClicked::
-                                                                                                                         onLivePatchEditorModeClicked
-                                                                                                                        );
-                                       setVisible (
-                                                   false
-                                                  );
+        SharedResourcePointer < ListenerList < LivePatchEditorModeClicked > > () -> call (
+                                                                                          &LivePatchEditorModeClicked::onLivePatchEditorModeClicked );
+        setVisible (
+                    false );
         //[/UserButtonCode_patchEditorButton]
     }
-    else if (buttonThatWasClicked == addPatchButton.get())
+    else if ( button_that_was_clicked == addPatchButton . get () )
     {
         //[UserButtonCode_addPatchButton] -- add your button handler code here..
-                                       if ( !patchSelector -> isVisible () )
-                                       {
-                                           patchSelector -> setVisible (
-                                                                        true
-                                                                       );
-                                           SharedResourcePointer < ListenerList < LivePatchListMode > > () -> call (
-                                                                                                                    &LivePatchListMode::onLivePatchListMode
-                                                                                                                  , 1
-                                                                                                                   );
-                                           //patchListMode = 1;
-                                       }
-                                       else
-                                       {
-                                           patchSelector -> setVisible (
-                                                                        false
-                                                                       );
-                                           SharedResourcePointer < ListenerList < LivePatchListMode > > () -> call (
-                                                                                                                    &LivePatchListMode::onLivePatchListMode
-                                                                                                                  , -1
-                                                                                                                   );
-                                           //patchListMode = -1;
-                                       }
+        if ( !patchSelector -> isVisible () )
+        {
+            patchSelector -> setVisible (
+                                         true );
+            SharedResourcePointer < ListenerList < LivePatchListMode > > () -> call (
+                                                                                     &LivePatchListMode::onLivePatchListMode
+                                                                                   , 1 );
+            //patchListMode = 1;
+        }
+        else
+        {
+            patchSelector -> setVisible (
+                                         false );
+            SharedResourcePointer < ListenerList < LivePatchListMode > > () -> call (
+                                                                                     &LivePatchListMode::onLivePatchListMode
+                                                                                   , -1 );
+            //patchListMode = -1;
+        }
         //[/UserButtonCode_addPatchButton]
     }
-    else if (buttonThatWasClicked == replacePatchButton.get())
+    else if ( button_that_was_clicked == replacePatchButton . get () )
     {
         //[UserButtonCode_replacePatchButton] -- add your button handler code here..
-                                       if ( !patchSelector -> isVisible () )
-                                       {
-                                           patchSelector -> setVisible (
-                                                                        true
-                                                                       );
-                                           SharedResourcePointer < ListenerList < LivePatchListMode > > () -> call (
-                                                                                                                    &LivePatchListMode::onLivePatchListMode
-                                                                                                                  , 2
-                                                                                                                   );
-                                           //patchListMode = 2;
-                                       }
-                                       else
-                                       {
-                                           patchSelector -> setVisible (
-                                                                        false
-                                                                       );
-                                           SharedResourcePointer < ListenerList < LivePatchListMode > > () -> call (
-                                                                                                                    &LivePatchListMode::onLivePatchListMode
-                                                                                                                  , -1
-                                                                                                                   );
-                                           //patchListMode = -1;
-                                       }
+        if ( !patchSelector -> isVisible () )
+        {
+            patchSelector -> setVisible (
+                                         true );
+            SharedResourcePointer < ListenerList < LivePatchListMode > > () -> call (
+                                                                                     &LivePatchListMode::onLivePatchListMode
+                                                                                   , 2 );
+            //patchListMode = 2;
+        }
+        else
+        {
+            patchSelector -> setVisible (
+                                         false );
+            SharedResourcePointer < ListenerList < LivePatchListMode > > () -> call (
+                                                                                     &LivePatchListMode::onLivePatchListMode
+                                                                                   , -1 );
+            //patchListMode = -1;
+        }
         //[/UserButtonCode_replacePatchButton]
     }
-    else if (buttonThatWasClicked == removePatchButton.get())
+    else if ( button_that_was_clicked == removePatchButton . get () )
     {
         //[UserButtonCode_removePatchButton] -- add your button handler code here..
-                                       SharedResourcePointer < ListenerList < LiveRemovePatchClicked > > () -> call (
-                                                                                                                     &LiveRemovePatchClicked::
-                                                                                                                     onLiveRemovePatchClicked
-                                                                                                                    );
-                                       //refreshPatches();
+        SharedResourcePointer < ListenerList < LiveRemovePatchClicked > > () -> call (
+                                                                                      &LiveRemovePatchClicked::onLiveRemovePatchClicked );
+        //refreshPatches();
         //[/UserButtonCode_removePatchButton]
     }
 
     //[UserbuttonClicked_Post]
     //[/UserbuttonClicked_Post]
 }
-
 
 
 //[MiscUserCode] You can add your own definitions of your custom methods or any other code here...
@@ -2263,69 +3399,47 @@ void
                                {
                                    switch ( voice )
                                    {
-                                       case SID_VOICE_1 :
+                                       case SID_VOICE_1:
                                            patch1Slider -> setValue (
                                                                      value + 1
-                                                                   , dontSendNotification
-                                                                    );
+                                                                   , dontSendNotification );
                                            patch1Label -> setText (
                                                                    patch1Slider -> getTextFromValue (
-                                                                                                     patch1Slider -> getValue ()
-                                                                                                    )
-                                                                 , dontSendNotification
-                                                                  );
+                                                                                                     patch1Slider -> getValue () )
+                                                                 , dontSendNotification );
                                            SharedResourcePointer < ListenerList < ExportPatchChanged > > () -> call (
-                                                                                                                     &ExportPatchChanged::
-                                                                                                                     onExportPatchChanged
+                                                                                                                     &ExportPatchChanged::onExportPatchChanged
                                                                                                                    , SID_VOICE_1
-                                                                                                                   , static_cast < unsigned int > (
-                                                                                                                         patch1Slider
-                                                                                                                      -> getValue () ) - 1
-                                                                                                                    );
+                                                                                                                   , static_cast < unsigned int > ( patch1Slider -> getValue () ) - 1 );
                                            break;
-                                       case SID_VOICE_2 :
+                                       case SID_VOICE_2:
                                            patch2Slider -> setValue (
                                                                      value + 1
-                                                                   , dontSendNotification
-                                                                    );
+                                                                   , dontSendNotification );
                                            patch2Label -> setText (
                                                                    patch2Slider -> getTextFromValue (
-                                                                                                     patch2Slider -> getValue ()
-                                                                                                    )
-                                                                 , dontSendNotification
-                                                                  );
+                                                                                                     patch2Slider -> getValue () )
+                                                                 , dontSendNotification );
                                            SharedResourcePointer < ListenerList < ExportPatchChanged > > () -> call (
-                                                                                                                     &ExportPatchChanged::
-                                                                                                                     onExportPatchChanged
+                                                                                                                     &ExportPatchChanged::onExportPatchChanged
                                                                                                                    , SID_VOICE_2
-                                                                                                                   , static_cast < unsigned int > (
-                                                                                                                         patch2Slider
-                                                                                                                      -> getValue () ) - 1
-                                                                                                                    );
+                                                                                                                   , static_cast < unsigned int > ( patch2Slider -> getValue () ) - 1 );
                                            break;
-                                       case SID_VOICE_3 :
+                                       case SID_VOICE_3:
                                            patch3Slider -> setValue (
                                                                      value + 1
-                                                                   , dontSendNotification
-                                                                    );
+                                                                   , dontSendNotification );
                                            patch3Label -> setText (
                                                                    patch3Slider -> getTextFromValue (
-                                                                                                     patch3Slider -> getValue ()
-                                                                                                    )
-                                                                 , dontSendNotification
-                                                                  );
+                                                                                                     patch3Slider -> getValue () )
+                                                                 , dontSendNotification );
                                            SharedResourcePointer < ListenerList < ExportPatchChanged > > () -> call (
-                                                                                                                     &ExportPatchChanged::
-                                                                                                                     onExportPatchChanged
+                                                                                                                     &ExportPatchChanged::onExportPatchChanged
                                                                                                                    , SID_VOICE_3
-                                                                                                                   , static_cast < unsigned int > (
-                                                                                                                         patch3Slider
-                                                                                                                      -> getValue () ) - 1
-                                                                                                                    );
+                                                                                                                   , static_cast < unsigned int > ( patch3Slider -> getValue () ) - 1 );
                                            break;
                                    }
-                               }
-                              );
+                               } );
 }
 
 
@@ -2334,22 +3448,20 @@ void
 //}
 
 void
-    LiveMode::hidePatchSelector () const
+    LiveMode::HidePatchSelector () const
 {
     MessageManager::callAsync (
                                [=] ()
                                {
                                    patchSelector -> setVisible (
-                                                                false
-                                                               );
-                               }
-                              );
+                                                                false );
+                               } );
 }
 
 
 // TODO: Need to figure out what to do about this
 void
-    LiveMode::refreshPatches ()
+    LiveMode::RefreshPatches ()
 {
     MessageManager::callAsync (
                                [=] ()
@@ -2359,17 +3471,11 @@ void
                                    //patch3Slider->setRange(1, core->getPatchListSize(), 1);
                                    //patches->refresh();
                                    repaint ();
-                               }
-                              );
+                               } );
 }
-
 
 int
-    LiveMode::getPatchListIndex () const
-{
-    return patches -> getSelectedIndex ();
-}
-
+    LiveMode::GetPatchListIndex () const { return patches -> getSelectedIndex (); }
 
 void
     LiveMode::SendInit () const
@@ -2378,62 +3484,41 @@ void
     // patches
     // filter voices
     SharedResourcePointer < ListenerList < ExportVoiceFilterChanged > > () -> call (
-                                                                                  &ExportVoiceFilterChanged::
-                                                                                  onExportVoiceFilterChanged
-                                                                                , SID_VOICE_1
-                                                                                , filter1Checkbox -> getToggleState ()
-                                                                                 );
+                                                                                    &ExportVoiceFilterChanged::onExportVoiceFilterChanged
+                                                                                  , SID_VOICE_1
+                                                                                  , filter1Checkbox -> getToggleState () );
     SharedResourcePointer < ListenerList < ExportVoiceFilterChanged > > () -> call (
-                                                                                  &ExportVoiceFilterChanged::
-                                                                                  onExportVoiceFilterChanged
-                                                                                , SID_VOICE_2
-                                                                                , filter2Checkbox -> getToggleState ()
-                                                                                 );
+                                                                                    &ExportVoiceFilterChanged::onExportVoiceFilterChanged
+                                                                                  , SID_VOICE_2
+                                                                                  , filter2Checkbox -> getToggleState () );
     SharedResourcePointer < ListenerList < ExportVoiceFilterChanged > > () -> call (
-                                                                                  &ExportVoiceFilterChanged::
-                                                                                  onExportVoiceFilterChanged
-                                                                                , SID_VOICE_3
-                                                                                , filter3Checkbox -> getToggleState ()
-                                                                                 );
+                                                                                    &ExportVoiceFilterChanged::onExportVoiceFilterChanged
+                                                                                  , SID_VOICE_3
+                                                                                  , filter3Checkbox -> getToggleState () );
 
     // volume
     SharedResourcePointer < ListenerList < ExportVolumeChanged > > () -> call (
-                                                                             &ExportVolumeChanged::onExportVolumeChanged
-                                                                           , static_cast < unsigned int > ( volumeSlider
-                                                                              -> getValue () )
-                                                                            );
+                                                                               &ExportVolumeChanged::onExportVolumeChanged
+                                                                             , static_cast < unsigned int > ( volumeSlider -> getValue () ) );
     // cutoff
     SharedResourcePointer < ListenerList < ExportCutoffChanged > > () -> call (
-                                                                             &ExportCutoffChanged::onExportCutoffChanged
-                                                                           , static_cast < unsigned int > ( cutoffSlider
-                                                                              -> getValue () )
-                                                                            );
+                                                                               &ExportCutoffChanged::onExportCutoffChanged
+                                                                             , static_cast < unsigned int > ( cutoffSlider -> getValue () ) );
     // resonance
     SharedResourcePointer < ListenerList < ExportResonanceChanged > > () -> call (
-                                                                                &ExportResonanceChanged::
-                                                                                onExportResonanceChanged
-                                                                              , static_cast < unsigned int > (
-                                                                                    resonanceSlider -> getValue () )
-                                                                               );
+                                                                                  &ExportResonanceChanged::onExportResonanceChanged
+                                                                                , static_cast < unsigned int > ( resonanceSlider -> getValue () ) );
     // filter type
     SharedResourcePointer < ListenerList < ExportLowPassChanged > > () -> call (
-                                                                              &ExportLowPassChanged::onExportLowPassChanged
-                                                                            , filterLowPassCheckbox -> getToggleState ()
-                                                                             );
+                                                                                &ExportLowPassChanged::onExportLowPassChanged
+                                                                              , filterLowPassCheckbox -> getToggleState () );
     SharedResourcePointer < ListenerList < ExportBandPassChanged > > () -> call (
-                                                                               &ExportBandPassChanged::
-                                                                               onExportBandPassChanged
-                                                                             , filterBandPassCheckbox ->
-                                                                               getToggleState ()
-                                                                              );
+                                                                                 &ExportBandPassChanged::onExportBandPassChanged
+                                                                               , filterBandPassCheckbox -> getToggleState () );
     SharedResourcePointer < ListenerList < ExportHighPassChanged > > () -> call (
-                                                                               &ExportHighPassChanged::
-                                                                               onExportHighPassChanged
-                                                                             , FilterHighPassCheckbox ->
-                                                                               getToggleState ()
-                                                                              );
+                                                                                 &ExportHighPassChanged::onExportHighPassChanged
+                                                                               , filterHighPassCheckbox -> getToggleState () );
 }
-
 
 void
     LiveMode::onPulseWidthParameterChanged (
@@ -2446,77 +3531,48 @@ void
                                {
                                    switch ( voice )
                                    {
-                                       case SID_VOICE_1 :
+                                       case SID_VOICE_1:
                                            pulseWidth1Slider -> setValue (
                                                                           value * 100.0f
-                                                                        , dontSendNotification
-                                                                         );
+                                                                        , dontSendNotification );
                                            pulseWidth1Label -> setText (
                                                                         pulseWidth1Slider -> getTextFromValue (
-                                                                                                               pulseWidth1Slider -> getValue ()
-                                                                                                              ) + "%"
-                                                                      , dontSendNotification
-                                                                       );
+                                                                                                               pulseWidth1Slider -> getValue () ) + "%"
+                                                                      , dontSendNotification );
                                            SharedResourcePointer < ListenerList < ExportPulseWidthChanged > > () -> call (
-                                                                                                                          &ExportPulseWidthChanged::
-                                                                                                                          onExportPulseWidthChanged
+                                                                                                                          &ExportPulseWidthChanged::onExportPulseWidthChanged
                                                                                                                         , SID_VOICE_1
-                                                                                                                        , static_cast < float > (
-                                                                                                                              pulseWidth1Slider ->
-                                                                                                                              getValue ()
-                                                                                                                              /
-                                                                                                                              100.0 )
-                                                                                                                         );
+                                                                                                                        , static_cast < float > ( pulseWidth1Slider -> getValue () / 100.0 ) );
                                            break;
-                                       case SID_VOICE_2 :
+                                       case SID_VOICE_2:
                                            pulseWidth2Slider -> setValue (
                                                                           value * 100.0f
-                                                                        , dontSendNotification
-                                                                         );
+                                                                        , dontSendNotification );
                                            pulseWidth2Label -> setText (
                                                                         pulseWidth2Slider -> getTextFromValue (
-                                                                                                               pulseWidth2Slider -> getValue ()
-                                                                                                              ) + "%"
-                                                                      , dontSendNotification
-                                                                       );
+                                                                                                               pulseWidth2Slider -> getValue () ) + "%"
+                                                                      , dontSendNotification );
                                            SharedResourcePointer < ListenerList < ExportPulseWidthChanged > > () -> call (
-                                                                                                                          &ExportPulseWidthChanged::
-                                                                                                                          onExportPulseWidthChanged
+                                                                                                                          &ExportPulseWidthChanged::onExportPulseWidthChanged
                                                                                                                         , SID_VOICE_2
-                                                                                                                        , static_cast < float > (
-                                                                                                                              pulseWidth2Slider ->
-                                                                                                                              getValue ()
-                                                                                                                              /
-                                                                                                                              100.0 )
-                                                                                                                         );
+                                                                                                                        , static_cast < float > ( pulseWidth2Slider -> getValue () / 100.0 ) );
                                            break;
-                                       case SID_VOICE_3 :
+                                       case SID_VOICE_3:
                                            pulseWidth3Slider -> setValue (
                                                                           value * 100.0f
-                                                                        , dontSendNotification
-                                                                         );
+                                                                        , dontSendNotification );
                                            pulseWidth3Label -> setText (
                                                                         pulseWidth3Slider -> getTextFromValue (
-                                                                                                               pulseWidth3Slider -> getValue ()
-                                                                                                              ) + "%"
-                                                                      , dontSendNotification
-                                                                       );
+                                                                                                               pulseWidth3Slider -> getValue () ) + "%"
+                                                                      , dontSendNotification );
                                            SharedResourcePointer < ListenerList < ExportPulseWidthChanged > > () -> call (
-                                                                                                                          &ExportPulseWidthChanged::
-                                                                                                                          onExportPulseWidthChanged
+                                                                                                                          &ExportPulseWidthChanged::onExportPulseWidthChanged
                                                                                                                         , SID_VOICE_3
-                                                                                                                        , static_cast < float > (
-                                                                                                                              pulseWidth3Slider ->
-                                                                                                                              getValue ()
-                                                                                                                              /
-                                                                                                                              100.0 )
-                                                                                                                         );
+                                                                                                                        , static_cast < float > ( pulseWidth3Slider -> getValue () / 100.0 ) );
                                            break;
                                    }
-                               }
-                              );
+                               } );
 }
-
 
 void
     LiveMode::onAttackParameterChanged (
@@ -2529,68 +3585,48 @@ void
                                {
                                    switch ( voice )
                                    {
-                                       case SID_VOICE_1 :
+                                       case SID_VOICE_1:
                                            attack1Slider -> setValue (
                                                                       value
-                                                                    , dontSendNotification
-                                                                     );
+                                                                    , dontSendNotification );
                                            attack1Label -> setText (
                                                                     attack1Slider -> getTextFromValue (
-                                                                                                       attack1Slider -> getValue ()
-                                                                                                      )
-                                                                  , dontSendNotification
-                                                                   );
+                                                                                                       attack1Slider -> getValue () )
+                                                                  , dontSendNotification );
                                            SharedResourcePointer < ListenerList < ExportAttackChanged > > () -> call (
-                                                                                                                      &ExportAttackChanged::
-                                                                                                                      onExportAttackChanged
+                                                                                                                      &ExportAttackChanged::onExportAttackChanged
                                                                                                                     , SID_VOICE_1
-                                                                                                                    , static_cast < unsigned int > (
-                                                                                                                          attack1Slider -> getValue () )
-                                                                                                                     );
+                                                                                                                    , static_cast < unsigned int > ( attack1Slider -> getValue () ) );
                                            break;
-                                       case SID_VOICE_2 :
+                                       case SID_VOICE_2:
                                            attack2Slider -> setValue (
                                                                       value
-                                                                    , dontSendNotification
-                                                                     );
+                                                                    , dontSendNotification );
                                            attack2Label -> setText (
                                                                     attack2Slider -> getTextFromValue (
-                                                                                                       attack2Slider -> getValue ()
-                                                                                                      )
-                                                                  , dontSendNotification
-                                                                   );
+                                                                                                       attack2Slider -> getValue () )
+                                                                  , dontSendNotification );
                                            SharedResourcePointer < ListenerList < ExportAttackChanged > > () -> call (
-                                                                                                                      &ExportAttackChanged::
-                                                                                                                      onExportAttackChanged
+                                                                                                                      &ExportAttackChanged::onExportAttackChanged
                                                                                                                     , SID_VOICE_2
-                                                                                                                    , static_cast < unsigned int > (
-                                                                                                                          attack2Slider -> getValue () )
-                                                                                                                     );
+                                                                                                                    , static_cast < unsigned int > ( attack2Slider -> getValue () ) );
                                            break;
-                                       case SID_VOICE_3 :
+                                       case SID_VOICE_3:
                                            attack3Slider -> setValue (
                                                                       value
-                                                                    , dontSendNotification
-                                                                     );
+                                                                    , dontSendNotification );
                                            attack3Label -> setText (
                                                                     attack3Slider -> getTextFromValue (
-                                                                                                       attack3Slider -> getValue ()
-                                                                                                      )
-                                                                  , dontSendNotification
-                                                                   );
+                                                                                                       attack3Slider -> getValue () )
+                                                                  , dontSendNotification );
                                            SharedResourcePointer < ListenerList < ExportAttackChanged > > () -> call (
-                                                                                                                      &ExportAttackChanged::
-                                                                                                                      onExportAttackChanged
+                                                                                                                      &ExportAttackChanged::onExportAttackChanged
                                                                                                                     , SID_VOICE_3
-                                                                                                                    , static_cast < unsigned int > (
-                                                                                                                          attack3Slider -> getValue () )
-                                                                                                                     );
+                                                                                                                    , static_cast < unsigned int > ( attack3Slider -> getValue () ) );
                                            break;
                                    }
-                               }
-                              );
+                               } );
 }
-
 
 void
     LiveMode::onDecayParameterChanged (
@@ -2603,71 +3639,48 @@ void
                                {
                                    switch ( voice )
                                    {
-                                       case SID_VOICE_1 :
+                                       case SID_VOICE_1:
                                            decay1Slider -> setValue (
                                                                      value
-                                                                   , dontSendNotification
-                                                                    );
+                                                                   , dontSendNotification );
                                            decay1Label -> setText (
                                                                    decay1Slider -> getTextFromValue (
-                                                                                                     decay1Slider -> getValue ()
-                                                                                                    )
-                                                                 , dontSendNotification
-                                                                  );
+                                                                                                     decay1Slider -> getValue () )
+                                                                 , dontSendNotification );
                                            SharedResourcePointer < ListenerList < ExportDecayChanged > > () -> call (
-                                                                                                                     &ExportDecayChanged::
-                                                                                                                     onExportDecayChanged
+                                                                                                                     &ExportDecayChanged::onExportDecayChanged
                                                                                                                    , SID_VOICE_1
-                                                                                                                   , static_cast < unsigned int > (
-                                                                                                                         decay1Slider
-                                                                                                                      -> getValue () )
-                                                                                                                    );
+                                                                                                                   , static_cast < unsigned int > ( decay1Slider -> getValue () ) );
                                            break;
-                                       case SID_VOICE_2 :
+                                       case SID_VOICE_2:
                                            decay2Slider -> setValue (
                                                                      value
-                                                                   , dontSendNotification
-                                                                    );
+                                                                   , dontSendNotification );
                                            decay2Label -> setText (
                                                                    decay2Slider -> getTextFromValue (
-                                                                                                     decay2Slider -> getValue ()
-                                                                                                    )
-                                                                 , dontSendNotification
-                                                                  );
+                                                                                                     decay2Slider -> getValue () )
+                                                                 , dontSendNotification );
                                            SharedResourcePointer < ListenerList < ExportDecayChanged > > () -> call (
-                                                                                                                     &ExportDecayChanged::
-                                                                                                                     onExportDecayChanged
+                                                                                                                     &ExportDecayChanged::onExportDecayChanged
                                                                                                                    , SID_VOICE_2
-                                                                                                                   , static_cast < unsigned int > (
-                                                                                                                         decay2Slider
-                                                                                                                      -> getValue () )
-                                                                                                                    );
+                                                                                                                   , static_cast < unsigned int > ( decay2Slider -> getValue () ) );
                                            break;
-                                       case SID_VOICE_3 :
+                                       case SID_VOICE_3:
                                            decay3Slider -> setValue (
                                                                      value
-                                                                   , dontSendNotification
-                                                                    );
+                                                                   , dontSendNotification );
                                            decay3Label -> setText (
                                                                    decay3Slider -> getTextFromValue (
-                                                                                                     decay3Slider -> getValue ()
-                                                                                                    )
-                                                                 , dontSendNotification
-                                                                  );
+                                                                                                     decay3Slider -> getValue () )
+                                                                 , dontSendNotification );
                                            SharedResourcePointer < ListenerList < ExportDecayChanged > > () -> call (
-                                                                                                                     &ExportDecayChanged::
-                                                                                                                     onExportDecayChanged
+                                                                                                                     &ExportDecayChanged::onExportDecayChanged
                                                                                                                    , SID_VOICE_3
-                                                                                                                   , static_cast < unsigned int > (
-                                                                                                                         decay3Slider
-                                                                                                                      -> getValue () )
-                                                                                                                    );
+                                                                                                                   , static_cast < unsigned int > ( decay3Slider -> getValue () ) );
                                            break;
                                    }
-                               }
-                              );
+                               } );
 }
-
 
 void
     LiveMode::onSustainParameterChanged (
@@ -2680,68 +3693,48 @@ void
                                {
                                    switch ( voice )
                                    {
-                                       case SID_VOICE_1 :
+                                       case SID_VOICE_1:
                                            sustain1Slider -> setValue (
                                                                        value
-                                                                     , dontSendNotification
-                                                                      );
+                                                                     , dontSendNotification );
                                            sustain1Label -> setText (
                                                                      sustain1Slider -> getTextFromValue (
-                                                                                                         sustain1Slider -> getValue ()
-                                                                                                        )
-                                                                   , dontSendNotification
-                                                                    );
+                                                                                                         sustain1Slider -> getValue () )
+                                                                   , dontSendNotification );
                                            SharedResourcePointer < ListenerList < ExportSustainChanged > > () -> call (
-                                                                                                                       &ExportSustainChanged::
-                                                                                                                       onExportSustainChanged
+                                                                                                                       &ExportSustainChanged::onExportSustainChanged
                                                                                                                      , SID_VOICE_1
-                                                                                                                     , static_cast < unsigned int > (
-                                                                                                                           sustain1Slider -> getValue () )
-                                                                                                                      );
+                                                                                                                     , static_cast < unsigned int > ( sustain1Slider -> getValue () ) );
                                            break;
-                                       case SID_VOICE_2 :
+                                       case SID_VOICE_2:
                                            sustain2Slider -> setValue (
                                                                        value
-                                                                     , dontSendNotification
-                                                                      );
+                                                                     , dontSendNotification );
                                            sustain2Label -> setText (
                                                                      sustain2Slider -> getTextFromValue (
-                                                                                                         sustain2Slider -> getValue ()
-                                                                                                        )
-                                                                   , dontSendNotification
-                                                                    );
+                                                                                                         sustain2Slider -> getValue () )
+                                                                   , dontSendNotification );
                                            SharedResourcePointer < ListenerList < ExportSustainChanged > > () -> call (
-                                                                                                                       &ExportSustainChanged::
-                                                                                                                       onExportSustainChanged
+                                                                                                                       &ExportSustainChanged::onExportSustainChanged
                                                                                                                      , SID_VOICE_2
-                                                                                                                     , static_cast < unsigned int > (
-                                                                                                                           sustain2Slider -> getValue () )
-                                                                                                                      );
+                                                                                                                     , static_cast < unsigned int > ( sustain2Slider -> getValue () ) );
                                            break;
-                                       case SID_VOICE_3 :
+                                       case SID_VOICE_3:
                                            sustain3Slider -> setValue (
                                                                        value
-                                                                     , dontSendNotification
-                                                                      );
+                                                                     , dontSendNotification );
                                            sustain3Label -> setText (
                                                                      sustain3Slider -> getTextFromValue (
-                                                                                                         sustain3Slider -> getValue ()
-                                                                                                        )
-                                                                   , dontSendNotification
-                                                                    );
+                                                                                                         sustain3Slider -> getValue () )
+                                                                   , dontSendNotification );
                                            SharedResourcePointer < ListenerList < ExportSustainChanged > > () -> call (
-                                                                                                                       &ExportSustainChanged::
-                                                                                                                       onExportSustainChanged
+                                                                                                                       &ExportSustainChanged::onExportSustainChanged
                                                                                                                      , SID_VOICE_3
-                                                                                                                     , static_cast < unsigned int > (
-                                                                                                                           sustain3Slider -> getValue () )
-                                                                                                                      );
+                                                                                                                     , static_cast < unsigned int > ( sustain3Slider -> getValue () ) );
                                            break;
                                    }
-                               }
-                              );
+                               } );
 }
-
 
 void
     LiveMode::onReleaseParameterChanged (
@@ -2754,68 +3747,48 @@ void
                                {
                                    switch ( voice )
                                    {
-                                       case SID_VOICE_1 :
+                                       case SID_VOICE_1:
                                            release1Slider -> setValue (
                                                                        value
-                                                                     , dontSendNotification
-                                                                      );
+                                                                     , dontSendNotification );
                                            release1Label -> setText (
                                                                      release1Slider -> getTextFromValue (
-                                                                                                         release1Slider -> getValue ()
-                                                                                                        )
-                                                                   , dontSendNotification
-                                                                    );
+                                                                                                         release1Slider -> getValue () )
+                                                                   , dontSendNotification );
                                            SharedResourcePointer < ListenerList < ExportReleaseChanged > > () -> call (
-                                                                                                                       &ExportReleaseChanged::
-                                                                                                                       onExportReleaseChanged
+                                                                                                                       &ExportReleaseChanged::onExportReleaseChanged
                                                                                                                      , SID_VOICE_1
-                                                                                                                     , static_cast < unsigned int > (
-                                                                                                                           release1Slider -> getValue () )
-                                                                                                                      );
+                                                                                                                     , static_cast < unsigned int > ( release1Slider -> getValue () ) );
                                            break;
-                                       case SID_VOICE_2 :
+                                       case SID_VOICE_2:
                                            release2Slider -> setValue (
                                                                        value
-                                                                     , dontSendNotification
-                                                                      );
+                                                                     , dontSendNotification );
                                            release2Label -> setText (
                                                                      release2Slider -> getTextFromValue (
-                                                                                                         release2Slider -> getValue ()
-                                                                                                        )
-                                                                   , dontSendNotification
-                                                                    );
+                                                                                                         release2Slider -> getValue () )
+                                                                   , dontSendNotification );
                                            SharedResourcePointer < ListenerList < ExportReleaseChanged > > () -> call (
-                                                                                                                       &ExportReleaseChanged::
-                                                                                                                       onExportReleaseChanged
+                                                                                                                       &ExportReleaseChanged::onExportReleaseChanged
                                                                                                                      , SID_VOICE_2
-                                                                                                                     , static_cast < unsigned int > (
-                                                                                                                           release2Slider -> getValue () )
-                                                                                                                      );
+                                                                                                                     , static_cast < unsigned int > ( release2Slider -> getValue () ) );
                                            break;
-                                       case SID_VOICE_3 :
+                                       case SID_VOICE_3:
                                            release3Slider -> setValue (
                                                                        value
-                                                                     , dontSendNotification
-                                                                      );
+                                                                     , dontSendNotification );
                                            release3Label -> setText (
                                                                      release3Slider -> getTextFromValue (
-                                                                                                         release3Slider -> getValue ()
-                                                                                                        )
-                                                                   , dontSendNotification
-                                                                    );
+                                                                                                         release3Slider -> getValue () )
+                                                                   , dontSendNotification );
                                            SharedResourcePointer < ListenerList < ExportReleaseChanged > > () -> call (
-                                                                                                                       &ExportReleaseChanged::
-                                                                                                                       onExportReleaseChanged
+                                                                                                                       &ExportReleaseChanged::onExportReleaseChanged
                                                                                                                      , SID_VOICE_3
-                                                                                                                     , static_cast < unsigned int > (
-                                                                                                                           release3Slider -> getValue () )
-                                                                                                                      );
+                                                                                                                     , static_cast < unsigned int > ( release3Slider -> getValue () ) );
                                            break;
                                    }
-                               }
-                              );
+                               } );
 }
-
 
 void
     LiveMode::onFilterVoiceParameterChanged (
@@ -2828,50 +3801,36 @@ void
                                {
                                    switch ( voice )
                                    {
-                                       case SID_VOICE_1 :
+                                       case SID_VOICE_1:
                                            filter1Checkbox -> setToggleState (
                                                                               value
-                                                                            , dontSendNotification
-                                                                             );
+                                                                            , dontSendNotification );
                                            SharedResourcePointer < ListenerList < ExportVoiceFilterChanged > > () -> call (
-                                                                                                                           &ExportVoiceFilterChanged::
-                                                                                                                           onExportVoiceFilterChanged
+                                                                                                                           &ExportVoiceFilterChanged::onExportVoiceFilterChanged
                                                                                                                          , SID_VOICE_1
-                                                                                                                         , filter1Checkbox ->
-                                                                                                                           getToggleState ()
-                                                                                                                          );
+                                                                                                                         , filter1Checkbox -> getToggleState () );
                                            break;
-                                       case SID_VOICE_2 :
+                                       case SID_VOICE_2:
                                            filter2Checkbox -> setToggleState (
                                                                               value
-                                                                            , dontSendNotification
-                                                                             );
+                                                                            , dontSendNotification );
                                            SharedResourcePointer < ListenerList < ExportVoiceFilterChanged > > () -> call (
-                                                                                                                           &ExportVoiceFilterChanged::
-                                                                                                                           onExportVoiceFilterChanged
+                                                                                                                           &ExportVoiceFilterChanged::onExportVoiceFilterChanged
                                                                                                                          , SID_VOICE_2
-                                                                                                                         , filter2Checkbox ->
-                                                                                                                           getToggleState ()
-                                                                                                                          );
+                                                                                                                         , filter2Checkbox -> getToggleState () );
                                            break;
-                                       case SID_VOICE_3 :
+                                       case SID_VOICE_3:
                                            filter3Checkbox -> setToggleState (
                                                                               value
-                                                                            , dontSendNotification
-                                                                             );
+                                                                            , dontSendNotification );
                                            SharedResourcePointer < ListenerList < ExportVoiceFilterChanged > > () -> call (
-                                                                                                                           &ExportVoiceFilterChanged::
-                                                                                                                           onExportVoiceFilterChanged
+                                                                                                                           &ExportVoiceFilterChanged::onExportVoiceFilterChanged
                                                                                                                          , SID_VOICE_3
-                                                                                                                         , filter3Checkbox ->
-                                                                                                                           getToggleState ()
-                                                                                                                          );
+                                                                                                                         , filter3Checkbox -> getToggleState () );
                                            break;
                                    }
-                               }
-                              );
+                               } );
 }
-
 
 void
     LiveMode::onCutoffParameterChanged (
@@ -2883,25 +3842,16 @@ void
                                {
                                    cutoffSlider -> setValue (
                                                              value
-                                                           , dontSendNotification
-                                                            );
+                                                           , dontSendNotification );
                                    cutoffLabel -> setText (
                                                            cutoffSlider -> getTextFromValue (
-                                                                                             cutoffSlider -> getValue ()
-                                                                                            )
-                                                         , dontSendNotification
-                                                          );
-                               }
-                              );
+                                                                                             cutoffSlider -> getValue () )
+                                                         , dontSendNotification );
+                               } );
     SharedResourcePointer < ListenerList < ExportCutoffChanged > > () -> call (
-                                                                               &ExportCutoffChanged::
-                                                                               onExportCutoffChanged
-                                                                             , static_cast < unsigned int > (
-                                                                                   cutoffSlider
-                                                                                -> getValue () )
-                                                                              );
+                                                                               &ExportCutoffChanged::onExportCutoffChanged
+                                                                             , static_cast < unsigned int > ( cutoffSlider -> getValue () ) );
 }
-
 
 void
     LiveMode::onVolumeParameterChanged (
@@ -2913,25 +3863,16 @@ void
                                {
                                    volumeSlider -> setValue (
                                                              value
-                                                           , dontSendNotification
-                                                            );
+                                                           , dontSendNotification );
                                    volumeLabel -> setText (
                                                            volumeSlider -> getTextFromValue (
-                                                                                             volumeSlider -> getValue ()
-                                                                                            )
-                                                         , dontSendNotification
-                                                          );
-                               }
-                              );
+                                                                                             volumeSlider -> getValue () )
+                                                         , dontSendNotification );
+                               } );
     SharedResourcePointer < ListenerList < ExportVolumeChanged > > () -> call (
-                                                                               &ExportVolumeChanged::
-                                                                               onExportVolumeChanged
-                                                                             , static_cast < unsigned int > (
-                                                                                   volumeSlider
-                                                                                -> getValue () )
-                                                                              );
+                                                                               &ExportVolumeChanged::onExportVolumeChanged
+                                                                             , static_cast < unsigned int > ( volumeSlider -> getValue () ) );
 }
-
 
 void
     LiveMode::onPitchBendParameterChanged (
@@ -2944,71 +3885,48 @@ void
                                {
                                    switch ( voice )
                                    {
-                                       case SID_VOICE_1 :
+                                       case SID_VOICE_1:
                                            pitchBend1Slider -> setValue (
                                                                          value * 100.0f
-                                                                       , dontSendNotification
-                                                                        );
+                                                                       , dontSendNotification );
                                            pitchBend1Label -> setText (
                                                                        pitchBend1Slider -> getTextFromValue (
-                                                                                                             pitchBend1Slider -> getValue ()
-                                                                                                            ) + "%"
-                                                                     , dontSendNotification
-                                                                      );
+                                                                                                             pitchBend1Slider -> getValue () ) + "%"
+                                                                     , dontSendNotification );
                                            SharedResourcePointer < ListenerList < ExportPitchBendChanged > > () -> call (
-                                                                                                                         &ExportPitchBendChanged::
-                                                                                                                         onExportPitchBendChanged
+                                                                                                                         &ExportPitchBendChanged::onExportPitchBendChanged
                                                                                                                        , SID_VOICE_1
-                                                                                                                       , static_cast < float > (
-                                                                                                                             pitchBend1Slider
-                                                                                                                          -> getValue () / 100.0 )
-                                                                                                                        );
+                                                                                                                       , static_cast < float > ( pitchBend1Slider -> getValue () / 100.0 ) );
                                            break;
-                                       case SID_VOICE_2 :
+                                       case SID_VOICE_2:
                                            pitchBend2Slider -> setValue (
                                                                          value * 100.0f
-                                                                       , dontSendNotification
-                                                                        );
+                                                                       , dontSendNotification );
                                            pitchBend2Label -> setText (
                                                                        pitchBend2Slider -> getTextFromValue (
-                                                                                                             pitchBend2Slider -> getValue ()
-                                                                                                            ) + "%"
-                                                                     , dontSendNotification
-                                                                      );
+                                                                                                             pitchBend2Slider -> getValue () ) + "%"
+                                                                     , dontSendNotification );
                                            SharedResourcePointer < ListenerList < ExportPitchBendChanged > > () -> call (
-                                                                                                                         &ExportPitchBendChanged::
-                                                                                                                         onExportPitchBendChanged
+                                                                                                                         &ExportPitchBendChanged::onExportPitchBendChanged
                                                                                                                        , SID_VOICE_2
-                                                                                                                       , static_cast < float > (
-                                                                                                                             pitchBend2Slider
-                                                                                                                          -> getValue () / 100.0 )
-                                                                                                                        );
+                                                                                                                       , static_cast < float > ( pitchBend2Slider -> getValue () / 100.0 ) );
                                            break;
-                                       case SID_VOICE_3 :
+                                       case SID_VOICE_3:
                                            pitchBend3Slider -> setValue (
                                                                          value * 100.0f
-                                                                       , dontSendNotification
-                                                                        );
+                                                                       , dontSendNotification );
                                            pitchBend3Label -> setText (
                                                                        pitchBend3Slider -> getTextFromValue (
-                                                                                                             pitchBend3Slider -> getValue ()
-                                                                                                            ) + "%"
-                                                                     , dontSendNotification
-                                                                      );
+                                                                                                             pitchBend3Slider -> getValue () ) + "%"
+                                                                     , dontSendNotification );
                                            SharedResourcePointer < ListenerList < ExportPitchBendChanged > > () -> call (
-                                                                                                                         &ExportPitchBendChanged::
-                                                                                                                         onExportPitchBendChanged
+                                                                                                                         &ExportPitchBendChanged::onExportPitchBendChanged
                                                                                                                        , SID_VOICE_3
-                                                                                                                       , static_cast < float > (
-                                                                                                                             pitchBend3Slider
-                                                                                                                          -> getValue () / 100.0 )
-                                                                                                                        );
+                                                                                                                       , static_cast < float > ( pitchBend3Slider -> getValue () / 100.0 ) );
                                            break;
                                    }
-                               }
-                              );
+                               } );
 }
-
 
 void
     LiveMode::onVibratoAmountParameterChanged (
@@ -3021,76 +3939,53 @@ void
                                {
                                    switch ( voice )
                                    {
-                                       case SID_VOICE_1 :
+                                       case SID_VOICE_1:
                                            vibratoAmount1Slider -> setValue (
                                                                              value * 100.0f
-                                                                           , dontSendNotification
-                                                                            );
+                                                                           , dontSendNotification );
                                            vibratoAmount1Label -> setText (
                                                                            vibratoAmount1Slider -> getTextFromValue (
-                                                                                                                     vibratoAmount1Slider -> getValue ()
-                                                                                                                    ) + "%"
-                                                                         , dontSendNotification
-                                                                          );
+                                                                                                                     vibratoAmount1Slider -> getValue () ) + "%"
+                                                                         , dontSendNotification );
                                            SharedResourcePointer < ListenerList < ExportVibratoAmountChanged > > () -> call (
-                                                                                                                             &ExportVibratoAmountChanged::
-                                                                                                                             onExportVibratoAmountChanged
+                                                                                                                             &ExportVibratoAmountChanged::onExportVibratoAmountChanged
                                                                                                                            , SID_VOICE_1
-                                                                                                                           , static_cast < float > (
-                                                                                                                                 vibratoAmount1Slider ->
-                                                                                                                                 getValue () / 100.0 )
-                                                                                                                            );
+                                                                                                                           , static_cast < float > ( vibratoAmount1Slider -> getValue () / 100.0 ) );
                                            break;
-                                       case SID_VOICE_2 :
+                                       case SID_VOICE_2:
                                            vibratoAmount2Slider -> setValue (
                                                                              value * 100.0f
-                                                                           , dontSendNotification
-                                                                            );
+                                                                           , dontSendNotification );
                                            vibratoAmount2Label -> setText (
                                                                            vibratoAmount2Slider -> getTextFromValue (
-                                                                                                                     vibratoAmount2Slider -> getValue ()
-                                                                                                                    ) + "%"
-                                                                         , dontSendNotification
-                                                                          );
+                                                                                                                     vibratoAmount2Slider -> getValue () ) + "%"
+                                                                         , dontSendNotification );
                                            SharedResourcePointer < ListenerList < ExportVibratoAmountChanged > > () -> call (
-                                                                                                                             &ExportVibratoAmountChanged::
-                                                                                                                             onExportVibratoAmountChanged
+                                                                                                                             &ExportVibratoAmountChanged::onExportVibratoAmountChanged
                                                                                                                            , SID_VOICE_2
-                                                                                                                           , static_cast < float > (
-                                                                                                                                 vibratoAmount2Slider ->
-                                                                                                                                 getValue () / 100.0 )
-                                                                                                                            );
+                                                                                                                           , static_cast < float > ( vibratoAmount2Slider -> getValue () / 100.0 ) );
                                            break;
-                                       case SID_VOICE_3 :
+                                       case SID_VOICE_3:
                                            vibratoAmount3Slider -> setValue (
                                                                              value * 100.0f
-                                                                           , dontSendNotification
-                                                                            );
+                                                                           , dontSendNotification );
                                            vibratoAmount3Label -> setText (
                                                                            vibratoAmount3Slider -> getTextFromValue (
-                                                                                                                     vibratoAmount3Slider -> getValue ()
-                                                                                                                    ) + "%"
-                                                                         , dontSendNotification
-                                                                          );
+                                                                                                                     vibratoAmount3Slider -> getValue () ) + "%"
+                                                                         , dontSendNotification );
                                            SharedResourcePointer < ListenerList < ExportVibratoAmountChanged > > () -> call (
-                                                                                                                             &ExportVibratoAmountChanged::
-                                                                                                                             onExportVibratoAmountChanged
+                                                                                                                             &ExportVibratoAmountChanged::onExportVibratoAmountChanged
                                                                                                                            , SID_VOICE_3
-                                                                                                                           , static_cast < float > (
-                                                                                                                                 vibratoAmount3Slider ->
-                                                                                                                                 getValue () / 100.0 )
-                                                                                                                            );
+                                                                                                                           , static_cast < float > ( vibratoAmount3Slider -> getValue () / 100.0 ) );
                                            break;
                                    }
-                               }
-                              );
+                               } );
 }
-
 
 void
     LiveMode::onVibratoDelayParameterChanged (
             const unsigned voice
-          , unsigned value
+          , unsigned       value
             )
 {
     MessageManager::callAsync (
@@ -3098,17 +3993,14 @@ void
                                {
                                    switch ( voice )
                                    {
-                                       case SID_VOICE_1 :
+                                       case SID_VOICE_1:
                                            vibratoDelay1Slider -> setValue (
                                                                             value
-                                                                          , dontSendNotification
-                                                                           );
+                                                                          , dontSendNotification );
                                            vibratoDelay1Label -> setText (
                                                                           vibratoDelay1Slider -> getTextFromValue (
-                                                                                                                   vibratoDelay1Slider -> getValue ()
-                                                                                                                  )
-                                                                        , dontSendNotification
-                                                                         );
+                                                                                                                   vibratoDelay1Slider -> getValue () )
+                                                                        , dontSendNotification );
                                            //SharedResourcePointer < ListenerList < ExportVibratoDelayChanged > > () -> call (
                                            //                                                                                  &ExportVibratoDelayChanged::
                                            //                                                                                  onExportVibratoDelayChanged
@@ -3118,17 +4010,14 @@ void
                                            //                                                                                      getValue () / 100.0 )
                                            //                                                                                 );
                                            break;
-                                       case SID_VOICE_2 :
+                                       case SID_VOICE_2:
                                            vibratoDelay2Slider -> setValue (
                                                                             value
-                                                                          , dontSendNotification
-                                                                           );
+                                                                          , dontSendNotification );
                                            vibratoDelay2Label -> setText (
                                                                           vibratoDelay2Slider -> getTextFromValue (
-                                                                                                                   vibratoDelay2Slider -> getValue ()
-                                                                                                                  )
-                                                                        , dontSendNotification
-                                                                         );
+                                                                                                                   vibratoDelay2Slider -> getValue () )
+                                                                        , dontSendNotification );
                                            //SharedResourcePointer < ListenerList < ExportVibratoDelayChanged > > () -> call (
                                            //                                                                                  &ExportVibratoDelayChanged::
                                            //                                                                                  onExportVibratoDelayChanged
@@ -3138,17 +4027,14 @@ void
                                            //                                                                                      getValue () / 100.0 )
                                            //                                                                                 );
                                            break;
-                                       case SID_VOICE_3 :
+                                       case SID_VOICE_3:
                                            vibratoDelay3Slider -> setValue (
                                                                             value
-                                                                          , dontSendNotification
-                                                                           );
+                                                                          , dontSendNotification );
                                            vibratoDelay3Label -> setText (
                                                                           vibratoDelay3Slider -> getTextFromValue (
-                                                                                                                   vibratoDelay3Slider -> getValue ()
-                                                                                                                  )
-                                                                        , dontSendNotification
-                                                                         );
+                                                                                                                   vibratoDelay3Slider -> getValue () )
+                                                                        , dontSendNotification );
                                            //SharedResourcePointer < ListenerList < ExportVibratoDelayChanged > > () -> call (
                                            //                                                                                  &ExportVibratoDelayChanged::
                                            //                                                                                  onExportVibratoDelayChanged
@@ -3159,10 +4045,8 @@ void
                                            //                                                                                 );
                                            break;
                                    }
-                               }
-                              );
+                               } );
 }
-
 
 void
     LiveMode::onVibratoSpeedParameterChanged (
@@ -3175,71 +4059,48 @@ void
                                {
                                    switch ( voice )
                                    {
-                                       case SID_VOICE_1 :
+                                       case SID_VOICE_1:
                                            vibratoSpeed1Slider -> setValue (
                                                                             value * 100.0f
-                                                                          , dontSendNotification
-                                                                           );
+                                                                          , dontSendNotification );
                                            vibratoSpeed1Label -> setText (
                                                                           vibratoSpeed1Slider -> getTextFromValue (
-                                                                                                                   vibratoSpeed1Slider -> getValue ()
-                                                                                                                  ) + "%"
-                                                                        , dontSendNotification
-                                                                         );
+                                                                                                                   vibratoSpeed1Slider -> getValue () ) + "%"
+                                                                        , dontSendNotification );
                                            SharedResourcePointer < ListenerList < ExportVibratoSpeedChanged > > () -> call (
-                                                                                                                            &ExportVibratoSpeedChanged::
-                                                                                                                            onExportVibratoSpeedChanged
+                                                                                                                            &ExportVibratoSpeedChanged::onExportVibratoSpeedChanged
                                                                                                                           , SID_VOICE_1
-                                                                                                                          , static_cast < float > (
-                                                                                                                                vibratoSpeed1Slider ->
-                                                                                                                                getValue () / 100.0 )
-                                                                                                                           );
+                                                                                                                          , static_cast < float > ( vibratoSpeed1Slider -> getValue () / 100.0 ) );
                                            break;
-                                       case SID_VOICE_2 :
+                                       case SID_VOICE_2:
                                            vibratoSpeed2Slider -> setValue (
                                                                             value * 100.0f
-                                                                          , dontSendNotification
-                                                                           );
+                                                                          , dontSendNotification );
                                            vibratoSpeed2Label -> setText (
                                                                           vibratoSpeed2Slider -> getTextFromValue (
-                                                                                                                   vibratoSpeed2Slider -> getValue ()
-                                                                                                                  ) + "%"
-                                                                        , dontSendNotification
-                                                                         );
+                                                                                                                   vibratoSpeed2Slider -> getValue () ) + "%"
+                                                                        , dontSendNotification );
                                            SharedResourcePointer < ListenerList < ExportVibratoSpeedChanged > > () -> call (
-                                                                                                                            &ExportVibratoSpeedChanged::
-                                                                                                                            onExportVibratoSpeedChanged
+                                                                                                                            &ExportVibratoSpeedChanged::onExportVibratoSpeedChanged
                                                                                                                           , SID_VOICE_2
-                                                                                                                          , static_cast < float > (
-                                                                                                                                vibratoSpeed2Slider ->
-                                                                                                                                getValue () / 100.0 )
-                                                                                                                           );
+                                                                                                                          , static_cast < float > ( vibratoSpeed2Slider -> getValue () / 100.0 ) );
                                            break;
-                                       case SID_VOICE_3 :
+                                       case SID_VOICE_3:
                                            vibratoSpeed3Slider -> setValue (
                                                                             value * 100.0f
-                                                                          , dontSendNotification
-                                                                           );
+                                                                          , dontSendNotification );
                                            vibratoSpeed3Label -> setText (
                                                                           vibratoSpeed3Slider -> getTextFromValue (
-                                                                                                                   vibratoSpeed3Slider -> getValue ()
-                                                                                                                  ) + "%"
-                                                                        , dontSendNotification
-                                                                         );
+                                                                                                                   vibratoSpeed3Slider -> getValue () ) + "%"
+                                                                        , dontSendNotification );
                                            SharedResourcePointer < ListenerList < ExportVibratoSpeedChanged > > () -> call (
-                                                                                                                            &ExportVibratoSpeedChanged::
-                                                                                                                            onExportVibratoSpeedChanged
+                                                                                                                            &ExportVibratoSpeedChanged::onExportVibratoSpeedChanged
                                                                                                                           , SID_VOICE_3
-                                                                                                                          , static_cast < float > (
-                                                                                                                                vibratoSpeed3Slider ->
-                                                                                                                                getValue () / 100.0 )
-                                                                                                                           );
+                                                                                                                          , static_cast < float > ( vibratoSpeed3Slider -> getValue () / 100.0 ) );
                                            break;
                                    }
-                               }
-                              );
+                               } );
 }
-
 
 void
     LiveMode::onPatchEditorLiveModeClicked ()
@@ -3248,16 +4109,13 @@ void
                                [=] ()
                                {
                                    setVisible (
-                                               true
-                                              );
-                               }
-                              );
+                                               true );
+                               } );
 }
-
 
 void
     LiveMode::onBankProgramChanged (
-            String                                   oldID
+            String                                   old_id
           , ReferenceCountedObjectPtr < SidProgram > program
             )
 {
@@ -3265,13 +4123,10 @@ void
                                [=] ()
                                {
                                    patchSelector -> setVisible (
-                                                                false
-                                                               );
-                                   refreshPatches ();
-                               }
-                              );
+                                                                false );
+                                   RefreshPatches ();
+                               } );
 }
-
 
 void
     LiveMode::onLivePatchListChanged (
@@ -3282,27 +4137,21 @@ void
                                [=] ()
                                {
                                    int listSize = names . size ();
-
                                    if ( listSize < 2 )
                                        listSize = 2;
-
                                    patch1Slider -> setRange (
                                                              1
                                                            , listSize
-                                                           , 1
-                                                            );
+                                                           , 1 );
                                    patch2Slider -> setRange (
                                                              1
                                                            , listSize
-                                                           , 1
-                                                            );
+                                                           , 1 );
                                    patch3Slider -> setRange (
                                                              1
                                                            , listSize
-                                                           , 1
-                                                            );
-                               }
-                              );
+                                                           , 1 );
+                               } );
 }
 
 void
@@ -3332,17 +4181,11 @@ void
 {
     quarterNoteTicked = true;
     startTimer (
-                125
-               );
+                125 );
     // queue for display thread
     MessageManager::callAsync (
-                               [=] ()
-                               {
-                                   repaint ();
-                               }
-                              );
+                               [=] () { repaint (); } );
 }
-
 
 void
     LiveMode::timerCallback ()
@@ -3351,26 +4194,16 @@ void
     quarterNoteTicked = false;
     // queue for display thread
     MessageManager::callAsync (
-                               [=] ()
-                               {
-                                   repaint ();
-                               }
-                              );
+                               [=] () { repaint (); } );
 }
-
 
 void
     LiveMode::onLiveDoneExporting ()
 {
     armed = false;
     MessageManager::callAsync (
-                               [=] ()
-                               {
-                                   repaint ();
-                               }
-                              );
+                               [=] () { repaint (); } );
 }
-
 
 void
     LiveMode::onResonanceParameterChanged (
@@ -3382,24 +4215,16 @@ void
                                {
                                    resonanceSlider -> setValue (
                                                                 value
-                                                              , dontSendNotification
-                                                               );
+                                                              , dontSendNotification );
                                    resonanceLabel -> setText (
                                                               resonanceSlider -> getTextFromValue (
-                                                                                                   resonanceSlider -> getValue ()
-                                                                                                  )
-                                                            , dontSendNotification
-                                                             );
-                               }
-                              );
+                                                                                                   resonanceSlider -> getValue () )
+                                                            , dontSendNotification );
+                               } );
     SharedResourcePointer < ListenerList < ExportResonanceChanged > > () -> call (
-                                                                                  &ExportResonanceChanged::
-                                                                                  onExportResonanceChanged
-                                                                                , static_cast < unsigned int > (
-                                                                                      resonanceSlider -> getValue () )
-                                                                                 );
+                                                                                  &ExportResonanceChanged::onExportResonanceChanged
+                                                                                , static_cast < unsigned int > ( resonanceSlider -> getValue () ) );
 }
-
 
 void
     LiveMode::onLowPassParameterChanged (
@@ -3411,18 +4236,12 @@ void
                                {
                                    filterLowPassCheckbox -> setToggleState (
                                                                             value
-                                                                          , dontSendNotification
-                                                                           );
-                               }
-                              );
+                                                                          , dontSendNotification );
+                               } );
     SharedResourcePointer < ListenerList < ExportLowPassChanged > > () -> call (
-                                                                                &ExportLowPassChanged::
-                                                                                onExportLowPassChanged
-                                                                              , filterLowPassCheckbox ->
-                                                                                getToggleState ()
-                                                                               );
+                                                                                &ExportLowPassChanged::onExportLowPassChanged
+                                                                              , filterLowPassCheckbox -> getToggleState () );
 }
-
 
 void
     LiveMode::onBandPassParameterChanged (
@@ -3434,18 +4253,12 @@ void
                                {
                                    filterBandPassCheckbox -> setToggleState (
                                                                              value
-                                                                           , dontSendNotification
-                                                                            );
-                               }
-                              );
+                                                                           , dontSendNotification );
+                               } );
     SharedResourcePointer < ListenerList < ExportBandPassChanged > > () -> call (
-                                                                                 &ExportBandPassChanged::
-                                                                                 onExportBandPassChanged
-                                                                               , filterBandPassCheckbox ->
-                                                                                 getToggleState () * 2
-                                                                                );
+                                                                                 &ExportBandPassChanged::onExportBandPassChanged
+                                                                               , filterBandPassCheckbox -> getToggleState () * 2 );
 }
-
 
 void
     LiveMode::onHighPassParameterChanged (
@@ -3455,18 +4268,13 @@ void
     MessageManager::callAsync (
                                [=] ()
                                {
-                                   FilterHighPassCheckbox -> setToggleState (
+                                   filterHighPassCheckbox -> setToggleState (
                                                                              value
-                                                                           , dontSendNotification
-                                                                            );
-                               }
-                              );
+                                                                           , dontSendNotification );
+                               } );
     SharedResourcePointer < ListenerList < ExportHighPassChanged > > () -> call (
-                                                                                 &ExportHighPassChanged::
-                                                                                 onExportHighPassChanged
-                                                                               , FilterHighPassCheckbox ->
-                                                                                 getToggleState () * 4
-                                                                                );
+                                                                                 &ExportHighPassChanged::onExportHighPassChanged
+                                                                               , filterHighPassCheckbox -> getToggleState () * 4 );
 }
 
 

@@ -40,21 +40,17 @@ Patches::Patches ()
 
     setSize (
              496
-           , 16
-            );
+           , 16 );
 
 
     //[Constructor] You can add your own custom stuff here..
     addMouseListener (
                       this
-                    , true
-                     );
+                    , true );
     SharedResourcePointer < ListenerList < LivePatchListChanged > > () -> add (
-                                                                               this
-                                                                              );
+                                                                               this );
     //[/Constructor]
 }
-
 
 Patches::~Patches ()
 {
@@ -114,8 +110,8 @@ void
 
         for each ( PatchRow* r in rows )
         {
-            if ( r == nullptr && r -> getSelected () )
-                selectedRow = r;
+            //if ( r != nullptr && r -> getSelected () )
+            //    selectedRow = r;
 
             if ( r == clicked || r -> isParentOf (
                                                   clicked
@@ -216,7 +212,7 @@ void
     setBounds (
                0
              , 0
-             , getWidth () - 8
+             , getWidth ()
              , 16 * programs . size () + 32
               );
     repaint ();

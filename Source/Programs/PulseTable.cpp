@@ -1,23 +1,17 @@
 #include "PulseTable.h"
 
-
-#include "Wavetable.h"
-
 #include <array>
 
 #include "../SIDProgram.h"
-
+#include "Wavetable.h"
 
 PulseTable::PulseTable ()
 {
     table . add (
-                 CYCLE_CENTER
-                );
+                 CYCLE_CENTER );
     table . add (
-                 static_cast < unsigned int > ( END_COMMAND )
-                );
+                 static_cast < unsigned int > ( END_COMMAND ) );
 }
-
 
 PulseTable::PulseTable (
         XmlElement* e
@@ -26,169 +20,125 @@ PulseTable::PulseTable (
     for ( auto i = 0 ; i < e -> getNumChildElements () ; i++ )
     {
         const auto r = e -> getChildElement (
-                                             i
-                                            );
+                                             i );
         auto new_row = END_COMMAND;
-
         if ( r -> getTagName () == "pulse-cycle" )
         {
             new_row = r -> getIntAttribute (
-                                            "value"
-                                           );
+                                            "value" );
         }
         else if ( r -> getTagName () == "command" )
         {
             auto command_type = r -> getStringAttribute (
-                                                         "type"
-                                                        );
-            if ( command_type == "end" )
-            {
-                new_row = END_COMMAND;
-            }
+                                                         "type" );
+            if ( command_type == "end" ) { new_row = END_COMMAND; }
             else if ( command_type == "goto" )
             {
                 new_row = GOTO_COMMAND | r -> getIntAttribute (
-                                                               "argument"
-                                                              );
+                                                               "argument" );
             }
             else if ( command_type == "sustain-to" )
             {
                 new_row = SUSTAIN_TO_COMMAND | r -> getIntAttribute (
-                                                                     "argument"
-                                                                    );
+                                                                     "argument" );
             }
         }
-
         table . add (
-                     new_row
-                    );
+                     new_row );
     }
 }
-
 
 PulseTable::PulseTable (
         const PulseTable& other
         )
     :
     pulseTableIndex (
-                     other . pulseTableIndex
-                    )
+                     other . pulseTableIndex )
   , sustained (
-               other . sustained
-              )
+               other . sustained )
   , released (
-              other . released
-             )
+              other . released )
   , releaseCounter (
-                    other . releaseCounter
-                   )
+                    other . releaseCounter )
   , selectedRow (
-                 other . selectedRow
-                )
+                 other . selectedRow )
   , forVoice (
-              other . forVoice
-             )
+              other . forVoice )
 {
     for ( auto row : other . table )
     {
         table . add (
-                     row
-                    );
+                     row );
     }
 }
-
 
 PulseTable::PulseTable (
         PulseTable&& other
         ) noexcept
     :
     pulseTableIndex (
-                     other . pulseTableIndex
-                    )
+                     other . pulseTableIndex )
   , sustained (
-               other . sustained
-              )
+               other . sustained )
   , released (
-              other . released
-             )
+              other . released )
   , releaseCounter (
-                    other . releaseCounter
-                   )
+                    other . releaseCounter )
   , selectedRow (
-                 other . selectedRow
-                )
+                 other . selectedRow )
   , forVoice (
-              other . forVoice
-             )
+              other . forVoice )
 {
     for ( auto row : other . table )
     {
         table . add (
-                     row
-                    );
+                     row );
     }
     other . table . clear ();
 }
-
 
 auto
     PulseTable::operator= (
             const PulseTable& other
             ) -> PulseTable&
 {
-    if ( &other == this )
-    {
-        return *this;
-    }
-
+    if ( &other == this ) { return *this; }
     pulseTableIndex = other . pulseTableIndex;
     sustained       = other . sustained;
     released        = other . released;
     releaseCounter  = other . releaseCounter;
     selectedRow     = other . selectedRow;
     forVoice        = other . forVoice;
-
     table . clear ();
     for ( auto row : other . table )
     {
         table . add (
-                     row
-                    );
+                     row );
     }
-
     return *this;
 }
-
 
 auto
     PulseTable::operator= (
             PulseTable&& other
             ) noexcept -> PulseTable&
 {
-    if ( &other == this )
-    {
-        return *this;
-    }
-
+    if ( &other == this ) { return *this; }
     pulseTableIndex = other . pulseTableIndex;
     sustained       = other . sustained;
     released        = other . released;
     releaseCounter  = other . releaseCounter;
     selectedRow     = other . selectedRow;
     forVoice        = other . forVoice;
-
     table . clear ();
     for ( auto row : other . table )
     {
         table . add (
-                     row
-                    );
+                     row );
     }
     other . table . clear ();
-
     return *this;
 }
-
 
 void
     PulseTable::Select (
@@ -198,41 +148,30 @@ void
     if ( value )
     {
         SharedResourcePointer < ListenerList < PatchEditorShowPulseTable > > () -> add (
-                                                                                        this
-                                                                                       );
+                                                                                        this );
         SharedResourcePointer < ListenerList < PatchEditorShowNoteTable > > () -> add (
-                                                                                       this
-                                                                                      );
+                                                                                       this );
         SharedResourcePointer < ListenerList < PatchEditorShowWaveTable > > () -> add (
-                                                                                       this
-                                                                                      );
+                                                                                       this );
         SharedResourcePointer < ListenerList < PulseTableSelectionChanged > > () -> add (
-                                                                                         this
-                                                                                        );
+                                                                                         this );
         pulseTableRowChangedListeners -> add (
-                                              this
-                                             );
+                                              this );
     }
     else
     {
         SharedResourcePointer < ListenerList < PatchEditorShowNoteTable > > () -> remove (
-                                                                                          this
-                                                                                         );
+                                                                                          this );
         SharedResourcePointer < ListenerList < PatchEditorShowPulseTable > > () -> remove (
-                                                                                           this
-                                                                                          );
+                                                                                           this );
         SharedResourcePointer < ListenerList < PatchEditorShowWaveTable > > () -> remove (
-                                                                                          this
-                                                                                         );
+                                                                                          this );
         SharedResourcePointer < ListenerList < PulseTableSelectionChanged > > () -> remove (
-                                                                                            this
-                                                                                           );
+                                                                                            this );
         pulseTableRowChangedListeners -> remove (
-                                                 this
-                                                );
+                                                 this );
     }
 }
-
 
 void
     PulseTable::Write (
@@ -240,83 +179,62 @@ void
             ) const
 {
     auto pt = e -> getChildByName (
-                                   "pulsetable"
-                                  );
-
+                                   "pulsetable" );
     if ( pt == nullptr )
     {
         pt = new XmlElement (
-                             "pulsetable"
-                            );
+                             "pulsetable" );
         e -> addChildElement (
-                              pt
-                             );
+                              pt );
     }
-
     pt -> deleteAllChildElements ();
-
     for ( auto pulse : table )
     {
         if ( ( pulse & COMMAND_NYBBLE_MASK ) == 0x0000 )
         {
             auto row = new XmlElement (
-                                       "pulse-cycle"
-                                      );
+                                       "pulse-cycle" );
             row -> setAttribute (
                                  "value"
                                , String (
-                                         pulse
-                                        )
-                                );
-
+                                         pulse ) );
             pt -> addChildElement (
-                                   row
-                                  );
+                                   row );
         }
         else
         {
             auto command = new XmlElement (
-                                           "command"
-                                          );
+                                           "command" );
             if ( ( pulse & END_COMMAND ) == END_COMMAND )
             {
                 command -> setAttribute (
                                          "type"
-                                       , "end"
-                                        );
+                                       , "end" );
             }
             else if ( ( pulse & GOTO_COMMAND ) == GOTO_COMMAND )
             {
                 command -> setAttribute (
                                          "type"
-                                       , "goto"
-                                        );
+                                       , "goto" );
             }
             else if ( ( pulse & SUSTAIN_TO_COMMAND ) == SUSTAIN_TO_COMMAND )
             {
                 command -> setAttribute (
                                          "type"
-                                       , "sustain-to"
-                                        );
+                                       , "sustain-to" );
             }
-
             if ( ( pulse & END_COMMAND ) != END_COMMAND )
             {
                 command -> setAttribute (
                                          "argument"
                                        , String (
-                                                 pulse & ARGUMENT_NYBBLE_MASK
-                                                )
-                                        );
+                                                 pulse & ARGUMENT_NYBBLE_MASK ) );
             }
-
             pt -> addChildElement (
-                                   command
-                                  );
+                                   command );
         }
     }
 }
-
 
 void
     PulseTable::WriteState (
@@ -326,26 +244,21 @@ void
     unsigned int size = table . size ();
     dest_data . append (
                         static_cast < const void* > ( &size )
-                      , sizeof size
-                       );
-
+                      , sizeof size );
     for ( const auto& row : table )
     {
         const unsigned int row_size = sizeof ( unsigned int );
         dest_data . append (
                             static_cast < const void* > ( &row )
-                          , row_size
-                           );
+                          , row_size );
     }
 }
-
 
 void
 // ReSharper disable once CppMemberFunctionMayBeStatic
     PulseTable::WriteCopyState (
             MemoryBlock& dest_data
             ) const {}
-
 
 void
     PulseTable::LoadState (
@@ -355,27 +268,21 @@ void
 {
     auto nt = o -> GetPulseTable ();
     nt -> table . clear ();
-
     unsigned int count;
     stream . read (
                    &count
-                 , sizeof count
-                  );
-
+                 , sizeof count );
     for ( unsigned int i = 0 ; i < count ; i++ )
     {
-        unsigned int row;
-        const unsigned int size = sizeof (unsigned int);
+        unsigned int       row;
+        const unsigned int size = sizeof ( unsigned int );
         stream . read (
                        &row
-                     , size
-                      );
+                     , size );
         nt -> table . add (
-                           row
-                          );
+                           row );
     }
 }
-
 
 void
     PulseTable::LoadCopyState (
@@ -383,36 +290,24 @@ void
           , ReferenceCountedObjectPtr < SidProgram > o
             ) {}
 
-
 auto
     PulseTable::GetPulseTableSize () const -> unsigned
 {
-    return table . size ();
+    return static_cast < unsigned > ( table . size () );
 }
-
 
 auto
     PulseTable::GetPulseTableEntryAt (
             const unsigned index
-            ) const -> unsigned
-{
-    return table [ static_cast < int > ( index ) ];
-}
-
+            ) const -> unsigned { return table [ static_cast < int > ( index ) ]; }
 
 auto
     PulseTable::GetCurrentPulseTableEntry () const -> unsigned
 {
-    if ( pulseTableIndex == -1 )
-    {
-        return CYCLE_CENTER;
-    }
-
+    if ( pulseTableIndex == -1 ) { return CYCLE_CENTER; }
     return GetPulseTableEntryAt (
-                                 pulseTableIndex
-                                );
+                                 pulseTableIndex );
 }
-
 
 void
     PulseTable::AddPulseTableEntry (
@@ -420,42 +315,36 @@ void
             )
 {
     table . add (
-                 value
-                );
+                 value );
 }
-
 
 void
     PulseTable::SetPulseTableEntryAt (
             const unsigned index
-          , const unsigned       value
+          , const unsigned value
             )
 {
     if ( table . size () > index )
     {
         table . set (
                      static_cast < int > ( index )
-                   , value
-                    );
+                   , value );
     }
 }
-
 
 void
     PulseTable::InsertPulseTableEntryAt (
             const unsigned index
-          , const unsigned       value
+          , const unsigned value
             )
 {
     if ( table . size () > index )
     {
         table . insert (
                         static_cast < int > ( index )
-                      , value
-                       );
+                      , value );
     }
 }
-
 
 void
     PulseTable::RemovePulseTableEntryAt (
@@ -465,11 +354,9 @@ void
     if ( table . size () > index )
     {
         table . remove (
-                        static_cast < int > ( index )
-                       );
+                        static_cast < int > ( index ) );
     }
 }
-
 
 void
     PulseTable::Start ()
@@ -480,52 +367,24 @@ void
     released        = false;
 }
 
-
 void
     PulseTable::Step ()
 {
-    if ( Released () && DoneReleasing () )
-    {
-        return;
-    }
+    if ( Released () && DoneReleasing () ) { return; }
     pulseTableIndex++;
-    if ( pulseTableIndex == static_cast < unsigned int > ( table . size () ) )
-    {
-        pulseTableIndex--;
-    }
+    if ( pulseTableIndex == static_cast < unsigned int > ( table . size () ) ) { pulseTableIndex--; }
     const auto row = table [ pulseTableIndex ];
-    if ( ( row & END_COMMAND ) == END_COMMAND )
-    {
-        pulseTableIndex--;
-    }
-    else if ( ( row & GOTO_COMMAND ) == GOTO_COMMAND )
-    {
-        pulseTableIndex = static_cast < int > ( table [ pulseTableIndex ] ) & ARGUMENT_NYBBLE_MASK;
-    }
+    if ( ( row & END_COMMAND ) == END_COMMAND ) { pulseTableIndex--; }
+    else if ( ( row & GOTO_COMMAND ) == GOTO_COMMAND ) { pulseTableIndex = static_cast < int > ( table [ pulseTableIndex ] ) & ARGUMENT_NYBBLE_MASK; }
     else if ( ( row & SUSTAIN_TO_COMMAND ) == SUSTAIN_TO_COMMAND )
     {
         sustained = true;
-        if ( !released )
-        {
-            pulseTableIndex = static_cast < int > ( table [ pulseTableIndex ] ) & ARGUMENT_NYBBLE_MASK;
-        }
-        else
-        {
-            pulseTableIndex++;
-        }
-
-        if ( pulseTableIndex == static_cast < unsigned int > ( table . size () ) )
-        {
-            pulseTableIndex -= 2;
-        }
+        if ( !released ) { pulseTableIndex = static_cast < int > ( table [ pulseTableIndex ] ) & ARGUMENT_NYBBLE_MASK; }
+        else { pulseTableIndex++; }
+        if ( pulseTableIndex == static_cast < unsigned int > ( table . size () ) ) { pulseTableIndex -= 2; }
     }
-
-    if ( releaseCounter > 0 )
-    {
-        releaseCounter--;
-    }
+    if ( releaseCounter > 0 ) { releaseCounter--; }
 }
-
 
 void
     PulseTable::Release (
@@ -536,66 +395,43 @@ void
     released       = true;
 }
 
+auto
+    PulseTable::Sustained () const -> bool { return sustained; }
 
 auto
-    PulseTable::Sustained () const -> bool
-{
-    return sustained;
-}
-
+    PulseTable::Released () const -> bool { return released; }
 
 auto
-    PulseTable::Released () const -> bool
-{
-    return released;
-}
-
-
-auto
-    PulseTable::DoneReleasing () const -> bool
-{
-    return releaseCounter <= 0;
-}
-
+    PulseTable::DoneReleasing () const -> bool { return releaseCounter <= 0; }
 
 void
     PulseTable::SetForVoice (
             const int value
-            )
-{
-    forVoice = value;
-}
-
+            ) { forVoice = value; }
 
 void
     PulseTable::onPatchEditorDeleteTableRowClicked ()
 {
     RemovePulseTableEntryAt (
-                             selectedRow
-                            );
+                             selectedRow );
 }
-
 
 void
     PulseTable::onPatchEditorNewTableCommandClicked ()
 {
     const unsigned int row = END_COMMAND;
-
     if ( selectedRow < static_cast < unsigned int > ( table . size () ) )
     {
         InsertPulseTableEntryAt (
                                  selectedRow
-                               , row
-                                );
+                               , row );
     }
     else
     {
         AddPulseTableEntry (
-                            row
-                           );
+                            row );
     }
 }
-
 
 void
     PulseTable::onPatchEditorNewTableRowClicked ()
@@ -605,26 +441,19 @@ void
     {
         InsertPulseTableEntryAt (
                                  selectedRow
-                               , row
-                                );
+                               , row );
     }
     else
     {
         AddPulseTableEntry (
-                            row
-                           );
+                            row );
     }
 }
-
 
 void
     PulseTable::onPulseTableSelectionChanged (
             const unsigned row
-            )
-{
-    selectedRow = row;
-}
-
+            ) { selectedRow = row; }
 
 void
     PulseTable::onPulseTableRowChanged (
@@ -633,51 +462,38 @@ void
 {
     SetPulseTableEntryAt (
                           selectedRow
-                        , value
-                         );
+                        , value );
 }
-
 
 void
     PulseTable::onPatchEditorShowNoteTable ()
 {
     SharedResourcePointer < ListenerList < PatchEditorNewTableRowClicked > > () -> remove (
-                                                                                           this
-                                                                                          );
+                                                                                           this );
     SharedResourcePointer < ListenerList < PatchEditorNewTableCommandClicked > > () -> remove (
-                                                                                               this
-                                                                                              );
+                                                                                               this );
     SharedResourcePointer < ListenerList < PatchEditorDeleteTableRowClicked > > () -> remove (
-                                                                                              this
-                                                                                             );
+                                                                                              this );
 }
-
 
 void
     PulseTable::onPatchEditorShowPulseTable ()
 {
     SharedResourcePointer < ListenerList < PatchEditorNewTableRowClicked > > () -> add (
-                                                                                        this
-                                                                                       );
+                                                                                        this );
     SharedResourcePointer < ListenerList < PatchEditorNewTableCommandClicked > > () -> add (
-                                                                                            this
-                                                                                           );
+                                                                                            this );
     SharedResourcePointer < ListenerList < PatchEditorDeleteTableRowClicked > > () -> add (
-                                                                                           this
-                                                                                          );
+                                                                                           this );
 }
-
 
 void
     PulseTable::onPatchEditorShowWaveTable ()
 {
     SharedResourcePointer < ListenerList < PatchEditorNewTableRowClicked > > () -> remove (
-                                                                                           this
-                                                                                          );
+                                                                                           this );
     SharedResourcePointer < ListenerList < PatchEditorNewTableCommandClicked > > () -> remove (
-                                                                                               this
-                                                                                              );
+                                                                                               this );
     SharedResourcePointer < ListenerList < PatchEditorDeleteTableRowClicked > > () -> remove (
-                                                                                              this
-                                                                                             );
+                                                                                              this );
 }

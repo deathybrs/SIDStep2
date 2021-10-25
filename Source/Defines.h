@@ -89,6 +89,7 @@ public: \
 #define EVENT(evnt, parameters) \
 class evnt { \
 public: \
+    evnt () {} \
 	virtual ~evnt() = default; \
 	evnt (const evnt& other) = default; \
 	evnt (evnt&& other) = default; \

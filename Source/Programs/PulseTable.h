@@ -1,24 +1,19 @@
 #pragma once
 
-
 #include "JuceHeader.h"
-
 
 #include "../Listeners/ListenerInitializer.h"
 
-#include "../Programs/ArpRow.h"
-
-
 class PulseTable final
-        : public ReferenceCountedObject ,
-          public PatchEditorNewTableRowClicked ,
-          public PatchEditorNewTableCommandClicked ,
-          public PatchEditorDeleteTableRowClicked ,
-          public PatchEditorShowPulseTable ,
-          public PatchEditorShowNoteTable ,
-          public PatchEditorShowWaveTable ,
-          public PulseTableSelectionChanged ,
-          public PulseTableRowChanged
+        : public ReferenceCountedObject
+        , public PatchEditorNewTableRowClicked
+        , public PatchEditorNewTableCommandClicked
+        , public PatchEditorDeleteTableRowClicked
+        , public PatchEditorShowPulseTable
+        , public PatchEditorShowNoteTable
+        , public PatchEditorShowWaveTable
+        , public PulseTableSelectionChanged
+        , public PulseTableRowChanged
 {
 public:
     PulseTable ();
@@ -167,25 +162,18 @@ public:
         onPatchEditorShowWaveTable () override;
 
 private:
-    Array < unsigned int > table;
-    int                    pulseTableIndex = 0;
-
-    bool         sustained      = false;
-    bool         released       = false;
-    unsigned int releaseCounter = 0;
-
-    unsigned int selectedRow = 0;
-
+    Array < unsigned int >                                          table;
+    int                                                             pulseTableIndex = 0;
+    bool                                                            sustained       = false;
+    bool                                                            released        = false;
+    unsigned int                                                    releaseCounter  = 0;
+    unsigned int                                                    selectedRow     = 0;
     SharedResourcePointer < ListenerList < PulseTableRowChanged > > pulseTableRowChangedListeners;
-
-    int forVoice = 0;
-
-
-    static const int END_COMMAND        = 0x1000;
-    static const int GOTO_COMMAND       = 0x2000;
-    static const int SUSTAIN_TO_COMMAND = 0x4000;
-
-    static const int CYCLE_CENTER         = 0x0800;
-    static const int COMMAND_NYBBLE_MASK  = 0xF000;
-    static const int ARGUMENT_NYBBLE_MASK = 0x0FFF;
+    int                                                             forVoice             = 0;
+    static const int                                                END_COMMAND          = 0x1000;
+    static const int                                                GOTO_COMMAND         = 0x2000;
+    static const int                                                SUSTAIN_TO_COMMAND   = 0x4000;
+    static const int                                                CYCLE_CENTER         = 0x0800;
+    static const int                                                COMMAND_NYBBLE_MASK  = 0xF000;
+    static const int                                                ARGUMENT_NYBBLE_MASK = 0x0FFF;
 };

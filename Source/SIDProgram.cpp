@@ -1,35 +1,25 @@
 #include "../JuceLibraryCode/JuceHeader.h"
 
-
 #include "SIDProgram.h"
-
 
 SidProgram::SidProgram ()
     :
     name (
-          "New Patch"
-         )
+          "New Patch" )
   , envelope (
-              new sEnvelope ()
-             )
+              new sEnvelope () )
   , noteTable (
-               new NoteTable ()
-              )
+               new NoteTable () )
   , pulseTable (
-                new PulseTable ()
-               )
+                new PulseTable () )
   , wavetable (
-               new Wavetable ()
-              )
+               new Wavetable () )
   , expression (
-                new Expressions ()
-               )
+                new Expressions () )
 {
     SharedResourcePointer < ListenerList < BankProgramChanged > > () -> add (
-                                                                             this
-                                                                            );
+                                                                             this );
 }
-
 
 SidProgram::SidProgram (
         XmlElement* e
@@ -37,109 +27,69 @@ SidProgram::SidProgram (
     :
     name (
           e -> getStringAttribute (
-                                   "name"
-                                  )
-         )
+                                   "name" ) )
   , id (
         Uuid (
               e -> getStringAttribute (
-                                       "id"
-                                      )
-             )
-       )
+                                       "id" ) ) )
   , envelope (
               new sEnvelope (
                              e -> getChildByName (
-                                                  "envelope"
-                                                 )
-                            )
-             )
+                                                  "envelope" ) ) )
   , noteTable (
                new NoteTable (
                               e -> getChildByName (
-                                                   "notetable"
-                                                  )
-                             )
-              )
+                                                   "notetable" ) ) )
   , pulseTable (
                 new PulseTable (
                                 e -> getChildByName (
-                                                     "pulsetable"
-                                                    )
-                               )
-               )
+                                                     "pulsetable" ) ) )
   , wavetable (
                new Wavetable (
                               e -> getChildByName (
-                                                   "wavetable"
-                                                  )
-                             )
-              )
+                                                   "wavetable" ) ) )
   , expression (
                 new Expressions (
                                  e -> getChildByName (
-                                                      "expressions"
-                                                     )
-                                )
-               )
+                                                      "expressions" ) ) )
   , factoryPreset (
                    e -> getBoolAttribute (
-                                          "factory-preset"
-                                         )
-                  )
+                                          "factory-preset" ) )
 {
     SharedResourcePointer < ListenerList < BankProgramChanged > > () -> add (
-                                                                             this
-                                                                            );
+                                                                             this );
 }
-
 
 SidProgram::SidProgram (
         const SidProgram& other
         )
     :
     name (
-          other . name
-         )
+          other . name )
   , id (
         Uuid (
-              other . id
-             )
-       )
+              other . id ) )
   , envelope (
               new sEnvelope (
-                             *other . envelope
-                            )
-             )
+                             *other . envelope ) )
   , noteTable (
                new NoteTable (
-                              *other . noteTable
-                             )
-              )
+                              *other . noteTable ) )
   , pulseTable (
                 new PulseTable (
-                                *other . pulseTable
-                               )
-               )
+                                *other . pulseTable ) )
   , wavetable (
                new Wavetable (
-                              *other . wavetable
-                             )
-              )
+                              *other . wavetable ) )
   , expression (
                 new Expressions (
-                                 *other . expression
-                                )
-               )
+                                 *other . expression ) )
   , factoryPreset (
-                   other . factoryPreset
-                  )
+                   other . factoryPreset )
 {
     SharedResourcePointer < ListenerList < BankProgramChanged > > () -> add (
-                                                                             this
-                                                                            );
+                                                                             this );
 }
-
 
 SidProgram::SidProgram (
         SidProgram&& other
@@ -147,57 +97,38 @@ SidProgram::SidProgram (
     :
     name (
           std::move (
-                     name
-                    )
-         )
+                     name ) )
   , id (
         Uuid (
-              other . id
-             )
-       )
+              other . id ) )
   , envelope (
               std::move (
-                         other . envelope
-                        )
-             )
+                         other . envelope ) )
   , noteTable (
                std::move (
-                          other . noteTable
-                         )
-              )
+                          other . noteTable ) )
   , pulseTable (
                 std::move (
-                           other . pulseTable
-                          )
-               )
+                           other . pulseTable ) )
   , wavetable (
                std::move (
-                          other . wavetable
-                         )
-              )
+                          other . wavetable ) )
   , expression (
                 std::move (
-                           other . expression
-                          )
-               )
+                           other . expression ) )
   , factoryPreset (
-                   other . factoryPreset
-                  )
+                   other . factoryPreset )
 {
     SharedResourcePointer < ListenerList < BankProgramChanged > > () -> add (
-                                                                             this
-                                                                            );
+                                                                             this );
 }
-
 
 SidProgram::~SidProgram ()
 {
     Select (
-            false
-           );
+            false );
     SharedResourcePointer < ListenerList < BankProgramChanged > > () -> remove (
-                                                                                this
-                                                                               );
+                                                                                this );
     envelope   = nullptr;
     noteTable  = nullptr;
     pulseTable = nullptr;
@@ -205,87 +136,56 @@ SidProgram::~SidProgram ()
     expression = nullptr;
 }
 
-
 auto
     SidProgram::operator= (
             const SidProgram& other
             ) -> SidProgram&
 {
-    if ( &other == this )
-    {
-        return *this;
-    }
-
+    if ( &other == this ) { return *this; }
     name = String (
-                   other . name
-                  );
+                   other . name );
     id = Uuid (
-               other . id
-              );
+               other . id );
     envelope = new sEnvelope (
-                              *other . envelope
-                             );
+                              *other . envelope );
     noteTable = new NoteTable (
-                               *other . noteTable
-                              );
+                               *other . noteTable );
     pulseTable = new PulseTable (
-                                 *other . pulseTable
-                                );
+                                 *other . pulseTable );
     wavetable = new Wavetable (
-                               *other . wavetable
-                              );
+                               *other . wavetable );
     expression = new Expressions (
-                                  *other . expression
-                                 );
+                                  *other . expression );
     factoryPreset = other . factoryPreset;
-
     return *this;
 }
-
 
 auto
     SidProgram::operator= (
             SidProgram&& other
             ) noexcept -> SidProgram&
 {
-    if ( &other == this )
-    {
-        return *this;
-    }
-
+    if ( &other == this ) { return *this; }
     name = std::move (
-                      other . name
-                     );
+                      other . name );
     id = Uuid (
-               other . id
-              );
+               other . id );
     envelope = std::move (
-                          other . envelope
-                         );
+                          other . envelope );
     noteTable = std::move (
-                           other . noteTable
-                          );
+                           other . noteTable );
     pulseTable = std::move (
-                            other . pulseTable
-                           );
+                            other . pulseTable );
     wavetable = std::move (
-                           other . wavetable
-                          );
+                           other . wavetable );
     expression = std::move (
-                            other . expression
-                           );
+                            other . expression );
     factoryPreset = other . factoryPreset;
-
     return *this;
 }
 
-
 auto
-    SidProgram::GetName () const -> String
-{
-    return name;
-}
-
+    SidProgram::GetName () const -> String { return name; }
 
 void
     SidProgram::SetName (
@@ -293,24 +193,14 @@ void
             )
 {
     name = String (
-                   value
-                  );
+                   value );
 }
-
 
 auto
-    SidProgram::GetId () const -> Uuid
-{
-    return id;
-}
-
+    SidProgram::GetId () const -> Uuid { return id; }
 
 void
-    SidProgram::ResetId ()
-{
-    id = Uuid ();
-}
-
+    SidProgram::ResetId () { id = Uuid (); }
 
 void
     SidProgram::Write (
@@ -319,42 +209,29 @@ void
 {
     e -> setAttribute (
                        "name"
-                     , name
-                      );
+                     , name );
     e -> setAttribute (
                        "id"
-                     , id . toDashedString ()
-                      );
+                     , id . toDashedString () );
     e -> setAttribute (
                        "factory-preset"
                      , String (
-                               static_cast < int > ( factoryPreset )
-                              )
-                      );
+                               static_cast < int > ( factoryPreset ) ) );
     e -> setAttribute (
                        "patch-version"
                      , String (
-                               PATCH_VERSION
-                              )
-                      );
-
+                               PATCH_VERSION ) );
     envelope -> write (
-                       e
-                      );
+                       e );
     noteTable -> Write (
-                        e
-                       );
+                        e );
     pulseTable -> Write (
-                         e
-                        );
+                         e );
     wavetable -> Write (
-                        e
-                       );
+                        e );
     expression -> write (
-                         e
-                        );
+                         e );
 }
-
 
 void
     SidProgram::WriteState (
@@ -363,55 +240,38 @@ void
 {
     dest_data . append (
                         static_cast < const void* > ( &PATCH_VERSION )
-                      , sizeof PATCH_VERSION
-                       );
+                      , sizeof PATCH_VERSION );
     unsigned int name_length = name . length ();
     dest_data . append (
                         static_cast < const void* > ( &name_length )
-                      , sizeof name_length
-                       );
-
+                      , sizeof name_length );
     const char* name_string = name . getCharPointer ();
     dest_data . append (
                         static_cast < const void* > ( name_string )
-                      , name_length
-                       );
-
+                      , name_length );
     const auto   did       = id . toDashedString ();
     unsigned int id_length = did . length ();
     dest_data . append (
                         static_cast < const void* > ( &id_length )
-                      , sizeof id_length
-                       );
-
+                      , sizeof id_length );
     const char* id_string = did . getCharPointer ();
     dest_data . append (
                         static_cast < const void* > ( id_string )
-                      , id_length
-                       );
-
+                      , id_length );
     dest_data . append (
                         static_cast < const void* > ( &factoryPreset )
-                      , sizeof factoryPreset
-                       );
-
+                      , sizeof factoryPreset );
     envelope -> writeState (
-                            dest_data
-                           );
+                            dest_data );
     noteTable -> WriteState (
-                             dest_data
-                            );
+                             dest_data );
     pulseTable -> WriteState (
-                              dest_data
-                             );
+                              dest_data );
     wavetable -> WriteState (
-                             dest_data
-                            );
+                             dest_data );
     expression -> writeState (
-                              dest_data
-                             );
+                              dest_data );
 }
-
 
 void
     SidProgram::WriteCopyState (
@@ -419,22 +279,16 @@ void
             ) const
 {
     envelope -> writeCopyState (
-                                dest_data
-                               );
+                                dest_data );
     noteTable -> WriteCopyState (
-                                 dest_data
-                                );
+                                 dest_data );
     pulseTable -> WriteCopyState (
-                                  dest_data
-                                 );
+                                  dest_data );
     wavetable -> WriteCopyState (
-                                 dest_data
-                                );
+                                 dest_data );
     expression -> writeCopyState (
-                                  dest_data
-                                 );
+                                  dest_data );
 }
-
 
 auto
     SidProgram::LoadState (
@@ -442,82 +296,56 @@ auto
             ) -> ReferenceCountedObjectPtr < SidProgram >
 {
     ReferenceCountedObjectPtr < SidProgram > p (
-                                                new SidProgram ()
-                                               );
-
+                                                new SidProgram () );
     int version;
     stream . read (
                    &version
-                 , sizeof version
-                  );
-    if ( version < 1 || version > PATCH_VERSION )
-    {
-        return nullptr;
-    }
-
+                 , sizeof version );
+    if ( version < 1 || version > PATCH_VERSION ) { return nullptr; }
     unsigned int name_length;
     stream . read (
                    &name_length
-                 , sizeof name_length
-                  );
-
+                 , sizeof name_length );
     const auto name_string = new char[name_length + 1];
     stream . read (
                    name_string
-                 , static_cast < int > ( name_length )
-                  );
-    name_string [ name_length ] = 0;  // NOLINT(cppcoreguidelines-pro-bounds-pointer-arithmetic)
+                 , static_cast < int > ( name_length ) );
+    name_string [ name_length ] = 0; // NOLINT(cppcoreguidelines-pro-bounds-pointer-arithmetic)
     p -> name                   = String (
-                                          name_string
-                                         );
+                                          name_string );
     delete[] name_string;
-
     unsigned int id_length;
     stream . read (
                    &id_length
-                 , sizeof id_length
-                  );
-
+                 , sizeof id_length );
     const auto id_string = new char[id_length + 1];
     stream . read (
                    id_string
-                 , static_cast < int > ( id_length )
-                  );
-    id_string [ id_length ] = 0;  // NOLINT(cppcoreguidelines-pro-bounds-pointer-arithmetic)
+                 , static_cast < int > ( id_length ) );
+    id_string [ id_length ] = 0; // NOLINT(cppcoreguidelines-pro-bounds-pointer-arithmetic)
     p -> id                 = Uuid (
-                                    id_string
-                                   );
+                                    id_string );
     delete[] id_string;
-
     stream . read (
                    &p -> factoryPreset
-                 , sizeof p -> factoryPreset
-                  );
-
+                 , sizeof p -> factoryPreset );
     sEnvelope::loadState (
                           stream
-                        , p
-                         );
+                        , p );
     NoteTable::LoadState (
                           stream
-                        , p
-                         );
+                        , p );
     PulseTable::LoadState (
                            stream
-                         , p
-                          );
+                         , p );
     Wavetable::LoadState (
                           stream
-                        , p
-                         );
+                        , p );
     Expressions::loadState (
                             stream
-                          , p
-                           );
-
+                          , p );
     return p;
 }
-
 
 auto
     SidProgram::LoadCopyState (
@@ -527,76 +355,42 @@ auto
 {
     ReferenceCountedObjectPtr < SidProgram > p (
                                                 new SidProgram (
-                                                                *original
-                                                               )
-                                               );
-
+                                                                *original ) );
     sEnvelope::loadCopyState (
                               stream
-                            , p
-                             );
+                            , p );
     NoteTable::LoadCopyState (
                               stream
-                            , p
-                             );
+                            , p );
     PulseTable::LoadCopyState (
                                stream
-                             , p
-                              );
+                             , p );
     Wavetable::LoadCopyState (
                               stream
-                            , p
-                             );
+                            , p );
     Expressions::loadCopyState (
                                 stream
-                              , p
-                               );
-
+                              , p );
     return p;
 }
 
+auto
+    SidProgram::GetEnvelope () const -> ReferenceCountedObjectPtr < sEnvelope > { return envelope; }
 
 auto
-    SidProgram::GetEnvelope () const -> ReferenceCountedObjectPtr < sEnvelope >
-{
-    return envelope;
-}
-
+    SidProgram::GetNoteTable () const -> ReferenceCountedObjectPtr < NoteTable > { return noteTable; }
 
 auto
-    SidProgram::GetNoteTable () const -> ReferenceCountedObjectPtr < NoteTable >
-{
-    return noteTable;
-}
-
+    SidProgram::GetPulseTable () const -> ReferenceCountedObjectPtr < PulseTable > { return pulseTable; }
 
 auto
-    SidProgram::GetPulseTable () const -> ReferenceCountedObjectPtr < PulseTable >
-{
-    return pulseTable;
-}
-
+    SidProgram::GetWavetable () const -> ReferenceCountedObjectPtr < Wavetable > { return wavetable; }
 
 auto
-    SidProgram::GetWavetable () const -> ReferenceCountedObjectPtr < Wavetable >
-{
-    return wavetable;
-}
-
+    SidProgram::GetExpression () const -> ReferenceCountedObjectPtr < Expressions > { return expression; }
 
 auto
-    SidProgram::GetExpression () const -> ReferenceCountedObjectPtr < Expressions >
-{
-    return expression;
-}
-
-
-auto
-    SidProgram::IsFactoryPreset () const -> bool
-{
-    return factoryPreset;
-}
-
+    SidProgram::IsFactoryPreset () const -> bool { return factoryPreset; }
 
 void
     SidProgram::Start () const
@@ -607,7 +401,6 @@ void
     expression -> Start ();
 }
 
-
 void
     SidProgram::Step () const
 {
@@ -617,22 +410,17 @@ void
     expression -> Step ();
 }
 
-
 void
     SidProgram::Release () const
 {
     noteTable -> Release (
-                          envelope -> getRelease ()
-                         );
+                          envelope -> getRelease () );
     pulseTable -> Release (
-                           envelope -> getRelease ()
-                          );
+                           envelope -> getRelease () );
     wavetable -> Release (
-                          envelope -> getRelease ()
-                         );
+                          envelope -> getRelease () );
     expression -> Release ();
 }
-
 
 void
     SidProgram::Select (
@@ -640,37 +428,27 @@ void
             )
 {
     selected = value;
-
     if ( value )
     {
         SharedResourcePointer < ListenerList < PatchEditorNameChanged > > () -> add (
-                                                                                     this
-                                                                                    );
+                                                                                     this );
     }
     else
     {
         SharedResourcePointer < ListenerList < PatchEditorNameChanged > > () -> remove (
-                                                                                        this
-                                                                                       );
+                                                                                        this );
     }
-
     envelope -> select (
-                        value
-                       );
+                        value );
     noteTable -> Select (
-                         value
-                        );
+                         value );
     pulseTable -> Select (
-                          value
-                         );
+                          value );
     wavetable -> Select (
-                         value
-                        );
+                         value );
     expression -> select (
-                          value
-                         );
+                          value );
 }
-
 
 void
     SidProgram::SetForVoice (
@@ -678,24 +456,17 @@ void
             )
 {
     forVoice = value;
-
     envelope -> setForVoice (
-                             value
-                            );
+                             value );
     noteTable -> SetForVoice (
-                              value
-                             );
+                              value );
     pulseTable -> SetForVoice (
-                               value
-                              );
+                               value );
     wavetable -> SetForVoice (
-                              value
-                             );
+                              value );
     expression -> setForVoice (
-                               value
-                              );
+                               value );
 }
-
 
 void
     SidProgram::onBankProgramChanged (
@@ -708,34 +479,25 @@ void
         if ( selected )
         {
             Select (
-                    false
-                   );
+                    false );
         }
         return;
     }
-    if ( selected )
-    {
-        return;
-    }
-
+    if ( selected ) { return; }
     if ( old_id == id . toDashedString () && old_id != program -> id . toDashedString () )
     {
         id = Uuid (
-                   program -> id . toDashedString ()
-                  );
+                   program -> id . toDashedString () );
     }
-
     if ( id . toDashedString () == program -> id . toDashedString () )
     {
         if ( !selected )
         {
             Select (
-                    true
-                   );
+                    true );
         }
     }
 }
-
 
 void
     SidProgram::onPatchEditorNameChanged (
@@ -743,6 +505,5 @@ void
             )
 {
     SetName (
-             value
-            );
+             value );
 }

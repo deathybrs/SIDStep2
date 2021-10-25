@@ -176,53 +176,46 @@ void
         rows . clear ();
     }
 
-    for ( unsigned int i = 0 ; i < pulse_table -> GetPulseTableSize () ; i++ )
+    if (pulse_table != nullptr)
     {
-        const auto pulse_row = pulse_table -> GetPulseTableEntryAt (
-                                                                    i
-                                                                   );
-
-        if ( ( pulse_row & 0xF000 ) == 0x0000 )
+        for ( unsigned int i = 0 ; i < pulse_table -> GetPulseTableSize () ; i++ )
         {
-            // row
-            auto ptr = new PulseTableRow ();
-            ptr -> Set (
-                        i
-                      , pulse_row
-                       );
-            ptr -> setBounds (
-                              0
-                            , 8 + i * 24
-                            , 590
-                            , 24
-                             );
-            addAndMakeVisible (
-                               ptr
-                              );
-            rows . add (
-                        ptr
-                       );
-        }
-        else
-        {
-            // command
-            auto ptc = new PulseTableCommandRow ();
-            ptc -> Set (
-                        i
-                      , pulse_row
-                       );
-            ptc -> setBounds (
-                              0
-                            , 8 + i * 24
-                            , 590
-                            , 24
-                             );
-            addAndMakeVisible (
-                               ptc
-                              );
-            rows . add (
-                        ptc
-                       );
+            const auto pulse_row = pulse_table -> GetPulseTableEntryAt (
+                                                                        i );
+            if ( ( pulse_row & 0xF000 ) == 0x0000 )
+            {
+                // row
+                auto ptr = new PulseTableRow ();
+                ptr -> Set (
+                            i
+                          , pulse_row );
+                ptr -> setBounds (
+                                  0
+                                , 8 + i * 24
+                                , 590
+                                , 24 );
+                addAndMakeVisible (
+                                   ptr );
+                rows . add (
+                            ptr );
+            }
+            else
+            {
+                // command
+                auto ptc = new PulseTableCommandRow ();
+                ptc -> Set (
+                            i
+                          , pulse_row );
+                ptc -> setBounds (
+                                  0
+                                , 8 + i * 24
+                                , 590
+                                , 24 );
+                addAndMakeVisible (
+                                   ptc );
+                rows . add (
+                            ptc );
+            }
         }
     }
 }

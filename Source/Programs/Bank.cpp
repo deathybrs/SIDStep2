@@ -1,7 +1,10 @@
 #include "Bank.h"
+
 #include "../Note.h"
-#include "../SharedProperties.h"
 #include "../SIDProgram.h"
+
+#include "../SharedProperties.h"
+
 #include "../Requirements/resid-0.16/sid.h"
 // ReSharper restore CppUnusedIncludeDirective
 
@@ -45,7 +48,7 @@ Bank::Bank ()
                      0x0f );
     dirty . add (
                  true );
-    dirtyWrite (
+    DirtyWrite (
                 0x03
               , 0x08 );
     bankNewListeners -> add (
@@ -89,29 +92,29 @@ Bank::~Bank ()
 
 void
     Bank::Generate (
-            MidiBuffer&                         midiMessages
+            MidiBuffer&                         midi_messages
           , AudioSampleBuffer&                  buffer
-          , AudioPlayHead::CurrentPositionInfo& positionInfo
+          , AudioPlayHead::CurrentPositionInfo& position_info
             )
 {
     MidiBuffer::Iterator it (
-                             midiMessages );
+                             midi_messages );
     MidiMessage m;
-    int         nextMessageSample;
+    int         next_message_sample;
     short       buf[16];
-    if ( positionInfo . isPlaying )
-        sampleIndex = static_cast < long > ( positionInfo . timeInSamples );
+    if ( position_info . isPlaying )
+        sampleIndex = static_cast < long > ( position_info . timeInSamples );
     if ( !it . getNextEvent (
                              m
-                           , nextMessageSample ) )
-        nextMessageSample = buffer . getNumSamples ();
+                           , next_message_sample ) )
+        next_message_sample = buffer . getNumSamples ();
     for ( auto i = 0 ; i < buffer . getNumSamples () ; )
     {
         sampleIndex++;
         if ( sampleIndex % samplesPerFrame == 0 )
             Frame ();
-        auto cycs = 0;
-        while ( i >= nextMessageSample )
+        auto cycles = 0;
+        while ( i >= next_message_sample )
         {
             if ( m . isNoteOff () )
             {
@@ -156,13 +159,13 @@ void
             }
             if ( !it . getNextEvent (
                                      m
-                                   , nextMessageSample ) )
-                nextMessageSample = buffer . getNumSamples ();
+                                   , next_message_sample ) )
+                next_message_sample = buffer . getNumSamples ();
         }
-        cycs += cyclesPerSample;
+        cycles += cyclesPerSample;
         //int s = sid->clock(static_cast<unsigned int>(cyclesPerSample), buf);
         const auto s = sid -> clock (
-                                     cycs
+                                     cycles
                                    , buf
                                    , 1 );
         for ( auto j = 0 ; j < s ; j++ )
@@ -190,26 +193,26 @@ void
 
 void
     Bank::onBankLoad (
-            String id
+            const String id
             )
 {
-    const ScopedPointer < XmlElement > patchesElement = properties -> getXmlValue (
-                                                                                   "patches" );
-    auto        i                     = 0;
-    XmlElement* currentProgramElement = nullptr;
-    for ( ; i < patchesElement -> getNumChildElements () ; i++ )
+    const ScopedPointer < XmlElement > patches_element = properties -> getXmlValue (
+                                                                                    "patches" );
+    auto        i                       = 0;
+    XmlElement* current_program_element = nullptr;
+    for ( ; i < patches_element -> getNumChildElements () ; i++ )
     {
-        currentProgramElement = patchesElement -> getChildElement (
-                                                                   i ) -> getChildByAttribute (
-                                                                                               "id"
-                                                                                             , id );
-        if ( currentProgramElement != nullptr )
+        current_program_element = patches_element -> getChildElement (
+                                                                      i ) -> getChildByAttribute (
+                                                                                                  "id"
+                                                                                                , id );
+        if ( current_program_element != nullptr )
             break;
     }
-    if ( currentProgramElement != nullptr )
+    if ( current_program_element != nullptr )
     {
         currentProgram = new SidProgram (
-                                         currentProgramElement );
+                                         current_program_element );
     }
     bankProgramChangedListeners -> call (
                                          &BankProgramChanged::onBankProgramChanged
@@ -262,7 +265,7 @@ void
     const ScopedPointer < XmlElement > patches_element = properties -> getXmlValue (
                                                                                     "patches" );
     auto category_element = patches_element -> getChildByName (
-                                                               getCategoryElementName (
+                                                               GetCategoryElementName (
                                                                                        category ) );
     const auto current_program_element = new XmlElement (
                                                          "patch" );
@@ -283,17 +286,17 @@ void
 
 void
     Bank::onSampleRateChanged (
-            double newRate
+            const double new_rate
             )
 {
-    sampleRate      = static_cast < int > ( newRate );
-    samplesPerFrame = static_cast < int > ( newRate / 50 );
-    cyclesPerSample = 985248.0 / newRate;
+    sampleRate      = static_cast < int > ( new_rate );
+    samplesPerFrame = static_cast < int > ( new_rate / 50 );
+    cyclesPerSample = 985248.0 / new_rate;
     sid -> set_sampling_parameters (
                                     985248
                                   , SAMPLE_FAST
-                                  , newRate
-                                  , ( 0.9 * newRate ) / 2.0 );
+                                  , new_rate
+                                  , 0.9 * new_rate / 2.0 );
 }
 
 void
@@ -307,7 +310,7 @@ void
 
 void
     Bank::onLivePatchSelected (
-            ReferenceCountedObjectPtr < SidProgram > program
+            const ReferenceCountedObjectPtr < SidProgram > program
             )
 {
     currentProgram = program;
@@ -325,10 +328,10 @@ void
     if ( notes . size () > 0 && arpIndex != -1 ) { ReleaseProcessor (); }
     if ( arpIndex == -1 && notes . size () > 0 )
     {
-        dirtyWrite (
+        DirtyWrite (
                     5
                   , ( e -> getDefaultAttack () << 4 ) + e -> getDefaultDecay () );
-        dirtyWrite (
+        DirtyWrite (
                     6
                   , ( e -> getDefaultSustain () << 4 ) + e -> getDefaultRelease () );
         arpIndex = 0;
@@ -337,32 +340,32 @@ void
     if ( notes . size () > 0 )
     {
         if ( arpIndex >= notes . size () ) { arpIndex = 0; }
-        const auto pulseCycle      = currentProgram -> GetExpression () -> getCurrentPulseValue ();
-        const auto pulseTableCycle = currentProgram -> GetPulseTable () -> GetCurrentPulseTableEntry ();
-        const int  pulseValue      = ( static_cast < int > ( pulseCycle ) - 2048 ) + ( static_cast < int > ( pulseTableCycle ) - 2048 ) + 2048;
-        dirtyWrite (
+        const auto pulse_cycle       = currentProgram -> GetExpression () -> getCurrentPulseValue ();
+        const auto pulse_table_cycle = currentProgram -> GetPulseTable () -> GetCurrentPulseTableEntry ();
+        const auto pulse_value       = static_cast < int > ( pulse_cycle ) - 2048 + ( static_cast < int > ( pulse_table_cycle ) - 2048 ) + 2048;
+        DirtyWrite (
                     2
-                  , pulseValue & 0xff );
-        dirtyWrite (
+                  , pulse_value & 0xff );
+        DirtyWrite (
                     3
-                  , ( pulseValue & 0xf00 ) >> 8 );
+                  , ( pulse_value & 0xf00 ) >> 8 );
         SetNote (
                  notes [ arpIndex ] . note );
-        dirtyWrite (
+        DirtyWrite (
                     4
                   , wt -> GetCurrentWaveTableEntry () );
         arpIndex++;
     }
     for ( auto i = 0x15 ; i < 0x19 ; i++ )
-        dirtyWrite (
+        DirtyWrite (
                     i );
     for ( auto v = 0 ; v < 3 ; v++ )
     {
         for ( auto j = 0 ; j < 7 ; j++ )
             if ( j != 4 )
-                dirtyWrite (
+                DirtyWrite (
                             v * 7 + j );
-        dirtyWrite (
+        DirtyWrite (
                     v * 7 + 4 );
     }
     currentProgram -> Step ();
@@ -370,13 +373,13 @@ void
 
 void
     Bank::SetNote (
-            unsigned int note
+            const unsigned int note
             )
 {
     const auto ex                       = currentProgram -> GetExpression ();
-    const auto vib                      = ( ex -> getVibrato () -> GetCurrentVibratoValue () / 4096.0 );
-    const auto ntab                     = currentProgram -> GetNoteTable ();
-    const auto current_note_table_entry = ntab -> GetCurrentNoteTableEntry ();
+    const auto vib                      = ex -> getVibrato () -> GetCurrentVibratoValue () / 4096.0;
+    const auto n_tab                    = currentProgram -> GetNoteTable ();
+    const auto current_note_table_entry = n_tab -> GetCurrentNoteTableEntry ();
     const auto note_offset              = current_note_table_entry . rowType == RELATIVE
                                               ? current_note_table_entry . value
                                               : 0;
@@ -391,10 +394,10 @@ void
                          fv );
     const auto lv = v & 0xff;
     const auto hv = ( v & 0xff00 ) >> 8;
-    dirtyWrite (
+    DirtyWrite (
                 0
               , lv );
-    dirtyWrite (
+    DirtyWrite (
                 1
               , hv );
 }
@@ -419,7 +422,7 @@ void
         {
             // if so, then finish releasing notes
             NotesOff ();
-            dirtyWrite (
+            DirtyWrite (
                         4
                       , wt -> GetCurrentWaveTableEntry () & 0xfe );
             arpIndex = -1;
@@ -446,8 +449,8 @@ void
 }
 
 void
-    Bank::dirtyWrite (
-            int index
+    Bank::DirtyWrite (
+            const int index
             )
 {
     if ( !dirty [ index ] )
@@ -461,9 +464,9 @@ void
 }
 
 void
-    Bank::dirtyWrite (
-            int index
-          , int value
+    Bank::DirtyWrite (
+            const int index
+          , const int value
             )
 {
     if ( registers [ index ] == value )
@@ -479,7 +482,7 @@ void
 
 // TODO: Move this into a better place for it
 String
-    Bank::getCategoryElementName (
+    Bank::GetCategoryElementName (
             const Category c
             )
 {
