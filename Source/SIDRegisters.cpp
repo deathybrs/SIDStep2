@@ -40,7 +40,7 @@ SidRegisters::SidRegisters ()
     for ( auto i = 0 ; i < 3 ; i++ )
     {
         DirtyWrite (
-                    0x03 + i
+                    0x03 + i * 7
                   , pulse_width_default );
         notes . add (
                      new Array < Note > () );
@@ -447,7 +447,7 @@ void
                                                            , false );
                                        }
                                        file . writeText (
-                                                         "data:\n\t!byte "
+                                                         "data:\n; Bar 0\n\t!byte "
                                                        , false
                                                        , false );
                                        auto value_index = 0;
@@ -526,7 +526,6 @@ void
 void
     SidRegisters::onLiveExportArmed ()
 {
-    record . clear ();
     recording    = true;
     currentFrame = 0;
 }
@@ -702,6 +701,10 @@ void
                                                                                  &LiveDoneExporting::onLiveDoneExporting );
         return;
     }
+    if ( frame == 0 )
+    {
+        record . clear ();
+    }
     lastFrame = currentFrame;
     currentFrame = frame;
 }
@@ -769,7 +772,7 @@ void
     {
         hardRestartCounter . set (
                                   v
-                                , 4 );
+                                , 3 );
         DirtyWrite (
                     static_cast < int > ( offset ) + attack_decay_offset
                   , 0 );
@@ -887,10 +890,12 @@ void
     }
     if ( recording )
     {
-        if ( currentFrame == 1 )
+        if ( currentFrame == 0 )
         {
             record . clear ();
             barFrames . clear ();
+            barFrames . push_back (
+                                   0 );
         }
         if ( lastFrame != currentFrame )
         {

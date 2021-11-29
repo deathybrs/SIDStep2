@@ -40,46 +40,6 @@
     </GROUP>
     <GROUP id="{7C1D86DB-8EB5-467E-5D78-9FFFA81EF60F}" name="Source">
       <FILE id="CQXQho" name="SIDEvent.h" compile="0" resource="0" file="Source/SIDEvent.h"/>
-      <GROUP id="{3EA062C4-4326-BEA5-1059-08713DE34790}" name="Commands">
-        <FILE id="BBUMzf" name="Attack.h" compile="0" resource="0" file="Source/Commands/Attack.h"/>
-        <FILE id="CKHUoA" name="Command.cpp" compile="1" resource="0" file="Source/Commands/Command.cpp"/>
-        <FILE id="BzWpT2" name="Command.h" compile="0" resource="0" file="Source/Commands/Command.h"/>
-        <FILE id="yVnwfx" name="Cutoff.h" compile="0" resource="0" file="Source/Commands/Cutoff.h"/>
-        <FILE id="ezr4SP" name="Decay.h" compile="0" resource="0" file="Source/Commands/Decay.h"/>
-        <FILE id="HHNOfe" name="Filter.h" compile="0" resource="0" file="Source/Commands/Filter.h"/>
-        <FILE id="aCuBD6" name="FilterType.h" compile="0" resource="0" file="Source/Commands/FilterType.h"/>
-        <FILE id="pmkrPX" name="Note.h" compile="0" resource="0" file="Source/Commands/Note.h"/>
-        <FILE id="dUbNEQ" name="NybbleCommand.cpp" compile="1" resource="0"
-              file="Source/Commands/NybbleCommand.cpp"/>
-        <FILE id="hZ32Fa" name="NybbleCommand.h" compile="0" resource="0" file="Source/Commands/NybbleCommand.h"/>
-        <FILE id="gv53rN" name="Pattern.cpp" compile="1" resource="0" file="Source/Commands/Pattern.cpp"/>
-        <FILE id="siSvsZ" name="Pattern.h" compile="0" resource="0" file="Source/Commands/Pattern.h"/>
-        <FILE id="ihqJfq" name="PitchBend.h" compile="0" resource="0" file="Source/Commands/PitchBend.h"/>
-        <FILE id="H1ow7i" name="ProgramChange.h" compile="0" resource="0" file="Source/Commands/ProgramChange.h"/>
-        <FILE id="kr1XmV" name="PulseWidth.h" compile="0" resource="0" file="Source/Commands/PulseWidth.h"/>
-        <FILE id="nCTznS" name="Release.h" compile="0" resource="0" file="Source/Commands/Release.h"/>
-        <FILE id="JIWqqX" name="Resonance.h" compile="0" resource="0" file="Source/Commands/Resonance.h"/>
-        <FILE id="pjXHxn" name="SignedShortCommand.cpp" compile="1" resource="0"
-              file="Source/Commands/SignedShortCommand.cpp"/>
-        <FILE id="Ym4Dhv" name="SignedShortCommand.h" compile="0" resource="0"
-              file="Source/Commands/SignedShortCommand.h"/>
-        <FILE id="vJQwZX" name="Sustain.h" compile="0" resource="0" file="Source/Commands/Sustain.h"/>
-        <FILE id="td8uom" name="TremoloAmount.h" compile="0" resource="0" file="Source/Commands/TremoloAmount.h"/>
-        <FILE id="Yr49vT" name="TremoloSpeed.h" compile="0" resource="0" file="Source/Commands/TremoloSpeed.h"/>
-        <FILE id="Ws7IhN" name="UnsignedShortCommand.cpp" compile="1" resource="0"
-              file="Source/Commands/UnsignedShortCommand.cpp"/>
-        <FILE id="hjqKQg" name="UnsignedShortCommand.h" compile="0" resource="0"
-              file="Source/Commands/UnsignedShortCommand.h"/>
-        <FILE id="a43HJ4" name="VibratoAmount.h" compile="0" resource="0" file="Source/Commands/VibratoAmount.h"/>
-        <FILE id="jpUyYN" name="VibratoSpeed.h" compile="0" resource="0" file="Source/Commands/VibratoSpeed.h"/>
-        <FILE id="BLsvsi" name="Volume.h" compile="0" resource="0" file="Source/Commands/Volume.h"/>
-      </GROUP>
-      <FILE id="O2CuEz" name="Encoder.cpp" compile="1" resource="0" file="Source/Encoder.cpp"/>
-      <FILE id="p86TVW" name="Encoder.h" compile="0" resource="0" file="Source/Encoder.h"/>
-      <FILE id="vHaBaF" name="Packer.cpp" compile="1" resource="0" file="Source/Packer.cpp"/>
-      <FILE id="dGmj4Y" name="Packer.h" compile="0" resource="0" file="Source/Packer.h"/>
-      <FILE id="PMD5t8" name="Renderer.cpp" compile="1" resource="0" file="Source/Renderer.cpp"/>
-      <FILE id="IAj3OX" name="Renderer.h" compile="0" resource="0" file="Source/Renderer.h"/>
       <GROUP id="{D2F12EFB-4B36-22CC-03A2-922931012C1B}" name="Listeners">
         <FILE id="fwo5SD" name="PulseTableSelectionChanged.h" compile="0" resource="0"
               file="Source/Listeners/PulseTableSelectionChanged.h"/>
@@ -481,43 +441,12 @@
     <FILE id="hE77uk" name="TODO.txt" compile="0" resource="0" file="TODO.txt"/>
   </MAINGROUP>
   <EXPORTFORMATS>
-    <VS2015 targetFolder="Builds/VisualStudio2015" vstFolder="C:\Users\Skye\Documents\SpiderOak\Projects\SIDStep2\Requirements\VST3 SDK">
-      <CONFIGURATIONS>
-        <CONFIGURATION name="Debug" winWarningLevel="4" generateManifest="1" winArchitecture="x64"
-                       isDebug="1" optimisation="1" targetName="SIDStep2" binaryPath="C:\Users\Skye\Documents\VSTs"
-                       headerPath="C:\Users\Skye\Documents\SpiderOak\Projects\SIDStep2\Requirements\JUCE\modules"/>
-        <CONFIGURATION name="Release" winWarningLevel="4" generateManifest="1" winArchitecture="x64"
-                       isDebug="0" optimisation="3" targetName="SIDStep2" binaryPath="C:\Users\Skye\Documents\VSTs"
-                       headerPath="C:\Users\Skye\Documents\SpiderOak\Projects\SIDStep2\Requirements\JUCE\modules"
-                       useRuntimeLibDLL="0"/>
-        <CONFIGURATION name="Debug32" winWarningLevel="4" generateManifest="1" winArchitecture="32-bit"
-                       isDebug="1" optimisation="1" targetName="SIDStep2" binaryPath="C:\Users\Skye\Documents\VSTs"
-                       headerPath="C:\Users\Skye\Documents\SpiderOak\Projects\SIDStep2\Requirements\JUCE\modules"/>
-        <CONFIGURATION name="Release32" winWarningLevel="4" generateManifest="1" winArchitecture="32-bit"
-                       isDebug="0" optimisation="3" targetName="SIDStep2" binaryPath="C:\Users\Skye\Documents\VSTs"
-                       headerPath="C:\Users\Skye\Documents\SpiderOak\Projects\SIDStep2\Requirements\JUCE\modules"
-                       useRuntimeLibDLL="0"/>
-      </CONFIGURATIONS>
-      <MODULEPATHS>
-        <MODULEPATH id="juce_core" path="Requirements/JUCE/modules"/>
-        <MODULEPATH id="juce_events" path="Requirements/JUCE/modules"/>
-        <MODULEPATH id="juce_graphics" path="Requirements/JUCE/modules"/>
-        <MODULEPATH id="juce_data_structures" path="Requirements/JUCE/modules"/>
-        <MODULEPATH id="juce_gui_basics" path="Requirements/JUCE/modules"/>
-        <MODULEPATH id="juce_gui_extra" path="Requirements/JUCE/modules"/>
-        <MODULEPATH id="juce_audio_basics" path="Requirements/JUCE/modules"/>
-        <MODULEPATH id="juce_audio_devices" path="Requirements/JUCE/modules"/>
-        <MODULEPATH id="juce_audio_formats" path="Requirements/JUCE/modules"/>
-        <MODULEPATH id="juce_audio_processors" path="Requirements/JUCE/modules"/>
-        <MODULEPATH id="juce_audio_plugin_client" path="Requirements/JUCE/modules"/>
-      </MODULEPATHS>
-    </VS2015>
     <VS2019 targetFolder="Builds/VisualStudio2019">
       <CONFIGURATIONS>
         <CONFIGURATION isDebug="1" name="Debug" binaryPath="D:\My Documents\VSTs\64b"
-                       headerPath="D:\VST3 SDK"/>
+                       headerPath="C:\VST3 SDK"/>
         <CONFIGURATION isDebug="0" name="Release" binaryPath="D:\My Documents\VSTs\64b"
-                       headerPath="D:\VST3 SDK"/>
+                       headerPath="C:\VST3 SDK"/>
       </CONFIGURATIONS>
       <MODULEPATHS>
         <MODULEPATH id="juce_gui_extra" path="D:\JUCE-Multiversions\juce-6.0.4-windows\JUCE\modules"/>

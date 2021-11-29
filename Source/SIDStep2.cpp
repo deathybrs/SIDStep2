@@ -55,6 +55,7 @@ SidStep2::SidStep2 ()
     patchListMode       = -1;
     patchSelectionIndex = 0;
     armed               = recording = false;
+    sampleIndex         = 0;
 }
 
 SidStep2::~SidStep2 ()
@@ -99,7 +100,10 @@ void
           , AudioPlayHead::CurrentPositionInfo& position_info
             )
 {
+    // Don't generate anything if we're not done being initialized by the VST host.
     if ( sampleRate == 0 ) { return; }
+
+    // If the user is in the patch editor, then we pass generation to that code.
     if ( !live )
     {
         bank -> Generate (
@@ -108,6 +112,9 @@ void
                         , position_info );
         return;
     }
+
+    // Is the tempo is set, then calculate samples per quarter note and current
+    // sample position in quarter notes.
     auto spq  = 0.0;
     auto cppq = 0.0;
     if ( position_info . bpm > 0 )
@@ -116,20 +123,21 @@ void
         spq   = sampleRate * ONE_MINUTE / position_info . bpm;
         cppq  = position_info . ppqPosition * spq;
     }
-    MidiBuffer::Iterator it (
-                             midi_messages );
-    MidiMessage                        m;
-    int                                next_message_sample;
-    std::array < short , BUFFER_SIZE > buf {};
+
+    // If the DAW is playing,
     if ( position_info . isPlaying )
     {
+        // then determine the current sampleIndex into the song
         sampleIndex = static_cast < long > ( position_info . timeInSamples );
+
+        // and further, if recording is armed then start recording.
         if ( armed )
         {
             recording = true;
             armed     = false;
         }
     }
+        // Otherwise, if the DAW has stopped playing, then stop recording as well.
     else if ( recording )
     {
         // may want to move this block to the frame... although most people exporting SHOULD be smart enough to allow a 
@@ -139,29 +147,52 @@ void
         SharedResourcePointer < ListenerList < LiveDoneExporting > > () -> call (
                                                                                  &LiveDoneExporting::onLiveDoneExporting );
     }
+
+    MidiBuffer::Iterator it (
+                             midi_messages );
+    MidiMessage                        m;
+    int                                next_message_sample;
+    std::array < short , BUFFER_SIZE > buf {};
+
+    // If there are no MIDI messages, then set the processing to not look for
+    // messages in this update.
     if ( !it . getNextEvent (
                              m
                            , next_message_sample ) ) { next_message_sample = buffer . getNumSamples (); }
+    else
+    {
+        // This math calculates the time of the event, in quarter notes.
+        //auto foo = ( position_info . timeInSamples + m . getTimeStamp () ) / spq;
+        //auto bar = foo;
+    }
+
     auto cycles = 0;
+    // loop over the buffer (index is updated inside).
     for ( auto i = 0 ; i < buffer . getNumSamples () ; )
     {
+        // Do extra work if the tempo is set
         if ( position_info . bpm > 0 )
         {
-            ++cppq;
+            // Have we stepped to the next quarter note?
             if ( static_cast < int > ( cppq ) % static_cast < int > ( spq ) == 0 )
             {
                 SharedResourcePointer < ListenerList < QuarterNoteTick > > () -> call (
                                                                                        &QuarterNoteTick::onQuarterNoteTick
                                                                                      , static_cast < unsigned int > ( cppq / spq ) );
-                /* Quarter Note Pulse; */
+
+                // If we're looping
                 if ( position_info . isLooping )
                 {
+                    // Get the current quarter note
                     const auto quarter_note = static_cast < unsigned int > ( cppq / spq ) + 1;
+                    // If it's equal to the loop start, then set that looping
+                    // point in the recording.
                     if ( quarter_note == static_cast < unsigned int > ( position_info . ppqLoopStart ) )
                     {
                         sidRegisters -> SetLoopStart (
                                                       sampleIndex / samplesPerFrame );
                     }
+                    // Same if it's the end, and further stop exporting if it has looped.
                     if ( quarter_note == static_cast < unsigned int > ( position_info . ppqLoopEnd ) )
                     {
                         sidRegisters -> SetLoopEnd (
@@ -171,28 +202,42 @@ void
                     }
                 }
             }
+            // advance the current quarter note sample
+            ++cppq;
         }
-        ++sampleIndex;
-        if ( sampleIndex % samplesPerFrame == 0 )
-        {
-            Frame (
-                   sampleIndex / samplesPerFrame + 1
-                 , position_info . isPlaying );
-        }
+        // If the next sample of the next midi event is now (or by some
+        // stretch, passed)
         while ( i >= next_message_sample )
         {
+            // Send the MIDI signal
             SharedResourcePointer < ListenerList < MIDISignal > > () -> call (
                                                                               &MIDISignal::onMIDISignal
                                                                             , m );
+
+            // and just like earlier, if that was the last midi message, then
+            // stop trying to process them.
             if ( !it . getNextEvent (
                                      m
                                    , next_message_sample ) ) { next_message_sample = buffer . getNumSamples (); }
         }
+        // if we have advanced to the next frame
+        if ( sampleIndex % samplesPerFrame == 0 )
+        {
+            // Then trigger the frame updates.
+            Frame (
+                   sampleIndex / samplesPerFrame
+                 , position_info . isPlaying );
+        }
+
+        // Increase the cycles and update the clock on the SID chip.
+        // I don't remember why the value is increased rather than static.
         cycles += static_cast < cycle_count > ( cyclesPerSample );
         const auto s = sidRegisters -> sid -> clock (
                                                      cycles
                                                    , buf . data ()
                                                    , 1 );
+
+        // Then copy the samples into the buffer.
         for ( auto j = 0 ; j < s ; j++ )
         {
             buffer . setSample (
@@ -203,6 +248,9 @@ void
                                                  j ) ) / float (
                                                                 SIXTEEN_BIT ) );
         }
+        // advance the current sample
+        ++sampleIndex;
+        // and increase i and loop
         i += s;
     }
 }

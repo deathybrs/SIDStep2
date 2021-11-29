@@ -44,7 +44,7 @@
  #define JucePlugin_Desc                   "SIDStep2"
 #endif
 #ifndef  JucePlugin_Manufacturer
- #define JucePlugin_Manufacturer           "Style"
+ #define JucePlugin_Manufacturer           "BAS"
 #endif
 #ifndef  JucePlugin_ManufacturerWebsite
  #define JucePlugin_ManufacturerWebsite    ""
