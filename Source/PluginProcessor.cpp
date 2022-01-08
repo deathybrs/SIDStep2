@@ -138,7 +138,7 @@ auto
 auto
     Sidstep2AudioProcessor::getNumPrograms () -> int
 {
-    return 1;
+    return 255;
 }
 
 auto

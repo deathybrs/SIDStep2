@@ -1,0 +1,16 @@
+Program Change
+Note On
+Note Off
+Arp
+Pitch Bend
+Pulse Width
+Change Attack+Decay
+Change Sustain+Release
+Voice Filter On/Off
+Vibrato Amount
+Vibrato Speed
+Vibrato Delay
+Cutoff
+Resonance
+Set Filter Type
+Volume

@@ -456,7 +456,7 @@ void
             )
 {
     forVoice = value;
-    envelope -> setForVoice (
+    envelope -> SetForVoice (
                              value );
     noteTable -> SetForVoice (
                               value );

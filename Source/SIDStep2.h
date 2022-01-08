@@ -7,11 +7,10 @@
 
 #include "Listeners/ListenerInitializer.h"
 
-
 class SidRegisters;
 class Renderer;
 class Bank;
-
+class Recorder;
 
 class SidStep2 final
         : public ReferenceCountedObject
@@ -152,7 +151,7 @@ private:
     int                                                 sampleRate;
     int                                                 samplesPerFrame;
     double                                              cyclesPerSample;
-    long                                                sampleIndex;
+    double                                              sampleIndex;
     bool                                                live;
     int                                                 patchListMode;
     int                                                 patchSelectionIndex;
@@ -161,6 +160,9 @@ private:
     double                                              tempo {};
     unsigned lastFrame {
             UINT_MAX
+    };
+    std::shared_ptr < Recorder > recorder {
+            nullptr
     };
 
 

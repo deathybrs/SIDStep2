@@ -1,21 +1,16 @@
 #include "SIDStep2.h"
 
-
 #include <JuceHeader.h>
-
 
 #include <array>
 
-
+#include "Recorder.h"
 #include "SIDProgram.h"
 #include "SIDRegisters.h"
 
-
 #include "../Requirements/resid-0.16/SID.h"  // NOLINT(clang-diagnostic-nonportable-include-path)
-
-
+#include "Exporter.h"
 #include "Programs/Bank.h"
-
 
 SidStep2::SidStep2 ()
 {
@@ -115,13 +110,11 @@ void
 
     // Is the tempo is set, then calculate samples per quarter note and current
     // sample position in quarter notes.
-    auto spq  = 0.0;
-    auto cppq = 0.0;
+    auto samples_per_quarter_note  = 0;
     if ( position_info . bpm > 0 )
     {
         tempo = position_info . bpm;
-        spq   = sampleRate * ONE_MINUTE / position_info . bpm;
-        cppq  = position_info . ppqPosition * spq;
+        samples_per_quarter_note   = static_cast < int > ( sampleRate * ONE_MINUTE / position_info . bpm );
     }
 
     // If the DAW is playing,
@@ -135,17 +128,21 @@ void
         {
             recording = true;
             armed     = false;
+            recorder -> Start ();
         }
-    }
-        // Otherwise, if the DAW has stopped playing, then stop recording as well.
+    }   // Otherwise, if the DAW has stopped playing, then stop recording as well.
     else if ( recording )
     {
         // may want to move this block to the frame... although most people exporting SHOULD be smart enough to allow a 
         // little silence before they stop recording.
         recording = false;
+        recorder -> Stop ();
         // fire stop recording event
         SharedResourcePointer < ListenerList < LiveDoneExporting > > () -> call (
                                                                                  &LiveDoneExporting::onLiveDoneExporting );
+        Exporter exporter (
+                           recorder );
+        exporter . ToPatterns ();
     }
 
     MidiBuffer::Iterator it (
@@ -159,52 +156,12 @@ void
     if ( !it . getNextEvent (
                              m
                            , next_message_sample ) ) { next_message_sample = buffer . getNumSamples (); }
-    else
-    {
-        // This math calculates the time of the event, in quarter notes.
-        //auto foo = ( position_info . timeInSamples + m . getTimeStamp () ) / spq;
-        //auto bar = foo;
-    }
 
     auto cycles = 0;
     // loop over the buffer (index is updated inside).
     for ( auto i = 0 ; i < buffer . getNumSamples () ; )
     {
-        // Do extra work if the tempo is set
-        if ( position_info . bpm > 0 )
-        {
-            // Have we stepped to the next quarter note?
-            if ( static_cast < int > ( cppq ) % static_cast < int > ( spq ) == 0 )
-            {
-                SharedResourcePointer < ListenerList < QuarterNoteTick > > () -> call (
-                                                                                       &QuarterNoteTick::onQuarterNoteTick
-                                                                                     , static_cast < unsigned int > ( cppq / spq ) );
-
-                // If we're looping
-                if ( position_info . isLooping )
-                {
-                    // Get the current quarter note
-                    const auto quarter_note = static_cast < unsigned int > ( cppq / spq ) + 1;
-                    // If it's equal to the loop start, then set that looping
-                    // point in the recording.
-                    if ( quarter_note == static_cast < unsigned int > ( position_info . ppqLoopStart ) )
-                    {
-                        sidRegisters -> SetLoopStart (
-                                                      sampleIndex / samplesPerFrame );
-                    }
-                    // Same if it's the end, and further stop exporting if it has looped.
-                    if ( quarter_note == static_cast < unsigned int > ( position_info . ppqLoopEnd ) )
-                    {
-                        sidRegisters -> SetLoopEnd (
-                                                    sampleIndex / samplesPerFrame );
-                        SharedResourcePointer < ListenerList < LiveDoneExporting > > () -> call (
-                                                                                                 &LiveDoneExporting::onLiveDoneExporting );
-                    }
-                }
-            }
-            // advance the current quarter note sample
-            ++cppq;
-        }
+        // if we have advanced to the next frame
         // If the next sample of the next midi event is now (or by some
         // stretch, passed)
         while ( i >= next_message_sample )
@@ -219,14 +176,6 @@ void
             if ( !it . getNextEvent (
                                      m
                                    , next_message_sample ) ) { next_message_sample = buffer . getNumSamples (); }
-        }
-        // if we have advanced to the next frame
-        if ( sampleIndex % samplesPerFrame == 0 )
-        {
-            // Then trigger the frame updates.
-            Frame (
-                   sampleIndex / samplesPerFrame
-                 , position_info . isPlaying );
         }
 
         // Increase the cycles and update the clock on the SID chip.
@@ -249,7 +198,48 @@ void
                                                                 SIXTEEN_BIT ) );
         }
         // advance the current sample
-        ++sampleIndex;
+        sampleIndex += s;
+        const auto current_frame = static_cast < unsigned > ( sampleIndex / static_cast < double > ( samplesPerFrame ) );
+        if ( current_frame != lastFrame )
+        {
+            // Then trigger the frame updates.
+            Frame (
+                   current_frame
+                 , position_info . isPlaying );
+        }
+        // Do extra work if the tempo is set
+        if ( position_info . bpm > 0 )
+        {
+            // Have we stepped to the next quarter note?
+            if ( static_cast < int > ( sampleIndex ) % samples_per_quarter_note == 0 )
+            {
+                SharedResourcePointer < ListenerList < QuarterNoteTick > > () -> call (
+                                                                                       &QuarterNoteTick::onQuarterNoteTick
+                                                                                     , static_cast < unsigned int > ( sampleIndex / samples_per_quarter_note ) );
+
+                // If we're looping
+                if ( position_info . isLooping )
+                {
+                    // Get the current quarter note
+                    const auto quarter_note = static_cast < unsigned int > ( sampleIndex / samples_per_quarter_note ) + 1;
+                    // If it's equal to the loop start, then set that looping
+                    // point in the recording.
+                    if ( quarter_note == static_cast < unsigned int > ( position_info . ppqLoopStart ) )
+                    {
+                        sidRegisters -> SetLoopStart (
+                                                      static_cast < int > ( sampleIndex ) / samplesPerFrame );
+                    }
+                    // Same if it's the end, and further stop exporting if it has looped.
+                    if ( quarter_note == static_cast < unsigned int > ( position_info . ppqLoopEnd ) )
+                    {
+                        sidRegisters -> SetLoopEnd (
+                                                    static_cast < int > ( sampleIndex ) / samplesPerFrame );
+                        SharedResourcePointer < ListenerList < LiveDoneExporting > > () -> call (
+                                                                                                 &LiveDoneExporting::onLiveDoneExporting );
+                    }
+                }
+            }
+        }
         // and increase i and loop
         i += s;
     }
@@ -634,10 +624,19 @@ void
 }
 
 void
-    SidStep2::onLiveExportArmed () { armed = true; }
+    SidStep2::onLiveExportArmed ()
+{
+    armed    = true;
+    recorder = nullptr;
+    recorder = std::make_shared < Recorder > ();
+}
 
 void
-    SidStep2::onLiveDoneExporting () { armed = false; }
+    SidStep2::onLiveDoneExporting ()
+{
+    armed = false;
+    recorder -> Stop ();
+}
 
 void
     SidStep2::Frame (
@@ -660,6 +659,12 @@ void
                       v );
     }
     sidRegisters -> WriteRegisters ();
+
+    if ( recorder != nullptr )
+    {
+        recorder -> Frame (
+                           frame );
+    }
 }
 
 void

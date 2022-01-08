@@ -39,6 +39,13 @@
       <FILE id="dByhyO" name="wave8580_PST.cc" compile="1" resource="0" file="Requirements/resid-0.16/wave8580_PST.cc"/>
     </GROUP>
     <GROUP id="{7C1D86DB-8EB5-467E-5D78-9FFFA81EF60F}" name="Source">
+      <FILE id="nO6fhl" name="Exporter.cpp" compile="1" resource="0" file="Source/Exporter.cpp"/>
+      <FILE id="mQ3l5w" name="Exporter.h" compile="0" resource="0" file="Source/Exporter.h"/>
+      <FILE id="uliXXJ" name="Recorder.cpp" compile="1" resource="0" file="Source/Recorder.cpp"/>
+      <FILE id="MjMI3X" name="Recorder.h" compile="0" resource="0" file="Source/Recorder.h"/>
+      <FILE id="sVOsCN" name="Command.cpp" compile="1" resource="0" file="Source/Command.cpp"/>
+      <FILE id="qCyqjJ" name="Command.h" compile="0" resource="0" file="Source/Command.h"/>
+      <FILE id="oEP1mD" name="commands.txt" compile="0" resource="1" file="commands.txt"/>
       <FILE id="CQXQho" name="SIDEvent.h" compile="0" resource="0" file="Source/SIDEvent.h"/>
       <GROUP id="{D2F12EFB-4B36-22CC-03A2-922931012C1B}" name="Listeners">
         <FILE id="fwo5SD" name="PulseTableSelectionChanged.h" compile="0" resource="0"
@@ -443,9 +450,9 @@
   <EXPORTFORMATS>
     <VS2019 targetFolder="Builds/VisualStudio2019">
       <CONFIGURATIONS>
-        <CONFIGURATION isDebug="1" name="Debug" binaryPath="D:\My Documents\VSTs\64b"
+        <CONFIGURATION isDebug="1" name="Debug" binaryPath="C\My Documents\VSTs\64b"
                        headerPath="C:\VST3 SDK"/>
-        <CONFIGURATION isDebug="0" name="Release" binaryPath="D:\My Documents\VSTs\64b"
+        <CONFIGURATION isDebug="0" name="Release" binaryPath="C:\My Documents\VSTs\64b"
                        headerPath="C:\VST3 SDK"/>
       </CONFIGURATIONS>
       <MODULEPATHS>

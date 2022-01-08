@@ -1,30 +1,25 @@
-#ifndef ENVELOPE_H_INCLUDED
-#define ENVELOPE_H_INCLUDED
-
+#pragma once
 
 #include "../JuceLibraryCode/JuceHeader.h"
 
-
 #include "../Listeners/ListenerInitializer.h"
-
 
 class SidProgram;
 
-
 class sEnvelope
-        : public ReferenceCountedObject ,
-          public PatchEditorAttackChanged ,
-          public PatchEditorDecayChanged ,
-          public PatchEditorSustainChanged ,
-          public PatchEditorReleaseChanged ,
-          public LiveAttackChanged ,
-          public LiveDecayChanged ,
-          public LiveSustainChanged ,
-          public LiveReleaseChanged ,
-          public AttackParameterChanged ,
-          public DecayParameterChanged ,
-          public SustainParameterChanged ,
-          public ReleaseParameterChanged
+        : public ReferenceCountedObject
+        , public PatchEditorAttackChanged
+        , public PatchEditorDecayChanged
+        , public PatchEditorSustainChanged
+        , public PatchEditorReleaseChanged
+        , public LiveAttackChanged
+        , public LiveDecayChanged
+        , public LiveSustainChanged
+        , public LiveReleaseChanged
+        , public AttackParameterChanged
+        , public DecayParameterChanged
+        , public SustainParameterChanged
+        , public ReleaseParameterChanged
 {
 public:
     sEnvelope ();
@@ -61,13 +56,13 @@ public:
 
     static void
         loadState (
-                MemoryInputStream&                 stream
+                MemoryInputStream&                       stream
               , ReferenceCountedObjectPtr < SidProgram > o
                 );
 
     static void
         loadCopyState (
-                MemoryInputStream&                 stream
+                MemoryInputStream&                       stream
               , ReferenceCountedObjectPtr < SidProgram > o
                 );
 
@@ -204,7 +199,7 @@ public:
                 ) override;
 
     void
-        setForVoice (
+        SetForVoice (
                 int value
                 );
 
@@ -213,14 +208,10 @@ private:
     unsigned int defaultDecay;
     unsigned int defaultSustain;
     unsigned int defaultRelease;
-
     unsigned int attack;
     unsigned int decay;
     unsigned int sustain;
     unsigned int release;
-
-    int forVoice;
+    int          forVoice;
 };
 
-
-#endif  // ENVELOPE_H_INCLUDED

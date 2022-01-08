@@ -160,7 +160,7 @@ void sEnvelope::onDecayParameterChanged(unsigned voice, unsigned value) { if (vo
 void sEnvelope::onSustainParameterChanged(unsigned voice, unsigned value) { if (voice == forVoice) setSustain(value); }
 void sEnvelope::onReleaseParameterChanged(unsigned voice, unsigned value) { if (voice == forVoice) setRelease(value); }
 
-void sEnvelope::setForVoice(int value) {
+void sEnvelope::SetForVoice(int value) {
 	if (value > -1 && value < 3) {
 		SharedResourcePointer<ListenerList<AttackParameterChanged>>()->call(&AttackParameterChanged::onAttackParameterChanged,
 			value, getAttack());

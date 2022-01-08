@@ -202,332 +202,332 @@ void
 void
     SidRegisters::onLiveDoneExporting ()
 {
-    if ( !recording ) { return; }
-    recording                                                  = false;
-    const std::array < int , register_array_size > order_table = {
-            0x00
-          , 0x01
-          , 0x02
-          , 0x03
-          , 0x05
-          , 0x06
-          , 0x07
-          , 0x08
-          , 0x09
-          , 0x0a
-          , 0x0c
-          , 0x0d
-          , 0x0e
-          , 0x0f
-          , 0x10
-          , 0x11
-          , 0x13
-          , 0x14
-          , 0x15
-          , 0x16
-          , 0x17
-          , 0x18
-          , 0x04
-          , 0x0b
-          , 0x12
-    };
-    MessageManager::callAsync (
-                               [=] ()
-                               {
-                                   if ( fileBrowser . browseForFileToSave (
-                                                                           true ) )
-                                   {
-                                       const auto f = fileBrowser . getResult ();
-                                       if ( f . exists () )
-                                       {
-                                           auto res = f . deleteFile ();
-                                           if ( res ) { res = f . create (); }
-                                           if ( !res ) { return; }
-                                       }
-                                       FileOutputStream file (
-                                                              f );
-                                       //auto row_idx = 0;
-                                       //auto bar = 0;
-                                       //auto loop_point = -1;
-                                       //for ( const auto& row : record )
-                                       //{
-                                       //    if ( std::all_of (
-                                       //                      row . begin ()
-                                       //                    , row . end ()
-                                       //                    , [=] (
-                                       //                      const int value
-                                       //                      )
-                                       //                      {
-                                       //                          return value == _8_bits_max;
-                                       //                      } ) )
-                                       //    {
-                                       //        if ( loop_point == -1 )
-                                       //        {
-                                       //            loop_point = row_idx + 2;
-                                       //        }
+    //if ( !recording ) { return; }
+    //recording                                                  = false;
+    //const std::array < int , register_array_size > order_table = {
+    //        0x00
+    //      , 0x01
+    //      , 0x02
+    //      , 0x03
+    //      , 0x05
+    //      , 0x06
+    //      , 0x07
+    //      , 0x08
+    //      , 0x09
+    //      , 0x0a
+    //      , 0x0c
+    //      , 0x0d
+    //      , 0x0e
+    //      , 0x0f
+    //      , 0x10
+    //      , 0x11
+    //      , 0x13
+    //      , 0x14
+    //      , 0x15
+    //      , 0x16
+    //      , 0x17
+    //      , 0x18
+    //      , 0x04
+    //      , 0x0b
+    //      , 0x12
+    //};
+    //MessageManager::callAsync (
+    //                           [=] ()
+    //                           {
+    //                               if ( fileBrowser . browseForFileToSave (
+    //                                                                       true ) )
+    //                               {
+    //                                   const auto f = fileBrowser . getResult ();
+    //                                   if ( f . exists () )
+    //                                   {
+    //                                       auto res = f . deleteFile ();
+    //                                       if ( res ) { res = f . create (); }
+    //                                       if ( !res ) { return; }
+    //                                   }
+    //                                   FileOutputStream file (
+    //                                                          f );
+    //                                   //auto row_idx = 0;
+    //                                   //auto bar = 0;
+    //                                   //auto loop_point = -1;
+    //                                   //for ( const auto& row : record )
+    //                                   //{
+    //                                   //    if ( std::all_of (
+    //                                   //                      row . begin ()
+    //                                   //                    , row . end ()
+    //                                   //                    , [=] (
+    //                                   //                      const int value
+    //                                   //                      )
+    //                                   //                      {
+    //                                   //                          return value == _8_bits_max;
+    //                                   //                      } ) )
+    //                                   //    {
+    //                                   //        if ( loop_point == -1 )
+    //                                   //        {
+    //                                   //            loop_point = row_idx + 2;
+    //                                   //        }
 
-                                       //        continue;
-                                       //    }
-                                       //    if ( loop_point == row_idx )
-                                       //    {
-                                       //        file . writeText (
-                                       //                          "data_loop:\n"
-                                       //                        , false
-                                       //                        , false );
-                                       //    }
-                                       //    if ( std::find (
-                                       //                    barFrames . begin ()
-                                       //                  , barFrames . end ()
-                                       //                  , row_idx + 25 ) != barFrames . end () )
-                                       //    {
-                                       //        file . writeText (
-                                       //                          "bar_" + String (
-                                       //                                           bar++ ) + ":\n"
-                                       //                        , false
-                                       //                        , false );
-                                       //    }
-                                       //    //file . writeText (
-                                       //    //                  "    !byte "
-                                       //    //                , false
-                                       //    //                , false );
+    //                                   //        continue;
+    //                                   //    }
+    //                                   //    if ( loop_point == row_idx )
+    //                                   //    {
+    //                                   //        file . writeText (
+    //                                   //                          "data_loop:\n"
+    //                                   //                        , false
+    //                                   //                        , false );
+    //                                   //    }
+    //                                   //    if ( std::find (
+    //                                   //                    barFrames . begin ()
+    //                                   //                  , barFrames . end ()
+    //                                   //                  , row_idx + 25 ) != barFrames . end () )
+    //                                   //    {
+    //                                   //        file . writeText (
+    //                                   //                          "bar_" + String (
+    //                                   //                                           bar++ ) + ":\n"
+    //                                   //                        , false
+    //                                   //                        , false );
+    //                                   //    }
+    //                                   //    //file . writeText (
+    //                                   //    //                  "    !byte "
+    //                                   //    //                , false
+    //                                   //    //                , false );
 
-                                       //    for ( auto i = 0 ; i < register_array_size ; i++ )
-                                       //    {
-                                       //        file . writeText (
-                                       //                          String (
-                                       //                                  row . at (
-                                       //                                            i ) ) . paddedLeft (
-                                       //                                                                ' '
-                                       //                                                              , 3 )
-                                       //                        , false
-                                       //                        , false );
-                                       //        if ( i != register_array_size - 1 )
-                                       //        {
-                                       //            file . writeText (
-                                       //                              ", "
-                                       //                            , false
-                                       //                            , false );
-                                       //        }
-                                       //    }
-                                       //    file . writeText (
-                                       //                      "\n"
-                                       //                    , false
-                                       //                    , false );
+    //                                   //    for ( auto i = 0 ; i < register_array_size ; i++ )
+    //                                   //    {
+    //                                   //        file . writeText (
+    //                                   //                          String (
+    //                                   //                                  row . at (
+    //                                   //                                            i ) ) . paddedLeft (
+    //                                   //                                                                ' '
+    //                                   //                                                              , 3 )
+    //                                   //                        , false
+    //                                   //                        , false );
+    //                                   //        if ( i != register_array_size - 1 )
+    //                                   //        {
+    //                                   //            file . writeText (
+    //                                   //                              ", "
+    //                                   //                            , false
+    //                                   //                            , false );
+    //                                   //        }
+    //                                   //    }
+    //                                   //    file . writeText (
+    //                                   //                      "\n"
+    //                                   //                    , false
+    //                                   //                    , false );
 
-                                       //    row_idx++;
-                                       //}
+    //                                   //    row_idx++;
+    //                                   //}
 
-                                       std::array < int , register_array_size > prev {};
-                                       prev . fill (
-                                                    -1 );
+    //                                   std::array < int , register_array_size > prev {};
+    //                                   prev . fill (
+    //                                                -1 );
 
-                                       auto                delay      = 0;
-                                       auto                loop_point = -1;
-                                       auto                frame      = 0;
-                                       std::vector < int > raw;
-                                       std::vector < int > bar_byte_stream_index;
+    //                                   auto                delay      = 0;
+    //                                   auto                loop_point = -1;
+    //                                   auto                frame      = 0;
+    //                                   std::vector < int > raw;
+    //                                   std::vector < int > bar_byte_stream_index;
 
-                                       bar_byte_stream_index . push_back (
-                                                                          0 );
-                                       for ( const auto& row : record )
-                                       {
-                                           if ( std::find (
-                                                           barFrames . begin ()
-                                                         , barFrames . end ()
-                                                         , frame ) != barFrames . end () )
-                                           {
-                                               bar_byte_stream_index . push_back (
-                                                                                  raw . size () );
-                                           }
-                                           if ( std::all_of (
-                                                             row . begin ()
-                                                           , row . end ()
-                                                           , [=] (
-                                                             const int value
-                                                             )
-                                                             {
-                                                                 return value == _8_bits_max;
-                                                             } ) )
-                                           {
-                                               if ( loop_point == -1 )
-                                               {
-                                                   while ( delay > _7_bits_max )
-                                                   {
-                                                       raw . push_back (
-                                                                        _8_bits_max );
-                                                       delay -= _7_bits_max;
-                                                   }
-                                                   if ( delay > 0 )
-                                                   {
-                                                       raw . push_back (
-                                                                        delay + delay_bit + 1 );
-                                                   }
-                                                   delay      = -1;
-                                                   loop_point = raw . size ();
-                                               }
-                                           }
-                                           else
-                                           {
-                                               if ( !raw . empty () ) { delay++; }
-                                               for ( auto order = 0 ; order < register_array_size ; order++ )
-                                               {
-                                                   const auto reg = order_table . at (
-                                                                                      order );
-                                                   if ( row . at (
-                                                                  reg ) != prev . at (
-                                                                                      reg ) )
-                                                   {
-                                                       while ( delay > _7_bits_max )
-                                                       {
-                                                           raw . push_back (
-                                                                            _8_bits_max );
-                                                           delay -= _7_bits_max;
-                                                       }
-                                                       if ( delay > 0 )
-                                                       {
-                                                           raw . push_back (
-                                                                            delay + delay_bit );
-                                                           delay = 0;
-                                                       }
-                                                       raw . push_back (
-                                                                        reg );
-                                                       raw . push_back (
-                                                                        row . at (
-                                                                                  reg ) );
-                                                   }
-                                               }
-                                           }
-                                           prev = row;
-                                           frame++;
-                                       }
-                                       while ( delay > _7_bits_max )
-                                       {
-                                           raw . push_back (
-                                                            _8_bits_max );
-                                           delay -= _7_bits_max;
-                                       }
-                                       if ( delay >= 0 )
-                                       {
-                                           raw . push_back (
-                                                            delay + delay_bit + 1 );
-                                       }
-                                       //for ( const auto& row : record )
-                                       String r = "";
-                                       file . writeText (
-                                                         "\t*= $1000\n\n!addr\tzp = $FB\n\n\ninterface\n\tjmp .init\n\tjmp .play\n\t\n"
-                                                       , false
-                                                       , false );
-                                       if ( songTitle . length () > 0 )
-                                       {
-                                           file . writeText (
-                                                             "\t!scr \"" + songTitle . toLowerCase () + "\", 0\n"
-                                                           , false
-                                                           , false );
-                                       }
-                                       if ( songArtist . length () > 0 )
-                                       {
-                                           file . writeText (
-                                                             "\t!scr \"by " + songArtist . toLowerCase () + "\", 0\n"
-                                                           , false
-                                                           , false );
-                                       }
-                                       if ( loop_point > -1 && static_cast < unsigned int > ( loop_point ) != raw . size () )
-                                       {
-                                           file . writeText (
-                                                             "\n.init\n\tlda # > data\n\tsta zp + 1\n\tlda #$00\n\tsta zp\n\tsta index\n\tsta delay\n\tldy # < data\n\tsty index\n\t\n.play\n\tlda delay\n!zone\n\tbeq .next\n\tdec delay\n\trts\n.next\n\tldy index\ncontinue\n\tlda (zp), y\n\tbmi delay_command\n\ttax\n\tiny\n!zone\n\tbne .next\n\tinc zp + 1\n.next\n\tlda (zp), y\n\tsta $d400, x\n\tiny\n\tbne continue\n\tinc zp + 1\n\tbne continue\n\t\ndelay_command\n\tand #$7F\n\tsta delay\n\tdec delay\n\tiny\n!zone\n\tbne .next\n\tinc zp + 1\n.next\n\tcpy #<data_end\n\tbne .return\n\tlda #>data_end\n\tcmp zp + 1\n\tbne .return\n\tlda # > data_loop\n\tsta zp + 1\n\tldy # < data_loop\n.return\n\tsty index\n\trts\n\t\nindex\n\t!byte $00\ndelay\n\t!byte $00\n\n"
-                                                           , false
-                                                           , false );
-                                       }
-                                       else
-                                       {
-                                           // Non-Looping
-                                           file . writeText (
-                                                             "\n.init\n\tlda # > data\n\tsta zp + 1\n\tlda #$00\n\tsta zp\n\tsta index\n\tsta delay\n\tldy # < data\n\tsty index\n\t\n.play\n\tlda delay\n!zone\n\tbeq .next\n\tdec delay\n\trts\n.next\n\tldy index\ncontinue\n\tlda (zp), y\n\tbmi delay_command\n\ttax\n\tiny\n!zone\n\tbne .next\n\tinc zp + 1\n.next\n\tlda (zp), y\n\tsta $d400, x\n\tiny\n\tbne continue\n\tinc zp + 1\n\tbne continue\n\t\ndelay_command\n\tand #$7F\n\tsta delay\n\tdec delay\n\tiny\n!zone\n\tbne .next\n\tinc zp + 1\n.next\n\tcpy #<data_end\n\tbne .return\n\tlda #>data_end\n\tcmp zp + 1\n\tbne .return\n\trts\n.return\n\tsty index\n\trts\n\t\nindex\n\t!byte $00\ndelay\n\t!byte $00\n\n"
-                                                           , false
-                                                           , false );
-                                       }
-                                       file . writeText (
-                                                         "data:\n; Bar 0\n\t!byte "
-                                                       , false
-                                                       , false );
-                                       auto value_index = 0;
-                                       auto bar_number = 0;
-                                       //for ( const auto& row : raw )
-                                       for ( size_t i = 0 ; i < raw . size () ; i++ )
-                                       {
-                                           auto& row = raw [ i ];
-                                           if ( static_cast < int > ( i ) == loop_point )
-                                           {
-                                               file . writeText (
-                                                                 r + "\ndata_loop:\n\t!byte "
-                                                               , false
-                                                               , false );
-                                               value_index += data_row_length - value_index % data_row_length;
-                                               r = "";
-                                           }
-                                           if ( ( row & delay_bit ) == delay_bit )
-                                           {
-                                               r += "$" + String::toHexString (
-                                                                               row ) . paddedLeft (
-                                                                                                   '0'
-                                                                                                 , 2 ) . toUpperCase ();
-                                               if ( std::find (
-                                                               bar_byte_stream_index . begin ()
-                                                             , bar_byte_stream_index . end ()
-                                                             , i ) != bar_byte_stream_index . end () )
-                                               {
-                                                   r += "\n; Bar " + String (
-                                                                             ++bar_number );
-                                               }
-                                               r += "\n\t!byte ";
-                                           }
-                                           else
-                                           {
-                                               r += "$" + String::toHexString (
-                                                                               row ) . paddedLeft (
-                                                                                                   '0'
-                                                                                                 , 2 ) . toUpperCase ();
-                                               value_index++;
-                                               row = raw [ ++i ];
-                                               r += ", $" + String::toHexString (
-                                                                                 row ) . paddedLeft (
-                                                                                                     '0'
-                                                                                                   , 2 ) . toUpperCase ();
-                                               value_index++;
-                                               r += ", ";
-                                           }
+    //                                   bar_byte_stream_index . push_back (
+    //                                                                      0 );
+    //                                   for ( const auto& row : record )
+    //                                   {
+    //                                       if ( std::find (
+    //                                                       barFrames . begin ()
+    //                                                     , barFrames . end ()
+    //                                                     , frame ) != barFrames . end () )
+    //                                       {
+    //                                           bar_byte_stream_index . push_back (
+    //                                                                              raw . size () );
+    //                                       }
+    //                                       if ( std::all_of (
+    //                                                         row . begin ()
+    //                                                       , row . end ()
+    //                                                       , [=] (
+    //                                                         const int value
+    //                                                         )
+    //                                                         {
+    //                                                             return value == _8_bits_max;
+    //                                                         } ) )
+    //                                       {
+    //                                           if ( loop_point == -1 )
+    //                                           {
+    //                                               while ( delay > _7_bits_max )
+    //                                               {
+    //                                                   raw . push_back (
+    //                                                                    _8_bits_max );
+    //                                                   delay -= _7_bits_max;
+    //                                               }
+    //                                               if ( delay > 0 )
+    //                                               {
+    //                                                   raw . push_back (
+    //                                                                    delay + delay_bit + 1 );
+    //                                               }
+    //                                               delay      = -1;
+    //                                               loop_point = raw . size ();
+    //                                           }
+    //                                       }
+    //                                       else
+    //                                       {
+    //                                           if ( !raw . empty () ) { delay++; }
+    //                                           for ( auto order = 0 ; order < register_array_size ; order++ )
+    //                                           {
+    //                                               const auto reg = order_table . at (
+    //                                                                                  order );
+    //                                               if ( row . at (
+    //                                                              reg ) != prev . at (
+    //                                                                                  reg ) )
+    //                                               {
+    //                                                   while ( delay > _7_bits_max )
+    //                                                   {
+    //                                                       raw . push_back (
+    //                                                                        _8_bits_max );
+    //                                                       delay -= _7_bits_max;
+    //                                                   }
+    //                                                   if ( delay > 0 )
+    //                                                   {
+    //                                                       raw . push_back (
+    //                                                                        delay + delay_bit );
+    //                                                       delay = 0;
+    //                                                   }
+    //                                                   raw . push_back (
+    //                                                                    reg );
+    //                                                   raw . push_back (
+    //                                                                    row . at (
+    //                                                                              reg ) );
+    //                                               }
+    //                                           }
+    //                                       }
+    //                                       prev = row;
+    //                                       frame++;
+    //                                   }
+    //                                   while ( delay > _7_bits_max )
+    //                                   {
+    //                                       raw . push_back (
+    //                                                        _8_bits_max );
+    //                                       delay -= _7_bits_max;
+    //                                   }
+    //                                   if ( delay >= 0 )
+    //                                   {
+    //                                       raw . push_back (
+    //                                                        delay + delay_bit + 1 );
+    //                                   }
+    //                                   //for ( const auto& row : record )
+    //                                   String r = "";
+    //                                   file . writeText (
+    //                                                     "\t*= $1000\n\n!addr\tzp = $FB\n\n\ninterface\n\tjmp .init\n\tjmp .play\n\t\n"
+    //                                                   , false
+    //                                                   , false );
+    //                                   if ( songTitle . length () > 0 )
+    //                                   {
+    //                                       file . writeText (
+    //                                                         "\t!scr \"" + songTitle . toLowerCase () + "\", 0\n"
+    //                                                       , false
+    //                                                       , false );
+    //                                   }
+    //                                   if ( songArtist . length () > 0 )
+    //                                   {
+    //                                       file . writeText (
+    //                                                         "\t!scr \"by " + songArtist . toLowerCase () + "\", 0\n"
+    //                                                       , false
+    //                                                       , false );
+    //                                   }
+    //                                   if ( loop_point > -1 && static_cast < unsigned int > ( loop_point ) != raw . size () )
+    //                                   {
+    //                                       file . writeText (
+    //                                                         "\n.init\n\tlda # > data\n\tsta zp + 1\n\tlda #$00\n\tsta zp\n\tsta index\n\tsta delay\n\tldy # < data\n\tsty index\n\t\n.play\n\tlda delay\n!zone\n\tbeq .next\n\tdec delay\n\trts\n.next\n\tldy index\ncontinue\n\tlda (zp), y\n\tbmi delay_command\n\ttax\n\tiny\n!zone\n\tbne .next\n\tinc zp + 1\n.next\n\tlda (zp), y\n\tsta $d400, x\n\tiny\n\tbne continue\n\tinc zp + 1\n\tbne continue\n\t\ndelay_command\n\tand #$7F\n\tsta delay\n\tdec delay\n\tiny\n!zone\n\tbne .next\n\tinc zp + 1\n.next\n\tcpy #<data_end\n\tbne .return\n\tlda #>data_end\n\tcmp zp + 1\n\tbne .return\n\tlda # > data_loop\n\tsta zp + 1\n\tldy # < data_loop\n.return\n\tsty index\n\trts\n\t\nindex\n\t!byte $00\ndelay\n\t!byte $00\n\n"
+    //                                                       , false
+    //                                                       , false );
+    //                                   }
+    //                                   else
+    //                                   {
+    //                                       // Non-Looping
+    //                                       file . writeText (
+    //                                                         "\n.init\n\tlda # > data\n\tsta zp + 1\n\tlda #$00\n\tsta zp\n\tsta index\n\tsta delay\n\tldy # < data\n\tsty index\n\t\n.play\n\tlda delay\n!zone\n\tbeq .next\n\tdec delay\n\trts\n.next\n\tldy index\ncontinue\n\tlda (zp), y\n\tbmi delay_command\n\ttax\n\tiny\n!zone\n\tbne .next\n\tinc zp + 1\n.next\n\tlda (zp), y\n\tsta $d400, x\n\tiny\n\tbne continue\n\tinc zp + 1\n\tbne continue\n\t\ndelay_command\n\tand #$7F\n\tsta delay\n\tdec delay\n\tiny\n!zone\n\tbne .next\n\tinc zp + 1\n.next\n\tcpy #<data_end\n\tbne .return\n\tlda #>data_end\n\tcmp zp + 1\n\tbne .return\n\trts\n.return\n\tsty index\n\trts\n\t\nindex\n\t!byte $00\ndelay\n\t!byte $00\n\n"
+    //                                                       , false
+    //                                                       , false );
+    //                                   }
+    //                                   file . writeText (
+    //                                                     "data:\n; Bar 0\n\t!byte "
+    //                                                   , false
+    //                                                   , false );
+    //                                   auto value_index = 0;
+    //                                   auto bar_number = 0;
+    //                                   //for ( const auto& row : raw )
+    //                                   for ( size_t i = 0 ; i < raw . size () ; i++ )
+    //                                   {
+    //                                       auto& row = raw [ i ];
+    //                                       if ( static_cast < int > ( i ) == loop_point )
+    //                                       {
+    //                                           file . writeText (
+    //                                                             r + "\ndata_loop:\n\t!byte "
+    //                                                           , false
+    //                                                           , false );
+    //                                           value_index += data_row_length - value_index % data_row_length;
+    //                                           r = "";
+    //                                       }
+    //                                       if ( ( row & delay_bit ) == delay_bit )
+    //                                       {
+    //                                           r += "$" + String::toHexString (
+    //                                                                           row ) . paddedLeft (
+    //                                                                                               '0'
+    //                                                                                             , 2 ) . toUpperCase ();
+    //                                           if ( std::find (
+    //                                                           bar_byte_stream_index . begin ()
+    //                                                         , bar_byte_stream_index . end ()
+    //                                                         , i ) != bar_byte_stream_index . end () )
+    //                                           {
+    //                                               r += "\n; Bar " + String (
+    //                                                                         ++bar_number );
+    //                                           }
+    //                                           r += "\n\t!byte ";
+    //                                       }
+    //                                       else
+    //                                       {
+    //                                           r += "$" + String::toHexString (
+    //                                                                           row ) . paddedLeft (
+    //                                                                                               '0'
+    //                                                                                             , 2 ) . toUpperCase ();
+    //                                           value_index++;
+    //                                           row = raw [ ++i ];
+    //                                           r += ", $" + String::toHexString (
+    //                                                                             row ) . paddedLeft (
+    //                                                                                                 '0'
+    //                                                                                               , 2 ) . toUpperCase ();
+    //                                           value_index++;
+    //                                           r += ", ";
+    //                                       }
 
-                                           //if ( value_index % data_row_length == 0 )
-                                           //{
-                                           //    if ( r . length () > 0 )
-                                           //    {
-                                           //        file . writeText (
-                                           //                          r + "\n"
-                                           //                        , false
-                                           //                        , false );
-                                           //    }
-                                           //    r = "\t!byte ";
-                                           //}
-                                           //else { r += ", "; }
-                                           //r += "$" + String::toHexString (
-                                           //                                row ) . paddedLeft (
-                                           //                                                    '0'
-                                           //                                                  , 2 ) . toUpperCase ();
-                                           //value_index++;
-                                       }
-                                       file . writeText (
-                                                         r + "\ndata_end:\n"
-                                                       , false
-                                                       , false );
-                                   }
-                               } );
+    //                                       //if ( value_index % data_row_length == 0 )
+    //                                       //{
+    //                                       //    if ( r . length () > 0 )
+    //                                       //    {
+    //                                       //        file . writeText (
+    //                                       //                          r + "\n"
+    //                                       //                        , false
+    //                                       //                        , false );
+    //                                       //    }
+    //                                       //    r = "\t!byte ";
+    //                                       //}
+    //                                       //else { r += ", "; }
+    //                                       //r += "$" + String::toHexString (
+    //                                       //                                row ) . paddedLeft (
+    //                                       //                                                    '0'
+    //                                       //                                                  , 2 ) . toUpperCase ();
+    //                                       //value_index++;
+    //                                   }
+    //                                   file . writeText (
+    //                                                     r + "\ndata_end:\n"
+    //                                                   , false
+    //                                                   , false );
+    //                               }
+    //                           } );
 }
 
 void
     SidRegisters::onLiveExportArmed ()
 {
-    recording    = true;
-    currentFrame = 0;
+    //recording    = true;
+    //currentFrame = 0;
 }
 
 void
