@@ -348,6 +348,17 @@
               file="Source/Parameters/UnsignedPercentParameter.h"/>
       </GROUP>
       <GROUP id="{37FAE092-0D5E-F550-9798-CFA728F740D9}" name="UI">
+        <FILE id="XH3PgS" name="CommandView.cpp" compile="1" resource="0" file="Source/UI/CommandView.cpp"/>
+        <FILE id="MrWly7" name="CommandView.h" compile="0" resource="0" file="Source/UI/CommandView.h"/>
+        <FILE id="T8704b" name="ExportManager.cpp" compile="1" resource="0"
+              file="Source/UI/ExportManager.cpp"/>
+        <FILE id="RCwURl" name="ExportManager.h" compile="0" resource="0" file="Source/UI/ExportManager.h"/>
+        <FILE id="VXgtGp" name="ColumnRow.cpp" compile="1" resource="0" file="Source/UI/ColumnRow.cpp"/>
+        <FILE id="PCWtcc" name="ColumnRow.h" compile="0" resource="0" file="Source/UI/ColumnRow.h"/>
+        <FILE id="gplpvB" name="CommandRow.cpp" compile="1" resource="0" file="Source/UI/CommandRow.cpp"/>
+        <FILE id="bpgMJN" name="CommandRow.h" compile="0" resource="0" file="Source/UI/CommandRow.h"/>
+        <FILE id="ETbgNN" name="FrameRow.cpp" compile="1" resource="0" file="Source/UI/FrameRow.cpp"/>
+        <FILE id="wcH5Fv" name="FrameRow.h" compile="0" resource="0" file="Source/UI/FrameRow.h"/>
         <FILE id="yrMQTL" name="AbstractNoteTableRow.cpp" compile="1" resource="0"
               file="Source/UI/AbstractNoteTableRow.cpp"/>
         <FILE id="jsqxUy" name="AbstractNoteTableRow.h" compile="0" resource="0"
@@ -469,6 +480,25 @@
         <MODULEPATH id="juce_audio_basics" path="D:\JUCE-Multiversions\juce-6.0.4-windows\JUCE\modules"/>
       </MODULEPATHS>
     </VS2019>
+    <XCODE_MAC targetFolder="Builds/MacOSX">
+      <CONFIGURATIONS>
+        <CONFIGURATION isDebug="1" name="Debug"/>
+        <CONFIGURATION isDebug="0" name="Release"/>
+      </CONFIGURATIONS>
+      <MODULEPATHS>
+        <MODULEPATH id="juce_gui_extra"/>
+        <MODULEPATH id="juce_gui_basics"/>
+        <MODULEPATH id="juce_graphics"/>
+        <MODULEPATH id="juce_events"/>
+        <MODULEPATH id="juce_data_structures"/>
+        <MODULEPATH id="juce_core"/>
+        <MODULEPATH id="juce_audio_processors"/>
+        <MODULEPATH id="juce_audio_plugin_client"/>
+        <MODULEPATH id="juce_audio_formats"/>
+        <MODULEPATH id="juce_audio_devices"/>
+        <MODULEPATH id="juce_audio_basics"/>
+      </MODULEPATHS>
+    </XCODE_MAC>
   </EXPORTFORMATS>
   <MODULES>
     <MODULE id="juce_audio_basics" showAllCode="1" useLocalCopy="1"/>

@@ -7,7 +7,7 @@
   the "//[xyz]" and "//[/xyz]" sections will be retained when the file is loaded
   and re-saved.
 
-  Created with Projucer version: 6.0.5
+  Created with Projucer version: 6.1.1
 
   ------------------------------------------------------------------------------
 
@@ -76,10 +76,7 @@ WaveformView::WaveformView ()
     //[UserPreSize]
     //[/UserPreSize]
 
-    setSize (
-             608
-           , 328
-            );
+    setSize (608, 328);
 
 
     //[Constructor] You can add your own custom stuff here..
@@ -92,11 +89,11 @@ WaveformView::WaveformView ()
     //[/Constructor]
 }
 
-
-WaveformView::~WaveformView ()
+WaveformView::~WaveformView()
 {
     //[Destructor_pre]. You can add your own custom destruction code here..
     //[/Destructor_pre]
+
 
 
     //[Destructor]. You can add your own custom destruction code here..
@@ -109,12 +106,8 @@ WaveformView::~WaveformView ()
     //[/Destructor]
 }
 
-
 //==============================================================================
-void
-    WaveformView::paint (
-            juce::Graphics& g
-            )
+void WaveformView::paint (juce::Graphics& g)
 {
     //[UserPrePaint] Add your own custom painting code here..
     //[/UserPrePaint]
@@ -339,9 +332,7 @@ void
     //[/UserPaint]
 }
 
-
-void
-    WaveformView::resized ()
+void WaveformView::resized()
 {
     //[UserPreResize] Add your own custom resize code here..
     //[/UserPreResize]
@@ -349,6 +340,7 @@ void
     //[UserResized] Add your own custom resize handling here..
     //[/UserResized]
 }
+
 
 
 //[MiscUserCode] You can add your own definitions of your custom methods or any other code here...
@@ -439,3 +431,4 @@ END_JUCER_METADATA
 
 //[EndFile] You can add extra defines here...
 //[/EndFile]
+

@@ -1,15 +1,15 @@
 #include "SIDStep2.h"
 
+#include <array>
 #include <JuceHeader.h>
 
-#include <array>
+#include "../Requirements/resid-0.16/SID.h"  // NOLINT(clang-diagnostic-nonportable-include-path)
 
+#include "Exporter.h"
 #include "Recorder.h"
 #include "SIDProgram.h"
 #include "SIDRegisters.h"
 
-#include "../Requirements/resid-0.16/SID.h"  // NOLINT(clang-diagnostic-nonportable-include-path)
-#include "Exporter.h"
 #include "Programs/Bank.h"
 
 SidStep2::SidStep2 ()
@@ -110,11 +110,11 @@ void
 
     // Is the tempo is set, then calculate samples per quarter note and current
     // sample position in quarter notes.
-    auto samples_per_quarter_note  = 0;
+    auto samples_per_quarter_note = 0;
     if ( position_info . bpm > 0 )
     {
-        tempo = position_info . bpm;
-        samples_per_quarter_note   = static_cast < int > ( sampleRate * ONE_MINUTE / position_info . bpm );
+        tempo                    = position_info . bpm;
+        samples_per_quarter_note = static_cast < int > ( sampleRate * ONE_MINUTE / position_info . bpm );
     }
 
     // If the DAW is playing,
@@ -130,7 +130,7 @@ void
             armed     = false;
             recorder -> Start ();
         }
-    }   // Otherwise, if the DAW has stopped playing, then stop recording as well.
+    } // Otherwise, if the DAW has stopped playing, then stop recording as well.
     else if ( recording )
     {
         // may want to move this block to the frame... although most people exporting SHOULD be smart enough to allow a 
@@ -144,7 +144,6 @@ void
                            recorder );
         exporter . ToPatterns ();
     }
-
     MidiBuffer::Iterator it (
                              midi_messages );
     MidiMessage                        m;
@@ -156,7 +155,6 @@ void
     if ( !it . getNextEvent (
                              m
                            , next_message_sample ) ) { next_message_sample = buffer . getNumSamples (); }
-
     auto cycles = 0;
     // loop over the buffer (index is updated inside).
     for ( auto i = 0 ; i < buffer . getNumSamples () ; )
@@ -177,28 +175,6 @@ void
                                      m
                                    , next_message_sample ) ) { next_message_sample = buffer . getNumSamples (); }
         }
-
-        // Increase the cycles and update the clock on the SID chip.
-        // I don't remember why the value is increased rather than static.
-        cycles += static_cast < cycle_count > ( cyclesPerSample );
-        const auto s = sidRegisters -> sid -> clock (
-                                                     cycles
-                                                   , buf . data ()
-                                                   , 1 );
-
-        // Then copy the samples into the buffer.
-        for ( auto j = 0 ; j < s ; j++ )
-        {
-            buffer . setSample (
-                                0
-                              , i + j
-                              , float (
-                                       buf . at (
-                                                 j ) ) / float (
-                                                                SIXTEEN_BIT ) );
-        }
-        // advance the current sample
-        sampleIndex += s;
         const auto current_frame = static_cast < unsigned > ( sampleIndex / static_cast < double > ( samplesPerFrame ) );
         if ( current_frame != lastFrame )
         {
@@ -240,6 +216,28 @@ void
                 }
             }
         }
+
+        // Increase the cycles and update the clock on the SID chip.
+        // I don't remember why the value is increased rather than static.
+        cycles += static_cast < cycle_count > ( cyclesPerSample );
+        const auto s = sidRegisters -> sid -> clock (
+                                                     cycles
+                                                   , buf . data ()
+                                                   , 1 );
+
+        // Then copy the samples into the buffer.
+        for ( auto j = 0 ; j < s ; j++ )
+        {
+            buffer . setSample (
+                                0
+                              , i + j
+                              , float (
+                                       buf . at (
+                                                 j ) ) / float (
+                                                                SIXTEEN_BIT ) );
+        }
+        // advance the current sample
+        sampleIndex += s;
         // and increase i and loop
         i += s;
     }
@@ -411,7 +409,7 @@ void
                    &title_length
                  , sizeof title_length );
     const auto title_array_size = static_cast < int > ( title_length ) + 1;
-    const auto title_string = new char[title_array_size];
+    const auto title_string     = new char[title_array_size];
     stream . read (
                    title_string
                  , static_cast < int > ( title_length ) );
@@ -427,7 +425,7 @@ void
                    &artist_length
                  , sizeof artist_length );
     const auto artist_array_size = static_cast < int > ( artist_length ) + 1;
-    const auto artist_string = new char[artist_array_size];
+    const auto artist_string     = new char[artist_array_size];
     stream . read (
                    artist_string
                  , static_cast < int > ( artist_length ) );
@@ -659,7 +657,6 @@ void
                       v );
     }
     sidRegisters -> WriteRegisters ();
-
     if ( recorder != nullptr )
     {
         recorder -> Frame (

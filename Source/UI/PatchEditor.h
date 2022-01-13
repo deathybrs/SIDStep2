@@ -7,7 +7,7 @@
   the "//[xyz]" and "//[/xyz]" sections will be retained when the file is loaded
   and re-saved.
 
-  Created with Projucer version: 6.0.5
+  Created with Projucer version: 6.1.1
 
   ------------------------------------------------------------------------------
 
@@ -34,12 +34,12 @@ class PulseTableView;
 
 //[/Headers]
 
+#include "WavetableText.h"
+#include "WaveformView.h"
 #include "BankMenu.h"
+#include "SavePatchAsDialog.h"
 #include "NoteTableText.h"
 #include "PulseTableText.h"
-#include "SavePatchAsDialog.h"
-#include "WaveformView.h"
-#include "WavetableText.h"
 
 
 //==============================================================================
@@ -50,23 +50,21 @@ class PulseTableView;
     Describe your class and how it works here!
                                                                     //[/Comments]
 */
-class PatchEditor
-        : public Component ,
-          public BankProgramChanged ,
-          public BankStartSaveAs ,
-          public LivePatchEditorModeClicked ,
-          public PatchEditorShowNoteTable ,
-          public PatchEditorShowPulseTable ,
-          public PatchEditorShowWaveTable ,
-          public juce::Slider::Listener ,
-          public juce::Label::Listener ,
-          public juce::Button::Listener
+class PatchEditor  : public Component,
+                     public BankProgramChanged,
+                     public BankStartSaveAs,
+                     public LivePatchEditorModeClicked,
+                     public PatchEditorShowNoteTable,
+                     public PatchEditorShowPulseTable,
+                     public PatchEditorShowWaveTable,
+                     public juce::Slider::Listener,
+                     public juce::Label::Listener,
+                     public juce::Button::Listener
 {
 public:
     //==============================================================================
     PatchEditor ();
-
-    ~PatchEditor () override;
+    ~PatchEditor() override;
 
     //==============================================================================
     //[UserMethods]     -- You can add your own custom methods in this section.
@@ -93,60 +91,43 @@ public:
 
     //[/UserMethods]
 
-    void
-        paint (
-                juce::Graphics& g
-                ) override;
-
-    void
-        resized () override;
-
-    void
-        sliderValueChanged (
-                juce::Slider* sliderThatWasMoved
-                ) override;
-
-    void
-        labelTextChanged (
-                juce::Label* labelThatHasChanged
-                ) override;
-
-    void
-        buttonClicked (
-                juce::Button* buttonThatWasClicked
-                ) override;
+    void paint (juce::Graphics& g) override;
+    void resized() override;
+    void sliderValueChanged (juce::Slider* sliderThatWasMoved) override;
+    void labelTextChanged (juce::Label* labelThatHasChanged) override;
+    void buttonClicked (juce::Button* buttonThatWasClicked) override;
 
     // Binary resources:
     static const char* patchEditorBackdrop_png;
-    static const int   patchEditorBackdrop_pngSize;
+    static const int patchEditorBackdrop_pngSize;
     static const char* liveModeButtonNormal_png;
-    static const int   liveModeButtonNormal_pngSize;
+    static const int liveModeButtonNormal_pngSize;
     static const char* liveModeButtonOver_png;
-    static const int   liveModeButtonOver_pngSize;
+    static const int liveModeButtonOver_pngSize;
     static const char* liveModeButtonDown_png;
-    static const int   liveModeButtonDown_pngSize;
+    static const int liveModeButtonDown_pngSize;
     static const char* patchEditorButtonDown_png;
-    static const int   patchEditorButtonDown_pngSize;
+    static const int patchEditorButtonDown_pngSize;
     static const char* downArrowNormal_png;
-    static const int   downArrowNormal_pngSize;
+    static const int downArrowNormal_pngSize;
     static const char* newRowNormal_png;
-    static const int   newRowNormal_pngSize;
+    static const int newRowNormal_pngSize;
     static const char* newRowOver_png;
-    static const int   newRowOver_pngSize;
+    static const int newRowOver_pngSize;
     static const char* newRowDown_png;
-    static const int   newRowDown_pngSize;
+    static const int newRowDown_pngSize;
     static const char* newCommandNormal_png;
-    static const int   newCommandNormal_pngSize;
+    static const int newCommandNormal_pngSize;
     static const char* newCommandOver_png;
-    static const int   newCommandOver_pngSize;
+    static const int newCommandOver_pngSize;
     static const char* newCommandDown_png;
-    static const int   newCommandDown_pngSize;
+    static const int newCommandDown_pngSize;
     static const char* deleteNormal_png;
-    static const int   deleteNormal_pngSize;
+    static const int deleteNormal_pngSize;
     static const char* deleteOver_png;
-    static const int   deleteOver_pngSize;
+    static const int deleteOver_pngSize;
     static const char* deleteDown_png;
-    static const int   deleteDown_pngSize;
+    static const int deleteDown_pngSize;
 
 
 private:
@@ -187,55 +168,53 @@ private:
     //[/UserVariables]
 
     //==============================================================================
-    std::unique_ptr < juce::Slider >      attackSlider;
-    std::unique_ptr < juce::Slider >      decaySlider;
-    std::unique_ptr < juce::Slider >      sustainSlider;
-    std::unique_ptr < juce::Slider >      releaseSlider;
-    std::unique_ptr < juce::Slider >      pitchBendRangeSlider;
-    std::unique_ptr < juce::Slider >      vibratoRangeSlider;
-    std::unique_ptr < juce::Slider >      vibratoSpeedSlider;
-    std::unique_ptr < juce::Slider >      pulseWidthRangeSlider;
-    std::unique_ptr < juce::Slider >      vibratoDelaySlider;
-    std::unique_ptr < juce::Label >       attackLabel;
-    std::unique_ptr < juce::Label >       decayLabel;
-    std::unique_ptr < juce::Label >       sustainLabel;
-    std::unique_ptr < juce::Label >       releaseLabel;
-    std::unique_ptr < juce::Label >       pitchBendRangeLabel;
-    std::unique_ptr < juce::Label >       vibratoRangeLabel;
-    std::unique_ptr < juce::Label >       vibratoSpeedLabel;
-    std::unique_ptr < juce::Label >       pulseWidthRangeLabel;
-    std::unique_ptr < juce::Label >       vibratoDelayLabel;
-    std::unique_ptr < juce::Label >       patchName;
-    std::unique_ptr < juce::ImageButton > liveModeButton;
-    std::unique_ptr < juce::ImageButton > menuButton;
-    std::unique_ptr < juce::Viewport >    commandTableViewport;
-    std::unique_ptr < WavetableText >     wavetableText;
-    std::unique_ptr < juce::ImageButton > newRowButton;
-    std::unique_ptr < juce::ImageButton > newCommandButton;
-    std::unique_ptr < juce::ImageButton > deleteButton;
-    std::unique_ptr < WaveformView >      waveformView;
-    std::unique_ptr < juce::Label >       vibratoDefaultAmountLabel;
-    std::unique_ptr < juce::Label >       vibratoDefaultSpeedLabel;
-    std::unique_ptr < juce::Label >       pulseWidthCenterLabel;
-    std::unique_ptr < juce::Label >       pulseWidthDefaultLabel;
-    std::unique_ptr < juce::Slider >      vibratoDefaultAmountSlider;
-    std::unique_ptr < juce::Slider >      vibratoDefaultSpeedSlider;
-    std::unique_ptr < juce::Slider >      pulseWidthCenterSlider;
-    std::unique_ptr < juce::Slider >      pulseWidthDefaultSlider;
-    std::unique_ptr < BankMenu >          bankMenu;
-    std::unique_ptr < SavePatchAsDialog > saveAsDialog;
-    std::unique_ptr < NoteTableText >     noteTableText;
-    std::unique_ptr < PulseTableText >    pulseTableText;
-    juce::Image                           cachedImage_patchEditorBackdrop_png_1;
-    juce::Image                           cachedImage_patchEditorButtonDown_png_2;
+    std::unique_ptr<juce::Slider> attackSlider;
+    std::unique_ptr<juce::Slider> decaySlider;
+    std::unique_ptr<juce::Slider> sustainSlider;
+    std::unique_ptr<juce::Slider> releaseSlider;
+    std::unique_ptr<juce::Slider> pitchBendRangeSlider;
+    std::unique_ptr<juce::Slider> vibratoRangeSlider;
+    std::unique_ptr<juce::Slider> vibratoSpeedSlider;
+    std::unique_ptr<juce::Slider> pulseWidthRangeSlider;
+    std::unique_ptr<juce::Slider> vibratoDelaySlider;
+    std::unique_ptr<juce::Label> attackLabel;
+    std::unique_ptr<juce::Label> decayLabel;
+    std::unique_ptr<juce::Label> sustainLabel;
+    std::unique_ptr<juce::Label> releaseLabel;
+    std::unique_ptr<juce::Label> pitchBendRangeLabel;
+    std::unique_ptr<juce::Label> vibratoRangeLabel;
+    std::unique_ptr<juce::Label> vibratoSpeedLabel;
+    std::unique_ptr<juce::Label> pulseWidthRangeLabel;
+    std::unique_ptr<juce::Label> vibratoDelayLabel;
+    std::unique_ptr<juce::Label> patchName;
+    std::unique_ptr<juce::ImageButton> liveModeButton;
+    std::unique_ptr<juce::ImageButton> menuButton;
+    std::unique_ptr<juce::Viewport> commandTableViewport;
+    std::unique_ptr<WavetableText> wavetableText;
+    std::unique_ptr<juce::ImageButton> newRowButton;
+    std::unique_ptr<juce::ImageButton> newCommandButton;
+    std::unique_ptr<juce::ImageButton> deleteButton;
+    std::unique_ptr<WaveformView> waveformView;
+    std::unique_ptr<juce::Label> vibratoDefaultAmountLabel;
+    std::unique_ptr<juce::Label> vibratoDefaultSpeedLabel;
+    std::unique_ptr<juce::Label> pulseWidthCenterLabel;
+    std::unique_ptr<juce::Label> pulseWidthDefaultLabel;
+    std::unique_ptr<juce::Slider> vibratoDefaultAmountSlider;
+    std::unique_ptr<juce::Slider> vibratoDefaultSpeedSlider;
+    std::unique_ptr<juce::Slider> pulseWidthCenterSlider;
+    std::unique_ptr<juce::Slider> pulseWidthDefaultSlider;
+    std::unique_ptr<BankMenu> bankMenu;
+    std::unique_ptr<SavePatchAsDialog> saveAsDialog;
+    std::unique_ptr<NoteTableText> noteTableText;
+    std::unique_ptr<PulseTableText> pulseTableText;
+    juce::Image cachedImage_patchEditorBackdrop_png_1;
+    juce::Image cachedImage_patchEditorButtonDown_png_2;
 
 
     //==============================================================================
-    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (
-                                                  PatchEditor
-                                                 )
+    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (PatchEditor)
 };
-
 
 //[EndFile] You can add extra defines here...
 //[/EndFile]
+

@@ -7,7 +7,7 @@
   the "//[xyz]" and "//[/xyz]" sections will be retained when the file is loaded
   and re-saved.
 
-  Created with Projucer version: 6.0.5
+  Created with Projucer version: 6.1.1
 
   ------------------------------------------------------------------------------
 
@@ -21,9 +21,7 @@
 
 //[Headers]     -- You can add your own extra header files here --
 #include <JuceHeader.h>
-
 #include "../Listeners/ListenerInitializer.h"
-
 class Patches;
 // ReSharper disable once CppInconsistentNaming
 class SIDStepLookAndFeel;
@@ -41,37 +39,6 @@ class SIDStepLookAndFeel;
 
     Too many inheritances for Projucer, here they are:
 
-        : public Component ,
-          public ProgramParameterChanged ,
-          public PulseWidthParameterChanged ,
-          public AttackParameterChanged ,
-          public DecayParameterChanged ,
-          public SustainParameterChanged ,
-          public ReleaseParameterChanged ,
-          public FilterVoiceParameterChanged ,
-          public CutoffParameterChanged ,
-          public ResonanceParameterChanged ,
-          public LowPassParameterChanged ,
-          public BandPassParameterChanged ,
-          public HighPassParameterChanged ,
-          public VolumeParameterChanged ,
-          public PitchBendParameterChanged ,
-          public VibratoAmountParameterChanged ,
-          public VibratoDelayParameterChanged ,
-          public VibratoSpeedParameterChanged ,
-          public PatchEditorLiveModeClicked ,
-          public BankProgramChanged ,
-          public LivePatchListChanged ,
-          public QuarterNoteTick ,
-          public LiveDoneExporting ,
-          public juce::Slider::Listener ,
-          public juce::Label::Listener ,
-          public juce::Button::Listener ,
-          public Timer
-
-                                                                    //[/Comments]
-*/
-class LiveMode final
         : public Component
         , public ProgramParameterChanged
         , public PulseWidthParameterChanged
@@ -93,13 +60,46 @@ class LiveMode final
         , public PatchEditorLiveModeClicked
         , public BankProgramChanged
         , public LivePatchListChanged
-        , public LiveTitleChanged
-        , public LiveArtistChanged
         , public QuarterNoteTick
         , public LiveDoneExporting
-        , public Slider::Listener
-        , public Label::Listener
-        , public Button::Listener
+        , public LiveTitleChanged
+        , public LiveArtistChanged
+        , public juce::Slider::Listener
+        , public juce::Label::Listener
+        , public juce::Button::Listener
+        , public Timer
+
+                                                                    //[/Comments]
+*/
+class LiveMode
+        : public Component
+        , public ProgramParameterChanged
+        , public PulseWidthParameterChanged
+        , public AttackParameterChanged
+        , public DecayParameterChanged
+        , public SustainParameterChanged
+        , public ReleaseParameterChanged
+        , public FilterVoiceParameterChanged
+        , public CutoffParameterChanged
+        , public ResonanceParameterChanged
+        , public LowPassParameterChanged
+        , public BandPassParameterChanged
+        , public HighPassParameterChanged
+        , public VolumeParameterChanged
+        , public PitchBendParameterChanged
+        , public VibratoAmountParameterChanged
+        , public VibratoDelayParameterChanged
+        , public VibratoSpeedParameterChanged
+        , public PatchEditorLiveModeClicked
+        , public BankProgramChanged
+        , public LivePatchListChanged
+        , public QuarterNoteTick
+        , public LiveDoneExporting
+        , public LiveTitleChanged
+        , public LiveArtistChanged
+        , public juce::Slider::Listener
+        , public juce::Label::Listener
+        , public juce::Button::Listener
         , public Timer
 {
 public:
@@ -265,7 +265,7 @@ public:
 
     void
         paint (
-                Graphics& g
+                juce::Graphics& g
                 ) override;
 
     void
@@ -273,21 +273,20 @@ public:
 
     void
         sliderValueChanged (
-                Slider* slider_that_was_moved
+                juce::Slider* sliderThatWasMoved
                 ) override;
 
     void
         labelTextChanged (
-                Label* label_that_has_changed
+                juce::Label* labelThatHasChanged
                 ) override;
 
     void
         buttonClicked (
-                Button* button_that_was_clicked
+                juce::Button* buttonThatWasClicked
                 ) override;
 
     // Binary resources:
-    // ReSharper disable CppInconsistentNaming
     static const char* liveModeBackdrop_png;
     static const int   liveModeBackdrop_pngSize;
     static const char* recordnormal_png;
@@ -328,7 +327,6 @@ public:
     static const int   removeButtonOver_pngSize;
     static const char* removeButtonDown_png;
     static const int   removeButtonDown_pngSize;
-    // ReSharper restore CppInconsistentNaming
 private:
     //[UserVariables]   -- You can add your own custom variables in this section.
     ScopedPointer < SIDStepLookAndFeel > look;
@@ -338,93 +336,91 @@ private:
     //[/UserVariables]
 
     //==============================================================================
-    std::unique_ptr < Slider >       volumeSlider;
-    std::unique_ptr < Label >        volumeLabel;
-    std::unique_ptr < Slider >       patch1Slider;
-    std::unique_ptr < Slider >       attack1Slider;
-    std::unique_ptr < Slider >       decay1Slider;
-    std::unique_ptr < Slider >       sustain1Slider;
-    std::unique_ptr < Slider >       release1Slider;
-    std::unique_ptr < Slider >       pitchBend1Slider;
-    std::unique_ptr < Slider >       vibratoAmount1Slider;
-    std::unique_ptr < Slider >       vibratoSpeed1Slider;
-    std::unique_ptr < Slider >       pulseWidth1Slider;
-    std::unique_ptr < Slider >       vibratoDelay1Slider;
-    std::unique_ptr < Slider >       patch2Slider;
-    std::unique_ptr < Slider >       attack2Slider;
-    std::unique_ptr < Slider >       decay2Slider;
-    std::unique_ptr < Slider >       sustain2Slider;
-    std::unique_ptr < Slider >       release2Slider;
-    std::unique_ptr < Slider >       pitchBend2Slider;
-    std::unique_ptr < Slider >       vibratoAmount2Slider;
-    std::unique_ptr < Slider >       vibratoSpeed2Slider;
-    std::unique_ptr < Slider >       pulseWidth2Slider;
-    std::unique_ptr < Slider >       vibratoDelay2Slider;
-    std::unique_ptr < Slider >       patch3Slider;
-    std::unique_ptr < Slider >       attack3Slider;
-    std::unique_ptr < Slider >       decay3Slider;
-    std::unique_ptr < Slider >       sustain3Slider;
-    std::unique_ptr < Slider >       release3Slider;
-    std::unique_ptr < Slider >       pitchBend3Slider;
-    std::unique_ptr < Slider >       vibratoAmount3Slider;
-    std::unique_ptr < Slider >       vibratoSpeed3Slider;
-    std::unique_ptr < Slider >       pulseWidth3Slider;
-    std::unique_ptr < Slider >       vibratoDelay3Slider;
-    std::unique_ptr < Slider >       cutoffSlider;
-    std::unique_ptr < Slider >       resonanceSlider;
-    std::unique_ptr < Label >        patch1Label;
-    std::unique_ptr < Label >        attack1Label;
-    std::unique_ptr < Label >        decay1Label;
-    std::unique_ptr < Label >        sustain1Label;
-    std::unique_ptr < Label >        release1Label;
-    std::unique_ptr < Label >        pitchBend1Label;
-    std::unique_ptr < Label >        vibratoAmount1Label;
-    std::unique_ptr < Label >        vibratoSpeed1Label;
-    std::unique_ptr < Label >        pulseWidth1Label;
-    std::unique_ptr < Label >        vibratoDelay1Label;
-    std::unique_ptr < Label >        patch2Label;
-    std::unique_ptr < Label >        attack2Label;
-    std::unique_ptr < Label >        decay2Label;
-    std::unique_ptr < Label >        sustain2Label;
-    std::unique_ptr < Label >        release2Label;
-    std::unique_ptr < Label >        pitchBend2Label;
-    std::unique_ptr < Label >        vibratoAmount2Label;
-    std::unique_ptr < Label >        vibratoSpeed2Label;
-    std::unique_ptr < Label >        pulseWidth2Label;
-    std::unique_ptr < Label >        vibratoDelay2Label;
-    std::unique_ptr < Label >        patch3Label;
-    std::unique_ptr < Label >        attack3Label;
-    std::unique_ptr < Label >        decay3Label;
-    std::unique_ptr < Label >        sustain3Label;
-    std::unique_ptr < Label >        release3Label;
-    std::unique_ptr < Label >        pitchBend3Label;
-    std::unique_ptr < Label >        vibratoAmount3Label;
-    std::unique_ptr < Label >        vibratoSpeed3Label;
-    std::unique_ptr < Label >        pulseWidth3Label;
-    std::unique_ptr < Label >        vibratoDelay3Label;
-    std::unique_ptr < Label >        cutoffLabel;
-    std::unique_ptr < Label >        resonanceLabel;
-    std::unique_ptr < Label >        titleLabel;
-    std::unique_ptr < Label >        artistLabel;
-    std::unique_ptr < ImageButton >  exportButton;
-    std::unique_ptr < Viewport >     patchesViewport;
-    std::unique_ptr < ToggleButton > filter1Checkbox;
-    std::unique_ptr < ToggleButton > filter2Checkbox;
-    std::unique_ptr < ToggleButton > filter3Checkbox;
-    std::unique_ptr < ToggleButton > filterLowPassCheckbox;
-    std::unique_ptr < ToggleButton > filterBandPassCheckbox;
-    std::unique_ptr < ToggleButton > filterHighPassCheckbox;
-    std::unique_ptr < ImageButton >  patchEditorButton;
-    std::unique_ptr < ImageButton >  addPatchButton;
-    std::unique_ptr < ImageButton >  replacePatchButton;
-    std::unique_ptr < ImageButton >  removePatchButton;
+    std::unique_ptr < juce::Slider >       volumeSlider;
+    std::unique_ptr < juce::Label >        volumeLabel;
+    std::unique_ptr < juce::Slider >       patch1Slider;
+    std::unique_ptr < juce::Slider >       attack1Slider;
+    std::unique_ptr < juce::Slider >       decay1Slider;
+    std::unique_ptr < juce::Slider >       sustain1Slider;
+    std::unique_ptr < juce::Slider >       release1Slider;
+    std::unique_ptr < juce::Slider >       pitchBend1Slider;
+    std::unique_ptr < juce::Slider >       vibratoAmount1Slider;
+    std::unique_ptr < juce::Slider >       vibratoSpeed1Slider;
+    std::unique_ptr < juce::Slider >       pulseWidth1Slider;
+    std::unique_ptr < juce::Slider >       vibratoDelay1Slider;
+    std::unique_ptr < juce::Slider >       patch2Slider;
+    std::unique_ptr < juce::Slider >       attack2Slider;
+    std::unique_ptr < juce::Slider >       decay2Slider;
+    std::unique_ptr < juce::Slider >       sustain2Slider;
+    std::unique_ptr < juce::Slider >       release2Slider;
+    std::unique_ptr < juce::Slider >       pitchBend2Slider;
+    std::unique_ptr < juce::Slider >       vibratoAmount2Slider;
+    std::unique_ptr < juce::Slider >       vibratoSpeed2Slider;
+    std::unique_ptr < juce::Slider >       pulseWidth2Slider;
+    std::unique_ptr < juce::Slider >       vibratoDelay2Slider;
+    std::unique_ptr < juce::Slider >       patch3Slider;
+    std::unique_ptr < juce::Slider >       attack3Slider;
+    std::unique_ptr < juce::Slider >       decay3Slider;
+    std::unique_ptr < juce::Slider >       sustain3Slider;
+    std::unique_ptr < juce::Slider >       release3Slider;
+    std::unique_ptr < juce::Slider >       pitchBend3Slider;
+    std::unique_ptr < juce::Slider >       vibratoAmount3Slider;
+    std::unique_ptr < juce::Slider >       vibratoSpeed3Slider;
+    std::unique_ptr < juce::Slider >       pulseWidth3Slider;
+    std::unique_ptr < juce::Slider >       vibratoDelay3Slider;
+    std::unique_ptr < juce::Slider >       cutoffSlider;
+    std::unique_ptr < juce::Slider >       resonanceSlider;
+    std::unique_ptr < juce::Label >        patch1Label;
+    std::unique_ptr < juce::Label >        attack1Label;
+    std::unique_ptr < juce::Label >        decay1Label;
+    std::unique_ptr < juce::Label >        sustain1Label;
+    std::unique_ptr < juce::Label >        release1Label;
+    std::unique_ptr < juce::Label >        pitchBend1Label;
+    std::unique_ptr < juce::Label >        vibratoAmount1Label;
+    std::unique_ptr < juce::Label >        vibratoSpeed1Label;
+    std::unique_ptr < juce::Label >        pulseWidth1Label;
+    std::unique_ptr < juce::Label >        vibratoDelay1Label;
+    std::unique_ptr < juce::Label >        patch2Label;
+    std::unique_ptr < juce::Label >        attack2Label;
+    std::unique_ptr < juce::Label >        decay2Label;
+    std::unique_ptr < juce::Label >        sustain2Label;
+    std::unique_ptr < juce::Label >        release2Label;
+    std::unique_ptr < juce::Label >        pitchBend2Label;
+    std::unique_ptr < juce::Label >        vibratoAmount2Label;
+    std::unique_ptr < juce::Label >        vibratoSpeed2Label;
+    std::unique_ptr < juce::Label >        pulseWidth2Label;
+    std::unique_ptr < juce::Label >        vibratoDelay2Label;
+    std::unique_ptr < juce::Label >        patch3Label;
+    std::unique_ptr < juce::Label >        attack3Label;
+    std::unique_ptr < juce::Label >        decay3Label;
+    std::unique_ptr < juce::Label >        sustain3Label;
+    std::unique_ptr < juce::Label >        release3Label;
+    std::unique_ptr < juce::Label >        pitchBend3Label;
+    std::unique_ptr < juce::Label >        vibratoAmount3Label;
+    std::unique_ptr < juce::Label >        vibratoSpeed3Label;
+    std::unique_ptr < juce::Label >        pulseWidth3Label;
+    std::unique_ptr < juce::Label >        vibratoDelay3Label;
+    std::unique_ptr < juce::Label >        cutoffLabel;
+    std::unique_ptr < juce::Label >        resonanceLabel;
+    std::unique_ptr < juce::Label >        titleLabel;
+    std::unique_ptr < juce::Label >        artistLabel;
+    std::unique_ptr < juce::ImageButton >  exportButton;
+    std::unique_ptr < juce::Viewport >     patchesViewport;
+    std::unique_ptr < juce::ToggleButton > filter1Checkbox;
+    std::unique_ptr < juce::ToggleButton > filter2Checkbox;
+    std::unique_ptr < juce::ToggleButton > filter3Checkbox;
+    std::unique_ptr < juce::ToggleButton > filterLowPassCheckbox;
+    std::unique_ptr < juce::ToggleButton > filterBandPassCheckbox;
+    std::unique_ptr < juce::ToggleButton > filterHighPassCheckbox;
+    std::unique_ptr < juce::ImageButton >  patchEditorButton;
+    std::unique_ptr < juce::ImageButton >  addPatchButton;
+    std::unique_ptr < juce::ImageButton >  replacePatchButton;
+    std::unique_ptr < juce::ImageButton >  removePatchButton;
     std::unique_ptr < PatchSelector >      patchSelector;
-    // ReSharper disable CppInconsistentNaming
-    Image                            cachedImage_liveModeBackdrop_png_1;
-    Image                            cachedImage_recordIndicator_png_2;
-    Image                            cachedImage_liveModeButtonDown_png_3;
-    Image                            cachedImage_recordIndicatorblink_png_4;
-    // ReSharper restore CppInconsistentNaming
+    juce::Image                            cachedImage_liveModeBackdrop_png_1;
+    juce::Image                            cachedImage_recordIndicator_png_2;
+    juce::Image                            cachedImage_liveModeButtonDown_png_3;
+    juce::Image                            cachedImage_recordIndicatorblink_png_4;
 
 
     //==============================================================================

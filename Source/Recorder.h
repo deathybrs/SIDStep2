@@ -256,4 +256,5 @@ private:
     unsigned                    currentVolume {};
 
     friend class Exporter;
+    friend class CommandView;
 };
