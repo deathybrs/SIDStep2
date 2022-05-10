@@ -1,6 +1,7 @@
 #pragma once
 #include <array>
 #include <memory>
+#include <string>
 #include <vector>
 enum class COMMANDS;
 
@@ -17,7 +18,10 @@ public:
                 );
 
     void
-        ToPatterns ();
+        ToPatterns (
+                std::string title
+              , std::string artist
+                ) const;
 
 private:
     auto

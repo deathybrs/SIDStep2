@@ -60,6 +60,7 @@ class SIDStepLookAndFeel;
         , public PatchEditorLiveModeClicked
         , public BankProgramChanged
         , public LivePatchListChanged
+        , public ShowExportManager
         , public QuarterNoteTick
         , public LiveDoneExporting
         , public LiveTitleChanged
@@ -93,6 +94,7 @@ class LiveMode
         , public PatchEditorLiveModeClicked
         , public BankProgramChanged
         , public LivePatchListChanged
+        , public ShowExportManager
         , public QuarterNoteTick
         , public LiveDoneExporting
         , public LiveTitleChanged
@@ -247,6 +249,11 @@ public:
 
     void
         onLiveDoneExporting () override;
+
+    void
+        onShowExportManager (
+                std::shared_ptr < Recorder > record
+                ) override;
 
     //int getPatchListMode() const;
     void

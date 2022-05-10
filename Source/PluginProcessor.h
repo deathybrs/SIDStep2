@@ -7,6 +7,7 @@
 
 
 class SidStep2;
+class ExportManager;
 class LiveMode;
 class PatchEditor;
 class ParameterProcessor;
@@ -107,6 +108,7 @@ private:
     ReferenceCountedObjectPtr < SidStep2 >                       core;
     ScopedPointer < LiveMode >                                   liveMode;
     ScopedPointer < PatchEditor >                                patchEditor;
+    ScopedPointer < ExportManager >                              exportManager;
     ScopedPointer < ParameterProcessor >                         parameterProcessor;
     ReferenceCountedObjectPtr < MidiProcessor >                  midiProcessor;
     SharedResourcePointer < ListenerList < SampleRateChanged > > sampleRateChangedListeners;

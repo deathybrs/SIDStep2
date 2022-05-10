@@ -31,6 +31,7 @@
 #include "Export/ExportVibratoSpeedChanged.h"
 #include "Export/ExportVoiceFilterChanged.h"
 #include "Export/ExportVolumeChanged.h"
+#include "Export/ShowExportManager.h"
 
 #include "Live/LiveAddPatchClicked.h"
 #include "Live/LiveArtistChanged.h"
@@ -181,6 +182,7 @@ private:
     SharedResourcePointer < ListenerList < ExportVibratoSpeedChanged > >  exportVibratoSpeedChanged;
     SharedResourcePointer < ListenerList < ExportVoiceFilterChanged > >   exportVoiceFilterChanged;
     SharedResourcePointer < ListenerList < ExportVolumeChanged > >        exportVolumeChanged;
+    SharedResourcePointer < ListenerList < ShowExportManager > >          showExportManager;
 
     SharedResourcePointer < ListenerList < LiveAddPatchClicked > >               liveAddPatchClickedListeners;
     SharedResourcePointer < ListenerList < LiveArtistChanged > >                 liveArtistChangedListeners;

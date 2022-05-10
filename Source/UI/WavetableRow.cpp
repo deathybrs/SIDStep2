@@ -105,6 +105,8 @@ WavetableRow::WavetableRow ()
     cachedImage_wavetableRowBackdrop_png_1 = juce::ImageCache::getFromMemory (wavetableRowBackdrop_png, wavetableRowBackdrop_pngSize);
 
     //[UserPreSize]
+    testCheckbox -> setEnabled (
+                                false );
     //[/UserPreSize]
 
     setSize (590, 24);

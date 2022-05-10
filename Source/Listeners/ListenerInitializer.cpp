@@ -32,6 +32,7 @@ ListenerInitializer::ListenerInitializer ()
     exportVibratoSpeedChanged -> getListeners ();
     exportVoiceFilterChanged -> getListeners ();
     exportVolumeChanged -> getListeners ();
+    showExportManager -> getListeners ();
 
     liveAddPatchClickedListeners -> getListeners ();
     liveArtistChangedListeners -> getListeners ();

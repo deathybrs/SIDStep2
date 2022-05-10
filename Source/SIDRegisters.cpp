@@ -23,7 +23,7 @@ SidRegisters::SidRegisters ()
                           true );
     sid -> set_sampling_parameters (
                                     clock_freq
-                                  , SAMPLE_FAST
+                                  , SAMPLE_RESAMPLE_INTERPOLATE
                                   , sample_freq
                                   , pass_freq );
     for ( auto i = 0 ; i < last_register ; i++ )
@@ -689,6 +689,11 @@ void
                                currentFrame );
     }
 }
+
+auto
+    SidRegisters::ReadRegister (
+            const int index
+            ) const -> int { return registers [ index ]; }
 
 void
     SidRegisters::SetFrame (

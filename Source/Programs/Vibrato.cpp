@@ -1,36 +1,24 @@
 #include "Vibrato.h"
-
-
 #include "../SIDProgram.h"
-
 
 Vibrato::Vibrato ()
     :
     currentVibratoAmount (
-                          defaultVibratoAmount
-                         )
+                          defaultVibratoAmount )
   , currentVibratoSpeed (
-                         defaultVibratoSpeed
-                        )
+                         defaultVibratoSpeed )
   , currentVibratoDelay (
-                         vibratoDelay
-                        )
+                         vibratoDelay )
 {
     SharedResourcePointer < ListenerList < LiveVibratoAmountChanged > > () -> add (
-                                                                                   this
-                                                                                  );
+                                                                                   this );
     SharedResourcePointer < ListenerList < LiveVibratoSpeedChanged > > () -> add (
-                                                                                  this
-                                                                                 );
-
+                                                                                  this );
     SharedResourcePointer < ListenerList < VibratoAmountParameterChanged > > () -> add (
-                                                                                        this
-                                                                                       );
+                                                                                        this );
     SharedResourcePointer < ListenerList < VibratoSpeedParameterChanged > > () -> add (
-                                                                                       this
-                                                                                      );
+                                                                                       this );
 }
-
 
 Vibrato::Vibrato (
         XmlElement* e
@@ -38,54 +26,35 @@ Vibrato::Vibrato (
     :
     vibratoRange (
                   static_cast < unsigned int > ( e -> getIntAttribute (
-                                                                       "range"
-                                                                      ) )
-                 )
+                                                                       "range" ) ) )
   , vibratoSpeed (
                   static_cast < unsigned int > ( e -> getIntAttribute (
-                                                                       "speed"
-                                                                      ) )
-                 )
+                                                                       "speed" ) ) )
   , vibratoDelay (
                   static_cast < unsigned int > ( e -> getIntAttribute (
-                                                                       "delay"
-                                                                      ) )
-                 )
+                                                                       "delay" ) ) )
   , defaultVibratoAmount (
                           static_cast < float > ( e -> getDoubleAttribute (
-                                                                           "default-amount"
-                                                                          ) )
-                         )
+                                                                           "default-amount" ) ) )
   , defaultVibratoSpeed (
                          static_cast < float > ( e -> getDoubleAttribute (
-                                                                          "default-speed"
-                                                                         ) )
-                        )
+                                                                          "default-speed" ) ) )
   , currentVibratoAmount (
-                          defaultVibratoAmount
-                         )
+                          defaultVibratoAmount )
   , currentVibratoSpeed (
-                         defaultVibratoSpeed
-                        )
+                         defaultVibratoSpeed )
   , currentVibratoDelay (
-                         vibratoDelay
-                        )
+                         vibratoDelay )
 {
     SharedResourcePointer < ListenerList < LiveVibratoAmountChanged > > () -> add (
-                                                                                   this
-                                                                                  );
+                                                                                   this );
     SharedResourcePointer < ListenerList < LiveVibratoSpeedChanged > > () -> add (
-                                                                                  this
-                                                                                 );
-
+                                                                                  this );
     SharedResourcePointer < ListenerList < VibratoAmountParameterChanged > > () -> add (
-                                                                                        this
-                                                                                       );
+                                                                                        this );
     SharedResourcePointer < ListenerList < VibratoSpeedParameterChanged > > () -> add (
-                                                                                       this
-                                                                                      );
+                                                                                       this );
 }
-
 
 Vibrato::Vibrato (
         const Vibrato& other
@@ -123,26 +92,18 @@ Vibrato::Vibrato (
     }
 {
     SharedResourcePointer < ListenerList < LiveVibratoAmountChanged > > () -> add (
-                                                                                   this
-                                                                                  );
+                                                                                   this );
     SharedResourcePointer < ListenerList < LiveVibratoDelayChanged > > () -> add (
-                                                                                  this
-                                                                                 );
+                                                                                  this );
     SharedResourcePointer < ListenerList < LiveVibratoSpeedChanged > > () -> add (
-                                                                                  this
-                                                                                 );
-
+                                                                                  this );
     SharedResourcePointer < ListenerList < VibratoAmountParameterChanged > > () -> add (
-                                                                                        this
-                                                                                       );
+                                                                                        this );
     SharedResourcePointer < ListenerList < VibratoDelayParameterChanged > > () -> add (
-                                                                                       this
-                                                                                      );
+                                                                                       this );
     SharedResourcePointer < ListenerList < VibratoSpeedParameterChanged > > () -> add (
-                                                                                       this
-                                                                                      );
+                                                                                       this );
 }
-
 
 Vibrato::Vibrato (
         Vibrato&& other
@@ -180,80 +141,53 @@ Vibrato::Vibrato (
     }
 {
     SharedResourcePointer < ListenerList < LiveVibratoAmountChanged > > () -> remove (
-                                                                                      &other
-                                                                                     );
+                                                                                      &other );
     SharedResourcePointer < ListenerList < LiveVibratoDelayChanged > > () -> remove (
-                                                                                     &other
-                                                                                    );
+                                                                                     &other );
     SharedResourcePointer < ListenerList < LiveVibratoSpeedChanged > > () -> remove (
-                                                                                     &other
-                                                                                    );
-
+                                                                                     &other );
     SharedResourcePointer < ListenerList < VibratoAmountParameterChanged > > () -> remove (
-                                                                                           &other
-                                                                                          );
+                                                                                           &other );
     SharedResourcePointer < ListenerList < VibratoDelayParameterChanged > > () -> remove (
-                                                                                          &other
-                                                                                         );
+                                                                                          &other );
     SharedResourcePointer < ListenerList < VibratoSpeedParameterChanged > > () -> remove (
-                                                                                          &other
-                                                                                         );
+                                                                                          &other );
     SharedResourcePointer < ListenerList < LiveVibratoAmountChanged > > () -> add (
-                                                                                   this
-                                                                                  );
+                                                                                   this );
     SharedResourcePointer < ListenerList < LiveVibratoDelayChanged > > () -> add (
-                                                                                  this
-                                                                                 );
+                                                                                  this );
     SharedResourcePointer < ListenerList < LiveVibratoSpeedChanged > > () -> add (
-                                                                                  this
-                                                                                 );
-
+                                                                                  this );
     SharedResourcePointer < ListenerList < VibratoAmountParameterChanged > > () -> add (
-                                                                                        this
-                                                                                       );
+                                                                                        this );
     SharedResourcePointer < ListenerList < VibratoDelayParameterChanged > > () -> add (
-                                                                                       this
-                                                                                      );
+                                                                                       this );
     SharedResourcePointer < ListenerList < VibratoSpeedParameterChanged > > () -> add (
-                                                                                       this
-                                                                                      );
+                                                                                       this );
 }
-
 
 Vibrato::~Vibrato ()
 {
     SharedResourcePointer < ListenerList < LiveVibratoAmountChanged > > () -> remove (
-                                                                                      this
-                                                                                     );
+                                                                                      this );
     SharedResourcePointer < ListenerList < LiveVibratoDelayChanged > > () -> remove (
-                                                                                     this
-                                                                                    );
+                                                                                     this );
     SharedResourcePointer < ListenerList < LiveVibratoSpeedChanged > > () -> remove (
-                                                                                     this
-                                                                                    );
-
+                                                                                     this );
     SharedResourcePointer < ListenerList < VibratoAmountParameterChanged > > () -> remove (
-                                                                                           this
-                                                                                          );
+                                                                                           this );
     SharedResourcePointer < ListenerList < VibratoDelayParameterChanged > > () -> remove (
-                                                                                          this
-                                                                                         );
+                                                                                          this );
     SharedResourcePointer < ListenerList < VibratoSpeedParameterChanged > > () -> remove (
-                                                                                          this
-                                                                                         );
+                                                                                          this );
 }
-
 
 auto
     Vibrato::operator= (
             const Vibrato& other
             ) -> Vibrato&
 {
-    if ( &other == this )
-    {
-        return *this;
-    }
-
+    if ( &other == this ) { return *this; }
     vibratoRange         = other . vibratoRange;
     vibratoSpeed         = other . vibratoSpeed;
     vibratoDelay         = other . vibratoDelay;
@@ -264,41 +198,27 @@ auto
     currentVibratoDelay  = other . currentVibratoDelay;
     vibratoCounter       = other . vibratoCounter;
     forVoice             = other . forVoice;
-
     return *this;
 }
-
 
 auto
     Vibrato::operator= (
             Vibrato&& other
             ) noexcept -> Vibrato&
 {
-    if ( &other == this )
-    {
-        return *this;
-    }
-
+    if ( &other == this ) { return *this; }
     SharedResourcePointer < ListenerList < LiveVibratoAmountChanged > > () -> remove (
-                                                                                      &other
-                                                                                     );
+                                                                                      &other );
     SharedResourcePointer < ListenerList < LiveVibratoDelayChanged > > () -> remove (
-                                                                                     &other
-                                                                                    );
+                                                                                     &other );
     SharedResourcePointer < ListenerList < LiveVibratoSpeedChanged > > () -> remove (
-                                                                                     &other
-                                                                                    );
-
+                                                                                     &other );
     SharedResourcePointer < ListenerList < VibratoAmountParameterChanged > > () -> remove (
-                                                                                           &other
-                                                                                          );
+                                                                                           &other );
     SharedResourcePointer < ListenerList < VibratoDelayParameterChanged > > () -> remove (
-                                                                                          &other
-                                                                                         );
+                                                                                          &other );
     SharedResourcePointer < ListenerList < VibratoSpeedParameterChanged > > () -> remove (
-                                                                                          &other
-                                                                                         );
-
+                                                                                          &other );
     vibratoRange         = other . vibratoRange;
     vibratoSpeed         = other . vibratoSpeed;
     vibratoDelay         = other . vibratoDelay;
@@ -309,10 +229,8 @@ auto
     currentVibratoDelay  = other . currentVibratoDelay;
     vibratoCounter       = other . vibratoCounter;
     forVoice             = other . forVoice;
-
     return *this;
 }
-
 
 void
     Vibrato::Select (
@@ -322,41 +240,30 @@ void
     if ( value )
     {
         SharedResourcePointer < ListenerList < PatchEditorVibratoRangeChanged > > () -> add (
-                                                                                             this
-                                                                                            );
+                                                                                             this );
         SharedResourcePointer < ListenerList < PatchEditorVibratoDelayChanged > > () -> add (
-                                                                                             this
-                                                                                            );
+                                                                                             this );
         SharedResourcePointer < ListenerList < PatchEditorVibratoSpeedChanged > > () -> add (
-                                                                                             this
-                                                                                            );
+                                                                                             this );
         SharedResourcePointer < ListenerList < PatchEditorVibratoDefaultAmountChanged > > () -> add (
-                                                                                                     this
-                                                                                                    );
+                                                                                                     this );
         SharedResourcePointer < ListenerList < PatchEditorVibratoDefaultSpeedChanged > > () -> add (
-                                                                                                    this
-                                                                                                   );
+                                                                                                    this );
     }
     else
     {
         SharedResourcePointer < ListenerList < PatchEditorVibratoRangeChanged > > () -> remove (
-                                                                                                this
-                                                                                               );
+                                                                                                this );
         SharedResourcePointer < ListenerList < PatchEditorVibratoDelayChanged > > () -> remove (
-                                                                                                this
-                                                                                               );
+                                                                                                this );
         SharedResourcePointer < ListenerList < PatchEditorVibratoSpeedChanged > > () -> remove (
-                                                                                                this
-                                                                                               );
+                                                                                                this );
         SharedResourcePointer < ListenerList < PatchEditorVibratoDefaultAmountChanged > > () -> remove (
-                                                                                                        this
-                                                                                                       );
+                                                                                                        this );
         SharedResourcePointer < ListenerList < PatchEditorVibratoDefaultSpeedChanged > > () -> remove (
-                                                                                                       this
-                                                                                                      );
+                                                                                                       this );
     }
 }
-
 
 void
     Vibrato::Write (
@@ -364,50 +271,35 @@ void
             ) const
 {
     auto v = e -> getChildByName (
-                                  "vibrato"
-                                 );
+                                  "vibrato" );
     if ( v == nullptr )
     {
         v = new XmlElement (
-                            "vibrato"
-                           );
+                            "vibrato" );
         e -> addChildElement (
-                              v
-                             );
+                              v );
     }
-
     v -> setAttribute (
                        "range"
                      , String (
-                               vibratoRange
-                              )
-                      );
+                               vibratoRange ) );
     v -> setAttribute (
                        "speed"
                      , String (
-                               vibratoSpeed
-                              )
-                      );
+                               vibratoSpeed ) );
     v -> setAttribute (
                        "delay"
                      , String (
-                               vibratoDelay
-                              )
-                      );
+                               vibratoDelay ) );
     v -> setAttribute (
                        "default-amount"
                      , String (
-                               defaultVibratoAmount
-                              )
-                      );
+                               defaultVibratoAmount ) );
     v -> setAttribute (
                        "default-speed"
                      , String (
-                               defaultVibratoSpeed
-                              )
-                      );
+                               defaultVibratoSpeed ) );
 }
-
 
 void
     Vibrato::WriteState (
@@ -416,26 +308,20 @@ void
 {
     dest_data . append (
                         static_cast < const void* > ( &vibratoRange )
-                      , sizeof vibratoRange
-                       );
+                      , sizeof vibratoRange );
     dest_data . append (
                         static_cast < const void* > ( &vibratoSpeed )
-                      , sizeof vibratoSpeed
-                       );
+                      , sizeof vibratoSpeed );
     dest_data . append (
                         static_cast < const void* > ( &vibratoDelay )
-                      , sizeof vibratoDelay
-                       );
+                      , sizeof vibratoDelay );
     dest_data . append (
                         static_cast < const void* > ( &defaultVibratoAmount )
-                      , sizeof defaultVibratoAmount
-                       );
+                      , sizeof defaultVibratoAmount );
     dest_data . append (
                         static_cast < const void* > ( &defaultVibratoSpeed )
-                      , sizeof defaultVibratoSpeed
-                       );
+                      , sizeof defaultVibratoSpeed );
 }
-
 
 void
     Vibrato::WriteCopyState (
@@ -444,18 +330,14 @@ void
 {
     dest_data . append (
                         static_cast < const void* > ( &currentVibratoAmount )
-                      , sizeof currentVibratoAmount
-                       );
+                      , sizeof currentVibratoAmount );
     dest_data . append (
                         static_cast < const void* > ( &currentVibratoSpeed )
-                      , sizeof currentVibratoSpeed
-                       );
+                      , sizeof currentVibratoSpeed );
     dest_data . append (
                         static_cast < const void* > ( &currentVibratoDelay )
-                      , sizeof currentVibratoDelay
-                       );
+                      , sizeof currentVibratoDelay );
 }
-
 
 void
     Vibrato::LoadState (
@@ -464,29 +346,22 @@ void
             )
 {
     auto v = o -> GetExpression () -> getVibrato ();
-
     stream . read (
                    &v -> vibratoRange
-                 , sizeof v -> vibratoRange
-                  );
+                 , sizeof v -> vibratoRange );
     stream . read (
                    &v -> vibratoSpeed
-                 , sizeof v -> vibratoSpeed
-                  );
+                 , sizeof v -> vibratoSpeed );
     stream . read (
                    &v -> vibratoDelay
-                 , sizeof v -> vibratoDelay
-                  );
+                 , sizeof v -> vibratoDelay );
     stream . read (
                    &v -> defaultVibratoAmount
-                 , sizeof v -> defaultVibratoAmount
-                  );
+                 , sizeof v -> defaultVibratoAmount );
     stream . read (
                    &v -> defaultVibratoSpeed
-                 , sizeof v -> defaultVibratoSpeed
-                  );
+                 , sizeof v -> defaultVibratoSpeed );
 }
-
 
 void
     Vibrato::LoadCopyState (
@@ -495,28 +370,19 @@ void
             )
 {
     auto v = o -> GetExpression () -> getVibrato ();
-
     stream . read (
                    &v -> currentVibratoAmount
-                 , sizeof v -> currentVibratoAmount
-                  );
+                 , sizeof v -> currentVibratoAmount );
     stream . read (
                    &v -> currentVibratoSpeed
-                 , sizeof v -> currentVibratoSpeed
-                  );
+                 , sizeof v -> currentVibratoSpeed );
     stream . read (
                    &v -> currentVibratoDelay
-                 , sizeof v -> currentVibratoDelay
-                  );
+                 , sizeof v -> currentVibratoDelay );
 }
-
 
 auto
-    Vibrato::GetVibratoRange () const -> unsigned int
-{
-    return vibratoRange;
-}
-
+    Vibrato::GetVibratoRange () const -> unsigned int { return vibratoRange; }
 
 void
     Vibrato::SetVibratoRange (
@@ -524,183 +390,102 @@ void
             )
 {
     static const auto RANGE_MAX = 8193;
-    if ( value < RANGE_MAX )
-    {
-        vibratoRange = value;
-    }
+    if ( value < RANGE_MAX ) { vibratoRange = value; }
 }
-
 
 auto
-    Vibrato::GetVibratoSpeed () const -> unsigned int
-{
-    return vibratoSpeed;
-}
-
+    Vibrato::GetVibratoSpeed () const -> unsigned int { return vibratoSpeed; }
 
 void
     Vibrato::SetVibratoSpeed (
             const unsigned int value
-            )
-{
-    vibratoSpeed = value;
-}
-
+            ) { vibratoSpeed = value; }
 
 auto
-    Vibrato::GetVibratoDelay () const -> unsigned
-{
-    return vibratoDelay;
-}
-
+    Vibrato::GetVibratoDelay () const -> unsigned { return vibratoDelay; }
 
 void
     Vibrato::SetVibratoDelay (
             const unsigned value
             )
 {
-    if ( value >= 0 && value < 16 )
-    {
-        vibratoDelay = value;
-    }
-
+    if ( value >= 0 && value < 16 ) { vibratoDelay = value; }
     SetCurrentVibratoDelay (
-                            value
-                           );
+                            value );
 }
-
 
 auto
-    Vibrato::GetDefaultVibratoAmount () const -> float
-{
-    return defaultVibratoAmount;
-}
-
+    Vibrato::GetDefaultVibratoAmount () const -> float { return defaultVibratoAmount; }
 
 auto
-    Vibrato::GetDefaultVibratoSpeed () const -> float
-{
-    return defaultVibratoSpeed;
-}
-
+    Vibrato::GetDefaultVibratoSpeed () const -> float { return defaultVibratoSpeed; }
 
 auto
-    Vibrato::GetCurrentVibratoAmount () const -> float
-{
-    return currentVibratoAmount;
-}
-
+    Vibrato::GetCurrentVibratoAmount () const -> float { return currentVibratoAmount; }
 
 auto
-    Vibrato::GetCurrentVibratoSpeed () const -> float
-{
-    return currentVibratoSpeed;
-}
-
+    Vibrato::GetCurrentVibratoSpeed () const -> float { return currentVibratoSpeed; }
 
 void
     Vibrato::SetDefaultVibratoAmount (
             const float value
             )
 {
-    if ( value >= -1 && value <= 1 )
-    {
-        defaultVibratoAmount = value;
-    }
-
+    if ( value >= -1 && value <= 1 ) { defaultVibratoAmount = value; }
     SetCurrentVibratoAmount (
-                             value
-                            );
+                             value );
 }
-
 
 void
     Vibrato::SetDefaultVibratoSpeed (
             const float value
             )
 {
-    if ( value >= -1 && value <= 1 )
-    {
-        defaultVibratoSpeed = value;
-    }
-
+    if ( value >= -1 && value <= 1 ) { defaultVibratoSpeed = value; }
     SetCurrentVibratoSpeed (
-                            value
-                           );
+                            value );
 }
-
 
 void
     Vibrato::SetCurrentVibratoAmount (
             const float value
             )
 {
-    if ( value < 0 || value > 1 )
-    {
-        return;
-    }
-    if ( currentVibratoAmount == 0 && value != 0 || currentVibratoAmount != 0 && value == 0 )
-    {
-        vibratoCounter = 0;
-    }
-
+    if ( value < 0 || value > 1 ) { return; }
+    if ( currentVibratoAmount == 0 && value != 0 || currentVibratoAmount != 0 && value == 0 ) { vibratoCounter = 0; }
     currentVibratoAmount = value;
 }
-
 
 void
     Vibrato::SetCurrentVibratoSpeed (
             const float value
             )
 {
-    if ( value < 0 || value > 1 )
-    {
-        return;
-    }
-
+    if ( value < 0 || value > 1 ) { return; }
     currentVibratoSpeed = value;
 }
 
-
 auto
-    Vibrato::GetCurrentVibratoDelay () const -> unsigned
-{
-    return currentVibratoDelay;
-}
-
+    Vibrato::GetCurrentVibratoDelay () const -> unsigned { return currentVibratoDelay; }
 
 void
     Vibrato::SetCurrentVibratoDelay (
             const unsigned value
-            )
-{
-    if ( value >= 0 && value < 16 )
-    {
-        currentVibratoDelay = value;
-    }
-}
-
+            ) { if ( value >= 0 && value < 16 ) { currentVibratoDelay = value; } }
 
 auto
     Vibrato::GetCurrentVibratoValue () const -> int
 {
-    if ( currentVibratoAmount == 0 || currentVibratoSpeed == 0 || vibratoCounter < currentVibratoDelay )
-    {
-        return 0;
-    }
+    if ( currentVibratoAmount == 0 || currentVibratoSpeed == 0 || vibratoCounter < currentVibratoDelay ) { return 0; }
 
     // ReSharper disable once CppInconsistentNaming
     const auto A = currentVibratoAmount * static_cast < double > ( vibratoRange );
-    const auto t = static_cast < double > ( vibratoCounter - currentVibratoDelay ) /
-            ( static_cast < double > ( vibratoSpeed ) * static_cast < double > ( currentVibratoSpeed ) );
+    const auto t = static_cast < double > ( vibratoCounter - currentVibratoDelay ) / ( static_cast < double > ( vibratoSpeed ) * static_cast < double > ( currentVibratoSpeed ) );
     // ReSharper disable once CppInconsistentNaming
     const auto _2PI = 3.1415926535897932384626433832795 * 2.0;
-
     return static_cast < int > ( A * sin (
-                                          _2PI * t
-                                         ) );
+                                          _2PI * t ) );
 }
-
 
 void
     Vibrato::Start ()
@@ -709,21 +494,12 @@ void
     currentVibratoDelay = vibratoDelay;
 }
 
-
 void
-    Vibrato::Step ()
-{
-    if ( currentVibratoAmount != 0 )
-    {
-        vibratoCounter++;
-    }
-}
-
+    Vibrato::Step () { if ( currentVibratoAmount != 0 ) { vibratoCounter++; } }
 
 void
 // ReSharper disable once CppMemberFunctionMayBeStatic
     Vibrato::Release () {}
-
 
 void
     Vibrato::onPatchEditorVibratoRangeChanged (
@@ -731,10 +507,8 @@ void
             )
 {
     SetVibratoRange (
-                     value
-                    );
+                     value );
 }
-
 
 void
     Vibrato::onPatchEditorVibratoSpeedChanged (
@@ -742,10 +516,8 @@ void
             )
 {
     SetVibratoSpeed (
-                     value
-                    );
+                     value );
 }
-
 
 void
     Vibrato::onPatchEditorVibratoDefaultAmountChanged (
@@ -753,10 +525,8 @@ void
             )
 {
     SetDefaultVibratoAmount (
-                             value
-                            );
+                             value );
 }
-
 
 void
     Vibrato::onPatchEditorVibratoDefaultSpeedChanged (
@@ -764,10 +534,8 @@ void
             )
 {
     SetDefaultVibratoSpeed (
-                            value
-                           );
+                            value );
 }
-
 
 void
     Vibrato::onLiveVibratoAmountChanged (
@@ -778,11 +546,9 @@ void
     if ( voice == forVoice )
     {
         SetCurrentVibratoAmount (
-                                 value
-                                );
+                                 value );
     }
 }
-
 
 void
     Vibrato::onLiveVibratoSpeedChanged (
@@ -793,11 +559,9 @@ void
     if ( voice == forVoice )
     {
         SetCurrentVibratoSpeed (
-                                value
-                               );
+                                value );
     }
 }
-
 
 void
     Vibrato::onVibratoAmountParameterChanged (
@@ -808,11 +572,9 @@ void
     if ( voice == forVoice )
     {
         SetCurrentVibratoAmount (
-                                 value
-                                );
+                                 value );
     }
 }
-
 
 void
     Vibrato::onVibratoSpeedParameterChanged (
@@ -823,11 +585,9 @@ void
     if ( voice == forVoice )
     {
         SetCurrentVibratoSpeed (
-                                value
-                               );
+                                value );
     }
 }
-
 
 void
     Vibrato::onLiveVibratoDelayChanged (
@@ -838,11 +598,9 @@ void
     if ( voice == forVoice )
     {
         SetCurrentVibratoDelay (
-                                value
-                               );
+                                value );
     }
 }
-
 
 void
     Vibrato::onVibratoDelayParameterChanged (
@@ -853,11 +611,9 @@ void
     if ( voice == forVoice )
     {
         SetCurrentVibratoDelay (
-                                value
-                               );
+                                value );
     }
 }
-
 
 void
     Vibrato::onPatchEditorVibratoDelayChanged (
@@ -865,10 +621,8 @@ void
             )
 {
     SetVibratoDelay (
-                     value
-                    );
+                     value );
 }
-
 
 void
     Vibrato::SetForVoice (
@@ -878,16 +632,13 @@ void
     if ( value > -1 && value < 3 )
     {
         SharedResourcePointer < ListenerList < VibratoAmountParameterChanged > > () -> call (
-                                                                                             &VibratoAmountParameterChanged::
-                                                                                             onVibratoAmountParameterChanged
+                                                                                             &VibratoAmountParameterChanged::onVibratoAmountParameterChanged
                                                                                            , value
-                                                                                           , GetCurrentVibratoAmount ()
-                                                                                            );
+                                                                                           , GetCurrentVibratoAmount () );
         SharedResourcePointer < ListenerList < VibratoSpeedParameterChanged > > () -> call (
                                                                                             &VibratoSpeedParameterChanged::onVibratoSpeedParameterChanged
                                                                                           , value
-                                                                                          , GetCurrentVibratoSpeed ()
-                                                                                           );
+                                                                                          , GetCurrentVibratoSpeed () );
     }
     forVoice = value;
 }

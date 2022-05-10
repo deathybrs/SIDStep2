@@ -154,6 +154,11 @@ public:
                 unsigned int ppq
                 ) override;
 
+    auto
+        ReadRegister (
+                int index
+                ) const -> int;
+
 private:
     static const int register_array_size       = 0x19;
     static const int last_register             = 0x18;

@@ -7,6 +7,7 @@
 
 #include "Listeners/ListenerInitializer.h"
 
+class ExportManager;
 class SidRegisters;
 class Renderer;
 class Bank;
@@ -164,6 +165,7 @@ private:
     std::shared_ptr < Recorder > recorder {
             nullptr
     };
+    std::shared_ptr < ExportManager > exportManager;
 
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (

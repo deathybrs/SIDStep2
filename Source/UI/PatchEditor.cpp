@@ -1200,9 +1200,12 @@ void
 void
     PatchEditor::onLivePatchEditorModeClicked ()
 {
-    setVisible (
-                true
-               );
+    MessageManager::callAsync (
+                               [=] ()
+                               {
+                                   setVisible (
+                                               true );
+                               } );
 }
 
 

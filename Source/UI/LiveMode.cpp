@@ -921,6 +921,8 @@ LiveMode::LiveMode ()
                                                                                  this );
     SharedResourcePointer < ListenerList < PatchEditorLiveModeClicked > > () -> add (
                                                                                      this );
+    SharedResourcePointer < ListenerList < ShowExportManager > > () -> add (
+                                                                            this );
     SharedResourcePointer < ListenerList < LivePatchListChanged > > () -> add (
                                                                                this );
     SharedResourcePointer < ListenerList < LiveTitleChanged > > () -> add (
@@ -977,6 +979,8 @@ LiveMode::~LiveMode()
                                                                                     this );
     SharedResourcePointer < ListenerList < PatchEditorLiveModeClicked > > () -> remove (
                                                                                         this );
+    SharedResourcePointer < ListenerList < ShowExportManager > > () -> remove (
+                                                                               this );
     SharedResourcePointer < ListenerList < LivePatchListChanged > > () -> remove (
                                                                                   this );
     SharedResourcePointer < ListenerList < LiveTitleChanged > > () -> remove (
@@ -2700,6 +2704,19 @@ void
     armed = false;
     MessageManager::callAsync (
                                [=] () { repaint (); } );
+}
+
+void
+    LiveMode::onShowExportManager (
+            std::shared_ptr < Recorder > record
+            )
+{
+    MessageManager::callAsync (
+                               [=] ()
+                               {
+                                   setVisible (
+                                               false );
+                               } );
 }
 
 void

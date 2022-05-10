@@ -32,7 +32,10 @@ class Recorder final
         , public QuarterNoteTick
 {
 public:
-    Recorder () = default;
+    explicit
+        Recorder (
+                const ReferenceCountedArray < SidProgram >& patch_list
+                );
 
     Recorder (
             const Recorder& other
@@ -247,13 +250,22 @@ private:
           , 256
     };
     unsigned short              currentCutoff {};
-    float                       currentPitchBend {};
     int                         currentVibratoAmount {};
     unsigned                    currentVibratoDelay {};
     unsigned char               currentVibratoSpeed {};
-    int                         currentPulseWidth {};
-    unsigned                    currentResonance {};
-    unsigned                    currentVolume {};
+    float currentPitchBend {
+            0
+    };
+    int currentPulseWidth {
+            INT32_MIN
+    };
+    unsigned currentResonance {
+            UINT32_MAX
+    };
+    unsigned currentVolume {
+            UINT32_MAX
+    };
+    ReferenceCountedArray < SidProgram > programList;
 
     friend class Exporter;
     friend class CommandView;

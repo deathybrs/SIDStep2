@@ -12,11 +12,12 @@
 #include "Parameters/SignedPercentParameter.h"
 #include "Parameters/UnsignedIntParameter.h"
 #include "Parameters/UnsignedPercentParameter.h"
-
+#include "UI/ExportManager.h"
 
 Sidstep2AudioProcessor::Sidstep2AudioProcessor ()
 {
     listeners     = new ListenerInitializer ();
+    exportManager = new ExportManager ();
     patchEditor   = new PatchEditor ();
     liveMode      = new LiveMode ();
     core          = new SidStep2 ();
@@ -102,6 +103,7 @@ Sidstep2AudioProcessor::Sidstep2AudioProcessor ()
 Sidstep2AudioProcessor::~Sidstep2AudioProcessor ()
 {
     core          = nullptr;
+    exportManager = nullptr;
     liveMode      = nullptr;
     patchEditor   = nullptr;
     midiProcessor = nullptr;
@@ -236,6 +238,8 @@ auto
                              liveMode );
     ed -> addChildComponent (
                              patchEditor );
+    ed -> addChildComponent (
+                             exportManager );
     return ed;
 }
 

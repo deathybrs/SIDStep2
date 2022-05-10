@@ -93,6 +93,8 @@
                 file="Source/Listeners/Export/ExportVoiceFilterChanged.h"/>
           <FILE id="flUczZ" name="ExportVolumeChanged.h" compile="0" resource="0"
                 file="Source/Listeners/Export/ExportVolumeChanged.h"/>
+          <FILE id="Unkw7D" name="ShowExportManager.h" compile="0" resource="0"
+                file="Source/Listeners/Export/ShowExportManager.h"/>
         </GROUP>
         <GROUP id="{BEB1A623-1720-718B-043A-FC3B4689CEFD}" name="MIDI">
           <FILE id="MCAwBU" name="MidiSignal.h" compile="0" resource="0" file="Source/Listeners/MIDI/MidiSignal.h"/>

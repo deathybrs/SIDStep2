@@ -1,18 +1,20 @@
 #include "Recorder.h"
 
-
 #include <string>
-
 
 #include "Command.h"
 #include "SIDProgram.h"
 
 #include "Programs/Expression.h"
 
-Recorder::~Recorder ()
-{
-    Stop ();
-}
+Recorder::Recorder (
+        const ReferenceCountedArray < SidProgram >& patch_list
+        )
+    :
+    programList (
+                 patch_list ) {}
+
+Recorder::~Recorder () { Stop (); }
 
 void
     Recorder::Start ()
@@ -175,15 +177,12 @@ void
     for ( const auto& command : globalCommands )
     {
         std::string arg;
-        auto r = command -> Render ();
+        auto        r = command -> Render ();
         arg += "\t!byte ";
         auto first = true;
         for ( const auto& v : r )
         {
-            if ( !first )
-            {
-                arg += ",";
-            }
+            if ( !first ) { arg += ","; }
             first = false;
             arg += std::to_string (
                                    v );
@@ -207,7 +206,7 @@ void
         for ( const auto& command : voiceCommands . at (
                                                         v ) )
         {
-            arg = "";
+            arg    = "";
             auto r = command -> Render ();
             arg += "\t!byte ";
             auto first = true;
@@ -289,14 +288,14 @@ void
                       , voice );
     currentAttack . at (
                         voice ) = static_cast < unsigned char > ( value );
-    const auto attack_decay = std::make_shared < Command > (
-                                                            COMMANDS::CHANGE_ATTACK_DECAY
-                                                          , currentFrame
-                                                          , std::vector < unsigned char > {
-                                                                    static_cast < unsigned char > ( currentAttack . at (
-                                                                                                                        voice ) << 4 | currentDecay . at (
-                                                                                                                                                          voice ) )
-                                                            } );
+    const auto attack_decay     = std::make_shared < Command > (
+                                                                COMMANDS::CHANGE_ATTACK_DECAY
+                                                              , currentFrame
+                                                              , std::vector < unsigned char > {
+                                                                        static_cast < unsigned char > ( currentAttack . at (
+                                                                                                                            voice ) << 4 | currentDecay . at (
+                                                                                                                                                              voice ) )
+                                                                } );
     currentVoiceCommands . at (
                                voice ) . push_back (
                                                     attack_decay );
@@ -309,14 +308,16 @@ void
 {
     if ( currentBandPass == value ) { return; }
     RemovePendingGlobal (
-                         COMMANDS::SET_FILTER_TYPE );
-    currentBandPass = value;
+                         COMMANDS::FILTER_MODE_VOLUME );
+    currentBandPass          = value;
     auto current_filter_type = static_cast < unsigned char > ( 0 );
     if ( currentLowPass ) { current_filter_type |= 1; }
     if ( currentBandPass ) { current_filter_type |= 2; }
     if ( currentHighPass ) { current_filter_type |= 4; }
+    current_filter_type *= 0x10;
+    current_filter_type |= currentVolume;
     const auto set_filter_type = std::make_shared < Command > (
-                                                               COMMANDS::SET_FILTER_TYPE
+                                                               COMMANDS::FILTER_MODE_VOLUME
                                                              , currentFrame
                                                              , std::vector < unsigned char > {
                                                                        current_filter_type
@@ -330,16 +331,25 @@ void
             const unsigned value
             )
 {
-    if ( currentCutoff == value ) { return; }
+    static const auto CUTOFF_BASE    = 0.9995117188;
+    static const auto BINARY_BASE    = 2.0;
+    static const auto CUTOFF_DIVISOR = 0.0833333333;
+    static const auto CUTOFF_RANGE   = 2047.0;
+    static const auto CUTOFF_OFFSET  = 0.0833333333;
+
+    const auto        log_val        = static_cast < unsigned > ( round (
+                                                                         CUTOFF_BASE * pow (
+                                                                                            BINARY_BASE
+                                                                                          , 1.0 / CUTOFF_DIVISOR * ( static_cast < double > ( value ) / CUTOFF_RANGE - CUTOFF_OFFSET ) ) ) ) / 0x08;
+    if ( currentCutoff == log_val ) { return; }
     RemovePendingGlobal (
                          COMMANDS::CUTOFF );
-    currentCutoff = value;
+    currentCutoff     = log_val;
     const auto cutoff = std::make_shared < Command > (
                                                       COMMANDS::CUTOFF
                                                     , currentFrame
                                                     , std::vector < unsigned char > {
-                                                              static_cast < unsigned char > ( value & 0xFF )
-                                                            , static_cast < unsigned char > ( ( value & 0xFF00 ) >> 8 )
+                                                              static_cast < unsigned char > ( log_val & 0xFF )
                                                       } );
     currentGlobalCommands . push_back (
                                        cutoff );
@@ -380,7 +390,7 @@ void
     if ( currentVoiceFilters . at (
                                    voice ) == value ) { return; }
     RemovePendingGlobal (
-                         COMMANDS::VOICE_FILTER_ON_OFF );
+                         COMMANDS::RESONANCE_ROUTING );
     currentVoiceFilters . at (
                               voice ) = value;
     auto current_voice_filters        = static_cast < unsigned char > ( 0 );
@@ -389,8 +399,9 @@ void
         if ( currentVoiceFilters . at (
                                        i ) ) { current_voice_filters |= 1 << i; }
     }
+    current_voice_filters |= ( currentResonance * 0x10 );
     const auto voice_filter_on_off = std::make_shared < Command > (
-                                                                   COMMANDS::VOICE_FILTER_ON_OFF
+                                                                   COMMANDS::RESONANCE_ROUTING
                                                                  , currentFrame
                                                                  , std::vector < unsigned char > {
                                                                            current_voice_filters
@@ -406,14 +417,16 @@ void
 {
     if ( currentHighPass == value ) { return; }
     RemovePendingGlobal (
-                         COMMANDS::SET_FILTER_TYPE );
+                         COMMANDS::FILTER_MODE_VOLUME );
     currentHighPass          = value;
     auto current_filter_type = static_cast < unsigned char > ( 0 );
     if ( currentLowPass ) { current_filter_type |= 1; }
     if ( currentBandPass ) { current_filter_type |= 2; }
     if ( currentHighPass ) { current_filter_type |= 4; }
+    current_filter_type *= 0x10;
+    current_filter_type |= currentVolume;
     const auto set_filter_type = std::make_shared < Command > (
-                                                               COMMANDS::SET_FILTER_TYPE
+                                                               COMMANDS::FILTER_MODE_VOLUME
                                                              , currentFrame
                                                              , std::vector < unsigned char > {
                                                                        current_filter_type
@@ -429,14 +442,16 @@ void
 {
     if ( currentLowPass == value ) { return; }
     RemovePendingGlobal (
-                         COMMANDS::SET_FILTER_TYPE );
+                         COMMANDS::FILTER_MODE_VOLUME );
     currentLowPass           = value;
     auto current_filter_type = static_cast < unsigned char > ( 0 );
     if ( currentLowPass ) { current_filter_type |= 1; }
     if ( currentBandPass ) { current_filter_type |= 2; }
     if ( currentHighPass ) { current_filter_type |= 4; }
+    current_filter_type *= 0x10;
+    current_filter_type |= currentVolume;
     const auto set_filter_type = std::make_shared < Command > (
-                                                               COMMANDS::SET_FILTER_TYPE
+                                                               COMMANDS::FILTER_MODE_VOLUME
                                                              , currentFrame
                                                              , std::vector < unsigned char > {
                                                                        current_filter_type
@@ -485,10 +500,15 @@ void
           , const ReferenceCountedObjectPtr < SidProgram > program
             )
 {
+    // This never gets called, which is probably to be expected.
     programs . at (
                    voice ) = program;
 
     // This will probably also need to reset any live changes to ADSR and the like.
+    currentAttack [ voice ]  = program -> GetEnvelope () -> getAttack ();
+    currentDecay [ voice ]   = program -> GetEnvelope () -> getDecay ();
+    currentSustain [ voice ] = program -> GetEnvelope () -> getSustain ();
+    currentRelease [ voice ] = program -> GetEnvelope () -> getRelease ();
 }
 
 void
@@ -498,24 +518,26 @@ void
             )
 {
     if ( currentProgram . at (
-                              voice ) == value )
-    {
-        return;
-    }
+                              voice ) == value ) { return; }
     RemovePendingVoice (
                         COMMANDS::PROGRAM_CHANGE
                       , voice );
     currentProgram . at (
                          voice ) = value;
-    const auto program_change = std::make_shared < Command > (
-                                                              COMMANDS::PROGRAM_CHANGE
-                                                            , currentFrame
-                                                            , std::vector < unsigned char > {
-                                                                      static_cast < unsigned char > ( value )
-                                                              } );
+    const auto program_change    = std::make_shared < Command > (
+                                                                 COMMANDS::PROGRAM_CHANGE
+                                                               , currentFrame
+                                                               , std::vector < unsigned char > {
+                                                                         static_cast < unsigned char > ( value )
+                                                                 } );
     currentVoiceCommands . at (
                                voice ) . push_back (
                                                     program_change );
+    const auto program       = programList [ value ];
+    currentAttack [ voice ]  = program -> GetEnvelope () -> getDefaultAttack ();
+    currentDecay [ voice ]   = program -> GetEnvelope () -> getDefaultDecay ();
+    currentSustain [ voice ] = program -> GetEnvelope () -> getDefaultSustain ();
+    currentRelease [ voice ] = program -> GetEnvelope () -> getDefaultRelease ();
 }
 
 void
@@ -527,9 +549,9 @@ void
     const auto p = programs . at (
                                   voice );
     if ( p == nullptr ) { return; }
-    const auto e                 = p -> GetExpression ();
+    const auto e           = p -> GetExpression ();
     const auto pulse_cycle = static_cast < int > ( value * static_cast < float > ( e -> getPulseWidthRange () ) + static_cast < float > ( e -> getPulseWidthCenter () ) );
-    const auto pulse_value       = pulse_cycle - 2048;
+    const auto pulse_value = pulse_cycle - 2048;
     if ( currentPulseWidth == pulse_value ) { return; }
     currentPulseWidth = pulse_value;
     RemovePendingVoice (
@@ -580,13 +602,20 @@ void
 {
     if ( currentResonance == value ) { return; }
     RemovePendingGlobal (
-                         COMMANDS::RESONANCE );
-    currentResonance           = value;
+                         COMMANDS::RESONANCE_ROUTING );
+    currentResonance     = value;
+    auto current_resonance_routing = static_cast < unsigned char > ( 0 );
+    for ( auto i = 0 ; i < 3 ; i++ )
+    {
+        if ( currentVoiceFilters . at (
+                                       i ) ) { current_resonance_routing |= 1 << i; }
+    }
+    current_resonance_routing |= ( currentResonance * 0x10 );
     const auto resonance = std::make_shared < Command > (
-                                                         COMMANDS::RESONANCE
+                                                         COMMANDS::RESONANCE_ROUTING
                                                        , currentFrame
                                                        , std::vector < unsigned char > {
-                                                                 static_cast < unsigned char > ( value & 0x0F )
+                                                                 static_cast < unsigned char > ( current_resonance_routing )
                                                          } );
     currentGlobalCommands . push_back (
                                        resonance );
@@ -627,12 +656,11 @@ void
     const auto p = programs . at (
                                   voice );
     if ( p == nullptr ) { return; }
-    const auto e = p -> GetExpression ();
-    const auto v = e -> getVibrato ();
+    const auto e  = p -> GetExpression ();
+    const auto v  = e -> getVibrato ();
     const auto va = static_cast < unsigned short > ( value * static_cast < float > ( v -> GetVibratoRange () ) );
     if ( currentVibratoAmount == va ) { return; }
     currentVibratoAmount = va;
-
     RemovePendingVoice (
                         COMMANDS::VIBRATO_AMOUNT
                       , voice );
@@ -684,7 +712,6 @@ void
     const auto vs = static_cast < unsigned short > ( value * static_cast < float > ( v -> GetVibratoSpeed () ) );
     if ( currentVibratoSpeed == vs ) { return; }
     currentVibratoSpeed = vs;
-
     RemovePendingVoice (
                         COMMANDS::VIBRATO_SPEED
                       , voice );
@@ -706,13 +733,19 @@ void
 {
     if ( currentVolume == value ) { return; }
     RemovePendingGlobal (
-                         COMMANDS::VOLUME );
+                         COMMANDS::FILTER_MODE_VOLUME );
     currentVolume     = value;
+    auto current_filter_type = static_cast < unsigned char > ( 0 );
+    if ( currentLowPass ) { current_filter_type |= 1; }
+    if ( currentBandPass ) { current_filter_type |= 2; }
+    if ( currentHighPass ) { current_filter_type |= 4; }
+    current_filter_type *= 0x10;
+    current_filter_type |= currentVolume;
     const auto volume = std::make_shared < Command > (
-                                                      COMMANDS::VOLUME
+                                                      COMMANDS::FILTER_MODE_VOLUME
                                                     , currentFrame
                                                     , std::vector < unsigned char > {
-                                                              static_cast < unsigned char > ( value & 0x0F )
+                                                              static_cast < unsigned char > ( current_filter_type )
                                                       } );
     currentGlobalCommands . push_back (
                                        volume );

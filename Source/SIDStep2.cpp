@@ -1,6 +1,7 @@
 #include "SIDStep2.h"
 
 #include <array>
+
 #include <JuceHeader.h>
 
 #include "../Requirements/resid-0.16/SID.h"  // NOLINT(clang-diagnostic-nonportable-include-path)
@@ -11,6 +12,8 @@
 #include "SIDRegisters.h"
 
 #include "Programs/Bank.h"
+
+//#include "UI/ExportManager.h"
 
 SidStep2::SidStep2 ()
 {
@@ -129,6 +132,34 @@ void
             recording = true;
             armed     = false;
             recorder -> Start ();
+            const auto filter_volume = sidRegisters -> ReadRegister (
+                                                                     0x18 );
+            recorder -> onVolumeParameterChanged (
+                                                  filter_volume );
+            recorder -> onCutoffParameterChanged (
+                                                  sidRegisters -> ReadRegister (
+                                                                                0x15 ) * 0x100 + sidRegisters -> ReadRegister (
+                                                                                                                               0x16 ) );
+            recorder -> onResonanceParameterChanged (
+                                                     sidRegisters -> ReadRegister (
+                                                                                   0x18 ) & 0xF0 >> 4 );
+            recorder -> onLowPassParameterChanged (
+                                                   ( filter_volume & 0x10 ) == 0x10 );
+            recorder -> onBandPassParameterChanged (
+                                                    ( filter_volume & 0x20 ) == 0x20 );
+            recorder -> onHighPassParameterChanged (
+                                                    ( filter_volume & 0x40 ) == 0x40 );
+            for ( size_t voice = 0 ; voice < 3 ; voice++ )
+            {
+                const auto bit = 0x01 << voice;
+                recorder -> onFilterVoiceParameterChanged (
+                                                           voice
+                                                         , ( sidRegisters -> ReadRegister (
+                                                                                           0x17 ) & bit ) == bit );
+                recorder -> onProgramParameterChanged (
+                                                       voice
+                                                     , currentChannelProgram [ voice ] );
+            }
         }
     } // Otherwise, if the DAW has stopped playing, then stop recording as well.
     else if ( recording )
@@ -140,9 +171,17 @@ void
         // fire stop recording event
         SharedResourcePointer < ListenerList < LiveDoneExporting > > () -> call (
                                                                                  &LiveDoneExporting::onLiveDoneExporting );
-        Exporter exporter (
-                           recorder );
-        exporter . ToPatterns ();
+
+        // Actual exporter needs to run after the user is done with the export manager
+        const Exporter exporter (
+                                 recorder );
+        MessageManager::callAsync (
+                                   [=] ()
+                                   {
+                                       exporter . ToPatterns (
+                                                              title . toStdString ()
+                                                            , artist . toStdString () );
+                                   } );
     }
     MidiBuffer::Iterator it (
                              midi_messages );
@@ -626,7 +665,8 @@ void
 {
     armed    = true;
     recorder = nullptr;
-    recorder = std::make_shared < Recorder > ();
+    recorder = std::make_shared < Recorder > (
+                                              programs );
 }
 
 void

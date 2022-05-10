@@ -392,6 +392,7 @@
 		D30D099B29CB4EB0A24D3B22 /* ListenerInitializer.cpp */ /* ListenerInitializer.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = ListenerInitializer.cpp; path = ../../Source/Listeners/ListenerInitializer.cpp; sourceTree = SOURCE_ROOT; };
 		D38B81B50338452A894781E1 /* siddefs.h */ /* siddefs.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = siddefs.h; path = "../../Requirements/resid-0.16/siddefs.h"; sourceTree = SOURCE_ROOT; };
 		D3F56EC89C8DC688A8177102 /* PatchTreeViewNode.h */ /* PatchTreeViewNode.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = PatchTreeViewNode.h; path = ../../Source/UI/PatchTreeViewNode.h; sourceTree = SOURCE_ROOT; };
+		D518D006E2818723A48730D4 /* ShowExportManager.h */ /* ShowExportManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = ShowExportManager.h; path = ../../Source/Listeners/Export/ShowExportManager.h; sourceTree = SOURCE_ROOT; };
 		D549FE3B52DE2501B9B648C2 /* PatchEditorTremoloDefaultAmountChanged.h */ /* PatchEditorTremoloDefaultAmountChanged.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = PatchEditorTremoloDefaultAmountChanged.h; path = "../../Source/Listeners/Patch Editor/PatchEditorTremoloDefaultAmountChanged.h"; sourceTree = SOURCE_ROOT; };
 		D78369E422A61E196CB1CAA8 /* PluginProcessor.cpp */ /* PluginProcessor.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = PluginProcessor.cpp; path = ../../Source/PluginProcessor.cpp; sourceTree = SOURCE_ROOT; };
 		D79C9371344A446D5E59FDE9 /* LiveDecayChanged.h */ /* LiveDecayChanged.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = LiveDecayChanged.h; path = ../../Source/Listeners/Live/LiveDecayChanged.h; sourceTree = SOURCE_ROOT; };
@@ -602,6 +603,7 @@
 				AABC6A2C4F6D41E9F426B267,
 				63949D9AC4CED53462A034BC,
 				389469E0E834105AB3F51227,
+				D518D006E2818723A48730D4,
 			);
 			name = Export;
 			sourceTree = "<group>";
