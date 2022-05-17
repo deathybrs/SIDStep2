@@ -19,8 +19,8 @@ public:
 
     void
         ToPatterns (
-                std::string title
-              , std::string artist
+                const std::string& title
+              , const std::string& artist
                 ) const;
 
 private:

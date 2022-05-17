@@ -106,8 +106,8 @@ void
 
 void
     Exporter::ToPatterns (
-            std::string title
-          , std::string artist
+            const std::string& title
+          , const std::string& artist
             ) const
 {
     FileChooser file_browser (
@@ -342,6 +342,25 @@ void
                                        static_cast < int > ( frame ) ) . paddedLeft (
                                                                                      '0'
                                                                                    , 4 ) + "\n";
+            fwrite (
+                    str . toStdString () . c_str ()
+                  , 1
+                  , str . length ()
+                  , file );
+        }
+        if ( recording -> loopStart > 0 )
+        {
+            const auto f = std::find (
+                                      recording -> patternFrame . begin ()
+                                    , recording -> patternFrame . end ()
+                                    , recording -> loopStart );
+            if ( f != recording -> patternFrame . end () )
+            {
+                str = "LOOP_TO " + String::toHexString (
+                                                        f - recording -> patternFrame . begin () ) . paddedLeft (
+                                                                                                                 '0'
+                                                                                                               , 2 ) + "\n";
+            }
             fwrite (
                     str . toStdString () . c_str ()
                   , 1

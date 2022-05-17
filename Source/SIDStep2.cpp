@@ -13,8 +13,6 @@
 
 #include "Programs/Bank.h"
 
-//#include "UI/ExportManager.h"
-
 SidStep2::SidStep2 ()
 {
     SharedResourcePointer < ListenerList < SampleRateChanged > > () -> add (
@@ -160,6 +158,11 @@ void
                                                        voice
                                                      , currentChannelProgram [ voice ] );
             }
+            const auto start = static_cast < int > ( position_info . ppqLoopStart * samples_per_quarter_note / samplesPerFrame );
+            const auto end   = static_cast < int > ( position_info . ppqLoopEnd * samples_per_quarter_note / samplesPerFrame );
+            recorder -> SetLoopPoints (
+                                       start
+                                     , end );
         }
     } // Otherwise, if the DAW has stopped playing, then stop recording as well.
     else if ( recording )
@@ -217,10 +220,43 @@ void
         const auto current_frame = static_cast < unsigned > ( sampleIndex / static_cast < double > ( samplesPerFrame ) );
         if ( current_frame != lastFrame )
         {
-            // Then trigger the frame updates.
-            Frame (
-                   current_frame
-                 , position_info . isPlaying );
+            if ( wasPlaying && position_info . isLooping && recorder != nullptr && current_frame < lastFrame && recording )
+            {
+                if ( position_info . bpm > 0 )
+                {
+                    // Have we stepped to the next quarter note?
+                    if ( static_cast < int > ( sampleIndex ) % samples_per_quarter_note == 0 )
+                    {
+                        SharedResourcePointer < ListenerList < QuarterNoteTick > > () -> call (
+                                                                                               &QuarterNoteTick::onQuarterNoteTick
+                                                                                             , static_cast < unsigned int > ( sampleIndex / samples_per_quarter_note ) + 1 );
+                    }
+                }
+                // Then trigger the frame updates.
+                recording = false;
+                recorder -> Stop ();
+                // fire stop recording event
+                SharedResourcePointer < ListenerList < LiveDoneExporting > > () -> call (
+                                                                                         &LiveDoneExporting::onLiveDoneExporting );
+
+                // Actual exporter needs to run after the user is done with the export manager
+                const Exporter exporter (
+                                         recorder );
+                MessageManager::callAsync (
+                                           [=] ()
+                                           {
+                                               exporter . ToPatterns (
+                                                                      title . toStdString ()
+                                                                    , artist . toStdString () );
+                                           } );
+            }
+            else
+            {
+                // Then trigger the frame updates.
+                Frame (
+                       current_frame
+                     , position_info . isPlaying );
+            }
         }
         // Do extra work if the tempo is set
         if ( position_info . bpm > 0 )
@@ -231,28 +267,6 @@ void
                 SharedResourcePointer < ListenerList < QuarterNoteTick > > () -> call (
                                                                                        &QuarterNoteTick::onQuarterNoteTick
                                                                                      , static_cast < unsigned int > ( sampleIndex / samples_per_quarter_note ) );
-
-                // If we're looping
-                if ( position_info . isLooping )
-                {
-                    // Get the current quarter note
-                    const auto quarter_note = static_cast < unsigned int > ( sampleIndex / samples_per_quarter_note ) + 1;
-                    // If it's equal to the loop start, then set that looping
-                    // point in the recording.
-                    if ( quarter_note == static_cast < unsigned int > ( position_info . ppqLoopStart ) )
-                    {
-                        sidRegisters -> SetLoopStart (
-                                                      static_cast < int > ( sampleIndex ) / samplesPerFrame );
-                    }
-                    // Same if it's the end, and further stop exporting if it has looped.
-                    if ( quarter_note == static_cast < unsigned int > ( position_info . ppqLoopEnd ) )
-                    {
-                        sidRegisters -> SetLoopEnd (
-                                                    static_cast < int > ( sampleIndex ) / samplesPerFrame );
-                        SharedResourcePointer < ListenerList < LiveDoneExporting > > () -> call (
-                                                                                                 &LiveDoneExporting::onLiveDoneExporting );
-                    }
-                }
             }
         }
 
@@ -280,6 +294,7 @@ void
         // and increase i and loop
         i += s;
     }
+    wasPlaying = position_info . isPlaying;
 }
 
 void

@@ -166,6 +166,9 @@ private:
             nullptr
     };
     std::shared_ptr < ExportManager > exportManager;
+    bool wasPlaying {
+            false
+    };
 
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (

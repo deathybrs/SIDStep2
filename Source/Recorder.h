@@ -1,11 +1,7 @@
 #pragma once
-
 #include <array>
-
 #include "Listeners/ListenerInitializer.h"
-
 enum class COMMANDS;
-
 class Command;
 
 class Recorder final
@@ -192,6 +188,18 @@ public:
                 unsigned ppq
                 ) override;
 
+    void
+        SetLoopPoints (
+                int start
+              , int end
+                );
+
+    //void
+    //    SetLoopStart ();
+
+    //void
+    //    SetLoopEnd ();
+
 private:
     void
         RemovePendingGlobal (
@@ -227,10 +235,10 @@ private:
     std::array < unsigned char , 3 >                            currentDecay {};
     std::array < unsigned char , 3 >                            currentSustain {};
     std::array < unsigned char , 3 >                            currentRelease {};
-    int currentPpq {
+    int                                                         currentPpq {
             -1
     };
-    bool                                                        currentBandPass {
+    bool currentBandPass {
             false
     };
     bool currentHighPass {
@@ -249,11 +257,11 @@ private:
           , 256
           , 256
     };
-    unsigned short              currentCutoff {};
-    int                         currentVibratoAmount {};
-    unsigned                    currentVibratoDelay {};
-    unsigned char               currentVibratoSpeed {};
-    float currentPitchBend {
+    unsigned short currentCutoff {};
+    int            currentVibratoAmount {};
+    unsigned       currentVibratoDelay {};
+    unsigned char  currentVibratoSpeed {};
+    float          currentPitchBend {
             0
     };
     int currentPulseWidth {
@@ -266,7 +274,12 @@ private:
             UINT32_MAX
     };
     ReferenceCountedArray < SidProgram > programList;
-
+    int                                  loopStart {
+            -1
+    };
+    int loopEnd {
+            -1
+    };
     friend class Exporter;
     friend class CommandView;
 };

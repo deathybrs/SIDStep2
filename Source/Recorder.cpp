@@ -105,6 +105,26 @@ void
                                                                                     this );
     SharedResourcePointer < ListenerList < QuarterNoteTick > > () -> remove (
                                                                              this );
+    if ( recording && loopStart > 0 && loopEnd > 0 )
+    {
+        patternIndexes . push_back (
+                                    {
+                                            globalCommands . size ()
+                                          , voiceCommands . at (
+                                                                0 ) . size ()
+                                          , voiceCommands . at (
+                                                                1 ) . size ()
+                                          , voiceCommands . at (
+                                                                2 ) . size ()
+                                    } );
+        if ( patternFrame . at (
+                                patternFrame . size () - 1 ) != currentFrame + 1 )
+        {
+            patternFrame . push_back (
+                                      currentFrame + 1 );
+        }
+    }
+
     recording = false;
 }
 
@@ -399,7 +419,7 @@ void
         if ( currentVoiceFilters . at (
                                        i ) ) { current_voice_filters |= 1 << i; }
     }
-    current_voice_filters |= ( currentResonance * 0x10 );
+    current_voice_filters |= currentResonance * 0x10;
     const auto voice_filter_on_off = std::make_shared < Command > (
                                                                    COMMANDS::RESONANCE_ROUTING
                                                                  , currentFrame
@@ -610,7 +630,7 @@ void
         if ( currentVoiceFilters . at (
                                        i ) ) { current_resonance_routing |= 1 << i; }
     }
-    current_resonance_routing |= ( currentResonance * 0x10 );
+    current_resonance_routing |= currentResonance * 0x10;
     const auto resonance = std::make_shared < Command > (
                                                          COMMANDS::RESONANCE_ROUTING
                                                        , currentFrame
@@ -770,10 +790,40 @@ void
                                           , voiceCommands . at (
                                                                 2 ) . size ()
                                     } );
-        patternFrame . push_back (
-                                  currentFrame );
+        if ( currentFrame == 0x780 )
+        {
+            var i = 0;
+        }
+        if ( patternFrame . empty () || patternFrame . at (
+                                                           patternFrame . size () - 1 ) != currentFrame )
+        {
+            patternFrame . push_back (
+                                      currentFrame );
+        }
     }
 }
+
+void
+    Recorder::SetLoopPoints (
+            const int start
+          , const int end
+            )
+{
+    loopStart = start;
+    loopEnd = end;
+}
+
+//void
+//    Recorder::SetLoopStart ()
+//{
+//    loopStart = currentFrame;
+//}
+//
+//void
+//    Recorder::SetLoopEnd ()
+//{
+//    loopEnd = currentFrame;
+//}
 
 void
     Recorder::RemovePendingGlobal (
