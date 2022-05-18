@@ -160,9 +160,12 @@ void
             }
             const auto start = static_cast < int > ( position_info . ppqLoopStart * samples_per_quarter_note / samplesPerFrame );
             const auto end   = static_cast < int > ( position_info . ppqLoopEnd * samples_per_quarter_note / samplesPerFrame );
-            recorder -> SetLoopPoints (
-                                       start
-                                     , end );
+            if ( position_info . isLooping )
+            {
+                recorder -> SetLoopPoints (
+                                           start
+                                         , end );
+            }
         }
     } // Otherwise, if the DAW has stopped playing, then stop recording as well.
     else if ( recording )

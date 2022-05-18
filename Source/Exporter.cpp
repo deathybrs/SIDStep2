@@ -348,7 +348,7 @@ void
                   , str . length ()
                   , file );
         }
-        if ( recording -> loopStart > 0 )
+        if (recording -> loopStart > 0 )
         {
             const auto f = std::find (
                                       recording -> patternFrame . begin ()

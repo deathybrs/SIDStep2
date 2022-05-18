@@ -525,10 +525,14 @@ void
                    voice ) = program;
 
     // This will probably also need to reset any live changes to ADSR and the like.
-    currentAttack [ voice ]  = program -> GetEnvelope () -> getAttack ();
-    currentDecay [ voice ]   = program -> GetEnvelope () -> getDecay ();
-    currentSustain [ voice ] = program -> GetEnvelope () -> getSustain ();
-    currentRelease [ voice ] = program -> GetEnvelope () -> getRelease ();
+    currentAttack . at (
+                        voice ) = program -> GetEnvelope () -> getAttack ();
+    currentDecay . at (
+                       voice ) = program -> GetEnvelope () -> getDecay ();
+    currentSustain . at (
+                         voice ) = program -> GetEnvelope () -> getSustain ();
+    currentRelease . at (
+                         voice ) = program -> GetEnvelope () -> getRelease ();
 }
 
 void
@@ -553,11 +557,17 @@ void
     currentVoiceCommands . at (
                                voice ) . push_back (
                                                     program_change );
-    const auto program       = programList [ value ];
-    currentAttack [ voice ]  = program -> GetEnvelope () -> getDefaultAttack ();
-    currentDecay [ voice ]   = program -> GetEnvelope () -> getDefaultDecay ();
-    currentSustain [ voice ] = program -> GetEnvelope () -> getDefaultSustain ();
-    currentRelease [ voice ] = program -> GetEnvelope () -> getDefaultRelease ();
+    const auto program = programList [ static_cast < int > ( value ) ];
+    programs . at (
+                   voice ) = program;
+    currentAttack . at (
+                        voice ) = program -> GetEnvelope () -> getAttack ();
+    currentDecay . at (
+                       voice ) = program -> GetEnvelope () -> getDecay ();
+    currentSustain . at (
+                         voice ) = program -> GetEnvelope () -> getSustain ();
+    currentRelease . at (
+                         voice ) = program -> GetEnvelope () -> getRelease ();
 }
 
 void
@@ -601,7 +611,7 @@ void
                         COMMANDS::PULSE_WIDTH
                       , voice );
     currentRelease . at (
-                         voice ) = static_cast < unsigned char > ( value * 0xF );
+                         voice ) = static_cast < unsigned char > ( value );
     const auto sustain_release   = std::make_shared < Command > (
                                                                  COMMANDS::CHANGE_SUSTAIN_RELEASE
                                                                , currentFrame
@@ -653,7 +663,7 @@ void
                         COMMANDS::CHANGE_SUSTAIN_RELEASE
                       , voice );
     currentSustain . at (
-                         voice ) = static_cast < unsigned char > ( value * 0xF );
+                         voice ) = static_cast < unsigned char > ( value );
     const auto sustain_release   = std::make_shared < Command > (
                                                                  COMMANDS::CHANGE_SUSTAIN_RELEASE
                                                                , currentFrame
@@ -790,10 +800,6 @@ void
                                           , voiceCommands . at (
                                                                 2 ) . size ()
                                     } );
-        if ( currentFrame == 0x780 )
-        {
-            var i = 0;
-        }
         if ( patternFrame . empty () || patternFrame . at (
                                                            patternFrame . size () - 1 ) != currentFrame )
         {
