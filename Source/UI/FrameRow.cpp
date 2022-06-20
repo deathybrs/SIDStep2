@@ -25,6 +25,7 @@
 
 #include "FrameRow.h"
 
+
 //[MiscUserDefs] You can add your own user definitions and misc code here...
 //[/MiscUserDefs]
 
@@ -34,47 +35,29 @@ FrameRow::FrameRow ()
     //[Constructor_pre] You can add your own custom stuff here..
     //[/Constructor_pre]
 
-    FrameIndex = std::make_unique < Label > (
-                                             "new label"
-                                           , TRANS (
-                                                    "0000" ) );
-    addAndMakeVisible (
-                       FrameIndex . get () );
-    FrameIndex -> setFont (
-                           Font (
-                                 "C64 Pro Mono"
-                               , 15.00F
-                               , Font::plain ) . withTypefaceStyle (
-                                                                    "Regular" ) );
-    FrameIndex -> setJustificationType (
-                                        Justification::centred );
-    FrameIndex -> setEditable (
-                               false
-                             , false
-                             , false );
-    FrameIndex -> setColour (
-                             Label::textColourId
-                           , Colours::red );
-    FrameIndex -> setBounds (
-                             8
-                           , 0
-                           , 72
-                           , 40 );
+    FrameIndex.reset (new juce::Label ("new label",
+                                       TRANS("0000")));
+    addAndMakeVisible (FrameIndex.get());
+    FrameIndex->setFont (juce::Font ("C64 Pro Mono", 15.00f, juce::Font::plain).withTypefaceStyle ("Regular"));
+    FrameIndex->setJustificationType (juce::Justification::centred);
+    FrameIndex->setEditable (false, false, false);
+    FrameIndex->setColour (juce::TextEditor::textColourId, juce::Colours::black);
+    FrameIndex->setColour (juce::TextEditor::backgroundColourId, juce::Colour (0x00000000));
+
+    FrameIndex->setBounds (8, 0, 72, 40);
 
 
     //[UserPreSize]
     //[/UserPreSize]
 
-    setSize (
-             1440
-           , 40 );
+    setSize (1440, 40);
 
 
     //[Constructor] You can add your own custom stuff here..
     //[/Constructor]
 }
 
-FrameRow::~FrameRow ()
+FrameRow::~FrameRow()
 {
     //[Destructor_pre]. You can add your own custom destruction code here..
     //[/Destructor_pre]
@@ -87,10 +70,7 @@ FrameRow::~FrameRow ()
 }
 
 //==============================================================================
-void
-    FrameRow::paint (
-            Graphics& g
-            )
+void FrameRow::paint (juce::Graphics& g)
 {
     //[UserPrePaint] Add your own custom painting code here..
     //[/UserPrePaint]
@@ -99,8 +79,7 @@ void
     //[/UserPaint]
 }
 
-void
-    FrameRow::resized ()
+void FrameRow::resized()
 {
     //[UserPreResize] Add your own custom resize code here..
     //[/UserPreResize]
@@ -108,6 +87,7 @@ void
     //[UserResized] Add your own custom resize handling here..
     //[/UserResized]
 }
+
 
 
 //[MiscUserCode] You can add your own definitions of your custom methods or any other code here...
@@ -205,3 +185,4 @@ END_JUCER_METADATA
 
 //[EndFile] You can add extra defines here...
 //[/EndFile]
+

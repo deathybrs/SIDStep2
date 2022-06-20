@@ -12,3 +12,6 @@ Package
 /SIDStep2 Source.7z
 /SIDStep2.7z
 /Simpletest.filtergraph
+*.ipch
+*.obj
+*.tlog

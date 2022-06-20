@@ -351,16 +351,27 @@ void
             const unsigned value
             )
 {
+    // auto log_val =
+    //                  static_cast<unsigned int>(round(
+    //                      cutoff_base * pow(
+    //                          binary_base, 1.0 / cutoff_divisor *
+    //                              ((static_cast<double>(value) / cutoff_range) - cutoff_offset)
+    //                          )
+    //                      )
+    //                  );
+    // DirtyWrite(0x15, (log_val & 0x07)); DirtyWrite(0x16, (log_val & 0x7f8) >> 3);
     static const auto CUTOFF_BASE    = 0.9995117188;
     static const auto BINARY_BASE    = 2.0;
     static const auto CUTOFF_DIVISOR = 0.0833333333;
     static const auto CUTOFF_RANGE   = 2047.0;
     static const auto CUTOFF_OFFSET  = 0.0833333333;
 
-    const auto        log_val        = static_cast < unsigned > ( round (
-                                                                         CUTOFF_BASE * pow (
-                                                                                            BINARY_BASE
-                                                                                          , 1.0 / CUTOFF_DIVISOR * ( static_cast < double > ( value ) / CUTOFF_RANGE - CUTOFF_OFFSET ) ) ) ) / 0x08;
+    auto log_val = static_cast < unsigned > ( round (
+                                                     CUTOFF_BASE * pow (
+                                                                        BINARY_BASE
+                                                                      , 1.0 / CUTOFF_DIVISOR * ( static_cast < double > ( value ) / CUTOFF_RANGE - CUTOFF_OFFSET ) ) ) );
+    log_val = log_val & 0x7f8;
+    log_val = log_val >> 3;
     if ( currentCutoff == log_val ) { return; }
     RemovePendingGlobal (
                          COMMANDS::CUTOFF );
@@ -369,7 +380,7 @@ void
                                                       COMMANDS::CUTOFF
                                                     , currentFrame
                                                     , std::vector < unsigned char > {
-                                                              static_cast < unsigned char > ( log_val & 0xFF )
+                                                              static_cast < unsigned char > ( log_val )
                                                       } );
     currentGlobalCommands . push_back (
                                        cutoff );
