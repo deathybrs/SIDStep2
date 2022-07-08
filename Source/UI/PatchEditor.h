@@ -20,26 +20,24 @@
 #pragma once
 
 //[Headers]     -- You can add your own extra header files here --
+#include "../Listeners/ListenerInitializer.h"
 #include "JuceHeader.h"
 
 
-#include "../Listeners/ListenerInitializer.h"
-
-
+// ReSharper disable once CppInconsistentNaming
 class SIDStepLookAndFeel;
 class WavetableView;
 class NoteTableView;
 class PulseTableView;
 
-
 //[/Headers]
 
-#include "WavetableText.h"
-#include "WaveformView.h"
 #include "BankMenu.h"
-#include "SavePatchAsDialog.h"
 #include "NoteTableText.h"
 #include "PulseTableText.h"
+#include "SavePatchAsDialog.h"
+#include "WaveformView.h"
+#include "WavetableText.h"
 
 
 //==============================================================================
@@ -50,21 +48,23 @@ class PulseTableView;
     Describe your class and how it works here!
                                                                     //[/Comments]
 */
-class PatchEditor  : public Component,
-                     public BankProgramChanged,
-                     public BankStartSaveAs,
-                     public LivePatchEditorModeClicked,
-                     public PatchEditorShowNoteTable,
-                     public PatchEditorShowPulseTable,
-                     public PatchEditorShowWaveTable,
-                     public juce::Slider::Listener,
-                     public juce::Label::Listener,
-                     public juce::Button::Listener
+class PatchEditor final
+        : public Component
+        , public BankProgramChanged
+        , public BankStartSaveAs
+        , public LivePatchEditorModeClicked
+        , public PatchEditorShowNoteTable
+        , public PatchEditorShowPulseTable
+        , public PatchEditorShowWaveTable
+        , public Slider::Listener
+        , public Label::Listener
+        , public Button::Listener
 {
 public:
     //==============================================================================
     PatchEditor ();
-    ~PatchEditor() override;
+
+    ~PatchEditor () override;
 
     //==============================================================================
     //[UserMethods]     -- You can add your own custom methods in this section.
@@ -91,130 +91,138 @@ public:
 
     //[/UserMethods]
 
-    void paint (juce::Graphics& g) override;
-    void resized() override;
-    void sliderValueChanged (juce::Slider* sliderThatWasMoved) override;
-    void labelTextChanged (juce::Label* labelThatHasChanged) override;
-    void buttonClicked (juce::Button* buttonThatWasClicked) override;
+    void
+        paint (
+                Graphics& g
+                ) override;
+
+    void
+        resized () override;
+
+    void
+        sliderValueChanged (
+                Slider* slider_that_was_moved
+                ) override;
+
+    void
+        labelTextChanged (
+                Label* label_that_has_changed
+                ) override;
+
+    void
+        buttonClicked (
+                Button* button_that_was_clicked
+                ) override;
 
     // Binary resources:
     static const char* patchEditorBackdrop_png;
-    static const int patchEditorBackdrop_pngSize;
+    static const int   patchEditorBackdrop_pngSize;
     static const char* liveModeButtonNormal_png;
-    static const int liveModeButtonNormal_pngSize;
+    static const int   liveModeButtonNormal_pngSize;
     static const char* liveModeButtonOver_png;
-    static const int liveModeButtonOver_pngSize;
+    static const int   liveModeButtonOver_pngSize;
     static const char* liveModeButtonDown_png;
-    static const int liveModeButtonDown_pngSize;
+    static const int   liveModeButtonDown_pngSize;
     static const char* patchEditorButtonDown_png;
-    static const int patchEditorButtonDown_pngSize;
+    static const int   patchEditorButtonDown_pngSize;
     static const char* downArrowNormal_png;
-    static const int downArrowNormal_pngSize;
+    static const int   downArrowNormal_pngSize;
     static const char* newRowNormal_png;
-    static const int newRowNormal_pngSize;
+    static const int   newRowNormal_pngSize;
     static const char* newRowOver_png;
-    static const int newRowOver_pngSize;
+    static const int   newRowOver_pngSize;
     static const char* newRowDown_png;
-    static const int newRowDown_pngSize;
+    static const int   newRowDown_pngSize;
     static const char* newCommandNormal_png;
-    static const int newCommandNormal_pngSize;
+    static const int   newCommandNormal_pngSize;
     static const char* newCommandOver_png;
-    static const int newCommandOver_pngSize;
+    static const int   newCommandOver_pngSize;
     static const char* newCommandDown_png;
-    static const int newCommandDown_pngSize;
+    static const int   newCommandDown_pngSize;
     static const char* deleteNormal_png;
-    static const int deleteNormal_pngSize;
+    static const int   deleteNormal_pngSize;
     static const char* deleteOver_png;
-    static const int deleteOver_pngSize;
+    static const int   deleteOver_pngSize;
     static const char* deleteDown_png;
-    static const int deleteDown_pngSize;
-
-
+    static const int   deleteDown_pngSize;
 private:
     //[UserVariables]   -- You can add your own custom variables in this section.
-    ScopedPointer < SIDStepLookAndFeel > look;
-    ScopedPointer < WavetableView >      wavetable;
-    ScopedPointer < NoteTableView >      noteTable;
-    ScopedPointer < PulseTableView >     pulseTable;
-
-    SharedResourcePointer < ListenerList < PatchEditorNameChanged > > patchEditorNameChangedListeners;
-
-    SharedResourcePointer < ListenerList < PatchEditorAttackChanged > >  patchEditorAttackChangedListeners;
-    SharedResourcePointer < ListenerList < PatchEditorDecayChanged > >   patchEditorDecayChangedListeners;
-    SharedResourcePointer < ListenerList < PatchEditorSustainChanged > > patchEditorSustainChangedListeners;
-    SharedResourcePointer < ListenerList < PatchEditorReleaseChanged > > patchEditorReleaseChangedListeners;
-
-    SharedResourcePointer < ListenerList < PatchEditorPitchBendRangeChanged > >    patchEditorPitchBendRangeChangedListeners;
-    SharedResourcePointer < ListenerList < PatchEditorPulseWidthRangeChanged > >   patchEditorPulseWidthRangeChangedListeners;
-    SharedResourcePointer < ListenerList < PatchEditorPulseWidthCenterChanged > >  patchEditorPulseWidthCenterChangedListeners;
-    SharedResourcePointer < ListenerList < PatchEditorPulseWidthDefaultChanged > > patchEditorPulseWidthDefaultChangedListeners;
-
+    ScopedPointer < SIDStepLookAndFeel >                                              look;
+    ScopedPointer < WavetableView >                                                   wavetable;
+    ScopedPointer < NoteTableView >                                                   noteTable;
+    ScopedPointer < PulseTableView >                                                  pulseTable;
+    SharedResourcePointer < ListenerList < PatchEditorNameChanged > >                 patchEditorNameChangedListeners;
+    SharedResourcePointer < ListenerList < PatchEditorAttackChanged > >               patchEditorAttackChangedListeners;
+    SharedResourcePointer < ListenerList < PatchEditorDecayChanged > >                patchEditorDecayChangedListeners;
+    SharedResourcePointer < ListenerList < PatchEditorSustainChanged > >              patchEditorSustainChangedListeners;
+    SharedResourcePointer < ListenerList < PatchEditorReleaseChanged > >              patchEditorReleaseChangedListeners;
+    SharedResourcePointer < ListenerList < PatchEditorPitchBendRangeChanged > >       patchEditorPitchBendRangeChangedListeners;
+    SharedResourcePointer < ListenerList < PatchEditorPulseWidthRangeChanged > >      patchEditorPulseWidthRangeChangedListeners;
+    SharedResourcePointer < ListenerList < PatchEditorPulseWidthCenterChanged > >     patchEditorPulseWidthCenterChangedListeners;
+    SharedResourcePointer < ListenerList < PatchEditorPulseWidthDefaultChanged > >    patchEditorPulseWidthDefaultChangedListeners;
     SharedResourcePointer < ListenerList < PatchEditorTremoloRangeChanged > >         patchEditorTremoloRangeChangedListeners;
     SharedResourcePointer < ListenerList < PatchEditorTremoloSpeedChanged > >         patchEditorTremoloSpeedChangedListeners;
     SharedResourcePointer < ListenerList < PatchEditorTremoloDefaultAmountChanged > > patchEditorTremoloDefaultAmountChangedListeners;
     SharedResourcePointer < ListenerList < PatchEditorTremoloDefaultSpeedChanged > >  patchEditorTremoloDefaultSpeedChangedListeners;
-
     SharedResourcePointer < ListenerList < PatchEditorVibratoRangeChanged > >         patchEditorVibratoRangeChangedListeners;
     SharedResourcePointer < ListenerList < PatchEditorVibratoSpeedChanged > >         patchEditorVibratoSpeedChangedListeners;
     SharedResourcePointer < ListenerList < PatchEditorVibratoDelayChanged > >         patchEditorVibratoDelayChangedListeners;
     SharedResourcePointer < ListenerList < PatchEditorVibratoDefaultAmountChanged > > patchEditorVibratoDefaultAmountChangedListeners;
     SharedResourcePointer < ListenerList < PatchEditorVibratoDefaultSpeedChanged > >  patchEditorVibratoDefaultSpeedChangedListeners;
-
-    SharedResourcePointer < ListenerList < PatchEditorNewTableRowClicked > >     patchEditorNewWavetableRowClickedListeners;
-    SharedResourcePointer < ListenerList < PatchEditorNewTableCommandClicked > > patchEditorNewWavetableCommandClickedListeners;
-    SharedResourcePointer < ListenerList < PatchEditorDeleteTableRowClicked > >  patchEditorDeleteWaveatableRowClickedListeners;
-
-    SharedResourcePointer < ListenerList < PatchEditorLiveModeClicked > > patchEditorLiveModeClickedListeners;
+    SharedResourcePointer < ListenerList < PatchEditorNewTableRowClicked > >          patchEditorNewWavetableRowClickedListeners;
+    SharedResourcePointer < ListenerList < PatchEditorNewTableCommandClicked > >      patchEditorNewWavetableCommandClickedListeners;
+    SharedResourcePointer < ListenerList < PatchEditorDeleteTableRowClicked > >       patchEditorDeleteWavetableRowClickedListeners;
+    SharedResourcePointer < ListenerList < PatchEditorLiveModeClicked > >             patchEditorLiveModeClickedListeners;
     //[/UserVariables]
 
     //==============================================================================
-    std::unique_ptr<juce::Slider> attackSlider;
-    std::unique_ptr<juce::Slider> decaySlider;
-    std::unique_ptr<juce::Slider> sustainSlider;
-    std::unique_ptr<juce::Slider> releaseSlider;
-    std::unique_ptr<juce::Slider> pitchBendRangeSlider;
-    std::unique_ptr<juce::Slider> vibratoRangeSlider;
-    std::unique_ptr<juce::Slider> vibratoSpeedSlider;
-    std::unique_ptr<juce::Slider> pulseWidthRangeSlider;
-    std::unique_ptr<juce::Slider> vibratoDelaySlider;
-    std::unique_ptr<juce::Label> attackLabel;
-    std::unique_ptr<juce::Label> decayLabel;
-    std::unique_ptr<juce::Label> sustainLabel;
-    std::unique_ptr<juce::Label> releaseLabel;
-    std::unique_ptr<juce::Label> pitchBendRangeLabel;
-    std::unique_ptr<juce::Label> vibratoRangeLabel;
-    std::unique_ptr<juce::Label> vibratoSpeedLabel;
-    std::unique_ptr<juce::Label> pulseWidthRangeLabel;
-    std::unique_ptr<juce::Label> vibratoDelayLabel;
-    std::unique_ptr<juce::Label> patchName;
-    std::unique_ptr<juce::ImageButton> liveModeButton;
-    std::unique_ptr<juce::ImageButton> menuButton;
-    std::unique_ptr<juce::Viewport> commandTableViewport;
-    std::unique_ptr<WavetableText> wavetableText;
-    std::unique_ptr<juce::ImageButton> newRowButton;
-    std::unique_ptr<juce::ImageButton> newCommandButton;
-    std::unique_ptr<juce::ImageButton> deleteButton;
-    std::unique_ptr<WaveformView> waveformView;
-    std::unique_ptr<juce::Label> vibratoDefaultAmountLabel;
-    std::unique_ptr<juce::Label> vibratoDefaultSpeedLabel;
-    std::unique_ptr<juce::Label> pulseWidthCenterLabel;
-    std::unique_ptr<juce::Label> pulseWidthDefaultLabel;
-    std::unique_ptr<juce::Slider> vibratoDefaultAmountSlider;
-    std::unique_ptr<juce::Slider> vibratoDefaultSpeedSlider;
-    std::unique_ptr<juce::Slider> pulseWidthCenterSlider;
-    std::unique_ptr<juce::Slider> pulseWidthDefaultSlider;
-    std::unique_ptr<BankMenu> bankMenu;
-    std::unique_ptr<SavePatchAsDialog> saveAsDialog;
-    std::unique_ptr<NoteTableText> noteTableText;
-    std::unique_ptr<PulseTableText> pulseTableText;
-    juce::Image cachedImage_patchEditorBackdrop_png_1;
-    juce::Image cachedImage_patchEditorButtonDown_png_2;
+    std::unique_ptr < Slider >      attackSlider;
+    std::unique_ptr < Slider >      decaySlider;
+    std::unique_ptr < Slider >      sustainSlider;
+    std::unique_ptr < Slider >      releaseSlider;
+    std::unique_ptr < Slider >      pitchBendRangeSlider;
+    std::unique_ptr < Slider >      vibratoRangeSlider;
+    std::unique_ptr < Slider >      vibratoSpeedSlider;
+    std::unique_ptr < Slider >      pulseWidthRangeSlider;
+    std::unique_ptr < Slider >      vibratoDelaySlider;
+    std::unique_ptr < Label >       attackLabel;
+    std::unique_ptr < Label >       decayLabel;
+    std::unique_ptr < Label >       sustainLabel;
+    std::unique_ptr < Label >       releaseLabel;
+    std::unique_ptr < Label >       pitchBendRangeLabel;
+    std::unique_ptr < Label >       vibratoRangeLabel;
+    std::unique_ptr < Label >       vibratoSpeedLabel;
+    std::unique_ptr < Label >       pulseWidthRangeLabel;
+    std::unique_ptr < Label >       vibratoDelayLabel;
+    std::unique_ptr < Label >       patchName;
+    std::unique_ptr < ImageButton > liveModeButton;
+    std::unique_ptr < ImageButton > menuButton;
+    std::unique_ptr < Viewport >    commandTableViewport;
+    std::unique_ptr < WavetableText >     wavetableText;
+    std::unique_ptr < ImageButton > newRowButton;
+    std::unique_ptr < ImageButton > newCommandButton;
+    std::unique_ptr < ImageButton > deleteButton;
+    std::unique_ptr < WaveformView >      waveformView;
+    std::unique_ptr < Label >       vibratoDefaultAmountLabel;
+    std::unique_ptr < Label >       vibratoDefaultSpeedLabel;
+    std::unique_ptr < Label >       pulseWidthCenterLabel;
+    std::unique_ptr < Label >       pulseWidthDefaultLabel;
+    std::unique_ptr < Slider >      vibratoDefaultAmountSlider;
+    std::unique_ptr < Slider >      vibratoDefaultSpeedSlider;
+    std::unique_ptr < Slider >      pulseWidthCenterSlider;
+    std::unique_ptr < Slider >      pulseWidthDefaultSlider;
+    std::unique_ptr < BankMenu >          bankMenu;
+    std::unique_ptr < SavePatchAsDialog > saveAsDialog;
+    std::unique_ptr < NoteTableText >     noteTableText;
+    std::unique_ptr < PulseTableText >    pulseTableText;
+    Image                           cachedImage_patchEditorBackdrop_png_1;
+    Image                           cachedImage_patchEditorButtonDown_png_2;
 
 
     //==============================================================================
-    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (PatchEditor)
+    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (
+                                                  PatchEditor )
 };
 
 //[EndFile] You can add extra defines here...
 //[/EndFile]
-

@@ -19,7 +19,6 @@
 
 //[Headers] You can add your own extra header files here...
 #include "../SIDProgram.h"
-
 #include "NoteTableView.h"
 #include "PulseTableView.h"
 #include "SIDStepLookAndFeel.h"
@@ -38,502 +37,1161 @@ PatchEditor::PatchEditor ()
     //[Constructor_pre] You can add your own custom stuff here..
     look = new SIDStepLookAndFeel;
     setLookAndFeel (
-                    look
-                   );
-	//core = nullptr;
+                    look );
+    //core = nullptr;
     //[/Constructor_pre]
 
-    attackSlider.reset (new juce::Slider ("new slider"));
-    addAndMakeVisible (attackSlider.get());
-    attackSlider->setRange (0, 15, 1);
-    attackSlider->setSliderStyle (juce::Slider::RotaryHorizontalVerticalDrag);
-    attackSlider->setTextBoxStyle (juce::Slider::NoTextBox, true, 80, 20);
-    attackSlider->addListener (this);
-
-    attackSlider->setBounds (64, 121, 48, 48);
-
-    decaySlider.reset (new juce::Slider ("new slider"));
-    addAndMakeVisible (decaySlider.get());
-    decaySlider->setRange (0, 15, 1);
-    decaySlider->setSliderStyle (juce::Slider::RotaryHorizontalVerticalDrag);
-    decaySlider->setTextBoxStyle (juce::Slider::NoTextBox, true, 80, 20);
-    decaySlider->addListener (this);
-
-    decaySlider->setBounds (144, 121, 48, 48);
-
-    sustainSlider.reset (new juce::Slider ("new slider"));
-    addAndMakeVisible (sustainSlider.get());
-    sustainSlider->setRange (0, 15, 1);
-    sustainSlider->setSliderStyle (juce::Slider::RotaryHorizontalVerticalDrag);
-    sustainSlider->setTextBoxStyle (juce::Slider::NoTextBox, true, 80, 20);
-    sustainSlider->addListener (this);
-
-    sustainSlider->setBounds (224, 121, 48, 48);
-
-    releaseSlider.reset (new juce::Slider ("new slider"));
-    addAndMakeVisible (releaseSlider.get());
-    releaseSlider->setRange (0, 15, 1);
-    releaseSlider->setSliderStyle (juce::Slider::RotaryHorizontalVerticalDrag);
-    releaseSlider->setTextBoxStyle (juce::Slider::NoTextBox, true, 80, 20);
-    releaseSlider->addListener (this);
-
-    releaseSlider->setBounds (304, 121, 48, 48);
-
-    pitchBendRangeSlider.reset (new juce::Slider ("new slider"));
-    addAndMakeVisible (pitchBendRangeSlider.get());
-    pitchBendRangeSlider->setRange (0, 8192, 1);
-    pitchBendRangeSlider->setSliderStyle (juce::Slider::RotaryHorizontalVerticalDrag);
-    pitchBendRangeSlider->setTextBoxStyle (juce::Slider::NoTextBox, true, 80, 20);
-    pitchBendRangeSlider->addListener (this);
-
-    pitchBendRangeSlider->setBounds (64, 209, 48, 48);
-
-    vibratoRangeSlider.reset (new juce::Slider ("new slider"));
-    addAndMakeVisible (vibratoRangeSlider.get());
-    vibratoRangeSlider->setRange (0, 8192, 1);
-    vibratoRangeSlider->setSliderStyle (juce::Slider::RotaryHorizontalVerticalDrag);
-    vibratoRangeSlider->setTextBoxStyle (juce::Slider::NoTextBox, true, 80, 20);
-    vibratoRangeSlider->addListener (this);
-
-    vibratoRangeSlider->setBounds (224, 209, 48, 48);
-
-    vibratoSpeedSlider.reset (new juce::Slider ("new slider"));
-    addAndMakeVisible (vibratoSpeedSlider.get());
-    vibratoSpeedSlider->setRange (0, 50, 1);
-    vibratoSpeedSlider->setSliderStyle (juce::Slider::RotaryHorizontalVerticalDrag);
-    vibratoSpeedSlider->setTextBoxStyle (juce::Slider::NoTextBox, true, 80, 20);
-    vibratoSpeedSlider->addListener (this);
-
-    vibratoSpeedSlider->setBounds (304, 209, 48, 48);
-
-    pulseWidthRangeSlider.reset (new juce::Slider ("new slider"));
-    addAndMakeVisible (pulseWidthRangeSlider.get());
-    pulseWidthRangeSlider->setRange (0, 4095, 1);
-    pulseWidthRangeSlider->setSliderStyle (juce::Slider::RotaryHorizontalVerticalDrag);
-    pulseWidthRangeSlider->setTextBoxStyle (juce::Slider::NoTextBox, true, 80, 20);
-    pulseWidthRangeSlider->addListener (this);
-
-    pulseWidthRangeSlider->setBounds (64, 297, 48, 48);
-
-    vibratoDelaySlider.reset (new juce::Slider ("new slider"));
-    addAndMakeVisible (vibratoDelaySlider.get());
-    vibratoDelaySlider->setRange (0, 15, 1);
-    vibratoDelaySlider->setSliderStyle (juce::Slider::RotaryHorizontalVerticalDrag);
-    vibratoDelaySlider->setTextBoxStyle (juce::Slider::NoTextBox, true, 80, 20);
-    vibratoDelaySlider->addListener (this);
-
-    vibratoDelaySlider->setBounds (224, 367, 48, 48);
-
-    attackLabel.reset (new juce::Label ("new label",
-                                        TRANS("0")));
-    addAndMakeVisible (attackLabel.get());
-    attackLabel->setFont (juce::Font ("C64 Pro", 12.00f, juce::Font::plain).withTypefaceStyle ("Regular"));
-    attackLabel->setJustificationType (juce::Justification::centred);
-    attackLabel->setEditable (true, true, false);
-    attackLabel->setColour (juce::Label::textColourId, juce::Colour (0xff5090d0));
-    attackLabel->setColour (juce::TextEditor::textColourId, juce::Colours::black);
-    attackLabel->setColour (juce::TextEditor::backgroundColourId, juce::Colour (0x00000000));
-    attackLabel->addListener (this);
-
-    attackLabel->setBounds (64, 97, 48, 18);
-
-    decayLabel.reset (new juce::Label ("new label",
-                                       TRANS("0")));
-    addAndMakeVisible (decayLabel.get());
-    decayLabel->setFont (juce::Font ("C64 Pro", 12.00f, juce::Font::plain).withTypefaceStyle ("Regular"));
-    decayLabel->setJustificationType (juce::Justification::centred);
-    decayLabel->setEditable (true, true, false);
-    decayLabel->setColour (juce::Label::textColourId, juce::Colour (0xff5090d0));
-    decayLabel->setColour (juce::TextEditor::textColourId, juce::Colours::black);
-    decayLabel->setColour (juce::TextEditor::backgroundColourId, juce::Colour (0x00000000));
-    decayLabel->addListener (this);
-
-    decayLabel->setBounds (144, 97, 48, 18);
-
-    sustainLabel.reset (new juce::Label ("new label",
-                                         TRANS("0")));
-    addAndMakeVisible (sustainLabel.get());
-    sustainLabel->setFont (juce::Font ("C64 Pro", 12.00f, juce::Font::plain).withTypefaceStyle ("Regular"));
-    sustainLabel->setJustificationType (juce::Justification::centred);
-    sustainLabel->setEditable (true, true, false);
-    sustainLabel->setColour (juce::Label::textColourId, juce::Colour (0xff5090d0));
-    sustainLabel->setColour (juce::TextEditor::textColourId, juce::Colours::black);
-    sustainLabel->setColour (juce::TextEditor::backgroundColourId, juce::Colour (0x00000000));
-    sustainLabel->addListener (this);
-
-    sustainLabel->setBounds (224, 97, 48, 18);
-
-    releaseLabel.reset (new juce::Label ("new label",
-                                         TRANS("0")));
-    addAndMakeVisible (releaseLabel.get());
-    releaseLabel->setFont (juce::Font ("C64 Pro", 12.00f, juce::Font::plain).withTypefaceStyle ("Regular"));
-    releaseLabel->setJustificationType (juce::Justification::centred);
-    releaseLabel->setEditable (true, true, false);
-    releaseLabel->setColour (juce::Label::textColourId, juce::Colour (0xff5090d0));
-    releaseLabel->setColour (juce::TextEditor::textColourId, juce::Colours::black);
-    releaseLabel->setColour (juce::TextEditor::backgroundColourId, juce::Colour (0x00000000));
-    releaseLabel->addListener (this);
-
-    releaseLabel->setBounds (304, 97, 48, 18);
-
-    pitchBendRangeLabel.reset (new juce::Label ("new label",
-                                                TRANS("0")));
-    addAndMakeVisible (pitchBendRangeLabel.get());
-    pitchBendRangeLabel->setFont (juce::Font ("C64 Pro", 12.00f, juce::Font::plain).withTypefaceStyle ("Regular"));
-    pitchBendRangeLabel->setJustificationType (juce::Justification::centred);
-    pitchBendRangeLabel->setEditable (true, true, false);
-    pitchBendRangeLabel->setColour (juce::Label::textColourId, juce::Colour (0xff5090d0));
-    pitchBendRangeLabel->setColour (juce::TextEditor::textColourId, juce::Colours::black);
-    pitchBendRangeLabel->setColour (juce::TextEditor::backgroundColourId, juce::Colour (0x00000000));
-    pitchBendRangeLabel->addListener (this);
-
-    pitchBendRangeLabel->setBounds (64, 185, 48, 18);
-
-    vibratoRangeLabel.reset (new juce::Label ("new label",
-                                              TRANS("0")));
-    addAndMakeVisible (vibratoRangeLabel.get());
-    vibratoRangeLabel->setFont (juce::Font ("C64 Pro", 12.00f, juce::Font::plain).withTypefaceStyle ("Regular"));
-    vibratoRangeLabel->setJustificationType (juce::Justification::centred);
-    vibratoRangeLabel->setEditable (true, true, false);
-    vibratoRangeLabel->setColour (juce::Label::textColourId, juce::Colour (0xff5090d0));
-    vibratoRangeLabel->setColour (juce::TextEditor::textColourId, juce::Colours::black);
-    vibratoRangeLabel->setColour (juce::TextEditor::backgroundColourId, juce::Colour (0x00000000));
-    vibratoRangeLabel->addListener (this);
-
-    vibratoRangeLabel->setBounds (224, 185, 48, 18);
-
-    vibratoSpeedLabel.reset (new juce::Label ("new label",
-                                              TRANS("0")));
-    addAndMakeVisible (vibratoSpeedLabel.get());
-    vibratoSpeedLabel->setFont (juce::Font ("C64 Pro", 12.00f, juce::Font::plain).withTypefaceStyle ("Regular"));
-    vibratoSpeedLabel->setJustificationType (juce::Justification::centred);
-    vibratoSpeedLabel->setEditable (true, true, false);
-    vibratoSpeedLabel->setColour (juce::Label::textColourId, juce::Colour (0xff5090d0));
-    vibratoSpeedLabel->setColour (juce::TextEditor::textColourId, juce::Colours::black);
-    vibratoSpeedLabel->setColour (juce::TextEditor::backgroundColourId, juce::Colour (0x00000000));
-    vibratoSpeedLabel->addListener (this);
-
-    vibratoSpeedLabel->setBounds (304, 185, 48, 18);
-
-    pulseWidthRangeLabel.reset (new juce::Label ("new label",
-                                                 TRANS("0")));
-    addAndMakeVisible (pulseWidthRangeLabel.get());
-    pulseWidthRangeLabel->setFont (juce::Font ("C64 Pro", 12.00f, juce::Font::plain).withTypefaceStyle ("Regular"));
-    pulseWidthRangeLabel->setJustificationType (juce::Justification::centred);
-    pulseWidthRangeLabel->setEditable (true, true, false);
-    pulseWidthRangeLabel->setColour (juce::Label::textColourId, juce::Colour (0xff5090d0));
-    pulseWidthRangeLabel->setColour (juce::TextEditor::textColourId, juce::Colours::black);
-    pulseWidthRangeLabel->setColour (juce::TextEditor::backgroundColourId, juce::Colour (0x00000000));
-    pulseWidthRangeLabel->addListener (this);
-
-    pulseWidthRangeLabel->setBounds (64, 273, 48, 18);
-
-    vibratoDelayLabel.reset (new juce::Label ("new label",
-                                              TRANS("0")));
-    addAndMakeVisible (vibratoDelayLabel.get());
-    vibratoDelayLabel->setFont (juce::Font ("C64 Pro", 12.00f, juce::Font::plain).withTypefaceStyle ("Regular"));
-    vibratoDelayLabel->setJustificationType (juce::Justification::centred);
-    vibratoDelayLabel->setEditable (true, true, false);
-    vibratoDelayLabel->setColour (juce::Label::textColourId, juce::Colour (0xff5090d0));
-    vibratoDelayLabel->setColour (juce::TextEditor::textColourId, juce::Colours::black);
-    vibratoDelayLabel->setColour (juce::TextEditor::backgroundColourId, juce::Colour (0x00000000));
-    vibratoDelayLabel->addListener (this);
-
-    vibratoDelayLabel->setBounds (224, 343, 48, 18);
-
-    patchName.reset (new juce::Label ("new label",
-                                      TRANS("Patch Name")));
-    addAndMakeVisible (patchName.get());
-    patchName->setFont (juce::Font ("C64 Pro", 12.00f, juce::Font::plain).withTypefaceStyle ("Regular"));
-    patchName->setJustificationType (juce::Justification::centredLeft);
-    patchName->setEditable (true, true, false);
-    patchName->setColour (juce::Label::textColourId, juce::Colour (0xff5090d0));
-    patchName->setColour (juce::TextEditor::textColourId, juce::Colours::black);
-    patchName->setColour (juce::TextEditor::backgroundColourId, juce::Colour (0x00000000));
-    patchName->addListener (this);
-
-    patchName->setBounds (24, 71, 324, 16);
-
-    liveModeButton.reset (new juce::ImageButton ("new button"));
-    addAndMakeVisible (liveModeButton.get());
-    liveModeButton->addListener (this);
-
-    liveModeButton->setImages (false, true, true,
-                               juce::ImageCache::getFromMemory (liveModeButtonNormal_png, liveModeButtonNormal_pngSize), 1.000f, juce::Colour (0x00000000),
-                               juce::ImageCache::getFromMemory (liveModeButtonOver_png, liveModeButtonOver_pngSize), 1.000f, juce::Colour (0x00000000),
-                               juce::ImageCache::getFromMemory (liveModeButtonDown_png, liveModeButtonDown_pngSize), 1.000f, juce::Colour (0x00000000));
-    liveModeButton->setBounds (32, 544, 154, 26);
-
-    menuButton.reset (new juce::ImageButton ("new button"));
-    addAndMakeVisible (menuButton.get());
-    menuButton->addListener (this);
-
-    menuButton->setImages (false, true, true,
-                           juce::ImageCache::getFromMemory (downArrowNormal_png, downArrowNormal_pngSize), 1.000f, juce::Colour (0x00000000),
-                           juce::Image(), 1.000f, juce::Colour (0x00000000),
-                           juce::Image(), 1.000f, juce::Colour (0x00000000));
-    menuButton->setBounds (353, 73, 14, 12);
-
-    commandTableViewport.reset (new juce::Viewport ("new viewport"));
-    addAndMakeVisible (commandTableViewport.get());
-    commandTableViewport->setScrollBarsShown (true, false);
-    commandTableViewport->setScrollBarThickness (16);
-
-    commandTableViewport->setBounds (400, 16, 608, 184);
-
-    wavetableText.reset (new WavetableText());
-    addAndMakeVisible (wavetableText.get());
-    wavetableText->setBounds (416, 8, 110, 17);
-
-    newRowButton.reset (new juce::ImageButton ("new button"));
-    addAndMakeVisible (newRowButton.get());
-    newRowButton->addListener (this);
-
-    newRowButton->setImages (false, true, true,
-                             juce::ImageCache::getFromMemory (newRowNormal_png, newRowNormal_pngSize), 1.000f, juce::Colour (0x00000000),
-                             juce::ImageCache::getFromMemory (newRowOver_png, newRowOver_pngSize), 1.000f, juce::Colour (0x00000000),
-                             juce::ImageCache::getFromMemory (newRowDown_png, newRowDown_pngSize), 1.000f, juce::Colour (0x00000000));
-    newRowButton->setBounds (448, 192, 154, 26);
-
-    newCommandButton.reset (new juce::ImageButton ("new button"));
-    addAndMakeVisible (newCommandButton.get());
-    newCommandButton->addListener (this);
-
-    newCommandButton->setImages (false, true, true,
-                                 juce::ImageCache::getFromMemory (newCommandNormal_png, newCommandNormal_pngSize), 1.000f, juce::Colour (0x00000000),
-                                 juce::ImageCache::getFromMemory (newCommandOver_png, newCommandOver_pngSize), 1.000f, juce::Colour (0x00000000),
-                                 juce::ImageCache::getFromMemory (newCommandDown_png, newCommandDown_pngSize), 1.000f, juce::Colour (0x00000000));
-    newCommandButton->setBounds (624, 192, 154, 26);
-
-    deleteButton.reset (new juce::ImageButton ("new button"));
-    addAndMakeVisible (deleteButton.get());
-    deleteButton->addListener (this);
-
-    deleteButton->setImages (false, true, true,
-                             juce::ImageCache::getFromMemory (deleteNormal_png, deleteNormal_pngSize), 1.000f, juce::Colour (0x00000000),
-                             juce::ImageCache::getFromMemory (deleteOver_png, deleteOver_pngSize), 1.000f, juce::Colour (0x00000000),
-                             juce::ImageCache::getFromMemory (deleteDown_png, deleteDown_pngSize), 1.000f, juce::Colour (0x00000000));
-    deleteButton->setBounds (800, 192, 154, 26);
-
-    waveformView.reset (new WaveformView());
-    addAndMakeVisible (waveformView.get());
-    waveformView->setBounds (400, 248, 608, 296);
-
-    vibratoDefaultAmountLabel.reset (new juce::Label ("new label",
-                                                      TRANS("0%")));
-    addAndMakeVisible (vibratoDefaultAmountLabel.get());
-    vibratoDefaultAmountLabel->setFont (juce::Font ("C64 Pro", 12.00f, juce::Font::plain).withTypefaceStyle ("Regular"));
-    vibratoDefaultAmountLabel->setJustificationType (juce::Justification::centred);
-    vibratoDefaultAmountLabel->setEditable (true, true, false);
-    vibratoDefaultAmountLabel->setColour (juce::Label::textColourId, juce::Colour (0xff5090d0));
-    vibratoDefaultAmountLabel->setColour (juce::TextEditor::textColourId, juce::Colours::black);
-    vibratoDefaultAmountLabel->setColour (juce::TextEditor::backgroundColourId, juce::Colour (0x00000000));
-    vibratoDefaultAmountLabel->addListener (this);
-
-    vibratoDefaultAmountLabel->setBounds (224, 264, 48, 18);
-
-    vibratoDefaultSpeedLabel.reset (new juce::Label ("new label",
-                                                     TRANS("0%")));
-    addAndMakeVisible (vibratoDefaultSpeedLabel.get());
-    vibratoDefaultSpeedLabel->setFont (juce::Font ("C64 Pro", 12.00f, juce::Font::plain).withTypefaceStyle ("Regular"));
-    vibratoDefaultSpeedLabel->setJustificationType (juce::Justification::centred);
-    vibratoDefaultSpeedLabel->setEditable (true, true, false);
-    vibratoDefaultSpeedLabel->setColour (juce::Label::textColourId, juce::Colour (0xff5090d0));
-    vibratoDefaultSpeedLabel->setColour (juce::TextEditor::textColourId, juce::Colours::black);
-    vibratoDefaultSpeedLabel->setColour (juce::TextEditor::backgroundColourId, juce::Colour (0x00000000));
-    vibratoDefaultSpeedLabel->addListener (this);
-
-    vibratoDefaultSpeedLabel->setBounds (304, 264, 48, 18);
-
-    pulseWidthCenterLabel.reset (new juce::Label ("new label",
-                                                  TRANS("0")));
-    addAndMakeVisible (pulseWidthCenterLabel.get());
-    pulseWidthCenterLabel->setFont (juce::Font ("C64 Pro", 12.00f, juce::Font::plain).withTypefaceStyle ("Regular"));
-    pulseWidthCenterLabel->setJustificationType (juce::Justification::centred);
-    pulseWidthCenterLabel->setEditable (true, true, false);
-    pulseWidthCenterLabel->setColour (juce::Label::textColourId, juce::Colour (0xff5090d0));
-    pulseWidthCenterLabel->setColour (juce::TextEditor::textColourId, juce::Colours::black);
-    pulseWidthCenterLabel->setColour (juce::TextEditor::backgroundColourId, juce::Colour (0x00000000));
-    pulseWidthCenterLabel->addListener (this);
-
-    pulseWidthCenterLabel->setBounds (64, 353, 48, 18);
-
-    pulseWidthDefaultLabel.reset (new juce::Label ("new label",
-                                                   TRANS("0%")));
-    addAndMakeVisible (pulseWidthDefaultLabel.get());
-    pulseWidthDefaultLabel->setFont (juce::Font ("C64 Pro", 12.00f, juce::Font::plain).withTypefaceStyle ("Regular"));
-    pulseWidthDefaultLabel->setJustificationType (juce::Justification::centred);
-    pulseWidthDefaultLabel->setEditable (true, true, false);
-    pulseWidthDefaultLabel->setColour (juce::Label::textColourId, juce::Colour (0xff5090d0));
-    pulseWidthDefaultLabel->setColour (juce::TextEditor::textColourId, juce::Colours::black);
-    pulseWidthDefaultLabel->setColour (juce::TextEditor::backgroundColourId, juce::Colour (0x00000000));
-    pulseWidthDefaultLabel->addListener (this);
-
-    pulseWidthDefaultLabel->setBounds (64, 433, 48, 18);
-
-    vibratoDefaultAmountSlider.reset (new juce::Slider ("new slider"));
-    addAndMakeVisible (vibratoDefaultAmountSlider.get());
-    vibratoDefaultAmountSlider->setRange (0, 100, 1);
-    vibratoDefaultAmountSlider->setSliderStyle (juce::Slider::RotaryHorizontalVerticalDrag);
-    vibratoDefaultAmountSlider->setTextBoxStyle (juce::Slider::NoTextBox, true, 80, 20);
-    vibratoDefaultAmountSlider->addListener (this);
-
-    vibratoDefaultAmountSlider->setBounds (224, 288, 48, 48);
-
-    vibratoDefaultSpeedSlider.reset (new juce::Slider ("new slider"));
-    addAndMakeVisible (vibratoDefaultSpeedSlider.get());
-    vibratoDefaultSpeedSlider->setRange (0, 100, 1);
-    vibratoDefaultSpeedSlider->setSliderStyle (juce::Slider::RotaryHorizontalVerticalDrag);
-    vibratoDefaultSpeedSlider->setTextBoxStyle (juce::Slider::NoTextBox, true, 80, 20);
-    vibratoDefaultSpeedSlider->addListener (this);
-
-    vibratoDefaultSpeedSlider->setBounds (304, 288, 48, 48);
-
-    pulseWidthCenterSlider.reset (new juce::Slider ("new slider"));
-    addAndMakeVisible (pulseWidthCenterSlider.get());
-    pulseWidthCenterSlider->setRange (0, 4095, 1);
-    pulseWidthCenterSlider->setSliderStyle (juce::Slider::RotaryHorizontalVerticalDrag);
-    pulseWidthCenterSlider->setTextBoxStyle (juce::Slider::NoTextBox, true, 80, 20);
-    pulseWidthCenterSlider->addListener (this);
-
-    pulseWidthCenterSlider->setBounds (64, 376, 48, 48);
-
-    pulseWidthDefaultSlider.reset (new juce::Slider ("new slider"));
-    addAndMakeVisible (pulseWidthDefaultSlider.get());
-    pulseWidthDefaultSlider->setRange (-100, 100, 1);
-    pulseWidthDefaultSlider->setSliderStyle (juce::Slider::RotaryHorizontalVerticalDrag);
-    pulseWidthDefaultSlider->setTextBoxStyle (juce::Slider::NoTextBox, true, 80, 20);
-    pulseWidthDefaultSlider->addListener (this);
-
-    pulseWidthDefaultSlider->setBounds (64, 456, 48, 48);
-
-    bankMenu.reset (new BankMenu());
-    addAndMakeVisible (bankMenu.get());
-    bankMenu->setBounds (24, 80, 324, 448);
-
-    saveAsDialog.reset (new SavePatchAsDialog());
-    addAndMakeVisible (saveAsDialog.get());
-    saveAsDialog->setBounds (274, 239, 476, 98);
-
-    noteTableText.reset (new NoteTableText());
-    addAndMakeVisible (noteTableText.get());
-    noteTableText->setBounds (632, 8, 131, 17);
-
-    pulseTableText.reset (new PulseTableText());
-    addAndMakeVisible (pulseTableText.get());
-    pulseTableText->setBounds (840, 8, 141, 17);
-
-    cachedImage_patchEditorBackdrop_png_1 = juce::ImageCache::getFromMemory (patchEditorBackdrop_png, patchEditorBackdrop_pngSize);
-    cachedImage_patchEditorButtonDown_png_2 = juce::ImageCache::getFromMemory (patchEditorButtonDown_png, patchEditorButtonDown_pngSize);
+    attackSlider . reset (
+                          new Slider (
+                                      "new slider" ) );
+    addAndMakeVisible (
+                       attackSlider . get () );
+    attackSlider -> setRange (
+                              0
+                            , 15
+                            , 1 );
+    attackSlider -> setSliderStyle (
+                                    Slider::RotaryHorizontalVerticalDrag );
+    attackSlider -> setTextBoxStyle (
+                                     Slider::NoTextBox
+                                   , true
+                                   , 80
+                                   , 20 );
+    attackSlider -> addListener (
+                                 this );
+    attackSlider -> setBounds (
+                               64
+                             , 121
+                             , 48
+                             , 48 );
+    decaySlider . reset (
+                         new Slider (
+                                     "new slider" ) );
+    addAndMakeVisible (
+                       decaySlider . get () );
+    decaySlider -> setRange (
+                             0
+                           , 15
+                           , 1 );
+    decaySlider -> setSliderStyle (
+                                   Slider::RotaryHorizontalVerticalDrag );
+    decaySlider -> setTextBoxStyle (
+                                    Slider::NoTextBox
+                                  , true
+                                  , 80
+                                  , 20 );
+    decaySlider -> addListener (
+                                this );
+    decaySlider -> setBounds (
+                              144
+                            , 121
+                            , 48
+                            , 48 );
+    sustainSlider . reset (
+                           new Slider (
+                                       "new slider" ) );
+    addAndMakeVisible (
+                       sustainSlider . get () );
+    sustainSlider -> setRange (
+                               0
+                             , 15
+                             , 1 );
+    sustainSlider -> setSliderStyle (
+                                     Slider::RotaryHorizontalVerticalDrag );
+    sustainSlider -> setTextBoxStyle (
+                                      Slider::NoTextBox
+                                    , true
+                                    , 80
+                                    , 20 );
+    sustainSlider -> addListener (
+                                  this );
+    sustainSlider -> setBounds (
+                                224
+                              , 121
+                              , 48
+                              , 48 );
+    releaseSlider . reset (
+                           new Slider (
+                                       "new slider" ) );
+    addAndMakeVisible (
+                       releaseSlider . get () );
+    releaseSlider -> setRange (
+                               0
+                             , 15
+                             , 1 );
+    releaseSlider -> setSliderStyle (
+                                     Slider::RotaryHorizontalVerticalDrag );
+    releaseSlider -> setTextBoxStyle (
+                                      Slider::NoTextBox
+                                    , true
+                                    , 80
+                                    , 20 );
+    releaseSlider -> addListener (
+                                  this );
+    releaseSlider -> setBounds (
+                                304
+                              , 121
+                              , 48
+                              , 48 );
+    pitchBendRangeSlider . reset (
+                                  new Slider (
+                                              "new slider" ) );
+    addAndMakeVisible (
+                       pitchBendRangeSlider . get () );
+    pitchBendRangeSlider -> setRange (
+                                      0
+                                    , 8192
+                                    , 1 );
+    pitchBendRangeSlider -> setSliderStyle (
+                                            Slider::RotaryHorizontalVerticalDrag );
+    pitchBendRangeSlider -> setTextBoxStyle (
+                                             Slider::NoTextBox
+                                           , true
+                                           , 80
+                                           , 20 );
+    pitchBendRangeSlider -> addListener (
+                                         this );
+    pitchBendRangeSlider -> setBounds (
+                                       64
+                                     , 209
+                                     , 48
+                                     , 48 );
+    vibratoRangeSlider . reset (
+                                new Slider (
+                                            "new slider" ) );
+    addAndMakeVisible (
+                       vibratoRangeSlider . get () );
+    vibratoRangeSlider -> setRange (
+                                    0
+                                  , 8192
+                                  , 1 );
+    vibratoRangeSlider -> setSliderStyle (
+                                          Slider::RotaryHorizontalVerticalDrag );
+    vibratoRangeSlider -> setTextBoxStyle (
+                                           Slider::NoTextBox
+                                         , true
+                                         , 80
+                                         , 20 );
+    vibratoRangeSlider -> addListener (
+                                       this );
+    vibratoRangeSlider -> setBounds (
+                                     224
+                                   , 209
+                                   , 48
+                                   , 48 );
+    vibratoSpeedSlider . reset (
+                                new Slider (
+                                            "new slider" ) );
+    addAndMakeVisible (
+                       vibratoSpeedSlider . get () );
+    vibratoSpeedSlider -> setRange (
+                                    0
+                                  , 50
+                                  , 1 );
+    vibratoSpeedSlider -> setSliderStyle (
+                                          Slider::RotaryHorizontalVerticalDrag );
+    vibratoSpeedSlider -> setTextBoxStyle (
+                                           Slider::NoTextBox
+                                         , true
+                                         , 80
+                                         , 20 );
+    vibratoSpeedSlider -> addListener (
+                                       this );
+    vibratoSpeedSlider -> setBounds (
+                                     304
+                                   , 209
+                                   , 48
+                                   , 48 );
+    pulseWidthRangeSlider . reset (
+                                   new Slider (
+                                               "new slider" ) );
+    addAndMakeVisible (
+                       pulseWidthRangeSlider . get () );
+    pulseWidthRangeSlider -> setRange (
+                                       0
+                                     , 4095
+                                     , 1 );
+    pulseWidthRangeSlider -> setSliderStyle (
+                                             Slider::RotaryHorizontalVerticalDrag );
+    pulseWidthRangeSlider -> setTextBoxStyle (
+                                              Slider::NoTextBox
+                                            , true
+                                            , 80
+                                            , 20 );
+    pulseWidthRangeSlider -> addListener (
+                                          this );
+    pulseWidthRangeSlider -> setBounds (
+                                        64
+                                      , 297
+                                      , 48
+                                      , 48 );
+    vibratoDelaySlider . reset (
+                                new Slider (
+                                            "new slider" ) );
+    addAndMakeVisible (
+                       vibratoDelaySlider . get () );
+    vibratoDelaySlider -> setRange (
+                                    0
+                                  , 15
+                                  , 1 );
+    vibratoDelaySlider -> setSliderStyle (
+                                          Slider::RotaryHorizontalVerticalDrag );
+    vibratoDelaySlider -> setTextBoxStyle (
+                                           Slider::NoTextBox
+                                         , true
+                                         , 80
+                                         , 20 );
+    vibratoDelaySlider -> addListener (
+                                       this );
+    vibratoDelaySlider -> setBounds (
+                                     224
+                                   , 367
+                                   , 48
+                                   , 48 );
+    attackLabel . reset (
+                         new Label (
+                                    "new label"
+                                  , TRANS (
+                                           "0" ) ) );
+    addAndMakeVisible (
+                       attackLabel . get () );
+    attackLabel -> setFont (
+                            Font (
+                                  "C64 Pro"
+                                , 12.00f
+                                , Font::plain ) . withTypefaceStyle (
+                                                                     "Regular" ) );
+    attackLabel -> setJustificationType (
+                                         Justification::centred );
+    attackLabel -> setEditable (
+                                true
+                              , true
+                              , false );
+    attackLabel -> setColour (
+                              Label::textColourId
+                            , Colour (
+                                      0xff5090d0 ) );
+    attackLabel -> setColour (
+                              TextEditor::textColourId
+                            , Colours::black );
+    attackLabel -> setColour (
+                              TextEditor::backgroundColourId
+                            , Colour (
+                                      0x00000000 ) );
+    attackLabel -> addListener (
+                                this );
+    attackLabel -> setBounds (
+                              64
+                            , 97
+                            , 48
+                            , 18 );
+    decayLabel . reset (
+                        new Label (
+                                   "new label"
+                                 , TRANS (
+                                          "0" ) ) );
+    addAndMakeVisible (
+                       decayLabel . get () );
+    decayLabel -> setFont (
+                           Font (
+                                 "C64 Pro"
+                               , 12.00f
+                               , Font::plain ) . withTypefaceStyle (
+                                                                    "Regular" ) );
+    decayLabel -> setJustificationType (
+                                        Justification::centred );
+    decayLabel -> setEditable (
+                               true
+                             , true
+                             , false );
+    decayLabel -> setColour (
+                             Label::textColourId
+                           , Colour (
+                                     0xff5090d0 ) );
+    decayLabel -> setColour (
+                             TextEditor::textColourId
+                           , Colours::black );
+    decayLabel -> setColour (
+                             TextEditor::backgroundColourId
+                           , Colour (
+                                     0x00000000 ) );
+    decayLabel -> addListener (
+                               this );
+    decayLabel -> setBounds (
+                             144
+                           , 97
+                           , 48
+                           , 18 );
+    sustainLabel . reset (
+                          new Label (
+                                     "new label"
+                                   , TRANS (
+                                            "0" ) ) );
+    addAndMakeVisible (
+                       sustainLabel . get () );
+    sustainLabel -> setFont (
+                             Font (
+                                   "C64 Pro"
+                                 , 12.00f
+                                 , Font::plain ) . withTypefaceStyle (
+                                                                      "Regular" ) );
+    sustainLabel -> setJustificationType (
+                                          Justification::centred );
+    sustainLabel -> setEditable (
+                                 true
+                               , true
+                               , false );
+    sustainLabel -> setColour (
+                               Label::textColourId
+                             , Colour (
+                                       0xff5090d0 ) );
+    sustainLabel -> setColour (
+                               TextEditor::textColourId
+                             , Colours::black );
+    sustainLabel -> setColour (
+                               TextEditor::backgroundColourId
+                             , Colour (
+                                       0x00000000 ) );
+    sustainLabel -> addListener (
+                                 this );
+    sustainLabel -> setBounds (
+                               224
+                             , 97
+                             , 48
+                             , 18 );
+    releaseLabel . reset (
+                          new Label (
+                                     "new label"
+                                   , TRANS (
+                                            "0" ) ) );
+    addAndMakeVisible (
+                       releaseLabel . get () );
+    releaseLabel -> setFont (
+                             Font (
+                                   "C64 Pro"
+                                 , 12.00f
+                                 , Font::plain ) . withTypefaceStyle (
+                                                                      "Regular" ) );
+    releaseLabel -> setJustificationType (
+                                          Justification::centred );
+    releaseLabel -> setEditable (
+                                 true
+                               , true
+                               , false );
+    releaseLabel -> setColour (
+                               Label::textColourId
+                             , Colour (
+                                       0xff5090d0 ) );
+    releaseLabel -> setColour (
+                               TextEditor::textColourId
+                             , Colours::black );
+    releaseLabel -> setColour (
+                               TextEditor::backgroundColourId
+                             , Colour (
+                                       0x00000000 ) );
+    releaseLabel -> addListener (
+                                 this );
+    releaseLabel -> setBounds (
+                               304
+                             , 97
+                             , 48
+                             , 18 );
+    pitchBendRangeLabel . reset (
+                                 new Label (
+                                            "new label"
+                                          , TRANS (
+                                                   "0" ) ) );
+    addAndMakeVisible (
+                       pitchBendRangeLabel . get () );
+    pitchBendRangeLabel -> setFont (
+                                    Font (
+                                          "C64 Pro"
+                                        , 12.00f
+                                        , Font::plain ) . withTypefaceStyle (
+                                                                             "Regular" ) );
+    pitchBendRangeLabel -> setJustificationType (
+                                                 Justification::centred );
+    pitchBendRangeLabel -> setEditable (
+                                        true
+                                      , true
+                                      , false );
+    pitchBendRangeLabel -> setColour (
+                                      Label::textColourId
+                                    , Colour (
+                                              0xff5090d0 ) );
+    pitchBendRangeLabel -> setColour (
+                                      TextEditor::textColourId
+                                    , Colours::black );
+    pitchBendRangeLabel -> setColour (
+                                      TextEditor::backgroundColourId
+                                    , Colour (
+                                              0x00000000 ) );
+    pitchBendRangeLabel -> addListener (
+                                        this );
+    pitchBendRangeLabel -> setBounds (
+                                      64
+                                    , 185
+                                    , 48
+                                    , 18 );
+    vibratoRangeLabel . reset (
+                               new Label (
+                                          "new label"
+                                        , TRANS (
+                                                 "0" ) ) );
+    addAndMakeVisible (
+                       vibratoRangeLabel . get () );
+    vibratoRangeLabel -> setFont (
+                                  Font (
+                                        "C64 Pro"
+                                      , 12.00f
+                                      , Font::plain ) . withTypefaceStyle (
+                                                                           "Regular" ) );
+    vibratoRangeLabel -> setJustificationType (
+                                               Justification::centred );
+    vibratoRangeLabel -> setEditable (
+                                      true
+                                    , true
+                                    , false );
+    vibratoRangeLabel -> setColour (
+                                    Label::textColourId
+                                  , Colour (
+                                            0xff5090d0 ) );
+    vibratoRangeLabel -> setColour (
+                                    TextEditor::textColourId
+                                  , Colours::black );
+    vibratoRangeLabel -> setColour (
+                                    TextEditor::backgroundColourId
+                                  , Colour (
+                                            0x00000000 ) );
+    vibratoRangeLabel -> addListener (
+                                      this );
+    vibratoRangeLabel -> setBounds (
+                                    224
+                                  , 185
+                                  , 48
+                                  , 18 );
+    vibratoSpeedLabel . reset (
+                               new Label (
+                                          "new label"
+                                        , TRANS (
+                                                 "0" ) ) );
+    addAndMakeVisible (
+                       vibratoSpeedLabel . get () );
+    vibratoSpeedLabel -> setFont (
+                                  Font (
+                                        "C64 Pro"
+                                      , 12.00f
+                                      , Font::plain ) . withTypefaceStyle (
+                                                                           "Regular" ) );
+    vibratoSpeedLabel -> setJustificationType (
+                                               Justification::centred );
+    vibratoSpeedLabel -> setEditable (
+                                      true
+                                    , true
+                                    , false );
+    vibratoSpeedLabel -> setColour (
+                                    Label::textColourId
+                                  , Colour (
+                                            0xff5090d0 ) );
+    vibratoSpeedLabel -> setColour (
+                                    TextEditor::textColourId
+                                  , Colours::black );
+    vibratoSpeedLabel -> setColour (
+                                    TextEditor::backgroundColourId
+                                  , Colour (
+                                            0x00000000 ) );
+    vibratoSpeedLabel -> addListener (
+                                      this );
+    vibratoSpeedLabel -> setBounds (
+                                    304
+                                  , 185
+                                  , 48
+                                  , 18 );
+    pulseWidthRangeLabel . reset (
+                                  new Label (
+                                             "new label"
+                                           , TRANS (
+                                                    "0" ) ) );
+    addAndMakeVisible (
+                       pulseWidthRangeLabel . get () );
+    pulseWidthRangeLabel -> setFont (
+                                     Font (
+                                           "C64 Pro"
+                                         , 12.00f
+                                         , Font::plain ) . withTypefaceStyle (
+                                                                              "Regular" ) );
+    pulseWidthRangeLabel -> setJustificationType (
+                                                  Justification::centred );
+    pulseWidthRangeLabel -> setEditable (
+                                         true
+                                       , true
+                                       , false );
+    pulseWidthRangeLabel -> setColour (
+                                       Label::textColourId
+                                     , Colour (
+                                               0xff5090d0 ) );
+    pulseWidthRangeLabel -> setColour (
+                                       TextEditor::textColourId
+                                     , Colours::black );
+    pulseWidthRangeLabel -> setColour (
+                                       TextEditor::backgroundColourId
+                                     , Colour (
+                                               0x00000000 ) );
+    pulseWidthRangeLabel -> addListener (
+                                         this );
+    pulseWidthRangeLabel -> setBounds (
+                                       64
+                                     , 273
+                                     , 48
+                                     , 18 );
+    vibratoDelayLabel . reset (
+                               new Label (
+                                          "new label"
+                                        , TRANS (
+                                                 "0" ) ) );
+    addAndMakeVisible (
+                       vibratoDelayLabel . get () );
+    vibratoDelayLabel -> setFont (
+                                  Font (
+                                        "C64 Pro"
+                                      , 12.00f
+                                      , Font::plain ) . withTypefaceStyle (
+                                                                           "Regular" ) );
+    vibratoDelayLabel -> setJustificationType (
+                                               Justification::centred );
+    vibratoDelayLabel -> setEditable (
+                                      true
+                                    , true
+                                    , false );
+    vibratoDelayLabel -> setColour (
+                                    Label::textColourId
+                                  , Colour (
+                                            0xff5090d0 ) );
+    vibratoDelayLabel -> setColour (
+                                    TextEditor::textColourId
+                                  , Colours::black );
+    vibratoDelayLabel -> setColour (
+                                    TextEditor::backgroundColourId
+                                  , Colour (
+                                            0x00000000 ) );
+    vibratoDelayLabel -> addListener (
+                                      this );
+    vibratoDelayLabel -> setBounds (
+                                    224
+                                  , 343
+                                  , 48
+                                  , 18 );
+    patchName . reset (
+                       new Label (
+                                  "new label"
+                                , TRANS (
+                                         "Patch Name" ) ) );
+    addAndMakeVisible (
+                       patchName . get () );
+    patchName -> setFont (
+                          Font (
+                                "C64 Pro"
+                              , 12.00f
+                              , Font::plain ) . withTypefaceStyle (
+                                                                   "Regular" ) );
+    patchName -> setJustificationType (
+                                       Justification::centredLeft );
+    patchName -> setEditable (
+                              true
+                            , true
+                            , false );
+    patchName -> setColour (
+                            Label::textColourId
+                          , Colour (
+                                    0xff5090d0 ) );
+    patchName -> setColour (
+                            TextEditor::textColourId
+                          , Colours::black );
+    patchName -> setColour (
+                            TextEditor::backgroundColourId
+                          , Colour (
+                                    0x00000000 ) );
+    patchName -> addListener (
+                              this );
+    patchName -> setBounds (
+                            24
+                          , 71
+                          , 324
+                          , 16 );
+    liveModeButton . reset (
+                            new ImageButton (
+                                             "new button" ) );
+    addAndMakeVisible (
+                       liveModeButton . get () );
+    liveModeButton -> addListener (
+                                   this );
+    liveModeButton -> setImages (
+                                 false
+                               , true
+                               , true
+                               , ImageCache::getFromMemory (
+                                                            liveModeButtonNormal_png
+                                                          , liveModeButtonNormal_pngSize )
+                               , 1.000f
+                               , Colour (
+                                         0x00000000 )
+                               , ImageCache::getFromMemory (
+                                                            liveModeButtonOver_png
+                                                          , liveModeButtonOver_pngSize )
+                               , 1.000f
+                               , Colour (
+                                         0x00000000 )
+                               , ImageCache::getFromMemory (
+                                                            liveModeButtonDown_png
+                                                          , liveModeButtonDown_pngSize )
+                               , 1.000f
+                               , Colour (
+                                         0x00000000 ) );
+    liveModeButton -> setBounds (
+                                 32
+                               , 544
+                               , 154
+                               , 26 );
+    menuButton . reset (
+                        new ImageButton (
+                                         "new button" ) );
+    addAndMakeVisible (
+                       menuButton . get () );
+    menuButton -> addListener (
+                               this );
+    menuButton -> setImages (
+                             false
+                           , true
+                           , true
+                           , ImageCache::getFromMemory (
+                                                        downArrowNormal_png
+                                                      , downArrowNormal_pngSize )
+                           , 1.000f
+                           , Colour (
+                                     0x00000000 )
+                           , Image ()
+                           , 1.000f
+                           , Colour (
+                                     0x00000000 )
+                           , Image ()
+                           , 1.000f
+                           , Colour (
+                                     0x00000000 ) );
+    menuButton -> setBounds (
+                             353
+                           , 73
+                           , 14
+                           , 12 );
+    commandTableViewport . reset (
+                                  new Viewport (
+                                                "new viewport" ) );
+    addAndMakeVisible (
+                       commandTableViewport . get () );
+    commandTableViewport -> setScrollBarsShown (
+                                                true
+                                              , false );
+    commandTableViewport -> setScrollBarThickness (
+                                                   16 );
+    commandTableViewport -> setBounds (
+                                       400
+                                     , 16
+                                     , 608
+                                     , 184 );
+    wavetableText . reset (
+                           new WavetableText () );
+    addAndMakeVisible (
+                       wavetableText . get () );
+    wavetableText -> setBounds (
+                                416
+                              , 8
+                              , 110
+                              , 17 );
+    newRowButton . reset (
+                          new ImageButton (
+                                           "new button" ) );
+    addAndMakeVisible (
+                       newRowButton . get () );
+    newRowButton -> addListener (
+                                 this );
+    newRowButton -> setImages (
+                               false
+                             , true
+                             , true
+                             , ImageCache::getFromMemory (
+                                                          newRowNormal_png
+                                                        , newRowNormal_pngSize )
+                             , 1.000f
+                             , Colour (
+                                       0x00000000 )
+                             , ImageCache::getFromMemory (
+                                                          newRowOver_png
+                                                        , newRowOver_pngSize )
+                             , 1.000f
+                             , Colour (
+                                       0x00000000 )
+                             , ImageCache::getFromMemory (
+                                                          newRowDown_png
+                                                        , newRowDown_pngSize )
+                             , 1.000f
+                             , Colour (
+                                       0x00000000 ) );
+    newRowButton -> setBounds (
+                               448
+                             , 192
+                             , 154
+                             , 26 );
+    newCommandButton . reset (
+                              new ImageButton (
+                                               "new button" ) );
+    addAndMakeVisible (
+                       newCommandButton . get () );
+    newCommandButton -> addListener (
+                                     this );
+    newCommandButton -> setImages (
+                                   false
+                                 , true
+                                 , true
+                                 , ImageCache::getFromMemory (
+                                                              newCommandNormal_png
+                                                            , newCommandNormal_pngSize )
+                                 , 1.000f
+                                 , Colour (
+                                           0x00000000 )
+                                 , ImageCache::getFromMemory (
+                                                              newCommandOver_png
+                                                            , newCommandOver_pngSize )
+                                 , 1.000f
+                                 , Colour (
+                                           0x00000000 )
+                                 , ImageCache::getFromMemory (
+                                                              newCommandDown_png
+                                                            , newCommandDown_pngSize )
+                                 , 1.000f
+                                 , Colour (
+                                           0x00000000 ) );
+    newCommandButton -> setBounds (
+                                   624
+                                 , 192
+                                 , 154
+                                 , 26 );
+    deleteButton . reset (
+                          new ImageButton (
+                                           "new button" ) );
+    addAndMakeVisible (
+                       deleteButton . get () );
+    deleteButton -> addListener (
+                                 this );
+    deleteButton -> setImages (
+                               false
+                             , true
+                             , true
+                             , ImageCache::getFromMemory (
+                                                          deleteNormal_png
+                                                        , deleteNormal_pngSize )
+                             , 1.000f
+                             , Colour (
+                                       0x00000000 )
+                             , ImageCache::getFromMemory (
+                                                          deleteOver_png
+                                                        , deleteOver_pngSize )
+                             , 1.000f
+                             , Colour (
+                                       0x00000000 )
+                             , ImageCache::getFromMemory (
+                                                          deleteDown_png
+                                                        , deleteDown_pngSize )
+                             , 1.000f
+                             , Colour (
+                                       0x00000000 ) );
+    deleteButton -> setBounds (
+                               800
+                             , 192
+                             , 154
+                             , 26 );
+    waveformView . reset (
+                          new WaveformView () );
+    addAndMakeVisible (
+                       waveformView . get () );
+    waveformView -> setBounds (
+                               400
+                             , 248
+                             , 608
+                             , 296 );
+    vibratoDefaultAmountLabel . reset (
+                                       new Label (
+                                                  "new label"
+                                                , TRANS (
+                                                         "0%" ) ) );
+    addAndMakeVisible (
+                       vibratoDefaultAmountLabel . get () );
+    vibratoDefaultAmountLabel -> setFont (
+                                          Font (
+                                                "C64 Pro"
+                                              , 12.00f
+                                              , Font::plain ) . withTypefaceStyle (
+                                                                                   "Regular" ) );
+    vibratoDefaultAmountLabel -> setJustificationType (
+                                                       Justification::centred );
+    vibratoDefaultAmountLabel -> setEditable (
+                                              true
+                                            , true
+                                            , false );
+    vibratoDefaultAmountLabel -> setColour (
+                                            Label::textColourId
+                                          , Colour (
+                                                    0xff5090d0 ) );
+    vibratoDefaultAmountLabel -> setColour (
+                                            TextEditor::textColourId
+                                          , Colours::black );
+    vibratoDefaultAmountLabel -> setColour (
+                                            TextEditor::backgroundColourId
+                                          , Colour (
+                                                    0x00000000 ) );
+    vibratoDefaultAmountLabel -> addListener (
+                                              this );
+    vibratoDefaultAmountLabel -> setBounds (
+                                            224
+                                          , 264
+                                          , 48
+                                          , 18 );
+    vibratoDefaultSpeedLabel . reset (
+                                      new Label (
+                                                 "new label"
+                                               , TRANS (
+                                                        "0%" ) ) );
+    addAndMakeVisible (
+                       vibratoDefaultSpeedLabel . get () );
+    vibratoDefaultSpeedLabel -> setFont (
+                                         Font (
+                                               "C64 Pro"
+                                             , 12.00f
+                                             , Font::plain ) . withTypefaceStyle (
+                                                                                  "Regular" ) );
+    vibratoDefaultSpeedLabel -> setJustificationType (
+                                                      Justification::centred );
+    vibratoDefaultSpeedLabel -> setEditable (
+                                             true
+                                           , true
+                                           , false );
+    vibratoDefaultSpeedLabel -> setColour (
+                                           Label::textColourId
+                                         , Colour (
+                                                   0xff5090d0 ) );
+    vibratoDefaultSpeedLabel -> setColour (
+                                           TextEditor::textColourId
+                                         , Colours::black );
+    vibratoDefaultSpeedLabel -> setColour (
+                                           TextEditor::backgroundColourId
+                                         , Colour (
+                                                   0x00000000 ) );
+    vibratoDefaultSpeedLabel -> addListener (
+                                             this );
+    vibratoDefaultSpeedLabel -> setBounds (
+                                           304
+                                         , 264
+                                         , 48
+                                         , 18 );
+    pulseWidthCenterLabel . reset (
+                                   new Label (
+                                              "new label"
+                                            , TRANS (
+                                                     "0" ) ) );
+    addAndMakeVisible (
+                       pulseWidthCenterLabel . get () );
+    pulseWidthCenterLabel -> setFont (
+                                      Font (
+                                            "C64 Pro"
+                                          , 12.00f
+                                          , Font::plain ) . withTypefaceStyle (
+                                                                               "Regular" ) );
+    pulseWidthCenterLabel -> setJustificationType (
+                                                   Justification::centred );
+    pulseWidthCenterLabel -> setEditable (
+                                          true
+                                        , true
+                                        , false );
+    pulseWidthCenterLabel -> setColour (
+                                        Label::textColourId
+                                      , Colour (
+                                                0xff5090d0 ) );
+    pulseWidthCenterLabel -> setColour (
+                                        TextEditor::textColourId
+                                      , Colours::black );
+    pulseWidthCenterLabel -> setColour (
+                                        TextEditor::backgroundColourId
+                                      , Colour (
+                                                0x00000000 ) );
+    pulseWidthCenterLabel -> addListener (
+                                          this );
+    pulseWidthCenterLabel -> setBounds (
+                                        64
+                                      , 353
+                                      , 48
+                                      , 18 );
+    pulseWidthDefaultLabel . reset (
+                                    new Label (
+                                               "new label"
+                                             , TRANS (
+                                                      "0%" ) ) );
+    addAndMakeVisible (
+                       pulseWidthDefaultLabel . get () );
+    pulseWidthDefaultLabel -> setFont (
+                                       Font (
+                                             "C64 Pro"
+                                           , 12.00f
+                                           , Font::plain ) . withTypefaceStyle (
+                                                                                "Regular" ) );
+    pulseWidthDefaultLabel -> setJustificationType (
+                                                    Justification::centred );
+    pulseWidthDefaultLabel -> setEditable (
+                                           true
+                                         , true
+                                         , false );
+    pulseWidthDefaultLabel -> setColour (
+                                         Label::textColourId
+                                       , Colour (
+                                                 0xff5090d0 ) );
+    pulseWidthDefaultLabel -> setColour (
+                                         TextEditor::textColourId
+                                       , Colours::black );
+    pulseWidthDefaultLabel -> setColour (
+                                         TextEditor::backgroundColourId
+                                       , Colour (
+                                                 0x00000000 ) );
+    pulseWidthDefaultLabel -> addListener (
+                                           this );
+    pulseWidthDefaultLabel -> setBounds (
+                                         64
+                                       , 433
+                                       , 48
+                                       , 18 );
+    vibratoDefaultAmountSlider . reset (
+                                        new Slider (
+                                                    "new slider" ) );
+    addAndMakeVisible (
+                       vibratoDefaultAmountSlider . get () );
+    vibratoDefaultAmountSlider -> setRange (
+                                            0
+                                          , 100
+                                          , 1 );
+    vibratoDefaultAmountSlider -> setSliderStyle (
+                                                  Slider::RotaryHorizontalVerticalDrag );
+    vibratoDefaultAmountSlider -> setTextBoxStyle (
+                                                   Slider::NoTextBox
+                                                 , true
+                                                 , 80
+                                                 , 20 );
+    vibratoDefaultAmountSlider -> addListener (
+                                               this );
+    vibratoDefaultAmountSlider -> setBounds (
+                                             224
+                                           , 288
+                                           , 48
+                                           , 48 );
+    vibratoDefaultSpeedSlider . reset (
+                                       new Slider (
+                                                   "new slider" ) );
+    addAndMakeVisible (
+                       vibratoDefaultSpeedSlider . get () );
+    vibratoDefaultSpeedSlider -> setRange (
+                                           0
+                                         , 100
+                                         , 1 );
+    vibratoDefaultSpeedSlider -> setSliderStyle (
+                                                 Slider::RotaryHorizontalVerticalDrag );
+    vibratoDefaultSpeedSlider -> setTextBoxStyle (
+                                                  Slider::NoTextBox
+                                                , true
+                                                , 80
+                                                , 20 );
+    vibratoDefaultSpeedSlider -> addListener (
+                                              this );
+    vibratoDefaultSpeedSlider -> setBounds (
+                                            304
+                                          , 288
+                                          , 48
+                                          , 48 );
+    pulseWidthCenterSlider . reset (
+                                    new Slider (
+                                                "new slider" ) );
+    addAndMakeVisible (
+                       pulseWidthCenterSlider . get () );
+    pulseWidthCenterSlider -> setRange (
+                                        0
+                                      , 4095
+                                      , 1 );
+    pulseWidthCenterSlider -> setSliderStyle (
+                                              Slider::RotaryHorizontalVerticalDrag );
+    pulseWidthCenterSlider -> setTextBoxStyle (
+                                               Slider::NoTextBox
+                                             , true
+                                             , 80
+                                             , 20 );
+    pulseWidthCenterSlider -> addListener (
+                                           this );
+    pulseWidthCenterSlider -> setBounds (
+                                         64
+                                       , 376
+                                       , 48
+                                       , 48 );
+    pulseWidthDefaultSlider . reset (
+                                     new Slider (
+                                                 "new slider" ) );
+    addAndMakeVisible (
+                       pulseWidthDefaultSlider . get () );
+    pulseWidthDefaultSlider -> setRange (
+                                         -100
+                                       , 100
+                                       , 1 );
+    pulseWidthDefaultSlider -> setSliderStyle (
+                                               Slider::RotaryHorizontalVerticalDrag );
+    pulseWidthDefaultSlider -> setTextBoxStyle (
+                                                Slider::NoTextBox
+                                              , true
+                                              , 80
+                                              , 20 );
+    pulseWidthDefaultSlider -> addListener (
+                                            this );
+    pulseWidthDefaultSlider -> setBounds (
+                                          64
+                                        , 456
+                                        , 48
+                                        , 48 );
+    bankMenu . reset (
+                      new BankMenu () );
+    addAndMakeVisible (
+                       bankMenu . get () );
+    bankMenu -> setBounds (
+                           24
+                         , 80
+                         , 324
+                         , 448 );
+    saveAsDialog . reset (
+                          new SavePatchAsDialog () );
+    addAndMakeVisible (
+                       saveAsDialog . get () );
+    saveAsDialog -> setBounds (
+                               274
+                             , 239
+                             , 476
+                             , 98 );
+    noteTableText . reset (
+                           new NoteTableText () );
+    addAndMakeVisible (
+                       noteTableText . get () );
+    noteTableText -> setBounds (
+                                632
+                              , 8
+                              , 131
+                              , 17 );
+    pulseTableText . reset (
+                            new PulseTableText () );
+    addAndMakeVisible (
+                       pulseTableText . get () );
+    pulseTableText -> setBounds (
+                                 840
+                               , 8
+                               , 141
+                               , 17 );
+    cachedImage_patchEditorBackdrop_png_1 = ImageCache::getFromMemory (
+                                                                       patchEditorBackdrop_png
+                                                                     , patchEditorBackdrop_pngSize );
+    cachedImage_patchEditorButtonDown_png_2 = ImageCache::getFromMemory (
+                                                                         patchEditorButtonDown_png
+                                                                       , patchEditorButtonDown_pngSize );
 
     //[UserPreSize]
     wavetable = new WavetableView ();
     commandTableViewport -> setViewedComponent (
                                                 wavetable
-                                              , false
-                                               );
+                                              , false );
     commandTableViewport -> getVerticalScrollBar () -> setAutoHide (
-                                                                    false
-                                                                   );
+                                                                    false );
     bankMenu -> setVisible (
-                            false
-                           );
+                            false );
     saveAsDialog -> setVisible (
-                                false
-                               );
-
-    noteTable = new NoteTableView ();
+                                false );
+    noteTable  = new NoteTableView ();
     pulseTable = new PulseTableView ();
-
     SharedResourcePointer < ListenerList < BankProgramChanged > > () -> add (
-                                                                             this
-                                                                            );
+                                                                             this );
     SharedResourcePointer < ListenerList < BankStartSaveAs > > () -> add (
-                                                                          this
-                                                                         );
+                                                                          this );
     SharedResourcePointer < ListenerList < LivePatchEditorModeClicked > > () -> add (
-                                                                                     this
-                                                                                    );
+                                                                                     this );
     SharedResourcePointer < ListenerList < PatchEditorShowNoteTable > > () -> add (
-                                                                                   this
-                                                                                  );
+                                                                                   this );
     SharedResourcePointer < ListenerList < PatchEditorShowPulseTable > > () -> add (
-                                                                                    this
-                                                                                   );
+                                                                                    this );
     SharedResourcePointer < ListenerList < PatchEditorShowWaveTable > > () -> add (
-                                                                                   this
-                                                                                  );
+                                                                                   this );
     //[/UserPreSize]
 
-    setSize (1024, 576);
+    setSize (
+             1024
+           , 576 );
 
 
     //[Constructor] You can add your own custom stuff here..
     //[/Constructor]
 }
 
-PatchEditor::~PatchEditor()
+PatchEditor::~PatchEditor ()
 {
     //[Destructor_pre]. You can add your own custom destruction code here..
     SharedResourcePointer < ListenerList < BankProgramChanged > > () -> remove (
-                                                                                this
-                                                                               );
+                                                                                this );
     SharedResourcePointer < ListenerList < BankStartSaveAs > > () -> remove (
-                                                                             this
-                                                                            );
+                                                                             this );
     SharedResourcePointer < ListenerList < LivePatchEditorModeClicked > > () -> remove (
-                                                                                        this
-                                                                                       );
+                                                                                        this );
     SharedResourcePointer < ListenerList < PatchEditorShowNoteTable > > () -> remove (
-                                                                                      this
-                                                                                     );
+                                                                                      this );
     SharedResourcePointer < ListenerList < PatchEditorShowPulseTable > > () -> remove (
-                                                                                       this
-                                                                                      );
+                                                                                       this );
     SharedResourcePointer < ListenerList < PatchEditorShowWaveTable > > () -> remove (
-                                                                                      this
-                                                                                     );
+                                                                                      this );
     //[/Destructor_pre]
 
-    attackSlider = nullptr;
-    decaySlider = nullptr;
-    sustainSlider = nullptr;
-    releaseSlider = nullptr;
-    pitchBendRangeSlider = nullptr;
-    vibratoRangeSlider = nullptr;
-    vibratoSpeedSlider = nullptr;
-    pulseWidthRangeSlider = nullptr;
-    vibratoDelaySlider = nullptr;
-    attackLabel = nullptr;
-    decayLabel = nullptr;
-    sustainLabel = nullptr;
-    releaseLabel = nullptr;
-    pitchBendRangeLabel = nullptr;
-    vibratoRangeLabel = nullptr;
-    vibratoSpeedLabel = nullptr;
-    pulseWidthRangeLabel = nullptr;
-    vibratoDelayLabel = nullptr;
-    patchName = nullptr;
-    liveModeButton = nullptr;
-    menuButton = nullptr;
-    commandTableViewport = nullptr;
-    wavetableText = nullptr;
-    newRowButton = nullptr;
-    newCommandButton = nullptr;
-    deleteButton = nullptr;
-    waveformView = nullptr;
-    vibratoDefaultAmountLabel = nullptr;
-    vibratoDefaultSpeedLabel = nullptr;
-    pulseWidthCenterLabel = nullptr;
-    pulseWidthDefaultLabel = nullptr;
+    attackSlider               = nullptr;
+    decaySlider                = nullptr;
+    sustainSlider              = nullptr;
+    releaseSlider              = nullptr;
+    pitchBendRangeSlider       = nullptr;
+    vibratoRangeSlider         = nullptr;
+    vibratoSpeedSlider         = nullptr;
+    pulseWidthRangeSlider      = nullptr;
+    vibratoDelaySlider         = nullptr;
+    attackLabel                = nullptr;
+    decayLabel                 = nullptr;
+    sustainLabel               = nullptr;
+    releaseLabel               = nullptr;
+    pitchBendRangeLabel        = nullptr;
+    vibratoRangeLabel          = nullptr;
+    vibratoSpeedLabel          = nullptr;
+    pulseWidthRangeLabel       = nullptr;
+    vibratoDelayLabel          = nullptr;
+    patchName                  = nullptr;
+    liveModeButton             = nullptr;
+    menuButton                 = nullptr;
+    commandTableViewport       = nullptr;
+    wavetableText              = nullptr;
+    newRowButton               = nullptr;
+    newCommandButton           = nullptr;
+    deleteButton               = nullptr;
+    waveformView               = nullptr;
+    vibratoDefaultAmountLabel  = nullptr;
+    vibratoDefaultSpeedLabel   = nullptr;
+    pulseWidthCenterLabel      = nullptr;
+    pulseWidthDefaultLabel     = nullptr;
     vibratoDefaultAmountSlider = nullptr;
-    vibratoDefaultSpeedSlider = nullptr;
-    pulseWidthCenterSlider = nullptr;
-    pulseWidthDefaultSlider = nullptr;
-    bankMenu = nullptr;
-    saveAsDialog = nullptr;
-    noteTableText = nullptr;
-    pulseTableText = nullptr;
+    vibratoDefaultSpeedSlider  = nullptr;
+    pulseWidthCenterSlider     = nullptr;
+    pulseWidthDefaultSlider    = nullptr;
+    bankMenu                   = nullptr;
+    saveAsDialog               = nullptr;
+    noteTableText              = nullptr;
+    pulseTableText             = nullptr;
 
 
     //[Destructor]. You can add your own custom destruction code here..
@@ -545,38 +1203,57 @@ PatchEditor::~PatchEditor()
 }
 
 //==============================================================================
-void PatchEditor::paint (juce::Graphics& g)
+void
+    PatchEditor::paint (
+            Graphics& g
+            )
 {
     //[UserPrePaint] Add your own custom painting code here..
     //[/UserPrePaint]
 
-    g.fillAll (juce::Colours::white);
-
+    g . fillAll (
+                 Colours::white );
     {
         int x = 0, y = 0, width = 1024, height = 576;
         //[UserPaintCustomArguments] Customize the painting arguments here..
         //[/UserPaintCustomArguments]
-        g.setColour (juce::Colours::black);
-        g.drawImage (cachedImage_patchEditorBackdrop_png_1,
-                     x, y, width, height,
-                     0, 0, cachedImage_patchEditorBackdrop_png_1.getWidth(), cachedImage_patchEditorBackdrop_png_1.getHeight());
+        g . setColour (
+                       Colours::black );
+        g . drawImage (
+                       cachedImage_patchEditorBackdrop_png_1
+                     , x
+                     , y
+                     , width
+                     , height
+                     , 0
+                     , 0
+                     , cachedImage_patchEditorBackdrop_png_1 . getWidth ()
+                     , cachedImage_patchEditorBackdrop_png_1 . getHeight () );
     }
-
     {
         int x = 208, y = 544, width = 154, height = 26;
         //[UserPaintCustomArguments] Customize the painting arguments here..
         //[/UserPaintCustomArguments]
-        g.setColour (juce::Colours::black);
-        g.drawImage (cachedImage_patchEditorButtonDown_png_2,
-                     x, y, width, height,
-                     0, 0, cachedImage_patchEditorButtonDown_png_2.getWidth(), cachedImage_patchEditorButtonDown_png_2.getHeight());
+        g . setColour (
+                       Colours::black );
+        g . drawImage (
+                       cachedImage_patchEditorButtonDown_png_2
+                     , x
+                     , y
+                     , width
+                     , height
+                     , 0
+                     , 0
+                     , cachedImage_patchEditorButtonDown_png_2 . getWidth ()
+                     , cachedImage_patchEditorButtonDown_png_2 . getHeight () );
     }
 
     //[UserPaint] Add your own custom painting code here..
     //[/UserPaint]
 }
 
-void PatchEditor::resized()
+void
+    PatchEditor::resized ()
 {
     //[UserPreResize] Add your own custom resize code here..
     //[/UserPreResize]
@@ -585,243 +1262,194 @@ void PatchEditor::resized()
     //[/UserResized]
 }
 
-void PatchEditor::sliderValueChanged (juce::Slider* sliderThatWasMoved)
+void
+    PatchEditor::sliderValueChanged (
+            Slider* slider_that_was_moved
+            )
 {
     //[UsersliderValueChanged_Pre]
     //[/UsersliderValueChanged_Pre]
 
-    if (sliderThatWasMoved == attackSlider.get())
+    if ( slider_that_was_moved == attackSlider . get () )
     {
         //[UserSliderCode_attackSlider] -- add your slider handling code here..
         attackLabel -> setText (
                                 attackSlider -> getTextFromValue (
-                                                                  attackSlider -> getValue ()
-                                                                 )
-                              , dontSendNotification
-                               );
+                                                                  attackSlider -> getValue () )
+                              , dontSendNotification );
         patchEditorAttackChangedListeners -> call (
                                                    &PatchEditorAttackChanged::onPatchEditorAttackChanged
-                                                 , static_cast < unsigned int > ( attackSlider -> getValue () )
-                                                  );
+                                                 , static_cast < unsigned int > ( attackSlider -> getValue () ) );
         SharedResourcePointer < ListenerList < BankRepaintWaveform > > () -> call (
-                                                                                   &BankRepaintWaveform::onBankRepaintWaveform
-                                                                                  );
+                                                                                   &BankRepaintWaveform::onBankRepaintWaveform );
         //[/UserSliderCode_attackSlider]
     }
-    else if (sliderThatWasMoved == decaySlider.get())
+    else if ( slider_that_was_moved == decaySlider . get () )
     {
         //[UserSliderCode_decaySlider] -- add your slider handling code here..
         decayLabel -> setText (
                                decaySlider -> getTextFromValue (
-                                                                decaySlider -> getValue ()
-                                                               )
-                             , dontSendNotification
-                              );
+                                                                decaySlider -> getValue () )
+                             , dontSendNotification );
         patchEditorDecayChangedListeners -> call (
                                                   &PatchEditorDecayChanged::onPatchEditorDecayChanged
-                                                , static_cast < unsigned int > ( decaySlider -> getValue () )
-                                                 );
+                                                , static_cast < unsigned int > ( decaySlider -> getValue () ) );
         SharedResourcePointer < ListenerList < BankRepaintWaveform > > () -> call (
-                                                                                   &BankRepaintWaveform::onBankRepaintWaveform
-                                                                                  );
+                                                                                   &BankRepaintWaveform::onBankRepaintWaveform );
         //[/UserSliderCode_decaySlider]
     }
-    else if (sliderThatWasMoved == sustainSlider.get())
+    else if ( slider_that_was_moved == sustainSlider . get () )
     {
         //[UserSliderCode_sustainSlider] -- add your slider handling code here..
         sustainLabel -> setText (
                                  sustainSlider -> getTextFromValue (
-                                                                    sustainSlider -> getValue ()
-                                                                   )
-                               , dontSendNotification
-                                );
+                                                                    sustainSlider -> getValue () )
+                               , dontSendNotification );
         patchEditorSustainChangedListeners -> call (
                                                     &PatchEditorSustainChanged::onPatchEditorSustainChanged
-                                                  , static_cast < unsigned int > ( sustainSlider -> getValue () )
-                                                   );
+                                                  , static_cast < unsigned int > ( sustainSlider -> getValue () ) );
         SharedResourcePointer < ListenerList < BankRepaintWaveform > > () -> call (
-                                                                                   &BankRepaintWaveform::onBankRepaintWaveform
-                                                                                  );
+                                                                                   &BankRepaintWaveform::onBankRepaintWaveform );
         //[/UserSliderCode_sustainSlider]
     }
-    else if (sliderThatWasMoved == releaseSlider.get())
+    else if ( slider_that_was_moved == releaseSlider . get () )
     {
         //[UserSliderCode_releaseSlider] -- add your slider handling code here..
         releaseLabel -> setText (
                                  releaseSlider -> getTextFromValue (
-                                                                    releaseSlider -> getValue ()
-                                                                   )
-                               , dontSendNotification
-                                );
+                                                                    releaseSlider -> getValue () )
+                               , dontSendNotification );
         patchEditorReleaseChangedListeners -> call (
                                                     &PatchEditorReleaseChanged::onPatchEditorReleaseChanged
-                                                  , static_cast < unsigned int > ( releaseSlider -> getValue () )
-                                                   );
+                                                  , static_cast < unsigned int > ( releaseSlider -> getValue () ) );
         SharedResourcePointer < ListenerList < BankRepaintWaveform > > () -> call (
-                                                                                   &BankRepaintWaveform::onBankRepaintWaveform
-                                                                                  );
+                                                                                   &BankRepaintWaveform::onBankRepaintWaveform );
         //[/UserSliderCode_releaseSlider]
     }
-    else if (sliderThatWasMoved == pitchBendRangeSlider.get())
+    else if ( slider_that_was_moved == pitchBendRangeSlider . get () )
     {
         //[UserSliderCode_pitchBendRangeSlider] -- add your slider handling code here..
         pitchBendRangeLabel -> setText (
                                         pitchBendRangeSlider -> getTextFromValue (
-                                                                                  pitchBendRangeSlider -> getValue ()
-                                                                                 )
-                                      , dontSendNotification
-                                       );
+                                                                                  pitchBendRangeSlider -> getValue () )
+                                      , dontSendNotification );
         patchEditorPitchBendRangeChangedListeners -> call (
                                                            &PatchEditorPitchBendRangeChanged::onPatchEditorPitchBendRangeChanged
-                                                         , static_cast < unsigned int > ( pitchBendRangeSlider -> getValue () )
-                                                          );
+                                                         , static_cast < unsigned int > ( pitchBendRangeSlider -> getValue () ) );
         SharedResourcePointer < ListenerList < BankRepaintWaveform > > () -> call (
-                                                                                   &BankRepaintWaveform::onBankRepaintWaveform
-                                                                                  );
+                                                                                   &BankRepaintWaveform::onBankRepaintWaveform );
         //[/UserSliderCode_pitchBendRangeSlider]
     }
-    else if (sliderThatWasMoved == vibratoRangeSlider.get())
+    else if ( slider_that_was_moved == vibratoRangeSlider . get () )
     {
         //[UserSliderCode_vibratoRangeSlider] -- add your slider handling code here..
         vibratoRangeLabel -> setText (
                                       vibratoRangeSlider -> getTextFromValue (
-                                                                              vibratoRangeSlider -> getValue ()
-                                                                             )
-                                    , dontSendNotification
-                                     );
+                                                                              vibratoRangeSlider -> getValue () )
+                                    , dontSendNotification );
         patchEditorVibratoRangeChangedListeners -> call (
                                                          &PatchEditorVibratoRangeChanged::onPatchEditorVibratoRangeChanged
-                                                       , static_cast < unsigned int > ( vibratoRangeSlider -> getValue () )
-                                                        );
+                                                       , static_cast < unsigned int > ( vibratoRangeSlider -> getValue () ) );
         SharedResourcePointer < ListenerList < BankRepaintWaveform > > () -> call (
-                                                                                   &BankRepaintWaveform::onBankRepaintWaveform
-                                                                                  );
+                                                                                   &BankRepaintWaveform::onBankRepaintWaveform );
         //[/UserSliderCode_vibratoRangeSlider]
     }
-    else if (sliderThatWasMoved == vibratoSpeedSlider.get())
+    else if ( slider_that_was_moved == vibratoSpeedSlider . get () )
     {
         //[UserSliderCode_vibratoSpeedSlider] -- add your slider handling code here..
         vibratoSpeedLabel -> setText (
                                       vibratoSpeedSlider -> getTextFromValue (
-                                                                              vibratoSpeedSlider -> getValue ()
-                                                                             )
-                                    , dontSendNotification
-                                     );
+                                                                              vibratoSpeedSlider -> getValue () )
+                                    , dontSendNotification );
         patchEditorVibratoSpeedChangedListeners -> call (
                                                          &PatchEditorVibratoSpeedChanged::onPatchEditorVibratoSpeedChanged
-                                                       , static_cast < unsigned int > ( vibratoSpeedSlider -> getValue () )
-                                                        );
+                                                       , static_cast < unsigned int > ( vibratoSpeedSlider -> getValue () ) );
         SharedResourcePointer < ListenerList < BankRepaintWaveform > > () -> call (
-                                                                                   &BankRepaintWaveform::onBankRepaintWaveform
-                                                                                  );
+                                                                                   &BankRepaintWaveform::onBankRepaintWaveform );
         //[/UserSliderCode_vibratoSpeedSlider]
     }
-    else if (sliderThatWasMoved == pulseWidthRangeSlider.get())
+    else if ( slider_that_was_moved == pulseWidthRangeSlider . get () )
     {
         //[UserSliderCode_pulseWidthRangeSlider] -- add your slider handling code here..
         pulseWidthRangeLabel -> setText (
                                          pulseWidthRangeSlider -> getTextFromValue (
-                                                                                    pulseWidthRangeSlider -> getValue ()
-                                                                                   )
-                                       , dontSendNotification
-                                        );
+                                                                                    pulseWidthRangeSlider -> getValue () )
+                                       , dontSendNotification );
         patchEditorPulseWidthRangeChangedListeners -> call (
                                                             &PatchEditorPulseWidthRangeChanged::onPatchEditorPulseWidthRangeChanged
-                                                          , static_cast < unsigned int > ( pulseWidthRangeSlider -> getValue () )
-                                                           );
+                                                          , static_cast < unsigned int > ( pulseWidthRangeSlider -> getValue () ) );
         SharedResourcePointer < ListenerList < BankRepaintWaveform > > () -> call (
-                                                                                   &BankRepaintWaveform::onBankRepaintWaveform
-                                                                                  );
+                                                                                   &BankRepaintWaveform::onBankRepaintWaveform );
         //[/UserSliderCode_pulseWidthRangeSlider]
     }
-    else if (sliderThatWasMoved == vibratoDelaySlider.get())
+    else if ( slider_that_was_moved == vibratoDelaySlider . get () )
     {
         //[UserSliderCode_vibratoDelaySlider] -- add your slider handling code here..
         vibratoDelayLabel -> setText (
                                       vibratoDelaySlider -> getTextFromValue (
-                                                                              vibratoDelaySlider -> getValue ()
-                                                                             )
-                                    , dontSendNotification
-                                     );
+                                                                              vibratoDelaySlider -> getValue () )
+                                    , dontSendNotification );
         patchEditorVibratoDelayChangedListeners -> call (
                                                          &PatchEditorVibratoDelayChanged::onPatchEditorVibratoDelayChanged
-                                                       , static_cast < unsigned int > ( vibratoDelaySlider -> getValue () )
-                                                        );
+                                                       , static_cast < unsigned int > ( vibratoDelaySlider -> getValue () ) );
         SharedResourcePointer < ListenerList < BankRepaintWaveform > > () -> call (
-                                                                                   &BankRepaintWaveform::onBankRepaintWaveform
-                                                                                  );
+                                                                                   &BankRepaintWaveform::onBankRepaintWaveform );
         //[/UserSliderCode_vibratoDelaySlider]
     }
-    else if (sliderThatWasMoved == vibratoDefaultAmountSlider.get())
+    else if ( slider_that_was_moved == vibratoDefaultAmountSlider . get () )
     {
         //[UserSliderCode_vibratoDefaultAmountSlider] -- add your slider handling code here..
         vibratoDefaultAmountLabel -> setText (
                                               vibratoDefaultAmountSlider -> getTextFromValue (
-                                                                                              vibratoDefaultAmountSlider -> getValue ()
-                                                                                             ) + "%"
-                                            , dontSendNotification
-                                             );
+                                                                                              vibratoDefaultAmountSlider -> getValue () ) + "%"
+                                            , dontSendNotification );
         patchEditorVibratoDefaultAmountChangedListeners -> call (
                                                                  &PatchEditorVibratoDefaultAmountChanged::onPatchEditorVibratoDefaultAmountChanged
-                                                               , static_cast < float > ( vibratoDefaultAmountSlider -> getValue () / 100.0 )
-                                                                );
+                                                               , static_cast < float > ( vibratoDefaultAmountSlider -> getValue () / 100.0 ) );
         SharedResourcePointer < ListenerList < BankRepaintWaveform > > () -> call (
-                                                                                   &BankRepaintWaveform::onBankRepaintWaveform
-                                                                                  );
+                                                                                   &BankRepaintWaveform::onBankRepaintWaveform );
         //[/UserSliderCode_vibratoDefaultAmountSlider]
     }
-    else if (sliderThatWasMoved == vibratoDefaultSpeedSlider.get())
+    else if ( slider_that_was_moved == vibratoDefaultSpeedSlider . get () )
     {
         //[UserSliderCode_vibratoDefaultSpeedSlider] -- add your slider handling code here..
         vibratoDefaultSpeedLabel -> setText (
                                              vibratoDefaultSpeedSlider -> getTextFromValue (
-                                                                                            vibratoDefaultSpeedSlider -> getValue ()
-                                                                                           ) + "%"
-                                           , dontSendNotification
-                                            );
+                                                                                            vibratoDefaultSpeedSlider -> getValue () ) + "%"
+                                           , dontSendNotification );
         patchEditorVibratoDefaultSpeedChangedListeners -> call (
                                                                 &PatchEditorVibratoDefaultSpeedChanged::onPatchEditorVibratoDefaultSpeedChanged
-                                                              , static_cast < float > ( vibratoDefaultSpeedSlider -> getValue () / 100.0 )
-                                                               );
+                                                              , static_cast < float > ( vibratoDefaultSpeedSlider -> getValue () / 100.0 ) );
         SharedResourcePointer < ListenerList < BankRepaintWaveform > > () -> call (
-                                                                                   &BankRepaintWaveform::onBankRepaintWaveform
-                                                                                  );
+                                                                                   &BankRepaintWaveform::onBankRepaintWaveform );
         //[/UserSliderCode_vibratoDefaultSpeedSlider]
     }
-    else if (sliderThatWasMoved == pulseWidthCenterSlider.get())
+    else if ( slider_that_was_moved == pulseWidthCenterSlider . get () )
     {
         //[UserSliderCode_pulseWidthCenterSlider] -- add your slider handling code here..
         pulseWidthCenterLabel -> setText (
                                           pulseWidthCenterSlider -> getTextFromValue (
-                                                                                      pulseWidthCenterSlider -> getValue ()
-                                                                                     )
-                                        , dontSendNotification
-                                         );
+                                                                                      pulseWidthCenterSlider -> getValue () )
+                                        , dontSendNotification );
         patchEditorPulseWidthCenterChangedListeners -> call (
                                                              &PatchEditorPulseWidthCenterChanged::onPatchEditorPulseWidthCenterChanged
-                                                           , static_cast < unsigned int > ( pulseWidthCenterSlider -> getValue () )
-                                                            );
+                                                           , static_cast < unsigned int > ( pulseWidthCenterSlider -> getValue () ) );
         SharedResourcePointer < ListenerList < BankRepaintWaveform > > () -> call (
-                                                                                   &BankRepaintWaveform::onBankRepaintWaveform
-                                                                                  );
+                                                                                   &BankRepaintWaveform::onBankRepaintWaveform );
         //[/UserSliderCode_pulseWidthCenterSlider]
     }
-    else if (sliderThatWasMoved == pulseWidthDefaultSlider.get())
+    else if ( slider_that_was_moved == pulseWidthDefaultSlider . get () )
     {
         //[UserSliderCode_pulseWidthDefaultSlider] -- add your slider handling code here..
         pulseWidthDefaultLabel -> setText (
                                            pulseWidthDefaultSlider -> getTextFromValue (
-                                                                                        pulseWidthDefaultSlider -> getValue ()
-                                                                                       ) + "%"
-                                         , dontSendNotification
-                                          );
+                                                                                        pulseWidthDefaultSlider -> getValue () ) + "%"
+                                         , dontSendNotification );
         patchEditorPulseWidthDefaultChangedListeners -> call (
                                                               &PatchEditorPulseWidthDefaultChanged::onPatchEditorPulseWidthDefaultChanged
-                                                            , static_cast < float > ( pulseWidthDefaultSlider -> getValue () / 100.0 )
-                                                             );
+                                                            , static_cast < float > ( pulseWidthDefaultSlider -> getValue () / 100.0 ) );
         SharedResourcePointer < ListenerList < BankRepaintWaveform > > () -> call (
-                                                                                   &BankRepaintWaveform::onBankRepaintWaveform
-                                                                                  );
+                                                                                   &BankRepaintWaveform::onBankRepaintWaveform );
         //[/UserSliderCode_pulseWidthDefaultSlider]
     }
 
@@ -829,122 +1457,111 @@ void PatchEditor::sliderValueChanged (juce::Slider* sliderThatWasMoved)
     //[/UsersliderValueChanged_Post]
 }
 
-void PatchEditor::labelTextChanged (juce::Label* labelThatHasChanged)
+void
+    PatchEditor::labelTextChanged (
+            Label* label_that_has_changed
+            )
 {
     //[UserlabelTextChanged_Pre]
     //[/UserlabelTextChanged_Pre]
 
-    if (labelThatHasChanged == attackLabel.get())
+    if ( label_that_has_changed == attackLabel . get () )
     {
         //[UserLabelCode_attackLabel] -- add your label text handling code here..
         attackSlider -> setValue (
-                                  attackLabel -> getText () . getIntValue ()
-                                 );
+                                  attackLabel -> getText () . getIntValue () );
         //[/UserLabelCode_attackLabel]
     }
-    else if (labelThatHasChanged == decayLabel.get())
+    else if ( label_that_has_changed == decayLabel . get () )
     {
         //[UserLabelCode_decayLabel] -- add your label text handling code here..
         decaySlider -> setValue (
-                                 decayLabel -> getText () . getIntValue ()
-                                );
+                                 decayLabel -> getText () . getIntValue () );
         //[/UserLabelCode_decayLabel]
     }
-    else if (labelThatHasChanged == sustainLabel.get())
+    else if ( label_that_has_changed == sustainLabel . get () )
     {
         //[UserLabelCode_sustainLabel] -- add your label text handling code here..
         sustainSlider -> setValue (
-                                   sustainLabel -> getText () . getIntValue ()
-                                  );
+                                   sustainLabel -> getText () . getIntValue () );
         //[/UserLabelCode_sustainLabel]
     }
-    else if (labelThatHasChanged == releaseLabel.get())
+    else if ( label_that_has_changed == releaseLabel . get () )
     {
         //[UserLabelCode_releaseLabel] -- add your label text handling code here..
         releaseSlider -> setValue (
-                                   releaseLabel -> getText () . getIntValue ()
-                                  );
+                                   releaseLabel -> getText () . getIntValue () );
         //[/UserLabelCode_releaseLabel]
     }
-    else if (labelThatHasChanged == pitchBendRangeLabel.get())
+    else if ( label_that_has_changed == pitchBendRangeLabel . get () )
     {
         //[UserLabelCode_pitchBendRangeLabel] -- add your label text handling code here..
         pitchBendRangeSlider -> setValue (
-                                          pitchBendRangeLabel -> getText () . getIntValue ()
-                                         );
+                                          pitchBendRangeLabel -> getText () . getIntValue () );
         //[/UserLabelCode_pitchBendRangeLabel]
     }
-    else if (labelThatHasChanged == vibratoRangeLabel.get())
+    else if ( label_that_has_changed == vibratoRangeLabel . get () )
     {
         //[UserLabelCode_vibratoRangeLabel] -- add your label text handling code here..
         vibratoRangeSlider -> setValue (
-                                        vibratoRangeLabel -> getText () . getIntValue ()
-                                       );
+                                        vibratoRangeLabel -> getText () . getIntValue () );
         //[/UserLabelCode_vibratoRangeLabel]
     }
-    else if (labelThatHasChanged == vibratoSpeedLabel.get())
+    else if ( label_that_has_changed == vibratoSpeedLabel . get () )
     {
         //[UserLabelCode_vibratoSpeedLabel] -- add your label text handling code here..
         vibratoSpeedSlider -> setValue (
-                                        vibratoSpeedLabel -> getText () . getIntValue ()
-                                       );
+                                        vibratoSpeedLabel -> getText () . getIntValue () );
         //[/UserLabelCode_vibratoSpeedLabel]
     }
-    else if (labelThatHasChanged == pulseWidthRangeLabel.get())
+    else if ( label_that_has_changed == pulseWidthRangeLabel . get () )
     {
         //[UserLabelCode_pulseWidthRangeLabel] -- add your label text handling code here..
         pulseWidthRangeSlider -> setValue (
-                                           pulseWidthRangeLabel -> getText () . getIntValue ()
-                                          );
+                                           pulseWidthRangeLabel -> getText () . getIntValue () );
         //[/UserLabelCode_pulseWidthRangeLabel]
     }
-    else if (labelThatHasChanged == vibratoDelayLabel.get())
+    else if ( label_that_has_changed == vibratoDelayLabel . get () )
     {
         //[UserLabelCode_vibratoDelayLabel] -- add your label text handling code here..
         vibratoDelaySlider -> setValue (
-                                        vibratoDelayLabel -> getText () . getIntValue ()
-                                       );
+                                        vibratoDelayLabel -> getText () . getIntValue () );
         //[/UserLabelCode_vibratoDelayLabel]
     }
-    else if (labelThatHasChanged == patchName.get())
+    else if ( label_that_has_changed == patchName . get () )
     {
         //[UserLabelCode_patchName] -- add your label text handling code here..
         patchEditorNameChangedListeners -> call (
                                                  &PatchEditorNameChanged::onPatchEditorNameChanged
-                                               , patchName -> getText ()
-                                                );
+                                               , patchName -> getText () );
         //[/UserLabelCode_patchName]
     }
-    else if (labelThatHasChanged == vibratoDefaultAmountLabel.get())
+    else if ( label_that_has_changed == vibratoDefaultAmountLabel . get () )
     {
         //[UserLabelCode_vibratoDefaultAmountLabel] -- add your label text handling code here..
         vibratoDefaultAmountSlider -> setValue (
-                                                vibratoDefaultAmountLabel -> getText () . getIntValue ()
-                                               );
+                                                vibratoDefaultAmountLabel -> getText () . getIntValue () );
         //[/UserLabelCode_vibratoDefaultAmountLabel]
     }
-    else if (labelThatHasChanged == vibratoDefaultSpeedLabel.get())
+    else if ( label_that_has_changed == vibratoDefaultSpeedLabel . get () )
     {
         //[UserLabelCode_vibratoDefaultSpeedLabel] -- add your label text handling code here..
         vibratoDefaultSpeedSlider -> setValue (
-                                               vibratoDefaultSpeedLabel -> getText () . getIntValue ()
-                                              );
+                                               vibratoDefaultSpeedLabel -> getText () . getIntValue () );
         //[/UserLabelCode_vibratoDefaultSpeedLabel]
     }
-    else if (labelThatHasChanged == pulseWidthCenterLabel.get())
+    else if ( label_that_has_changed == pulseWidthCenterLabel . get () )
     {
         //[UserLabelCode_pulseWidthCenterLabel] -- add your label text handling code here..
         pulseWidthCenterSlider -> setValue (
-                                            pulseWidthCenterLabel -> getText () . getIntValue ()
-                                           );
+                                            pulseWidthCenterLabel -> getText () . getIntValue () );
         //[/UserLabelCode_pulseWidthCenterLabel]
     }
-    else if (labelThatHasChanged == pulseWidthDefaultLabel.get())
+    else if ( label_that_has_changed == pulseWidthDefaultLabel . get () )
     {
         //[UserLabelCode_pulseWidthDefaultLabel] -- add your label text handling code here..
         pulseWidthDefaultSlider -> setValue (
-                                             pulseWidthDefaultLabel -> getText () . getIntValue ()
-                                            );
+                                             pulseWidthDefaultLabel -> getText () . getIntValue () );
         //[/UserLabelCode_pulseWidthDefaultLabel]
     }
 
@@ -952,68 +1569,61 @@ void PatchEditor::labelTextChanged (juce::Label* labelThatHasChanged)
     //[/UserlabelTextChanged_Post]
 }
 
-void PatchEditor::buttonClicked (juce::Button* buttonThatWasClicked)
+void
+    PatchEditor::buttonClicked (
+            Button* button_that_was_clicked
+            )
 {
     //[UserbuttonClicked_Pre]
     //[/UserbuttonClicked_Pre]
 
-    if (buttonThatWasClicked == liveModeButton.get())
+    if ( button_that_was_clicked == liveModeButton . get () )
     {
         //[UserButtonCode_liveModeButton] -- add your button handler code here..
-		// TODO: Need to trigger sending a BankProgramChanged event before the switch so that live patches will be refreshed.
-		// In order to do this, Bank will need to respond to the PatchEditorLiveModeClicked event.  Not sure how to manage
-		// the timing yet, but SIDStep2 will STILL need to respond to the PatchEditorLiveModeClicked event as WELL, because
-		// a refresh during a save as must be executed immediately to allow for properly refreshing oldID.
+        // TODO: Need to trigger sending a BankProgramChanged event before the switch so that live patches will be refreshed.
+        // In order to do this, Bank will need to respond to the PatchEditorLiveModeClicked event.  Not sure how to manage
+        // the timing yet, but SIDStep2 will STILL need to respond to the PatchEditorLiveModeClicked event as WELL, because
+        // a refresh during a save as must be executed immediately to allow for properly refreshing oldID.
         SharedResourcePointer < ListenerList < BankRefreshLive > > () -> call (
-                                                                               &BankRefreshLive::onBankRefreshLive
-                                                                              );
+                                                                               &BankRefreshLive::onBankRefreshLive );
         patchEditorLiveModeClickedListeners -> call (
-                                                     &PatchEditorLiveModeClicked::onPatchEditorLiveModeClicked
-                                                    );
+                                                     &PatchEditorLiveModeClicked::onPatchEditorLiveModeClicked );
         setVisible (
-                    false
-                   );
+                    false );
         //[/UserButtonCode_liveModeButton]
     }
-    else if (buttonThatWasClicked == menuButton.get())
+    else if ( button_that_was_clicked == menuButton . get () )
     {
         //[UserButtonCode_menuButton] -- add your button handler code here..
         bankMenu -> setVisible (
-                                !bankMenu -> isVisible ()
-                               );
+                                !bankMenu -> isVisible () );
         //[/UserButtonCode_menuButton]
     }
-    else if (buttonThatWasClicked == newRowButton.get())
+    else if ( button_that_was_clicked == newRowButton . get () )
     {
         //[UserButtonCode_newRowButton] -- add your button handler code here..
         patchEditorNewWavetableRowClickedListeners -> call (
-                                                            &PatchEditorNewTableRowClicked::onPatchEditorNewTableRowClicked
-                                                           );
+                                                            &PatchEditorNewTableRowClicked::onPatchEditorNewTableRowClicked );
         SharedResourcePointer < ListenerList < BankRepaintWaveform > > () -> call (
-                                                                                   &BankRepaintWaveform::onBankRepaintWaveform
-                                                                                  );
+                                                                                   &BankRepaintWaveform::onBankRepaintWaveform );
         //[/UserButtonCode_newRowButton]
     }
-    else if (buttonThatWasClicked == newCommandButton.get())
+    else if ( button_that_was_clicked == newCommandButton . get () )
     {
         //[UserButtonCode_newCommandButton] -- add your button handler code here..
         patchEditorNewWavetableCommandClickedListeners -> call (
-                                                                &PatchEditorNewTableCommandClicked::onPatchEditorNewTableCommandClicked
-                                                               );
+                                                                &PatchEditorNewTableCommandClicked::onPatchEditorNewTableCommandClicked );
         SharedResourcePointer < ListenerList < BankRepaintWaveform > > () -> call (
-                                                                                   &BankRepaintWaveform::onBankRepaintWaveform
-                                                                                  );
+                                                                                   &BankRepaintWaveform::onBankRepaintWaveform );
         //[/UserButtonCode_newCommandButton]
     }
-    else if (buttonThatWasClicked == deleteButton.get())
+    else if ( button_that_was_clicked == deleteButton . get () )
     {
         //[UserButtonCode_deleteButton] -- add your button handler code here..
-        patchEditorDeleteWaveatableRowClickedListeners -> call (
-                                                                &PatchEditorDeleteTableRowClicked::onPatchEditorDeleteTableRowClicked
-                                                               );
+        patchEditorDeleteWavetableRowClickedListeners -> call (
+                                                               &PatchEditorDeleteTableRowClicked::onPatchEditorDeleteTableRowClicked );
         SharedResourcePointer < ListenerList < BankRepaintWaveform > > () -> call (
-                                                                                   &BankRepaintWaveform::onBankRepaintWaveform
-                                                                                  );
+                                                                                   &BankRepaintWaveform::onBankRepaintWaveform );
         //[/UserButtonCode_deleteButton]
     }
 
@@ -1022,11 +1632,10 @@ void PatchEditor::buttonClicked (juce::Button* buttonThatWasClicked)
 }
 
 
-
 //[MiscUserCode] You can add your own definitions of your custom methods or any other code here...
 void
     PatchEditor::onBankProgramChanged (
-            String                                   old_id
+            String                                         old_id
           , const ReferenceCountedObjectPtr < SidProgram > program
             )
 {
@@ -1034,168 +1643,110 @@ void
 
     patchName -> setText (
                           program -> GetName ()
-                        , dontSendNotification
-                         );
-
+                        , dontSendNotification );
     const auto e  = program -> GetEnvelope ();
     const auto ex = program -> GetExpression ();
     const auto v  = ex -> getVibrato ();
     const auto t  = ex -> getTremolo ();
-
     attackSlider -> setValue (
                               e -> getAttack ()
-                            , dontSendNotification
-                             );
+                            , dontSendNotification );
     attackLabel -> setText (
                             attackSlider -> getTextFromValue (
-                                                              attackSlider -> getValue ()
-                                                             )
-                          , dontSendNotification
-                           );
-
+                                                              attackSlider -> getValue () )
+                          , dontSendNotification );
     decaySlider -> setValue (
                              e -> getDecay ()
-                           , dontSendNotification
-                            );
+                           , dontSendNotification );
     decayLabel -> setText (
                            decaySlider -> getTextFromValue (
-                                                            decaySlider -> getValue ()
-                                                           )
-                         , dontSendNotification
-                          );
-
+                                                            decaySlider -> getValue () )
+                         , dontSendNotification );
     sustainSlider -> setValue (
                                e -> getSustain ()
-                             , dontSendNotification
-                              );
+                             , dontSendNotification );
     sustainLabel -> setText (
                              sustainSlider -> getTextFromValue (
-                                                                sustainSlider -> getValue ()
-                                                               )
-                           , dontSendNotification
-                            );
-
+                                                                sustainSlider -> getValue () )
+                           , dontSendNotification );
     releaseSlider -> setValue (
                                e -> getRelease ()
-                             , dontSendNotification
-                              );
+                             , dontSendNotification );
     releaseLabel -> setText (
                              releaseSlider -> getTextFromValue (
-                                                                releaseSlider -> getValue ()
-                                                               )
-                           , dontSendNotification
-                            );
-
+                                                                releaseSlider -> getValue () )
+                           , dontSendNotification );
     pitchBendRangeSlider -> setValue (
                                       ex -> getPitchBendRange ()
-                                    , dontSendNotification
-                                     );
+                                    , dontSendNotification );
     pitchBendRangeLabel -> setText (
                                     pitchBendRangeSlider -> getTextFromValue (
-                                                                              pitchBendRangeSlider -> getValue ()
-                                                                             )
-                                  , dontSendNotification
-                                   );
-
+                                                                              pitchBendRangeSlider -> getValue () )
+                                  , dontSendNotification );
     pulseWidthRangeSlider -> setValue (
                                        ex -> getPulseWidthRange ()
-                                     , dontSendNotification
-                                      );
+                                     , dontSendNotification );
     pulseWidthRangeLabel -> setText (
                                      pulseWidthRangeSlider -> getTextFromValue (
-                                                                                pulseWidthRangeSlider -> getValue ()
-                                                                               )
-                                   , dontSendNotification
-                                    );
-
+                                                                                pulseWidthRangeSlider -> getValue () )
+                                   , dontSendNotification );
     pulseWidthCenterSlider -> setValue (
                                         ex -> getPulseWidthCenter ()
-                                      , dontSendNotification
-                                       );
+                                      , dontSendNotification );
     pulseWidthCenterLabel -> setText (
                                       pulseWidthCenterSlider -> getTextFromValue (
-                                                                                  pulseWidthCenterSlider -> getValue ()
-                                                                                 )
-                                    , dontSendNotification
-                                     );
-
+                                                                                  pulseWidthCenterSlider -> getValue () )
+                                    , dontSendNotification );
     pulseWidthDefaultSlider -> setValue (
                                          ex -> getPulseWidthDefault () * 100
-                                       , dontSendNotification
-                                        );
+                                       , dontSendNotification );
     pulseWidthDefaultLabel -> setText (
                                        pulseWidthDefaultSlider -> getTextFromValue (
-                                                                                    pulseWidthDefaultSlider -> getValue ()
-                                                                                   ) + "%"
-                                     , dontSendNotification
-                                      );
-
+                                                                                    pulseWidthDefaultSlider -> getValue () ) + "%"
+                                     , dontSendNotification );
     vibratoRangeSlider -> setValue (
                                     v -> GetVibratoRange ()
-                                  , dontSendNotification
-                                   );
+                                  , dontSendNotification );
     vibratoRangeLabel -> setText (
                                   vibratoRangeSlider -> getTextFromValue (
-                                                                          vibratoRangeSlider -> getValue ()
-                                                                         )
-                                , dontSendNotification
-                                 );
-
+                                                                          vibratoRangeSlider -> getValue () )
+                                , dontSendNotification );
     vibratoSpeedSlider -> setValue (
                                     v -> GetVibratoSpeed ()
-                                  , dontSendNotification
-                                   );
+                                  , dontSendNotification );
     vibratoSpeedLabel -> setText (
                                   vibratoSpeedSlider -> getTextFromValue (
-                                                                          vibratoSpeedSlider -> getValue ()
-                                                                         )
-                                , dontSendNotification
-                                 );
-
+                                                                          vibratoSpeedSlider -> getValue () )
+                                , dontSendNotification );
     vibratoDefaultAmountSlider -> setValue (
                                             v -> GetDefaultVibratoAmount () * 100
-                                          , dontSendNotification
-                                           );
+                                          , dontSendNotification );
     vibratoDefaultAmountLabel -> setText (
                                           vibratoDefaultAmountSlider -> getTextFromValue (
-                                                                                          vibratoDefaultAmountSlider -> getValue ()
-                                                                                         ) + "%"
-                                        , dontSendNotification
-                                         );
-
+                                                                                          vibratoDefaultAmountSlider -> getValue () ) + "%"
+                                        , dontSendNotification );
     vibratoDefaultSpeedSlider -> setValue (
                                            v -> GetDefaultVibratoSpeed () * 100
-                                         , dontSendNotification
-                                          );
+                                         , dontSendNotification );
     vibratoDefaultSpeedLabel -> setText (
                                          vibratoDefaultSpeedSlider -> getTextFromValue (
-                                                                                        vibratoDefaultSpeedSlider -> getValue ()
-                                                                                       ) + "%"
-                                       , dontSendNotification
-                                        );
-
+                                                                                        vibratoDefaultSpeedSlider -> getValue () ) + "%"
+                                       , dontSendNotification );
     repaint ();
-
     MessageManager::callAsync (
                                [=] ()
                                {
                                    SharedResourcePointer < ListenerList < PatchEditorShowWaveTable > > () -> call (
-                                                                                                                   &PatchEditorShowWaveTable::
-                                                                                                                   onPatchEditorShowWaveTable
-                                                                                                                  );
-                               }
-                              );
+                                                                                                                   &PatchEditorShowWaveTable::onPatchEditorShowWaveTable );
+                               } );
 }
-
 
 void
     PatchEditor::onBankStartSaveAs ()
 {
     saveAsDialog -> setVisible (
-                                true
-                               );
+                                true );
 }
-
 
 void
     PatchEditor::onLivePatchEditorModeClicked ()
@@ -1208,34 +1759,31 @@ void
                                } );
 }
 
-
 void
     PatchEditor::onPatchEditorShowNoteTable ()
 {
     commandTableViewport -> setViewedComponent (
                                                 noteTable
-                                              , false
-                                               );
+                                              , false );
+    noteTable -> resized ();
 }
-
 
 void
     PatchEditor::onPatchEditorShowPulseTable ()
 {
     commandTableViewport -> setViewedComponent (
                                                 pulseTable
-                                              , false
-                                               );
+                                              , false );
+    pulseTable -> resized ();
 }
-
 
 void
     PatchEditor::onPatchEditorShowWaveTable ()
 {
     commandTableViewport -> setViewedComponent (
                                                 wavetable
-                                              , false
-                                               );
+                                              , false );
+    wavetable -> resized ();
 }
 
 
