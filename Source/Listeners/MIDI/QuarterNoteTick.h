@@ -5,7 +5,7 @@
 #include "../../Defines.h"
 
 
-EVENT(QuarterNoteTick, (unsigned int ppq));
+EVENT(QuarterNoteTick, (unsigned int ppq, bool playing));
 
 
 #endif  // QUARTERNOTETICK_H_INCLUDED

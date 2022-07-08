@@ -686,6 +686,7 @@ void
 void
     SidRegisters::onQuarterNoteTick (
             const unsigned int ppq
+          , bool               playing
             )
 {
     currentQuarterNote = ppq;

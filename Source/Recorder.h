@@ -190,6 +190,7 @@ public:
     void
         onQuarterNoteTick (
                 unsigned ppq
+              , bool     playing
                 ) override;
 
     void

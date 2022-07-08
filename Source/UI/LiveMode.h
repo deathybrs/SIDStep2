@@ -21,7 +21,11 @@
 
 //[Headers]     -- You can add your own extra header files here --
 #include <JuceHeader.h>
+
+
 #include "../Listeners/ListenerInitializer.h"
+
+
 class Patches;
 // ReSharper disable once CppInconsistentNaming
 class SIDStepLookAndFeel;
@@ -242,6 +246,7 @@ public:
     void
         onQuarterNoteTick (
                 unsigned int ppq
+              , bool         playing
                 ) override;
 
     void

@@ -2383,6 +2383,8 @@ LiveMode::LiveMode ()
                                                                             this );
     SharedResourcePointer < ListenerList < QuarterNoteTick > > () -> add (
                                                                           this );
+    SharedResourcePointer < ListenerList < LiveDoneExporting > > () -> add (
+                                                                            this );
     //[/UserPreSize]
 
     setSize (
@@ -2443,6 +2445,8 @@ LiveMode::~LiveMode ()
                                                                                this );
     SharedResourcePointer < ListenerList < QuarterNoteTick > > () -> remove (
                                                                              this );
+    SharedResourcePointer < ListenerList < LiveDoneExporting > > () -> remove (
+                                                                               this );
     patches = nullptr;
     //[/Destructor_pre]
 
@@ -3327,10 +3331,10 @@ void
         //[UserButtonCode_filterHighPassCheckbox] -- add your button handler code here..
         SharedResourcePointer < ListenerList < LiveHighPassChanged > > () -> call (
                                                                                    &LiveHighPassChanged::onLiveHighPassChanged
-                                                                                 , filterHighPassCheckbox -> getToggleState () * 2 );
+                                                                                 , filterHighPassCheckbox -> getToggleState () * 4 );
         SharedResourcePointer < ListenerList < ExportHighPassChanged > > () -> call (
                                                                                      &ExportHighPassChanged::onExportHighPassChanged
-                                                                                   , filterHighPassCheckbox -> getToggleState () * 2 );
+                                                                                   , filterHighPassCheckbox -> getToggleState () * 4 );
         //[/UserButtonCode_filterHighPassCheckbox]
     }
     else if ( buttonThatWasClicked == patchEditorButton . get () )
@@ -4192,8 +4196,11 @@ void
 void
     LiveMode::onQuarterNoteTick (
             unsigned ppq
+          , const bool     playing
             )
 {
+    if ( !playing ) { return; }
+
     quarterNoteTicked = true;
     startTimer (
                 125 );

@@ -857,6 +857,7 @@ void
 void
     Recorder::onQuarterNoteTick (
             const unsigned ppq
+          , bool           playing
             )
 {
     if ( ppq == static_cast < unsigned > ( currentPpq ) ) { return; }

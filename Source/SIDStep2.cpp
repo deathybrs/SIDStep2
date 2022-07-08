@@ -232,7 +232,8 @@ void
                     {
                         SharedResourcePointer < ListenerList < QuarterNoteTick > > () -> call (
                                                                                                &QuarterNoteTick::onQuarterNoteTick
-                                                                                             , static_cast < unsigned int > ( sampleIndex / samples_per_quarter_note ) + 1 );
+                                                                                             , static_cast < unsigned int > ( sampleIndex / samples_per_quarter_note ) + 1
+                                                                                             , position_info . isPlaying );
                     }
                 }
                 // Then trigger the frame updates.
@@ -269,7 +270,8 @@ void
             {
                 SharedResourcePointer < ListenerList < QuarterNoteTick > > () -> call (
                                                                                        &QuarterNoteTick::onQuarterNoteTick
-                                                                                     , static_cast < unsigned int > ( sampleIndex / samples_per_quarter_note ) );
+                                                                                     , static_cast < unsigned int > ( sampleIndex / samples_per_quarter_note )
+                                                                                     , position_info . isPlaying );
             }
         }
 
