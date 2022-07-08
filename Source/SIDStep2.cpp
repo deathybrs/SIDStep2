@@ -433,7 +433,7 @@ void
                                                c );
         }
     }
-    FirePatchListChanged();
+    FirePatchListChanged ();
     for ( auto v = 0 ; v < 3 ; v++ )
     {
         unsigned int selection;

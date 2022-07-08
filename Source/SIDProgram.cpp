@@ -216,7 +216,7 @@ void
     e -> setAttribute (
                        "factory-preset"
                      , String (
-                               static_cast < int > ( factoryPreset ) ) );
+                               static_cast < int > ( false ) ) );
     e -> setAttribute (
                        "patch-version"
                      , String (
