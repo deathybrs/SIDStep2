@@ -169,11 +169,8 @@ void
         case COMMANDS::CHANGE_SUSTAIN_RELEASE:
             command_text = "Change Sustain/Release";
             break;
-        case COMMANDS::VIBRATO_AMOUNT:
-            command_text = "Vibrato Amount";
-            break;
-        case COMMANDS::VIBRATO_SPEED:
-            command_text = "Vibrato Speed";
+        case COMMANDS::VIBRATO_TABLE:
+            command_text = "Vibrato Table";
             break;
         case COMMANDS::VIBRATO_DELAY:
             command_text = "Vibrato Delay";

@@ -331,6 +331,7 @@ void
         stream . read (
                        &value
                      , sizeof value );
+        // ReSharper disable once CppInitializedValueIsAlwaysRewritten
         ArpRow row {};
         row . rowType = static_cast < ARP_ROW_TYPE > ( row_type );
         row . value   = value;
@@ -356,7 +357,7 @@ auto
             ) const -> ArpRow& { return *notes [ static_cast < int > ( index ) ]; }
 
 auto
-    NoteTable::GetCurrentNoteTableEntry () const -> ArpRow&
+    NoteTable::GetCurrentNoteTableEntry () const -> ArpRow
 {
     if ( noteTableIndex == -1 )
     {
@@ -387,7 +388,7 @@ void
           , ArpRow&        value
             )
 {
-    if ( notes . size () > index )
+    if ( notes . size () > static_cast < int > ( index ) )
     {
         notes . set (
                      static_cast < int > ( index )
@@ -402,7 +403,7 @@ void
           , ArpRow&        value
             )
 {
-    if ( notes . size () > index )
+    if ( notes . size () > static_cast < int > ( index ) )
     {
         notes . insert (
                         static_cast < int > ( index )
@@ -416,7 +417,7 @@ void
             const unsigned index
             )
 {
-    if ( notes . size () > index )
+    if ( notes . size () > static_cast < int > ( index ) )
     {
         notes . remove (
                         static_cast < int > ( index ) );
@@ -437,7 +438,7 @@ void
 {
     if ( Released () && DoneReleasing () ) { return; }
     noteTableIndex++;
-    if ( noteTableIndex == static_cast < unsigned int > ( notes . size () ) ) { noteTableIndex--; }
+    if ( noteTableIndex == notes . size () ) { noteTableIndex--; }
     const auto row = notes [ noteTableIndex ];
     if ( row -> rowType == COMMAND && ( row -> value & END_COMMAND ) == END_COMMAND ) { noteTableIndex--; }
     else if ( row -> rowType == COMMAND && ( row -> value & GOTO_COMMAND ) == GOTO_COMMAND ) { noteTableIndex = static_cast < int > ( notes [ noteTableIndex ] -> value ) & UCHAR_MAX; }
@@ -446,7 +447,7 @@ void
         sustained = true;
         if ( !released ) { noteTableIndex = static_cast < int > ( notes [ noteTableIndex ] -> value ) & UCHAR_MAX; }
         else { noteTableIndex++; }
-        if ( noteTableIndex == static_cast < unsigned int > ( notes . size () ) ) { noteTableIndex -= 2; }
+        if ( noteTableIndex == notes . size () ) { noteTableIndex -= 2; }
     }
     if ( releaseCounter > 0 ) { releaseCounter--; }
 }
@@ -456,7 +457,8 @@ void
             const unsigned release
             )
 {
-    releaseCounter = Wavetable::DECAY_RELEASE_FRAMES [ release ];
+    releaseCounter = Wavetable::DECAY_RELEASE_FRAMES . at (
+                                                           release );
     released       = true;
 }
 

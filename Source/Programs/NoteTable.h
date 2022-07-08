@@ -87,7 +87,7 @@ public:
                 ) const -> ArpRow&;
 
     auto
-        GetCurrentNoteTableEntry () const -> ArpRow&;
+        GetCurrentNoteTableEntry () const -> ArpRow;
 
     void
         AddNoteTableEntry (

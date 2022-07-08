@@ -190,11 +190,8 @@ void
                 case COMMANDS::CHANGE_SUSTAIN_RELEASE:
                     str += "CHANGE_SUSTAIN_RELEASE";
                     break;
-                case COMMANDS::VIBRATO_AMOUNT:
-                    str += "VIBRATO_AMOUNT";
-                    break;
-                case COMMANDS::VIBRATO_SPEED:
-                    str += "VIBRATO_SPEED";
+                case COMMANDS::VIBRATO_TABLE:
+                    str += "VIBRATO_TABLE";
                     break;
                 case COMMANDS::VIBRATO_DELAY:
                     str += "VIBRATO_DELAY";
@@ -297,11 +294,8 @@ void
                     case COMMANDS::CHANGE_SUSTAIN_RELEASE:
                         str += "CHANGE_SUSTAIN_RELEASE";
                         break;
-                    case COMMANDS::VIBRATO_AMOUNT:
-                        str += "VIBRATO_AMOUNT";
-                        break;
-                    case COMMANDS::VIBRATO_SPEED:
-                        str += "VIBRATO_SPEED";
+                    case COMMANDS::VIBRATO_TABLE:
+                        str += "VIBRATO_TABLE";
                         break;
                     case COMMANDS::VIBRATO_DELAY:
                         str += "VIBRATO_DELAY";
@@ -348,7 +342,7 @@ void
                   , str . length ()
                   , file );
         }
-        if (recording -> loopStart > 0 )
+        if ( recording -> loopStart > 0 )
         {
             const auto f = std::find (
                                       recording -> patternFrame . begin ()
@@ -434,14 +428,14 @@ void
                                                                                                         , 2 );
             str += ",";
             str += String::toHexString (
-                                        static_cast < int > ( vib -> GetDefaultVibratoAmount () ) ) . paddedLeft (
-                                                                                                                  '0'
-                                                                                                                , 2 );
+                                        static_cast < int > ( vib -> GetDefaultVibratoAmount () * UCHAR_MAX ) ) . paddedLeft (
+                                                                                                                              '0'
+                                                                                                                            , 2 );
             str += ",";
             str += String::toHexString (
-                                        static_cast < int > ( vib -> GetDefaultVibratoSpeed () ) ) . paddedLeft (
-                                                                                                                 '0'
-                                                                                                               , 2 );
+                                        static_cast < int > ( vib -> GetDefaultVibratoSpeed () * UCHAR_MAX ) ) . paddedLeft (
+                                                                                                                             '0'
+                                                                                                                           , 2 );
             str += ",";
             str += String::toHexString (
                                         static_cast < int > ( vib -> GetVibratoDelay () ) ) . paddedLeft (

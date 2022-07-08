@@ -341,8 +341,8 @@ void
 
 void
     Vibrato::LoadState (
-            MemoryInputStream&                             stream
-          , const ReferenceCountedObjectPtr < SidProgram > o
+            MemoryInputStream&                              stream
+          , const ReferenceCountedObjectPtr < SidProgram >& o
             )
 {
     auto v = o -> GetExpression () -> getVibrato ();
@@ -365,8 +365,8 @@ void
 
 void
     Vibrato::LoadCopyState (
-            MemoryInputStream&                             stream
-          , const ReferenceCountedObjectPtr < SidProgram > o
+            MemoryInputStream&                              stream
+          , const ReferenceCountedObjectPtr < SidProgram >& o
             )
 {
     auto v = o -> GetExpression () -> getVibrato ();
@@ -452,7 +452,8 @@ void
             )
 {
     if ( value < 0 || value > 1 ) { return; }
-    if ( currentVibratoAmount == 0 && value != 0 || currentVibratoAmount != 0 && value == 0 ) { vibratoCounter = 0; }
+    if ( currentVibratoAmount == 0 && value != 0 ) { vibratoCounter = 0; }
+    if ( currentVibratoAmount != 0 && value == 0 ) { vibratoCounter = 0; }
     currentVibratoAmount = value;
 }
 
@@ -543,7 +544,7 @@ void
           , const float    value
             )
 {
-    if ( voice == forVoice )
+    if ( static_cast < int > ( voice ) == forVoice )
     {
         SetCurrentVibratoAmount (
                                  value );
@@ -556,7 +557,7 @@ void
           , const float        value
             )
 {
-    if ( voice == forVoice )
+    if ( static_cast < int > ( voice ) == forVoice )
     {
         SetCurrentVibratoSpeed (
                                 value );
@@ -569,7 +570,7 @@ void
           , const float    value
             )
 {
-    if ( voice == forVoice )
+    if ( static_cast < int > ( voice ) == forVoice )
     {
         SetCurrentVibratoAmount (
                                  value );
@@ -582,7 +583,7 @@ void
           , const float        value
             )
 {
-    if ( voice == forVoice )
+    if ( static_cast < int > ( voice ) == forVoice )
     {
         SetCurrentVibratoSpeed (
                                 value );
@@ -595,7 +596,7 @@ void
           , const unsigned value
             )
 {
-    if ( voice == forVoice )
+    if ( static_cast < int > ( voice ) == forVoice )
     {
         SetCurrentVibratoDelay (
                                 value );
@@ -608,7 +609,7 @@ void
           , const unsigned value
             )
 {
-    if ( voice == forVoice )
+    if ( static_cast < int > ( voice ) == forVoice )
     {
         SetCurrentVibratoDelay (
                                 value );

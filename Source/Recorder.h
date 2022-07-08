@@ -1,7 +1,11 @@
 #pragma once
+
 #include <array>
+
 #include "Listeners/ListenerInitializer.h"
+
 enum class COMMANDS;
+
 class Command;
 
 class Recorder final
@@ -41,7 +45,7 @@ public:
             Recorder&& other
             ) = delete;
 
-    ~Recorder () override;
+    ~Recorder () override = default;
 
     auto
         operator= (
@@ -257,12 +261,26 @@ private:
           , 256
           , 256
     };
-    unsigned short currentCutoff {};
-    int            currentVibratoAmount {};
-    unsigned       currentVibratoDelay {};
-    unsigned char  currentVibratoSpeed {};
-    float          currentPitchBend {
+    unsigned short                   currentCutoff {};
+    std::array < float , 3 > currentVibratoAmount {
             0
+          , 0
+          , 0
+    };
+    std::array < unsigned , 3 > currentVibratoDelay {
+            0
+          , 0
+          , 0
+    };
+    std::array < float , 3 > currentVibratoSpeed {
+            0
+          , 0
+          , 0
+    };
+    std::array < double , 3 >        currentPitchBend {
+            0
+          , 0
+          , 0
     };
     int currentPulseWidth {
             INT32_MIN

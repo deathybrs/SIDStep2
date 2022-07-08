@@ -1,28 +1,24 @@
 #pragma once
 
-
 #include "JuceHeader.h"
-
 
 #include "../Listeners/ListenerInitializer.h"
 
-
 class SidProgram;
 
-
 class Vibrato final
-        : public ReferenceCountedObject ,
-          public PatchEditorVibratoRangeChanged ,
-          public PatchEditorVibratoSpeedChanged ,
-          public PatchEditorVibratoDefaultAmountChanged ,
-          public PatchEditorVibratoDefaultSpeedChanged ,
-          public PatchEditorVibratoDelayChanged ,
-          public LiveVibratoAmountChanged ,
-          public LiveVibratoDelayChanged ,
-          public LiveVibratoSpeedChanged ,
-          public VibratoAmountParameterChanged ,
-          public VibratoDelayParameterChanged ,
-          public VibratoSpeedParameterChanged
+        : public ReferenceCountedObject
+        , public PatchEditorVibratoRangeChanged
+        , public PatchEditorVibratoSpeedChanged
+        , public PatchEditorVibratoDefaultAmountChanged
+        , public PatchEditorVibratoDefaultSpeedChanged
+        , public PatchEditorVibratoDelayChanged
+        , public LiveVibratoAmountChanged
+        , public LiveVibratoDelayChanged
+        , public LiveVibratoSpeedChanged
+        , public VibratoAmountParameterChanged
+        , public VibratoDelayParameterChanged
+        , public VibratoSpeedParameterChanged
 {
 public:
     Vibrato ();
@@ -36,11 +32,9 @@ public:
             const Vibrato& other
             );
 
-
     Vibrato (
             Vibrato&& other
             ) noexcept;
-
 
     ~Vibrato () override;
 
@@ -86,13 +80,13 @@ public:
     static void
         LoadState (
                 MemoryInputStream&                       stream
-              , ReferenceCountedObjectPtr < SidProgram > o
+              , const ReferenceCountedObjectPtr < SidProgram >& o
                 );
 
     static void
         LoadCopyState (
-                MemoryInputStream&                       stream
-              , ReferenceCountedObjectPtr < SidProgram > o
+                MemoryInputStream&                              stream
+              , const ReferenceCountedObjectPtr < SidProgram >& o
                 );
 
     auto
@@ -231,33 +225,28 @@ public:
 private:
     static const int VIBRATO_RANGE = 85;
     static const int VIBRATO_SPEED = 5;
-
-    unsigned int vibratoRange {
-                    VIBRATO_RANGE
-            };
+    unsigned int     vibratoRange {
+            VIBRATO_RANGE
+    };
     unsigned int vibratoSpeed {
-                    VIBRATO_SPEED
-            };
+            VIBRATO_SPEED
+    };
     unsigned int vibratoDelay {
-                    0
-            };
-
+            0
+    };
     float defaultVibratoAmount {
-                    0
-            };
+            0
+    };
     float defaultVibratoSpeed {
-                    1
-            };
-
+            1
+    };
     float        currentVibratoAmount;
     float        currentVibratoSpeed;
     unsigned int currentVibratoDelay;
-
     unsigned int vibratoCounter {
-                    0
-            };
-
+            0
+    };
     int forVoice {
-                    -1
-            };
+            -1
+    };
 };

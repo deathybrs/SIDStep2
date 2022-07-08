@@ -14,8 +14,6 @@ Recorder::Recorder (
     programList (
                  patch_list ) {}
 
-Recorder::~Recorder () { Stop (); }
-
 void
     Recorder::Start ()
 {
@@ -124,7 +122,6 @@ void
                                       currentFrame + 1 );
         }
     }
-
     recording = false;
 }
 
@@ -365,11 +362,10 @@ void
     static const auto CUTOFF_DIVISOR = 0.0833333333;
     static const auto CUTOFF_RANGE   = 2047.0;
     static const auto CUTOFF_OFFSET  = 0.0833333333;
-
-    auto log_val = static_cast < unsigned > ( round (
-                                                     CUTOFF_BASE * pow (
-                                                                        BINARY_BASE
-                                                                      , 1.0 / CUTOFF_DIVISOR * ( static_cast < double > ( value ) / CUTOFF_RANGE - CUTOFF_OFFSET ) ) ) );
+    auto              log_val        = static_cast < unsigned > ( round (
+                                                                         CUTOFF_BASE * pow (
+                                                                                            BINARY_BASE
+                                                                                          , 1.0 / CUTOFF_DIVISOR * ( static_cast < double > ( value ) / CUTOFF_RANGE - CUTOFF_OFFSET ) ) ) );
     log_val = log_val & 0x7f8;
     log_val = log_val >> 3;
     if ( currentCutoff == log_val ) { return; }
@@ -497,16 +493,27 @@ void
           , const float    value
             )
 {
-    if ( currentPitchBend == value ) { return; }
-    currentPitchBend = value;
-    RemovePendingVoice (
-                        COMMANDS::PITCH_BEND
-                      , voice );
     const auto p = programs . at (
                                   voice );
     if ( p == nullptr ) { return; }
     const auto e  = p -> GetExpression ();
-    const auto pb = static_cast < unsigned short > ( e -> getPitchBend () * static_cast < float > ( e -> getPitchBendRange () ) );
+    const auto pb = value * static_cast < float > ( e -> getPitchBendRange () ) / static_cast < float > ( 4096 );
+    const auto f = 440.0 * pow (
+                                2
+                              , static_cast < double > ( pb ) ) - 440.0;
+    if ( currentPitchBend . at ( 
+                                voice ) == f ) { return; }
+    currentPitchBend . at (
+                           voice ) = f;
+    RemovePendingVoice (
+                        COMMANDS::PITCH_BEND
+                      , voice );
+
+    const auto fv = 17.02841924063789015557504303485 * f;
+    const auto v  = int (
+                         fv );
+    const auto lv = v & 0xff;
+    const auto hv = ( v & 0xff00 ) >> 8;
 
     // So, now we have the pitch bend, as a floating point octave offset.  This
     // is completely dependent on the note being played, which makes this a
@@ -517,8 +524,8 @@ void
                                                           COMMANDS::PITCH_BEND
                                                         , currentFrame
                                                         , std::vector < unsigned char > {
-                                                                  static_cast < unsigned char > ( pb & 0xFF )
-                                                                , static_cast < unsigned char > ( ( pb & 0xFF00 ) >> 8 )
+                                                                  static_cast < unsigned char > ( lv )
+                                                                , static_cast < unsigned char > ( hv )
                                                           } );
     currentVoiceCommands . at (
                                voice ) . push_back (
@@ -579,6 +586,13 @@ void
                          voice ) = program -> GetEnvelope () -> getSustain ();
     currentRelease . at (
                          voice ) = program -> GetEnvelope () -> getRelease ();
+
+    currentVibratoAmount . at (
+                               voice ) = program -> GetExpression () -> getVibrato () -> GetDefaultVibratoAmount ();
+    currentVibratoSpeed . at (
+                              voice ) = program -> GetExpression () -> getVibrato () -> GetDefaultVibratoSpeed ();
+    currentVibratoDelay . at (
+                              voice ) = program -> GetExpression () -> getVibrato () -> GetDefaultVibratoAmount ();
 }
 
 void
@@ -644,7 +658,7 @@ void
     if ( currentResonance == value ) { return; }
     RemovePendingGlobal (
                          COMMANDS::RESONANCE_ROUTING );
-    currentResonance     = value;
+    currentResonance               = value;
     auto current_resonance_routing = static_cast < unsigned char > ( 0 );
     for ( auto i = 0 ; i < 3 ; i++ )
     {
@@ -699,19 +713,42 @@ void
     if ( p == nullptr ) { return; }
     const auto e  = p -> GetExpression ();
     const auto v  = e -> getVibrato ();
-    const auto va = static_cast < unsigned short > ( value * static_cast < float > ( v -> GetVibratoRange () ) );
-    if ( currentVibratoAmount == va ) { return; }
-    currentVibratoAmount = va;
+    const auto vf = value * static_cast < float > ( v -> GetVibratoRange () );
+    const auto vs = currentVibratoSpeed . at (
+                                              voice );
+    if ( currentVibratoAmount . at (
+                                    voice ) == vf ) { return; }
+    currentVibratoAmount . at (
+                               voice ) = vf;
+    // build vibrato table here
+    std::vector < unsigned char > table;
+    table . push_back (
+                       static_cast < unsigned char > ( vs * 2 ) & 0xff );
+    static const auto PI = 3.1415926535897932384626433832795;
+    for ( size_t i = 0 ; i < vs ; i++ )
+    {
+        const auto time   = i / vs;
+        const auto factor = sin (
+                                 PI * 2 * time );
+        static const auto SCALE = 17.02841924;
+        const auto octaves     = vf * factor / 4096.0;
+        const auto frequency = 440.0 * pow (
+                                            2
+                                          , octaves ) - 440.0;
+        const auto calculated_value = static_cast < short > ( frequency * SCALE );
+        table . push_back (
+                           static_cast < unsigned char > ( calculated_value & 0xFF ) );
+        table . push_back (
+                           static_cast < unsigned char > ( ( calculated_value & 0xFF00 ) >> 8 ) );
+    }
+
     RemovePendingVoice (
-                        COMMANDS::VIBRATO_AMOUNT
+                        COMMANDS::VIBRATO_TABLE
                       , voice );
     const auto vibrato_amount = std::make_shared < Command > (
-                                                              COMMANDS::VIBRATO_AMOUNT
+                                                              COMMANDS::VIBRATO_TABLE
                                                             , currentFrame
-                                                            , std::vector < unsigned char > {
-                                                                      static_cast < unsigned char > ( va & 0xFF )
-                                                                    , static_cast < unsigned char > ( ( va & 0xFF00 ) >> 8 )
-                                                              } );
+                                                            , table );
     currentVoiceCommands . at (
                                voice ) . push_back (
                                                     vibrato_amount );
@@ -723,8 +760,10 @@ void
           , const unsigned value
             )
 {
-    if ( currentVibratoDelay == value ) { return; }
-    currentVibratoDelay = value;
+    if ( currentVibratoDelay . at (
+                                   voice ) == value ) { return; }
+    currentVibratoDelay . at (
+                              voice ) = value;
     RemovePendingVoice (
                         COMMANDS::VIBRATO_DELAY
                       , voice );
@@ -750,18 +789,41 @@ void
     if ( p == nullptr ) { return; }
     const auto e  = p -> GetExpression ();
     const auto v  = e -> getVibrato ();
-    const auto vs = static_cast < unsigned short > ( value * static_cast < float > ( v -> GetVibratoSpeed () ) );
-    if ( currentVibratoSpeed == vs ) { return; }
-    currentVibratoSpeed = vs;
+    const auto vs = value * static_cast < float > ( v -> GetVibratoSpeed () );
+    const auto vf = currentVibratoAmount . at (
+                                               voice );
+    if ( currentVibratoSpeed . at ( 
+                                   voice ) == vs ) { return; }
+    currentVibratoSpeed . at (
+                              voice ) = vs;
+    // build vibrato table here
+    std::vector < unsigned char > table;
+    table . push_back (
+                       static_cast < unsigned char > ( vs * 2 ) & 0xff );
+    static const auto PI2 = 3.1415926535897932384626433832795 * 2;
+    for ( size_t i = 0 ; i < vs ; i++ )
+    {
+        const auto time   = i / vs;
+        const auto factor = sin (
+                                 PI2 * time );
+        static const auto SCALE     = 17.02841924;
+        const auto        cents     = vf * factor / 4096.0;
+        const auto        frequency = 440.0 * pow (
+                                                   2
+                                                 , cents ) - 440.0;
+        const auto calculated_value = static_cast < short > ( frequency * SCALE );
+        table . push_back (
+                           static_cast < unsigned char > ( calculated_value & 0xFF ) );
+        table . push_back (
+                           static_cast < unsigned char > ( ( calculated_value & 0xFF00 ) >> 8 ) );
+    }
     RemovePendingVoice (
-                        COMMANDS::VIBRATO_SPEED
+                        COMMANDS::VIBRATO_TABLE
                       , voice );
     const auto vibrato_speed = std::make_shared < Command > (
-                                                             COMMANDS::VIBRATO_SPEED
+                                                             COMMANDS::VIBRATO_TABLE
                                                            , currentFrame
-                                                           , std::vector < unsigned char > {
-                                                                     static_cast < unsigned char > ( vs & 0xFF )
-                                                             } );
+                                                           , table );
     currentVoiceCommands . at (
                                voice ) . push_back (
                                                     vibrato_speed );
@@ -775,7 +837,7 @@ void
     if ( currentVolume == value ) { return; }
     RemovePendingGlobal (
                          COMMANDS::FILTER_MODE_VOLUME );
-    currentVolume     = value;
+    currentVolume            = value;
     auto current_filter_type = static_cast < unsigned char > ( 0 );
     if ( currentLowPass ) { current_filter_type |= 1; }
     if ( currentBandPass ) { current_filter_type |= 2; }
@@ -827,7 +889,7 @@ void
             )
 {
     loopStart = start;
-    loopEnd = end;
+    loopEnd   = end;
 }
 
 //void

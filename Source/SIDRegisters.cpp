@@ -181,7 +181,17 @@ void
                                               : 0;
     auto f = middle_a * pow (
                              2
-                           , ( static_cast < double > ( note ) + static_cast < double > ( note_offset ) - note_middle_offset ) / octave + static_cast < double > ( pb ) + vib );
+                           , ( static_cast < double > ( note ) + static_cast < double > ( note_offset ) - note_middle_offset ) / octave );
+    // This is necessary in order to allow the pitch bend and the vibrato to
+    // sound similar between the VST and the C64, since there is no reasonable
+    // way to make the pitch bend and vibrato pitch aware in the 64 replayer.
+    if ( pb != 0 || vib != 0 )
+    {
+        // math bad - not simple addition.
+        f += middle_a * pow (
+                             2
+                           , static_cast < double > ( pb ) + vib ) - middle_a;
+    }
     if ( current_note_table_entry . rowType == ABSOLUTE ) { f = static_cast < double > ( current_note_table_entry . value ); }
 
     // 17.02841924063789015557504303485 = PAL constant
@@ -619,11 +629,8 @@ void
     {
         int  idx;
         auto jdx = 0;
-        // BUG: I don't know where the hard restart bug is coming from, but it might be in here.  There are very few places where I even touch it.
-        // Hrm... I break out of the loop possibly before the end of the voice loop, which may mean that if there are simultaneous hard restarts that
-        // only the lower voice channel gets processed.
-        //
-        // No, wait... i_channel is the channel index, so what is idx?
+        // I used to think there was a hard restart error somewhere in here,
+        // but I think I was wrong.
         for ( idx = 0 ; idx < 3 ; idx++ )
         {
             for ( jdx = 0 ; jdx < hardRestartReleasedNotesDelay . getUnchecked (
