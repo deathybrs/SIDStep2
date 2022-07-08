@@ -433,6 +433,7 @@ void
                                                c );
         }
     }
+    FirePatchListChanged();
     for ( auto v = 0 ; v < 3 ; v++ )
     {
         unsigned int selection;
@@ -455,7 +456,6 @@ void
                                                                                          , v
                                                                                          , filtered );
     }
-    FirePatchListChanged ();
     unsigned int volume;
     stream . read (
                    &volume
