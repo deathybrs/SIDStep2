@@ -347,6 +347,11 @@ void
     //                                , "You can attach the debugger now." );
     // this saves the config
 
+    unsigned int data_version = 0x20200708;
+    dest_data . append (
+                        static_cast < const void* > ( &data_version )
+                      , sizeof data_version );
+
     unsigned int patch_list_size = programs . size ();
     dest_data . append (
                         static_cast < const void* > ( &patch_list_size )
@@ -397,22 +402,10 @@ void
 }
 
 void
-    SidStep2::SetStateInformation (
-            const void* data
-          , const int   size_in_bytes
+    SidStep2::ReadState20200708 (
+            MemoryInputStream& stream
             )
 {
-    // This is here to allow attaching the debugger
-    //NativeMessageBox::showMessageBox (
-    //                                  AlertWindow::InfoIcon
-    //                                , "Start Debugger"
-    //                                , "You can attach the debugger now." );
-    programs . clear ();
-    for ( auto v = 0 ; v < 3 ; v++ ) { channelProgramCopies [ v ] -> clear (); }
-    MemoryInputStream stream (
-                              data
-                            , size_in_bytes
-                            , false );
     // and this loads it (the names are a bit misleading)
     unsigned int patch_list_size;
     stream . read (
@@ -495,6 +488,43 @@ void
     SharedResourcePointer < ListenerList < LiveArtistChanged > > () -> call (
                                                                              &LiveArtistChanged::onLiveArtistChanged
                                                                            , artist );
+}
+
+void
+    SidStep2::SetStateInformation (
+            const void* data
+          , const int   size_in_bytes
+            )
+{
+    // This is here to allow attaching the debugger
+    //NativeMessageBox::showMessageBox (
+    //                                  AlertWindow::InfoIcon
+    //                                , "Start Debugger"
+    //                                , "You can attach the debugger now." );
+    programs . clear ();
+    for ( auto v = 0 ; v < 3 ; v++ ) { channelProgramCopies [ v ] -> clear (); }
+    MemoryInputStream stream (
+                              data
+                            , size_in_bytes
+                            , false );
+
+    unsigned int data_version;
+    stream . read (
+                   &data_version
+                 , sizeof data_version );
+    if ( data_version == 0x20200708 )
+    {
+        // Known current version
+        ReadState20200708 (
+                           stream );
+    }
+    else
+    {
+        stream . setPosition (
+                              0 );
+        ReadState20200708 (
+                           stream );
+    }
 }
 
 void

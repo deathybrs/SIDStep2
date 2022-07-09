@@ -2369,6 +2369,8 @@ LiveMode::LiveMode ()
                                                                                         this );
     SharedResourcePointer < ListenerList < VibratoSpeedParameterChanged > > () -> add (
                                                                                        this );
+    SharedResourcePointer < ListenerList < VibratoDelayParameterChanged > > () -> add (
+                                                                                       this );
     SharedResourcePointer < ListenerList < VolumeParameterChanged > > () -> add (
                                                                                  this );
     SharedResourcePointer < ListenerList < PatchEditorLiveModeClicked > > () -> add (
@@ -2430,6 +2432,8 @@ LiveMode::~LiveMode ()
     SharedResourcePointer < ListenerList < VibratoAmountParameterChanged > > () -> remove (
                                                                                            this );
     SharedResourcePointer < ListenerList < VibratoSpeedParameterChanged > > () -> remove (
+                                                                                          this );
+    SharedResourcePointer < ListenerList < VibratoDelayParameterChanged > > () -> remove (
                                                                                           this );
     SharedResourcePointer < ListenerList < VolumeParameterChanged > > () -> remove (
                                                                                     this );
@@ -2846,7 +2850,7 @@ void
         SharedResourcePointer < ListenerList < LiveVibratoDelayChanged > > () -> call (
                                                                                        &LiveVibratoDelayChanged::onLiveVibratoDelayChanged
                                                                                      , SID_VOICE_1
-                                                                                     , static_cast < unsigned int > ( vibratoAmount1Slider -> getValue () ) );
+                                                                                     , static_cast < unsigned int > ( vibratoDelay1Slider -> getValue () ) );
         //[/UserSliderCode_vibratoDelay1Slider]
     }
     else if ( slider_that_was_moved == patch2Slider . get () )
@@ -3421,7 +3425,7 @@ void
                                        case SID_VOICE_1:
                                            patch1Slider -> setValue (
                                                                      value + 1
-                                                                   , dontSendNotification );
+                                                                   , sendNotification /* dontSendNotification */ );
                                            patch1Label -> setText (
                                                                    patch1Slider -> getTextFromValue (
                                                                                                      patch1Slider -> getValue () )
@@ -3434,7 +3438,7 @@ void
                                        case SID_VOICE_2:
                                            patch2Slider -> setValue (
                                                                      value + 1
-                                                                   , dontSendNotification );
+                                                                   , sendNotification /* dontSendNotification */ );
                                            patch2Label -> setText (
                                                                    patch2Slider -> getTextFromValue (
                                                                                                      patch2Slider -> getValue () )
@@ -3447,7 +3451,7 @@ void
                                        case SID_VOICE_3:
                                            patch3Slider -> setValue (
                                                                      value + 1
-                                                                   , dontSendNotification );
+                                                                   , sendNotification /* dontSendNotification */ );
                                            patch3Label -> setText (
                                                                    patch3Slider -> getTextFromValue (
                                                                                                      patch3Slider -> getValue () )

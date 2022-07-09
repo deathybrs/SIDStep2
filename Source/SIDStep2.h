@@ -49,6 +49,11 @@ public:
                 ) const;
 
     void
+        ReadState20200708 (
+                MemoryInputStream& stream
+                );
+
+    void
         SetStateInformation (
                 const void* data
               , int         size_in_bytes
