@@ -64,7 +64,9 @@ PulseTable::PulseTable (
         const PulseTable& other
         )
     :
-    pulseTableIndex (
+    dispatcher (
+                other . dispatcher )
+  , pulseTableIndex (
                      other . pulseTableIndex )
   , sustained (
                other . sustained )
@@ -88,7 +90,9 @@ PulseTable::PulseTable (
         PulseTable&& other
         ) noexcept
     :
-    pulseTableIndex (
+    dispatcher (
+                other . dispatcher )
+  , pulseTableIndex (
                      other . pulseTableIndex )
   , sustained (
                other . sustained )
