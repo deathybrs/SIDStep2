@@ -1,12 +1,20 @@
 #include "Expression.h"
 
-#include "../JuceLibraryCode/JuceHeader.h"
+#include <JuceHeader.h>
+
+
 #include "../SIDProgram.h"
 
-Expressions::Expressions ()
-    :
-    vibrato (
-             new Vibrato () )
+
+Expressions::Expressions (
+        std::shared_ptr < EventDispatcher > dispatcher
+        )
+    : 
+    dispatcher (
+                dispatcher )
+  , vibrato (
+             new Vibrato (
+                          dispatcher ) )
   , tremolo (
              new Tremolo () )
   , pitchBendRange (
@@ -24,25 +32,29 @@ Expressions::Expressions ()
   , forVoice (
               -1 )
 {
-    SharedResourcePointer < ListenerList < LivePitchBendChanged > > () -> add (
-                                                                               this );
-    SharedResourcePointer < ListenerList < LivePulseWidthChanged > > () -> add (
-                                                                                this );
-    SharedResourcePointer < ListenerList < PitchBend > > () -> add (
-                                                                    this );
-    SharedResourcePointer < ListenerList < PitchBendParameterChanged > > () -> add (
-                                                                                    this );
-    SharedResourcePointer < ListenerList < PulseWidthParameterChanged > > () -> add (
-                                                                                     this );
+    dispatcher -> livePitchBendChangedListeners -> add (
+                                                        this );
+    dispatcher -> livePulseWidthChangedListeners -> add (
+                                                         this );
+    dispatcher -> pitchBendListeners -> add (
+                                             this );
+    dispatcher -> pitchBendParameterChangedListeners -> add (
+                                                             this );
+    dispatcher -> pulseWidthParameterChangedListeners -> add (
+                                                              this );
 }
 
 Expressions::Expressions (
-        XmlElement* e
+        std::shared_ptr < EventDispatcher > dispatcher
+      , XmlElement*                         e
         )
     :
-    vibrato (
+    dispatcher (
+                dispatcher )
+  , vibrato (
              new Vibrato (
-                          e -> getChildByName (
+                          dispatcher
+                        , e -> getChildByName (
                                                "vibrato" ) ) )
   , tremolo (
              new Tremolo (
@@ -67,23 +79,25 @@ Expressions::Expressions (
   , forVoice (
               -1 )
 {
-    SharedResourcePointer < ListenerList < LivePitchBendChanged > > () -> add (
-                                                                               this );
-    SharedResourcePointer < ListenerList < LivePulseWidthChanged > > () -> add (
-                                                                                this );
-    SharedResourcePointer < ListenerList < PitchBend > > () -> add (
-                                                                    this );
-    SharedResourcePointer < ListenerList < PitchBendParameterChanged > > () -> add (
-                                                                                    this );
-    SharedResourcePointer < ListenerList < PulseWidthParameterChanged > > () -> add (
-                                                                                     this );
+    dispatcher -> livePitchBendChangedListeners -> add (
+                                                        this );
+    dispatcher -> livePulseWidthChangedListeners -> add (
+                                                         this );
+    dispatcher -> pitchBendListeners -> add (
+                                             this );
+    dispatcher -> pitchBendParameterChangedListeners -> add (
+                                                             this );
+    dispatcher -> pulseWidthParameterChangedListeners -> add (
+                                                              this );
 }
 
 Expressions::Expressions (
         Expressions& original
         )
     :
-    vibrato (
+    dispatcher (
+                original . dispatcher )
+  , vibrato (
              new Vibrato (
                           *original . vibrato ) )
   , tremolo (
@@ -104,32 +118,32 @@ Expressions::Expressions (
   , forVoice (
               -1 )
 {
-    SharedResourcePointer < ListenerList < LivePitchBendChanged > > () -> add (
-                                                                               this );
-    SharedResourcePointer < ListenerList < LivePulseWidthChanged > > () -> add (
-                                                                                this );
-    SharedResourcePointer < ListenerList < PitchBend > > () -> add (
-                                                                    this );
-    SharedResourcePointer < ListenerList < PitchBendParameterChanged > > () -> add (
-                                                                                    this );
-    SharedResourcePointer < ListenerList < PulseWidthParameterChanged > > () -> add (
-                                                                                     this );
+    dispatcher -> livePitchBendChangedListeners -> add (
+                                                        this );
+    dispatcher -> livePulseWidthChangedListeners -> add (
+                                                         this );
+    dispatcher -> pitchBendListeners -> add (
+                                             this );
+    dispatcher -> pitchBendParameterChangedListeners -> add (
+                                                             this );
+    dispatcher -> pulseWidthParameterChangedListeners -> add (
+                                                              this );
 }
 
 Expressions::~Expressions ()
 {
-    SharedResourcePointer < ListenerList < LivePitchBendChanged > > () -> remove (
-                                                                                  this );
-    SharedResourcePointer < ListenerList < LivePulseWidthChanged > > () -> remove (
-                                                                                   this );
-    SharedResourcePointer < ListenerList < PitchBend > > () -> remove (
-                                                                       this );
-    SharedResourcePointer < ListenerList < PitchBendParameterChanged > > () -> remove (
-                                                                                       this );
-    SharedResourcePointer < ListenerList < PulseWidthParameterChanged > > () -> remove (
-                                                                                        this );
+    dispatcher -> livePitchBendChangedListeners -> remove (
+                                                           this );
+    dispatcher -> livePulseWidthChangedListeners -> remove (
+                                                            this );
+    dispatcher -> pitchBendListeners -> remove (
+                                                this );
+    dispatcher -> pitchBendParameterChangedListeners -> remove (
+                                                                this );
+    dispatcher -> pulseWidthParameterChangedListeners -> remove (
+                                                                 this );
     vibrato = nullptr;
-    tremolo = nullptr;
+    //tremolo = nullptr;
 }
 
 void
@@ -139,29 +153,29 @@ void
 {
     if ( value )
     {
-        SharedResourcePointer < ListenerList < PatchEditorPitchBendRangeChanged > > () -> add (
-                                                                                               this );
-        SharedResourcePointer < ListenerList < PatchEditorPulseWidthRangeChanged > > () -> add (
-                                                                                                this );
-        SharedResourcePointer < ListenerList < PatchEditorPulseWidthCenterChanged > > () -> add (
-                                                                                                 this );
-        SharedResourcePointer < ListenerList < PitchBend > > () -> add (
+        dispatcher -> patchEditorPitchBendRangeChangedListeners -> add (
                                                                         this );
-        SharedResourcePointer < ListenerList < PatchEditorPulseWidthDefaultChanged > > () -> add (
-                                                                                                  this );
+        dispatcher -> patchEditorPulseWidthRangeChangedListeners -> add (
+                                                                         this );
+        dispatcher -> patchEditorPulseWidthCenterChangedListeners -> add (
+                                                                          this );
+        dispatcher -> pitchBendListeners -> add (
+                                                 this );
+        dispatcher -> patchEditorPulseWidthDefaultChangedListeners -> add (
+                                                                           this );
     }
     else
     {
-        SharedResourcePointer < ListenerList < PatchEditorPitchBendRangeChanged > > () -> remove (
-                                                                                                  this );
-        SharedResourcePointer < ListenerList < PatchEditorPulseWidthRangeChanged > > () -> remove (
-                                                                                                   this );
-        SharedResourcePointer < ListenerList < PitchBend > > () -> remove (
+        dispatcher -> patchEditorPitchBendRangeChangedListeners -> remove (
                                                                            this );
-        SharedResourcePointer < ListenerList < PatchEditorPulseWidthCenterChanged > > () -> remove (
-                                                                                                    this );
-        SharedResourcePointer < ListenerList < PatchEditorPulseWidthDefaultChanged > > () -> remove (
-                                                                                                     this );
+        dispatcher -> patchEditorPulseWidthRangeChangedListeners -> remove (
+                                                                            this );
+        dispatcher -> patchEditorPulseWidthCenterChangedListeners -> remove (
+                                                                             this );
+        dispatcher -> pitchBendListeners -> remove (
+                                                    this );
+        dispatcher -> patchEditorPulseWidthDefaultChangedListeners -> remove (
+                                                                              this );
     }
     vibrato -> Select (
                        value );
@@ -497,10 +511,10 @@ void
         val = 1.0;
     else if ( val < -1.0 )
         val = -1.0;
-    SharedResourcePointer < ListenerList < PitchBendParameterChanged > > () -> call (
-                                                                                     &PitchBendParameterChanged::onPitchBendParameterChanged
-                                                                                   , voice
-                                                                                   , val );
+    dispatcher -> pitchBendParameterChangedListeners -> call (
+                                                              &PitchBendParameterChanged::onPitchBendParameterChanged
+                                                            , voice
+                                                            , val );
 }
 
 void
@@ -510,14 +524,14 @@ void
 {
     if ( value > -1 && value < 3 )
     {
-        SharedResourcePointer < ListenerList < PitchBendParameterChanged > > () -> call (
-                                                                                         &PitchBendParameterChanged::onPitchBendParameterChanged
-                                                                                       , value
-                                                                                       , getPitchBend () );
-        SharedResourcePointer < ListenerList < PulseWidthParameterChanged > > () -> call (
-                                                                                          &PulseWidthParameterChanged::onPulseWidthParameterChanged
-                                                                                        , value
-                                                                                        , getPulseOffset () );
+        dispatcher -> pitchBendParameterChangedListeners -> call (
+                                                                  &PitchBendParameterChanged::onPitchBendParameterChanged
+                                                                , value
+                                                                , getPitchBend () );
+        dispatcher -> pulseWidthParameterChangedListeners -> call (
+                                                                   &PulseWidthParameterChanged::onPulseWidthParameterChanged
+                                                                 , value
+                                                                 , getPulseOffset () );
     }
     forVoice = value;
     vibrato -> SetForVoice (

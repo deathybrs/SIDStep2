@@ -1,18 +1,16 @@
 #pragma once
-
-
 #include "../../JuceLibraryCode/JuceHeader.h"
-
-
 #include "../Listeners/ListenerInitializer.h"
 
-
 class AbstractPulseTableRow
-        : public Component ,
-          public PulseTableSelectionChanged
+        : public Component
+        , public PulseTableSelectionChanged
 {
 public:
-    AbstractPulseTableRow ();
+    explicit
+        AbstractPulseTableRow (
+                const std::shared_ptr < EventDispatcher >& dispatcher
+                );
 
     ~AbstractPulseTableRow () override;
 
@@ -31,10 +29,11 @@ public:
                 ) = 0;
 
 protected:
-    bool selected {
-                    false
-            };
-    int  row {
-                    -1
-            };
+    std::shared_ptr < EventDispatcher > dispatcher;
+    bool                                selected {
+            false
+    };
+    int row {
+            -1
+    };
 };

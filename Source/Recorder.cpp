@@ -8,101 +8,104 @@
 #include "Programs/Expression.h"
 
 Recorder::Recorder (
-        const ReferenceCountedArray < SidProgram >& patch_list
+        std::shared_ptr < EventDispatcher >         dispatcher
+      , const ReferenceCountedArray < SidProgram >& patch_list
         )
     :
-    programList (
+    dispatcher (
+                dispatcher )
+  , programList (
                  patch_list ) {}
 
 void
     Recorder::Start ()
 {
-    SharedResourcePointer < ListenerList < NoteOff > > () -> add (
-                                                                  this );
-    SharedResourcePointer < ListenerList < NoteOn > > () -> add (
+    dispatcher -> noteOffListeners -> add (
+                                           this );
+    dispatcher -> noteOnListeners -> add (
+                                          this );
+    dispatcher -> attackParameterChangedListeners -> add (
+                                                          this );
+    dispatcher -> bandPassParameterChangedListeners -> add (
+                                                            this );
+    dispatcher -> cutoffParameterChangedListeners -> add (
+                                                          this );
+    dispatcher -> decayParameterChangedListeners -> add (
+                                                         this );
+    dispatcher -> filterVoiceParameterChangedListeners -> add (
+                                                               this );
+    dispatcher -> highPassParameterChangedListeners -> add (
+                                                            this );
+    dispatcher -> lowPassParameterChangedListeners -> add (
+                                                           this );
+    dispatcher -> pitchBendParameterChangedListeners -> add (
+                                                             this );
+    dispatcher -> programParameterChangedListeners -> add (
+                                                           this );
+    dispatcher -> pulseWidthParameterChangedListeners -> add (
+                                                              this );
+    dispatcher -> releaseParameterChangedListeners -> add (
+                                                           this );
+    dispatcher -> resonanceParameterChangedListeners -> add (
+                                                             this );
+    dispatcher -> sustainParameterChangedListeners -> add (
+                                                           this );
+    dispatcher -> vibratoAmountParameterChangedListeners -> add (
                                                                  this );
-    SharedResourcePointer < ListenerList < AttackParameterChanged > > () -> add (
-                                                                                 this );
-    SharedResourcePointer < ListenerList < BandPassParameterChanged > > () -> add (
-                                                                                   this );
-    SharedResourcePointer < ListenerList < CutoffParameterChanged > > () -> add (
-                                                                                 this );
-    SharedResourcePointer < ListenerList < DecayParameterChanged > > () -> add (
-                                                                                this );
-    SharedResourcePointer < ListenerList < FilterVoiceParameterChanged > > () -> add (
-                                                                                      this );
-    SharedResourcePointer < ListenerList < HighPassParameterChanged > > () -> add (
-                                                                                   this );
-    SharedResourcePointer < ListenerList < LowPassParameterChanged > > () -> add (
-                                                                                  this );
-    SharedResourcePointer < ListenerList < PitchBendParameterChanged > > () -> add (
-                                                                                    this );
-    SharedResourcePointer < ListenerList < ProgramParameterChanged > > () -> add (
-                                                                                  this );
-    SharedResourcePointer < ListenerList < PulseWidthParameterChanged > > () -> add (
-                                                                                     this );
-    SharedResourcePointer < ListenerList < ReleaseParameterChanged > > () -> add (
-                                                                                  this );
-    SharedResourcePointer < ListenerList < ResonanceParameterChanged > > () -> add (
-                                                                                    this );
-    SharedResourcePointer < ListenerList < SustainParameterChanged > > () -> add (
-                                                                                  this );
-    SharedResourcePointer < ListenerList < VibratoAmountParameterChanged > > () -> add (
-                                                                                        this );
-    SharedResourcePointer < ListenerList < VibratoDelayParameterChanged > > () -> add (
-                                                                                       this );
-    SharedResourcePointer < ListenerList < VibratoSpeedParameterChanged > > () -> add (
-                                                                                       this );
-    SharedResourcePointer < ListenerList < VolumeParameterChanged > > () -> add (
-                                                                                 this );
-    SharedResourcePointer < ListenerList < QuarterNoteTick > > () -> add (
-                                                                          this );
+    dispatcher -> vibratoDelayParameterChangedListeners -> add (
+                                                                this );
+    dispatcher -> vibratoSpeedParameterChangedListeners -> add (
+                                                                this );
+    dispatcher -> volumeParameterChangedListeners -> add (
+                                                          this );
+    dispatcher -> quarterNoteTickListeners -> add (
+                                                   this );
     recording = true;
 }
 
 void
     Recorder::Stop ()
 {
-    SharedResourcePointer < ListenerList < NoteOff > > () -> remove (
-                                                                     this );
-    SharedResourcePointer < ListenerList < NoteOn > > () -> remove (
+    dispatcher -> noteOffListeners -> remove (
+                                              this );
+    dispatcher -> noteOnListeners -> remove (
+                                             this );
+    dispatcher -> attackParameterChangedListeners -> remove (
+                                                             this );
+    dispatcher -> bandPassParameterChangedListeners -> remove (
+                                                               this );
+    dispatcher -> cutoffParameterChangedListeners -> remove (
+                                                             this );
+    dispatcher -> decayParameterChangedListeners -> remove (
+                                                            this );
+    dispatcher -> filterVoiceParameterChangedListeners -> remove (
+                                                                  this );
+    dispatcher -> highPassParameterChangedListeners -> remove (
+                                                               this );
+    dispatcher -> lowPassParameterChangedListeners -> remove (
+                                                              this );
+    dispatcher -> pitchBendParameterChangedListeners -> remove (
+                                                                this );
+    dispatcher -> programParameterChangedListeners -> remove (
+                                                              this );
+    dispatcher -> pulseWidthParameterChangedListeners -> remove (
+                                                                 this );
+    dispatcher -> releaseParameterChangedListeners -> remove (
+                                                              this );
+    dispatcher -> resonanceParameterChangedListeners -> remove (
+                                                                this );
+    dispatcher -> sustainParameterChangedListeners -> remove (
+                                                              this );
+    dispatcher -> vibratoAmountParameterChangedListeners -> remove (
                                                                     this );
-    SharedResourcePointer < ListenerList < AttackParameterChanged > > () -> remove (
-                                                                                    this );
-    SharedResourcePointer < ListenerList < BandPassParameterChanged > > () -> remove (
-                                                                                      this );
-    SharedResourcePointer < ListenerList < CutoffParameterChanged > > () -> remove (
-                                                                                    this );
-    SharedResourcePointer < ListenerList < DecayParameterChanged > > () -> remove (
-                                                                                   this );
-    SharedResourcePointer < ListenerList < FilterVoiceParameterChanged > > () -> remove (
-                                                                                         this );
-    SharedResourcePointer < ListenerList < HighPassParameterChanged > > () -> remove (
-                                                                                      this );
-    SharedResourcePointer < ListenerList < LowPassParameterChanged > > () -> remove (
-                                                                                     this );
-    SharedResourcePointer < ListenerList < PitchBendParameterChanged > > () -> remove (
-                                                                                       this );
-    SharedResourcePointer < ListenerList < ProgramParameterChanged > > () -> remove (
-                                                                                     this );
-    SharedResourcePointer < ListenerList < PulseWidthParameterChanged > > () -> remove (
-                                                                                        this );
-    SharedResourcePointer < ListenerList < ReleaseParameterChanged > > () -> remove (
-                                                                                     this );
-    SharedResourcePointer < ListenerList < ResonanceParameterChanged > > () -> remove (
-                                                                                       this );
-    SharedResourcePointer < ListenerList < SustainParameterChanged > > () -> remove (
-                                                                                     this );
-    SharedResourcePointer < ListenerList < VibratoAmountParameterChanged > > () -> remove (
-                                                                                           this );
-    SharedResourcePointer < ListenerList < VibratoDelayParameterChanged > > () -> remove (
-                                                                                          this );
-    SharedResourcePointer < ListenerList < VibratoSpeedParameterChanged > > () -> remove (
-                                                                                          this );
-    SharedResourcePointer < ListenerList < VolumeParameterChanged > > () -> remove (
-                                                                                    this );
-    SharedResourcePointer < ListenerList < QuarterNoteTick > > () -> remove (
-                                                                             this );
+    dispatcher -> vibratoDelayParameterChangedListeners -> remove (
+                                                                   this );
+    dispatcher -> vibratoSpeedParameterChangedListeners -> remove (
+                                                                   this );
+    dispatcher -> volumeParameterChangedListeners -> remove (
+                                                             this );
+    dispatcher -> quarterNoteTickListeners -> remove (
+                                                      this );
     if ( recording && loopStart > 0 && loopEnd > 0 )
     {
         patternIndexes . push_back (

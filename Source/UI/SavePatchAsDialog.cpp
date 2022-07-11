@@ -27,7 +27,12 @@
 //[/MiscUserDefs]
 
 //==============================================================================
-SavePatchAsDialog::SavePatchAsDialog ()
+SavePatchAsDialog::SavePatchAsDialog (
+        std::shared_ptr < EventDispatcher > dispatcher
+        )
+    :
+    dispatcher (
+                dispatcher )
 {
     //[Constructor_pre] You can add your own custom stuff here..
     //[/Constructor_pre]
@@ -118,15 +123,16 @@ SavePatchAsDialog::SavePatchAsDialog ()
 	categorySelector->setColour(ComboBox::textColourId, Colour(0xff181090));
 	categorySelector->setColour(ComboBox::buttonColourId, Colour(0xff5090d0));
 	categorySelector->setColour(ComboBox::arrowColourId, Colour(0xff181090));
-
-	SharedResourcePointer<ListenerList<PatchEditorNameChanged>>()->add(this);
+    dispatcher -> patchEditorNameChangedListeners -> add (
+                                                          this );
     //[/Constructor]
 }
 
 SavePatchAsDialog::~SavePatchAsDialog()
 {
     //[Destructor_pre]. You can add your own custom destruction code here..
-	SharedResourcePointer<ListenerList<PatchEditorNameChanged>>()->remove(this);
+    dispatcher -> patchEditorNameChangedListeners -> remove (
+                                                             this );
     //[/Destructor_pre]
 
     label = nullptr;
@@ -252,8 +258,12 @@ void SavePatchAsDialog::buttonClicked (juce::Button* buttonThatWasClicked)
 				c = Misc;
 				break;
 		}
-		SharedResourcePointer<ListenerList<PatchEditorNameChanged>>()->call(&PatchEditorNameChanged::onPatchEditorNameChanged, patchNameLabel->getText());
-		SharedResourcePointer<ListenerList<BankSaveAs>>()->call(&BankSaveAs::onBankSaveAs, c);
+        dispatcher -> patchEditorNameChangedListeners -> call (
+                                                               &PatchEditorNameChanged::onPatchEditorNameChanged
+                                                             , patchNameLabel -> getText () );
+        dispatcher -> bankSaveAsListeners -> call (
+                                                   &BankSaveAs::onBankSaveAs
+                                                 , c );
 
 		//bank->getCurrentProgram()->setName(patchNameLabel->getText());
 		//bank->finishSaveAs(c);

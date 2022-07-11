@@ -19,8 +19,10 @@
 
 //[Headers] You can add your own extra header files here...
 #include "../SIDProgram.h"
+
 #include "NoteTableCommandRow.h"
 #include "NoteTableRow.h"
+
 #include "../Listeners/NoteTableSelectionChanged.h"
 
 //[/Headers]
@@ -32,7 +34,12 @@
 //[/MiscUserDefs]
 
 //==============================================================================
-NoteTableView::NoteTableView ()
+NoteTableView::NoteTableView (
+        const std::shared_ptr < EventDispatcher >& dispatcher
+        )
+    :
+    dispatcher (
+                dispatcher )
 {
     //[Constructor_pre] You can add your own custom stuff here..
     //[/Constructor_pre]
@@ -50,28 +57,28 @@ NoteTableView::NoteTableView ()
     addMouseListener (
                       this
                     , true );
-    SharedResourcePointer < ListenerList < BankProgramChanged > > () -> add (
-                                                                             this );
-    SharedResourcePointer < ListenerList < PatchEditorShowNoteTable > > () -> add (
-                                                                                   this );
-    SharedResourcePointer < ListenerList < PatchEditorShowPulseTable > > () -> add (
-                                                                                    this );
-    SharedResourcePointer < ListenerList < PatchEditorShowWaveTable > > () -> add (
-                                                                                   this );
+    dispatcher -> bankProgramChangedListeners -> add (
+                                                      this );
+    dispatcher -> patchEditorShowNoteTableListeners -> add (
+                                                            this );
+    dispatcher -> patchEditorShowPulseTableListeners -> add (
+                                                             this );
+    dispatcher -> patchEditorShowWaveTableListeners -> add (
+                                                            this );
     //[/Constructor]
 }
 
 NoteTableView::~NoteTableView ()
 {
     //[Destructor_pre]. You can add your own custom destruction code here..
-    SharedResourcePointer < ListenerList < BankProgramChanged > > () -> remove (
-                                                                                this );
-    SharedResourcePointer < ListenerList < PatchEditorShowNoteTable > > () -> remove (
-                                                                                      this );
-    SharedResourcePointer < ListenerList < PatchEditorShowPulseTable > > () -> remove (
-                                                                                       this );
-    SharedResourcePointer < ListenerList < PatchEditorShowWaveTable > > () -> remove (
-                                                                                      this );
+    dispatcher -> bankProgramChangedListeners -> remove (
+                                                         this );
+    dispatcher -> patchEditorShowNoteTableListeners -> remove (
+                                                               this );
+    dispatcher -> patchEditorShowPulseTableListeners -> remove (
+                                                                this );
+    dispatcher -> patchEditorShowWaveTableListeners -> remove (
+                                                               this );
     //[/Destructor_pre]
 
 
@@ -84,7 +91,7 @@ NoteTableView::~NoteTableView ()
 //==============================================================================
 void
     NoteTableView::paint (
-            juce::Graphics& g
+            Graphics& g
             )
 {
     //[UserPrePaint] Add your own custom painting code here..
@@ -121,7 +128,7 @@ void
 
 void
     NoteTableView::mouseUp (
-            const juce::MouseEvent& e
+            const MouseEvent& e
             )
 {
     //[UserCode_mouseUp] -- Add your code here...
@@ -132,12 +139,15 @@ void
         {
             const auto r = rows [ selectedRow ];
             if ( r == clicked || r -> isParentOf (
-                                                  clicked ) ) //{
+                                                  clicked ) )
+            {
+                //{
                 break;
+            }
         }
-        noteTableSelectionChangedListeners -> call (
-                                                    &NoteTableSelectionChanged::onNoteTableSelectionChanged
-                                                  , selectedRow );
+        dispatcher -> noteTableSelectionChangedListeners -> call (
+                                                                  &NoteTableSelectionChanged::onNoteTableSelectionChanged
+                                                                , selectedRow );
         repaint ();
         getParentComponent () -> repaint ();
     }
@@ -149,34 +159,34 @@ void
 void
     NoteTableView::onPatchEditorShowNoteTable ()
 {
-    SharedResourcePointer < ListenerList < PatchEditorNewTableRowClicked > > () -> add (
-                                                                                        this );
-    SharedResourcePointer < ListenerList < PatchEditorNewTableCommandClicked > > () -> add (
-                                                                                            this );
-    SharedResourcePointer < ListenerList < PatchEditorDeleteTableRowClicked > > () -> add (
-                                                                                           this );
+    dispatcher -> patchEditorNewWavetableRowClickedListeners -> add (
+                                                                     this );
+    dispatcher -> patchEditorNewWavetableCommandClickedListeners -> add (
+                                                                         this );
+    dispatcher -> patchEditorDeleteWavetableRowClickedListeners -> add (
+                                                                        this );
 }
 
 void
     NoteTableView::onPatchEditorShowPulseTable ()
 {
-    SharedResourcePointer < ListenerList < PatchEditorNewTableRowClicked > > () -> remove (
-                                                                                           this );
-    SharedResourcePointer < ListenerList < PatchEditorNewTableCommandClicked > > () -> remove (
-                                                                                               this );
-    SharedResourcePointer < ListenerList < PatchEditorDeleteTableRowClicked > > () -> remove (
-                                                                                              this );
+    dispatcher -> patchEditorNewWavetableRowClickedListeners -> remove (
+                                                                        this );
+    dispatcher -> patchEditorNewWavetableCommandClickedListeners -> remove (
+                                                                            this );
+    dispatcher -> patchEditorDeleteWavetableRowClickedListeners -> remove (
+                                                                           this );
 }
 
 void
     NoteTableView::onPatchEditorShowWaveTable ()
 {
-    SharedResourcePointer < ListenerList < PatchEditorNewTableRowClicked > > () -> remove (
-                                                                                           this );
-    SharedResourcePointer < ListenerList < PatchEditorNewTableCommandClicked > > () -> remove (
-                                                                                               this );
-    SharedResourcePointer < ListenerList < PatchEditorDeleteTableRowClicked > > () -> remove (
-                                                                                              this );
+    dispatcher -> patchEditorNewWavetableRowClickedListeners -> remove (
+                                                                        this );
+    dispatcher -> patchEditorNewWavetableCommandClickedListeners -> remove (
+                                                                            this );
+    dispatcher -> patchEditorDeleteWavetableRowClickedListeners -> remove (
+                                                                           this );
 }
 
 void
@@ -198,13 +208,14 @@ void
         if ( note_row . rowType != COMMAND )
         {
             // row
-            auto ntr = new NoteTableRow ();
+            auto ntr = new NoteTableRow (
+                                         dispatcher );
             ntr -> Set (
                         i
                       , note_row );
             ntr -> setBounds (
                               0
-                            , 8 + i * 24
+                            , 8 + static_cast < int > ( i ) * 24
                             , 590
                             , 24 );
             addAndMakeVisible (
@@ -215,13 +226,14 @@ void
         else
         {
             // command
-            auto ntc = new NoteTableCommandRow ();
+            auto ntc = new NoteTableCommandRow (
+                                                dispatcher );
             ntc -> Set (
                         i
                       , note_row );
             ntc -> setBounds (
                               0
-                            , 8 + i * 24
+                            , 8 + static_cast < int > ( i ) * 24
                             , 590
                             , 24 );
             addAndMakeVisible (
@@ -250,15 +262,16 @@ void
                            i
                          , rows [ i ] -> Get () );
     }
-    noteTableSelectionChangedListeners -> call (
-                                                &NoteTableSelectionChanged::onNoteTableSelectionChanged
-                                              , selectedRow );
+    dispatcher -> noteTableSelectionChangedListeners -> call (
+                                                              &NoteTableSelectionChanged::onNoteTableSelectionChanged
+                                                            , selectedRow );
 }
 
 void
     NoteTableView::onPatchEditorNewTableCommandClicked ()
 {
-    auto ntc = new NoteTableCommandRow ();
+    auto ntc = new NoteTableCommandRow (
+                                        dispatcher );
     if ( selectedRow >= rows . size () )
     {
         const auto i = static_cast < int > ( rows . size () );
@@ -314,15 +327,16 @@ void
     repaint ();
     getParentComponent () -> repaint ();
     selectedRow++;
-    noteTableSelectionChangedListeners -> call (
-                                                &NoteTableSelectionChanged::onNoteTableSelectionChanged
-                                              , selectedRow );
+    dispatcher -> noteTableSelectionChangedListeners -> call (
+                                                              &NoteTableSelectionChanged::onNoteTableSelectionChanged
+                                                            , selectedRow );
 }
 
 void
     NoteTableView::onPatchEditorNewTableRowClicked ()
 {
-    auto ntr = new NoteTableRow ();
+    auto ntr = new NoteTableRow (
+                                 dispatcher );
     if ( selectedRow >= rows . size () )
     {
         const auto i = static_cast < int > ( rows . size () );
@@ -378,9 +392,9 @@ void
     repaint ();
     getParentComponent () -> repaint ();
     selectedRow++;
-    noteTableSelectionChangedListeners -> call (
-                                                &NoteTableSelectionChanged::onNoteTableSelectionChanged
-                                              , selectedRow );
+    dispatcher -> noteTableSelectionChangedListeners -> call (
+                                                              &NoteTableSelectionChanged::onNoteTableSelectionChanged
+                                                            , selectedRow );
 }
 
 

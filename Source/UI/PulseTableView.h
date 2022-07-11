@@ -23,13 +23,10 @@
 #include <JuceHeader.h>
 
 #include "../Listeners/ListenerInitializer.h"
-
-
 class AbstractPulseTableRow;
 
 
 //[/Headers]
-
 
 
 //==============================================================================
@@ -40,19 +37,24 @@ class AbstractPulseTableRow;
     Describe your class and how it works here!
                                                                     //[/Comments]
 */
-class PulseTableView  : public juce::Component,
-                        public PatchEditorShowWaveTable,
-                        public PatchEditorShowNoteTable,
-                        public PatchEditorShowPulseTable,
-                        public BankProgramChanged,
-                        public PatchEditorNewTableRowClicked,
-                        public PatchEditorNewTableCommandClicked,
-                        public PatchEditorDeleteTableRowClicked
+class PulseTableView final
+        : public Component
+        , public PatchEditorShowWaveTable
+        , public PatchEditorShowNoteTable
+        , public PatchEditorShowPulseTable
+        , public BankProgramChanged
+        , public PatchEditorNewTableRowClicked
+        , public PatchEditorNewTableCommandClicked
+        , public PatchEditorDeleteTableRowClicked
 {
 public:
     //==============================================================================
-    PulseTableView ();
-    ~PulseTableView() override;
+    explicit
+        PulseTableView (
+                const std::shared_ptr < EventDispatcher >& dispatcher
+                );
+
+    ~PulseTableView () override;
 
     //==============================================================================
     //[UserMethods]     -- You can add your own custom methods in this section.
@@ -82,26 +84,33 @@ public:
 
     //[/UserMethods]
 
-    void paint (juce::Graphics& g) override;
-    void resized() override;
-    void mouseUp (const juce::MouseEvent& e) override;
+    void
+        paint (
+                Graphics& g
+                ) override;
 
+    void
+        resized () override;
 
+    void
+        mouseUp (
+                const MouseEvent& e
+                ) override;
 
 private:
     //[UserVariables]   -- You can add your own custom variables in this section.
-    OwnedArray < AbstractPulseTableRow >                                  rows;
-    int                                                                   selectedRow;
-    SharedResourcePointer < ListenerList < PulseTableSelectionChanged > > pulseTableSelectionChangedListeners;
+    std::shared_ptr < EventDispatcher >  dispatcher;
+    OwnedArray < AbstractPulseTableRow > rows;
+    int                                  selectedRow {};
     //[/UserVariables]
 
     //==============================================================================
 
 
     //==============================================================================
-    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (PulseTableView)
+    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (
+                                                  PulseTableView )
 };
 
 //[EndFile] You can add extra defines here...
 //[/EndFile]
-

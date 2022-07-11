@@ -2,30 +2,42 @@
 
 #include "SIDProgram.h"
 
-SidProgram::SidProgram ()
+SidProgram::SidProgram (
+        const std::shared_ptr < EventDispatcher >& dispatcher
+        )
     :
-    name (
+    dispatcher (
+                dispatcher )
+  , name (
           "New Patch" )
   , envelope (
-              new sEnvelope () )
+              new sEnvelope (
+                             dispatcher ) )
   , noteTable (
-               new NoteTable () )
+               new NoteTable (
+                              dispatcher ) )
   , pulseTable (
-                new PulseTable () )
+                new PulseTable (
+                                dispatcher ) )
   , wavetable (
-               new Wavetable () )
+               new Wavetable (
+                              dispatcher ) )
   , expression (
-                new Expressions () )
+                new Expressions (
+                                 dispatcher ) )
 {
-    SharedResourcePointer < ListenerList < BankProgramChanged > > () -> add (
-                                                                             this );
+    dispatcher -> bankProgramChangedListeners -> add (
+                                                      this );
 }
 
 SidProgram::SidProgram (
-        XmlElement* e
+        const std::shared_ptr < EventDispatcher >& dispatcher
+      , XmlElement*                                e
         )
     :
-    name (
+    dispatcher (
+                dispatcher )
+  , name (
           e -> getStringAttribute (
                                    "name" ) )
   , id (
@@ -34,44 +46,52 @@ SidProgram::SidProgram (
                                        "id" ) ) )
   , envelope (
               new sEnvelope (
-                             e -> getChildByName (
+                             dispatcher
+                           , e -> getChildByName (
                                                   "envelope" ) ) )
   , noteTable (
                new NoteTable (
-                              e -> getChildByName (
+                              dispatcher
+                            , e -> getChildByName (
                                                    "notetable" ) ) )
   , pulseTable (
                 new PulseTable (
-                                e -> getChildByName (
+                                dispatcher
+                              , e -> getChildByName (
                                                      "pulsetable" ) ) )
   , wavetable (
                new Wavetable (
-                              e -> getChildByName (
+                              dispatcher
+                            , e -> getChildByName (
                                                    "wavetable" ) ) )
   , expression (
                 new Expressions (
-                                 e -> getChildByName (
+                                 dispatcher
+                               , e -> getChildByName (
                                                       "expressions" ) ) )
   , factoryPreset (
                    e -> getBoolAttribute (
                                           "factory-preset" ) )
 {
-    SharedResourcePointer < ListenerList < BankProgramChanged > > () -> add (
-                                                                             this );
+    dispatcher -> bankProgramChangedListeners -> add (
+                                                      this );
 }
 
 SidProgram::SidProgram (
         const SidProgram& other
         )
     :
-    name (
+    dispatcher (
+                other . dispatcher )
+  , name (
           other . name )
   , id (
         Uuid (
               other . id ) )
   , envelope (
               new sEnvelope (
-                             *other . envelope ) )
+                             dispatcher
+                           , *other . envelope ) )
   , noteTable (
                new NoteTable (
                               *other . noteTable ) )
@@ -84,20 +104,23 @@ SidProgram::SidProgram (
   , expression (
                 new Expressions (
                                  *other . expression ) )
-  , factoryPreset (
+  , factoryPreset ( 
                    other . factoryPreset )
 {
-    SharedResourcePointer < ListenerList < BankProgramChanged > > () -> add (
-                                                                             this );
+    dispatcher -> bankProgramChangedListeners -> add (
+                                                      this );
 }
 
 SidProgram::SidProgram (
         SidProgram&& other
         ) noexcept
     :
-    name (
+    dispatcher (
+                std::move (
+                           other . dispatcher ) )
+  , name (
           std::move (
-                     name ) )
+                     other . name ) )
   , id (
         Uuid (
               other . id ) )
@@ -119,16 +142,17 @@ SidProgram::SidProgram (
   , factoryPreset (
                    other . factoryPreset )
 {
-    SharedResourcePointer < ListenerList < BankProgramChanged > > () -> add (
-                                                                             this );
+    dispatcher = other . dispatcher;
+    dispatcher -> bankProgramChangedListeners -> add (
+                                                      this );
 }
 
 SidProgram::~SidProgram ()
-{
-    Select (
+{ 
+    Select ( 
             false );
-    SharedResourcePointer < ListenerList < BankProgramChanged > > () -> remove (
-                                                                                this );
+    dispatcher -> bankProgramChangedListeners -> remove (
+                                                         this );
     envelope   = nullptr;
     noteTable  = nullptr;
     pulseTable = nullptr;
@@ -147,7 +171,8 @@ auto
     id = Uuid (
                other . id );
     envelope = new sEnvelope (
-                              *other . envelope );
+                              dispatcher
+                            , *other . envelope );
     noteTable = new NoteTable (
                                *other . noteTable );
     pulseTable = new PulseTable (
@@ -160,7 +185,7 @@ auto
     return *this;
 }
 
-auto
+auto 
     SidProgram::operator= (
             SidProgram&& other
             ) noexcept -> SidProgram&
@@ -189,7 +214,7 @@ auto
 
 void
     SidProgram::SetName (
-            const String value
+            const String& value
             )
 {
     name = String (
@@ -292,11 +317,13 @@ void
 
 auto
     SidProgram::LoadState (
-            MemoryInputStream& stream
+            const std::shared_ptr < EventDispatcher >& dispatcher
+          , MemoryInputStream&                         stream
             ) -> ReferenceCountedObjectPtr < SidProgram >
 {
     ReferenceCountedObjectPtr < SidProgram > p (
-                                                new SidProgram () );
+                                                new SidProgram (
+                                                                dispatcher ) );
     int version;
     stream . read (
                    &version
@@ -350,7 +377,7 @@ auto
 auto
     SidProgram::LoadCopyState (
             MemoryInputStream&                             stream
-          , const ReferenceCountedObjectPtr < SidProgram > original
+          , const ReferenceCountedObjectPtr < SidProgram >& original
             ) -> ReferenceCountedObjectPtr < SidProgram >
 {
     ReferenceCountedObjectPtr < SidProgram > p (
@@ -430,19 +457,19 @@ void
     selected = value;
     if ( value )
     {
-        SharedResourcePointer < ListenerList < PatchEditorNameChanged > > () -> add (
-                                                                                     this );
+        dispatcher -> patchEditorNameChangedListeners -> add (
+                                                              this );
     }
     else
     {
-        SharedResourcePointer < ListenerList < PatchEditorNameChanged > > () -> remove (
-                                                                                        this );
+        dispatcher -> patchEditorNameChangedListeners -> remove (
+                                                                 this );
     }
     envelope -> select (
                         value );
     noteTable -> Select (
                          value );
-    pulseTable -> Select (
+    pulseTable -> Select ( 
                           value );
     wavetable -> Select (
                          value );
@@ -503,7 +530,7 @@ void
     SidProgram::onPatchEditorNameChanged (
             const String value
             )
-{
+{ 
     SetName (
              value );
 }

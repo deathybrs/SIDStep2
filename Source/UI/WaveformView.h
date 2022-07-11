@@ -20,15 +20,15 @@
 #pragma once
 
 //[Headers]     -- You can add your own extra header files here --
-#include "../../JuceLibraryCode/JuceHeader.h"
+#include <JuceHeader.h>
+
+
 #include "../Listeners/ListenerInitializer.h"
+
 
 class SidProgram;
 class SID;
-
-
 //[/Headers]
-
 
 
 //==============================================================================
@@ -39,14 +39,18 @@ class SID;
     Describe your class and how it works here!
                                                                     //[/Comments]
 */
-class WaveformView  : public Component,
-                      public BankProgramChanged,
-                      public BankRepaintWaveform
+class WaveformView
+        : public Component
+        , public BankProgramChanged
+        , public BankRepaintWaveform
 {
 public:
     //==============================================================================
-    WaveformView ();
-    ~WaveformView() override;
+    WaveformView (
+            std::shared_ptr < EventDispatcher > dispatcher
+            );
+
+    ~WaveformView () override;
 
     //==============================================================================
     //[UserMethods]     -- You can add your own custom methods in this section.
@@ -68,13 +72,17 @@ public:
 
     //[/UserMethods]
 
-    void paint (juce::Graphics& g) override;
-    void resized() override;
+    void
+        paint (
+                juce::Graphics& g
+                ) override;
 
-
+    void
+        resized () override;
 
 private:
     //[UserVariables]   -- You can add your own custom variables in this section.
+    std::shared_ptr < EventDispatcher >      dispatcher;
     ReferenceCountedObjectPtr < SidProgram > currentProgram;
     //[/UserVariables]
 
@@ -82,9 +90,9 @@ private:
 
 
     //==============================================================================
-    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (WaveformView)
+    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (
+                                                  WaveformView )
 };
 
 //[EndFile] You can add extra defines here...
 //[/EndFile]
-

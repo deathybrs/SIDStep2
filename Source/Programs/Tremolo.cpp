@@ -8,11 +8,11 @@ Tremolo::Tremolo(): tremoloRange(7), tremoloSpeed(5), defaultTremoloAmount(0), d
 					currentTremoloAmount(defaultTremoloAmount), currentTremoloSpeed(defaultTremoloSpeed), 
 					tremoloCounter(0), forVoice(-1) {
 	
-	SharedResourcePointer<ListenerList<LiveTremoloAmountChanged>>()->add(this);
-	SharedResourcePointer<ListenerList<LiveTremoloSpeedChanged>>()->add(this);
+	//SharedResourcePointer<ListenerList<LiveTremoloAmountChanged>>()->add(this);
+	//SharedResourcePointer<ListenerList<LiveTremoloSpeedChanged>>()->add(this);
 
-	SharedResourcePointer<ListenerList<TremoloAmountParameterChanged>>()->add(this);
-	SharedResourcePointer<ListenerList<TremoloSpeedParameterChanged>>()->add(this);
+	//SharedResourcePointer<ListenerList<TremoloAmountParameterChanged>>()->add(this);
+	//SharedResourcePointer<ListenerList<TremoloSpeedParameterChanged>>()->add(this);
 }
 
 Tremolo::Tremolo(XmlElement *e): tremoloRange(static_cast<unsigned int>(e->getIntAttribute("range"))),
@@ -22,11 +22,11 @@ Tremolo::Tremolo(XmlElement *e): tremoloRange(static_cast<unsigned int>(e->getIn
 									   currentTremoloAmount(defaultTremoloAmount), 
 									   currentTremoloSpeed(defaultTremoloSpeed), tremoloCounter(0), forVoice(-1) {
 
-	SharedResourcePointer<ListenerList<LiveTremoloAmountChanged>>()->add(this);
-	SharedResourcePointer<ListenerList<LiveTremoloSpeedChanged>>()->add(this);
+	//SharedResourcePointer<ListenerList<LiveTremoloAmountChanged>>()->add(this);
+	//SharedResourcePointer<ListenerList<LiveTremoloSpeedChanged>>()->add(this);
 
-	SharedResourcePointer<ListenerList<TremoloAmountParameterChanged>>()->add(this);
-	SharedResourcePointer<ListenerList<TremoloSpeedParameterChanged>>()->add(this);
+	//SharedResourcePointer<ListenerList<TremoloAmountParameterChanged>>()->add(this);
+	//SharedResourcePointer<ListenerList<TremoloSpeedParameterChanged>>()->add(this);
 }
 
 Tremolo::Tremolo(Tremolo &original): tremoloRange(original.tremoloRange), tremoloSpeed(original.tremoloSpeed),
@@ -35,32 +35,32 @@ Tremolo::Tremolo(Tremolo &original): tremoloRange(original.tremoloRange), tremol
 									 currentTremoloAmount(defaultTremoloAmount),
 									 currentTremoloSpeed(defaultTremoloSpeed), tremoloCounter(0), forVoice(-1) {
 
-	SharedResourcePointer<ListenerList<LiveTremoloAmountChanged>>()->add(this);
-	SharedResourcePointer<ListenerList<LiveTremoloSpeedChanged>>()->add(this);
+	//SharedResourcePointer<ListenerList<LiveTremoloAmountChanged>>()->add(this);
+	//SharedResourcePointer<ListenerList<LiveTremoloSpeedChanged>>()->add(this);
 
-	SharedResourcePointer<ListenerList<TremoloAmountParameterChanged>>()->add(this);
-	SharedResourcePointer<ListenerList<TremoloSpeedParameterChanged>>()->add(this);
+	//SharedResourcePointer<ListenerList<TremoloAmountParameterChanged>>()->add(this);
+	//SharedResourcePointer<ListenerList<TremoloSpeedParameterChanged>>()->add(this);
 }
 
 Tremolo::~Tremolo() {
-	SharedResourcePointer<ListenerList<LiveTremoloAmountChanged>>()->remove(this);
-	SharedResourcePointer<ListenerList<LiveTremoloSpeedChanged>>()->remove(this);
+	//SharedResourcePointer<ListenerList<LiveTremoloAmountChanged>>()->remove(this);
+	//SharedResourcePointer<ListenerList<LiveTremoloSpeedChanged>>()->remove(this);
 
-	SharedResourcePointer<ListenerList<TremoloAmountParameterChanged>>()->remove(this);
-	SharedResourcePointer<ListenerList<TremoloSpeedParameterChanged>>()->remove(this);
+	//SharedResourcePointer<ListenerList<TremoloAmountParameterChanged>>()->remove(this);
+	//SharedResourcePointer<ListenerList<TremoloSpeedParameterChanged>>()->remove(this);
 }
 
 void Tremolo::select(bool value) {
 	if (value) {
-		SharedResourcePointer<ListenerList<PatchEditorTremoloRangeChanged>>()->add(this);
-		SharedResourcePointer<ListenerList<PatchEditorTremoloSpeedChanged>>()->add(this);
-		SharedResourcePointer<ListenerList<PatchEditorTremoloDefaultAmountChanged>>()->add(this);
-		SharedResourcePointer<ListenerList<PatchEditorTremoloDefaultSpeedChanged>>()->add(this);
+		//SharedResourcePointer<ListenerList<PatchEditorTremoloRangeChanged>>()->add(this);
+		//SharedResourcePointer<ListenerList<PatchEditorTremoloSpeedChanged>>()->add(this);
+		//SharedResourcePointer<ListenerList<PatchEditorTremoloDefaultAmountChanged>>()->add(this);
+		//SharedResourcePointer<ListenerList<PatchEditorTremoloDefaultSpeedChanged>>()->add(this);
 	} else {
-		SharedResourcePointer<ListenerList<PatchEditorTremoloRangeChanged>>()->remove(this);
-		SharedResourcePointer<ListenerList<PatchEditorTremoloSpeedChanged>>()->remove(this);
-		SharedResourcePointer<ListenerList<PatchEditorTremoloDefaultAmountChanged>>()->remove(this);
-		SharedResourcePointer<ListenerList<PatchEditorTremoloDefaultSpeedChanged>>()->remove(this);
+		//SharedResourcePointer<ListenerList<PatchEditorTremoloRangeChanged>>()->remove(this);
+		//SharedResourcePointer<ListenerList<PatchEditorTremoloSpeedChanged>>()->remove(this);
+		//SharedResourcePointer<ListenerList<PatchEditorTremoloDefaultAmountChanged>>()->remove(this);
+		//SharedResourcePointer<ListenerList<PatchEditorTremoloDefaultSpeedChanged>>()->remove(this);
 	}
 }
 
@@ -169,10 +169,10 @@ void Tremolo::onTremoloSpeedParameterChanged(unsigned int voice, float value) { 
 
 void Tremolo::setForVoice(int value) {
 	if (value > -1 && value < 3) {
-		SharedResourcePointer<ListenerList<TremoloAmountParameterChanged>>()->call(&TremoloAmountParameterChanged::onTremoloAmountParameterChanged,
-			value, getCurrentTremoloAmount());
-		SharedResourcePointer<ListenerList<TremoloSpeedParameterChanged>>()->call(&TremoloSpeedParameterChanged::onTremoloSpeedParameterChanged,
-			value, getCurrentTremoloSpeed());
+		//SharedResourcePointer<ListenerList<TremoloAmountParameterChanged>>()->call(&TremoloAmountParameterChanged::onTremoloAmountParameterChanged,
+		//	value, getCurrentTremoloAmount());
+		//SharedResourcePointer<ListenerList<TremoloSpeedParameterChanged>>()->call(&TremoloSpeedParameterChanged::onTremoloSpeedParameterChanged,
+		//	value, getCurrentTremoloSpeed());
 	}
 	forVoice = value;
 }

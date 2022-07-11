@@ -13,36 +13,43 @@
 
 #include "Programs/Bank.h"
 
-SidStep2::SidStep2 ()
+SidStep2::SidStep2 (
+        const std::shared_ptr < EventDispatcher >& dispatcher
+        )
+    :
+    dispatcher (
+                dispatcher )
 {
-    SharedResourcePointer < ListenerList < SampleRateChanged > > () -> add (
-                                                                            this );
-    SharedResourcePointer < ListenerList < BankProgramChanged > > () -> add (
-                                                                             this );
-    SharedResourcePointer < ListenerList < LiveTitleChanged > > () -> add (
-                                                                           this );
-    SharedResourcePointer < ListenerList < LiveArtistChanged > > () -> add (
-                                                                            this );
-    SharedResourcePointer < ListenerList < LivePatchEditorModeClicked > > () -> add (
-                                                                                     this );
-    SharedResourcePointer < ListenerList < LivePatchListMode > > () -> add (
-                                                                            this );
-    SharedResourcePointer < ListenerList < LivePatchListSelectedIndexChanged > > () -> add (
-                                                                                            this );
-    SharedResourcePointer < ListenerList < LiveRemovePatchClicked > > () -> add (
-                                                                                 this );
-    SharedResourcePointer < ListenerList < LivePatchChanged > > () -> add (
-                                                                           this );
-    SharedResourcePointer < ListenerList < ProgramParameterChanged > > () -> add (
-                                                                                  this );
-    SharedResourcePointer < ListenerList < PatchEditorLiveModeClicked > > () -> add (
-                                                                                     this );
-    SharedResourcePointer < ListenerList < LiveExportArmed > > () -> add (
-                                                                          this );
-    SharedResourcePointer < ListenerList < LiveDoneExporting > > () -> add (
-                                                                            this );
-    sidRegisters        = new SidRegisters ();
-    bank                = new Bank ();
+    dispatcher -> sampleRateChangedListeners -> add ( 
+                                                     this );
+    dispatcher -> bankProgramChangedListeners -> add (
+                                                      this );
+    dispatcher -> liveTitleChangedListeners -> add (
+                                                    this );
+    dispatcher -> liveArtistChangedListeners -> add (
+                                                     this );
+    dispatcher -> livePatchEditorModeClickedListeners -> add (
+                                                              this );
+    dispatcher -> livePatchListModeListeners -> add (
+                                                     this );
+    dispatcher -> livePatchListSelectedIndexChangedListeners -> add (
+                                                                     this );
+    dispatcher -> liveRemovePatchClickedListeners -> add (
+                                                          this );
+    dispatcher -> livePatchChangedListeners -> add (
+                                                    this );
+    dispatcher -> programParameterChangedListeners -> add (
+                                                           this );
+    dispatcher -> patchEditorLiveModeClickedListeners -> add (
+                                                              this );
+    dispatcher -> liveExportArmedListeners -> add (
+                                                   this );
+    dispatcher -> liveDoneExportingListeners -> add (
+                                                     this );
+    sidRegisters = std::make_shared < SidRegisters > (
+                                                      dispatcher );
+    bank = std::make_shared < Bank > (
+                                      dispatcher );
     sampleRate          = 0;
     samplesPerFrame     = 0;
     cyclesPerSample     = 0;
@@ -56,36 +63,38 @@ SidStep2::SidStep2 ()
 
 SidStep2::~SidStep2 ()
 {
-    SharedResourcePointer < ListenerList < SampleRateChanged > > () -> remove (
-                                                                               this );
-    SharedResourcePointer < ListenerList < BankProgramChanged > > () -> remove (
-                                                                                this );
-    SharedResourcePointer < ListenerList < LiveTitleChanged > > () -> remove (
-                                                                              this );
-    SharedResourcePointer < ListenerList < LiveArtistChanged > > () -> remove (
-                                                                               this );
-    SharedResourcePointer < ListenerList < LivePatchEditorModeClicked > > () -> remove (
-                                                                                        this );
-    SharedResourcePointer < ListenerList < LivePatchListMode > > () -> remove (
-                                                                               this );
-    SharedResourcePointer < ListenerList < LivePatchListSelectedIndexChanged > > () -> remove (
-                                                                                               this );
-    SharedResourcePointer < ListenerList < LiveRemovePatchClicked > > () -> remove (
-                                                                                    this );
-    SharedResourcePointer < ListenerList < LivePatchChanged > > () -> remove (
-                                                                              this );
-    SharedResourcePointer < ListenerList < ProgramParameterChanged > > () -> remove (
-                                                                                     this );
-    SharedResourcePointer < ListenerList < PatchEditorLiveModeClicked > > () -> remove (
-                                                                                        this );
-    SharedResourcePointer < ListenerList < LiveExportArmed > > () -> remove (
-                                                                             this );
-    SharedResourcePointer < ListenerList < LiveDoneExporting > > () -> remove (
-                                                                               this );
+    dispatcher -> sampleRateChangedListeners -> remove (
+                                                        this );
+    dispatcher -> bankProgramChangedListeners -> remove (
+                                                         this );
+    dispatcher -> liveTitleChangedListeners -> remove (
+                                                       this );
+    dispatcher -> liveArtistChangedListeners -> remove (
+                                                        this );
+    dispatcher -> livePatchEditorModeClickedListeners -> remove (
+                                                                 this );
+    dispatcher -> livePatchListModeListeners -> remove (
+                                                        this );
+    dispatcher -> livePatchListSelectedIndexChangedListeners -> remove (
+                                                                        this );
+    dispatcher -> liveRemovePatchClickedListeners -> remove (
+                                                             this );
+    dispatcher -> livePatchChangedListeners -> remove (
+                                                       this );
+    dispatcher -> programParameterChangedListeners -> remove (
+                                                              this );
+    dispatcher -> patchEditorLiveModeClickedListeners -> remove (
+                                                                 this );
+    dispatcher -> liveExportArmedListeners -> remove (
+                                                      this );
+    dispatcher -> liveDoneExportingListeners -> remove (
+                                                        this );
     sidRegisters = nullptr;
     bank         = nullptr;
-    programs . clear ();
-    channelProgramCopies . clear ();
+    dispatcher   = nullptr;
+
+    programs . clear (); 
+    channelProgramCopies . clear (); 
     currentChannelProgram . clear ();
 }
 
@@ -175,8 +184,8 @@ void
         recording = false;
         recorder -> Stop ();
         // fire stop recording event
-        SharedResourcePointer < ListenerList < LiveDoneExporting > > () -> call (
-                                                                                 &LiveDoneExporting::onLiveDoneExporting );
+        dispatcher -> liveDoneExportingListeners -> call (
+                                                          &LiveDoneExporting::onLiveDoneExporting );
 
         // Actual exporter needs to run after the user is done with the export manager
         const Exporter exporter (
@@ -210,9 +219,9 @@ void
         while ( i >= next_message_sample )
         {
             // Send the MIDI signal
-            SharedResourcePointer < ListenerList < MIDISignal > > () -> call (
-                                                                              &MIDISignal::onMIDISignal
-                                                                            , m );
+            dispatcher -> midiSignalListeners -> call (
+                                                       &MIDISignal::onMIDISignal
+                                                     , m );
 
             // and just like earlier, if that was the last midi message, then
             // stop trying to process them.
@@ -230,18 +239,18 @@ void
                     // Have we stepped to the next quarter note?
                     if ( static_cast < int > ( sampleIndex ) % samples_per_quarter_note == 0 )
                     {
-                        SharedResourcePointer < ListenerList < QuarterNoteTick > > () -> call (
-                                                                                               &QuarterNoteTick::onQuarterNoteTick
-                                                                                             , static_cast < unsigned int > ( sampleIndex / samples_per_quarter_note ) + 1
-                                                                                             , position_info . isPlaying );
+                        dispatcher -> quarterNoteTickListeners -> call (
+                                                                        &QuarterNoteTick::onQuarterNoteTick
+                                                                      , static_cast < unsigned int > ( sampleIndex / samples_per_quarter_note ) + 1
+                                                                      , position_info . isPlaying );
                     }
                 }
                 // Then trigger the frame updates.
                 recording = false;
                 recorder -> Stop ();
                 // fire stop recording event
-                SharedResourcePointer < ListenerList < LiveDoneExporting > > () -> call (
-                                                                                         &LiveDoneExporting::onLiveDoneExporting );
+                dispatcher -> liveDoneExportingListeners -> call (
+                                                                  &LiveDoneExporting::onLiveDoneExporting );
 
                 // Actual exporter needs to run after the user is done with the export manager
                 const Exporter exporter (
@@ -268,10 +277,10 @@ void
             // Have we stepped to the next quarter note?
             if ( static_cast < int > ( sampleIndex ) % samples_per_quarter_note == 0 )
             {
-                SharedResourcePointer < ListenerList < QuarterNoteTick > > () -> call (
-                                                                                       &QuarterNoteTick::onQuarterNoteTick
-                                                                                     , static_cast < unsigned int > ( sampleIndex / samples_per_quarter_note )
-                                                                                     , position_info . isPlaying );
+                dispatcher -> quarterNoteTickListeners -> call (
+                                                                &QuarterNoteTick::onQuarterNoteTick
+                                                              , static_cast < unsigned int > ( sampleIndex / samples_per_quarter_note )
+                                                              , position_info . isPlaying );
             }
         }
 
@@ -330,9 +339,9 @@ void
                      String (
                              p -> GetName () ) );
     }
-    SharedResourcePointer < ListenerList < LivePatchListChanged > > () -> call (
-                                                                                &LivePatchListChanged::onLivePatchListChanged
-                                                                              , value );
+    dispatcher -> livePatchListChangedListeners -> call (
+                                                         &LivePatchListChanged::onLivePatchListChanged
+                                                       , value );
 }
 
 void
@@ -414,7 +423,8 @@ void
     for ( unsigned int i = 0 ; i < patch_list_size ; i++ )
     {
         auto p = SidProgram::LoadState (
-                                        stream );
+                                        dispatcher
+                                      , stream );
         programs . add (
                         p );
         for ( auto v = 0 ; v < 3 ; v++ )
@@ -436,26 +446,26 @@ void
         currentChannelProgram . set (
                                      v
                                    , selection );
-        SharedResourcePointer < ListenerList < ProgramParameterChanged > > () -> call (
-                                                                                       &ProgramParameterChanged::onProgramParameterChanged
-                                                                                     , v
-                                                                                     , selection );
+        dispatcher -> programParameterChangedListeners -> call (
+                                                                &ProgramParameterChanged::onProgramParameterChanged
+                                                              , v
+                                                              , selection );
         bool filtered;
         stream . read (
                        &filtered
                      , sizeof filtered );
-        SharedResourcePointer < ListenerList < FilterVoiceParameterChanged > > () -> call (
-                                                                                           &FilterVoiceParameterChanged::onFilterVoiceParameterChanged
-                                                                                         , v
-                                                                                         , filtered );
+        dispatcher -> filterVoiceParameterChangedListeners -> call (
+                                                                    &FilterVoiceParameterChanged::onFilterVoiceParameterChanged
+                                                                  , v
+                                                                  , filtered );
     }
     unsigned int volume;
     stream . read (
                    &volume
                  , sizeof volume );
-    SharedResourcePointer < ListenerList < VolumeParameterChanged > > () -> call (
-                                                                                  &VolumeParameterChanged::onVolumeParameterChanged
-                                                                                , volume );
+    dispatcher -> volumeParameterChangedListeners -> call (
+                                                           &VolumeParameterChanged::onVolumeParameterChanged
+                                                         , volume );
     unsigned int title_length;
     stream . read (
                    &title_length
@@ -469,9 +479,9 @@ void
                     title_string
                   , title_length );
     delete[] title_string;
-    SharedResourcePointer < ListenerList < LiveTitleChanged > > () -> call (
-                                                                            &LiveTitleChanged::onLiveTitleChanged
-                                                                          , title );
+    dispatcher -> liveTitleChangedListeners -> call (
+                                                     &LiveTitleChanged::onLiveTitleChanged
+                                                   , title );
     unsigned int artist_length;
     stream . read (
                    &artist_length
@@ -485,9 +495,9 @@ void
                      artist_string
                    , artist_length );
     delete[] artist_string;
-    SharedResourcePointer < ListenerList < LiveArtistChanged > > () -> call (
-                                                                             &LiveArtistChanged::onLiveArtistChanged
-                                                                           , artist );
+    dispatcher -> liveArtistChangedListeners -> call (
+                                                      &LiveArtistChanged::onLiveArtistChanged
+                                                    , artist );
 }
 
 void
@@ -580,10 +590,10 @@ void
                                          0 );
             p -> SetForVoice (
                               i );
-            SharedResourcePointer < ListenerList < LoadLivePatch > > () -> call (
-                                                                                 &LoadLivePatch::onLoadLivePatch
-                                                                               , i
-                                                                               , p );
+            dispatcher -> loadLivePatchListeners -> call (
+                                                          &LoadLivePatch::onLoadLivePatch
+                                                        , i
+                                                        , p );
         }
         FirePatchListChanged ();
         return;
@@ -621,11 +631,11 @@ void
                     channelProgramCopies [ i ] -> getObjectPointer (
                                                                     patchSelectionIndex ) -> SetForVoice (
                                                                                                           i );
-                    SharedResourcePointer < ListenerList < LoadLivePatch > > () -> call (
-                                                                                         &LoadLivePatch::onLoadLivePatch
-                                                                                       , i
-                                                                                       , channelProgramCopies [ i ] -> getObjectPointer (
-                                                                                                                                         currentChannelProgram [ i ] ) );
+                    dispatcher -> loadLivePatchListeners -> call (
+                                                                  &LoadLivePatch::onLoadLivePatch
+                                                                , i
+                                                                , channelProgramCopies [ i ] -> getObjectPointer (
+                                                                                                                  currentChannelProgram [ i ] ) );
                 }
             }
             FirePatchListChanged ();
@@ -653,11 +663,11 @@ void
                         channelProgramCopies [ j ] -> getObjectPointer (
                                                                         i ) -> SetForVoice (
                                                                                             j );
-                        SharedResourcePointer < ListenerList < LoadLivePatch > > () -> call (
-                                                                                             &LoadLivePatch::onLoadLivePatch
-                                                                                           , j
-                                                                                           , channelProgramCopies [ j ] -> getObjectPointer (
-                                                                                                                                             currentChannelProgram [ j ] ) );
+                        dispatcher -> loadLivePatchListeners -> call (
+                                                                      &LoadLivePatch::onLoadLivePatch
+                                                                    , j
+                                                                    , channelProgramCopies [ j ] -> getObjectPointer (
+                                                                                                                      currentChannelProgram [ j ] ) );
                     }
                 }
                 FirePatchListChanged ();
@@ -684,9 +694,9 @@ void
             )
 {
     patchSelectionIndex = value;
-    SharedResourcePointer < ListenerList < LivePatchSelected > > () -> call (
-                                                                             &LivePatchSelected::onLivePatchSelected
-                                                                           , programs [ value ] );
+    dispatcher -> livePatchSelectedListeners -> call (
+                                                      &LivePatchSelected::onLivePatchSelected
+                                                    , programs [ value ] );
 }
 
 void
@@ -716,7 +726,8 @@ void
     armed    = true;
     recorder = nullptr;
     recorder = std::make_shared < Recorder > (
-                                              programs );
+                                              dispatcher
+                                            , programs );
 }
 
 void
@@ -739,8 +750,8 @@ void
         sidRegisters -> SetFrame (
                                   frame );
     }
-    SharedResourcePointer < ListenerList < ::Frame > > () -> call (
-                                                                   &Frame::onFrame );
+    dispatcher -> frameListeners -> call (
+                                          &Frame::onFrame );
     for ( auto v = 0 ; v < 3 ; v++ )
     {
         ProcessVoice (
@@ -758,7 +769,7 @@ void
     SidStep2::ProcessVoice (
             const int v
             ) const
-{
+{ 
     sidRegisters -> ProcessNotesOnOff (
                                        v );
     sidRegisters -> ProcessPulseWidth (

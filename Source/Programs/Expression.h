@@ -1,12 +1,12 @@
-#ifndef EXPRESSION_H_INCLUDED
-#define EXPRESSION_H_INCLUDED
+#pragma once
 
 
 #include "../JuceLibraryCode/JuceHeader.h"
 
 
-#include "Vibrato.h"
 #include "Tremolo.h"
+#include "Vibrato.h"
+
 
 #include "../Listeners/ListenerInitializer.h"
 
@@ -14,30 +14,35 @@
 class SidProgram;
 
 
-class Expressions
-        : public ReferenceCountedObject ,
-          public PatchEditorPitchBendRangeChanged ,
-          public PatchEditorPulseWidthRangeChanged ,
-          public PatchEditorPulseWidthCenterChanged ,
-          public PatchEditorPulseWidthDefaultChanged ,
-          public LivePitchBendChanged ,
-          public LivePulseWidthChanged ,
-          public PitchBend ,
-          public PitchBendParameterChanged ,
-          public PulseWidthParameterChanged
+class Expressions final
+        : public ReferenceCountedObject
+        , public PatchEditorPitchBendRangeChanged
+        , public PatchEditorPulseWidthRangeChanged
+        , public PatchEditorPulseWidthCenterChanged
+        , public PatchEditorPulseWidthDefaultChanged
+        , public LivePitchBendChanged
+        , public LivePulseWidthChanged
+        , public PitchBend
+        , public PitchBendParameterChanged
+        , public PulseWidthParameterChanged
 {
 public:
-    Expressions ();
+    explicit
+        Expressions (
+                std::shared_ptr < EventDispatcher > dispatcher
+                );
 
-    Expressions (
-            XmlElement* e
-            );
+    explicit
+        Expressions (
+                std::shared_ptr < EventDispatcher > dispatcher
+              , XmlElement*                         e
+                );
 
     Expressions (
             Expressions& original
             );
 
-    ~Expressions ();
+    ~Expressions () override;
 
     void
         select (
@@ -61,13 +66,13 @@ public:
 
     static void
         loadState (
-                MemoryInputStream&                 stream
+                MemoryInputStream&                       stream
               , ReferenceCountedObjectPtr < SidProgram > o
                 );
 
     static void
         loadCopyState (
-                MemoryInputStream&                 stream
+                MemoryInputStream&                       stream
               , ReferenceCountedObjectPtr < SidProgram > o
                 );
 
@@ -193,19 +198,14 @@ public:
                 );
 
 private:
+    std::shared_ptr < EventDispatcher >   dispatcher;
     ReferenceCountedObjectPtr < Vibrato > vibrato;
     ReferenceCountedObjectPtr < Tremolo > tremolo;
-
-    unsigned int pitchBendRange;
-    float        pulseWidthDefault;
-    unsigned int pulseWidthRange;
-    unsigned int pulseWidthCenter;
-
-    float pulseOffset;
-    float currentPitchBend;
-
-    int forVoice;
+    unsigned int                          pitchBendRange;
+    float                                 pulseWidthDefault;
+    unsigned int                          pulseWidthRange;
+    unsigned int                          pulseWidthCenter;
+    float                                 pulseOffset;
+    float                                 currentPitchBend;
+    int                                   forVoice;
 };
-
-
-#endif  // EXPRESSION_H_INCLUDED

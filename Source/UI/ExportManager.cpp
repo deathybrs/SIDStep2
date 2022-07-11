@@ -47,24 +47,12 @@ ExportManager::ExportManager ()
 
 
     //[Constructor] You can add your own custom stuff here..
-    SharedResourcePointer < ListenerList < LivePatchEditorModeClicked > > () -> add (
-                                                                                     this );
-    SharedResourcePointer < ListenerList < PatchEditorLiveModeClicked > > () -> add (
-                                                                                     this );
-    SharedResourcePointer < ListenerList < ShowExportManager > > () -> add (
-                                                                            this );
     //[/Constructor]
 }
 
 ExportManager::~ExportManager()
 {
     //[Destructor_pre]. You can add your own custom destruction code here..
-    SharedResourcePointer < ListenerList < LivePatchEditorModeClicked > > () -> remove (
-                                                                                        this );
-    SharedResourcePointer < ListenerList < PatchEditorLiveModeClicked > > () -> remove (
-                                                                                        this );
-    SharedResourcePointer < ListenerList < ShowExportManager > > () -> remove (
-                                                                               this );
     //[/Destructor_pre]
 
     juce__viewport = nullptr;

@@ -30,12 +30,17 @@
 //[/MiscUserDefs]
 
 //==============================================================================
-LiveMode::LiveMode ()
+LiveMode::LiveMode (
+        std::shared_ptr < EventDispatcher > dispatcher
+        )
+    :
+    dispatcher (
+                dispatcher ) 
 {
     //[Constructor_pre] You can add your own custom stuff here..
-    look = new SIDStepLookAndFeel;
+    look = std::make_shared < SIDStepLookAndFeel > ();
     setLookAndFeel (
-                    look );
+                    look . get() );
     armed = false;
     //[/Constructor_pre]
 
@@ -2297,7 +2302,8 @@ LiveMode::LiveMode ()
                                   , 154
                                   , 26 );
     patchSelector . reset (
-                           new PatchSelector () );
+                           new PatchSelector (
+                                              dispatcher ) );
     addAndMakeVisible (
                        patchSelector . get () );
     patchSelector -> setBounds (
@@ -2330,63 +2336,62 @@ LiveMode::LiveMode ()
     //                                           32
     //                                          );
 
-    patches = new Patches ();
+    patches = std::make_shared < Patches > (
+                                            dispatcher );
     patchesViewport -> setViewedComponent (
-                                           patches );
+                                           patches . get () );
     patchesViewport -> getVerticalScrollBar () -> setAutoHide (
                                                                false );
     patchSelector -> setVisible (
                                  false );
-    SharedResourcePointer < ListenerList < BankProgramChanged > > () -> add (
-                                                                             this );
-    SharedResourcePointer < ListenerList < AttackParameterChanged > > () -> add (
-                                                                                 this );
-    SharedResourcePointer < ListenerList < BandPassParameterChanged > > () -> add (
-                                                                                   this );
-    SharedResourcePointer < ListenerList < CutoffParameterChanged > > () -> add (
-                                                                                 this );
-    SharedResourcePointer < ListenerList < DecayParameterChanged > > () -> add (
-                                                                                this );
-    SharedResourcePointer < ListenerList < FilterVoiceParameterChanged > > () -> add (
-                                                                                      this );
-    SharedResourcePointer < ListenerList < HighPassParameterChanged > > () -> add (
-                                                                                   this );
-    SharedResourcePointer < ListenerList < LowPassParameterChanged > > () -> add (
-                                                                                  this );
-    SharedResourcePointer < ListenerList < PitchBendParameterChanged > > () -> add (
-                                                                                    this );
-    SharedResourcePointer < ListenerList < ProgramParameterChanged > > () -> add (
-                                                                                  this );
-    SharedResourcePointer < ListenerList < PulseWidthParameterChanged > > () -> add (
-                                                                                     this );
-    SharedResourcePointer < ListenerList < ReleaseParameterChanged > > () -> add (
-                                                                                  this );
-    SharedResourcePointer < ListenerList < ResonanceParameterChanged > > () -> add (
-                                                                                    this );
-    SharedResourcePointer < ListenerList < SustainParameterChanged > > () -> add (
-                                                                                  this );
-    SharedResourcePointer < ListenerList < VibratoAmountParameterChanged > > () -> add (
-                                                                                        this );
-    SharedResourcePointer < ListenerList < VibratoSpeedParameterChanged > > () -> add (
-                                                                                       this );
-    SharedResourcePointer < ListenerList < VibratoDelayParameterChanged > > () -> add (
-                                                                                       this );
-    SharedResourcePointer < ListenerList < VolumeParameterChanged > > () -> add (
-                                                                                 this );
-    SharedResourcePointer < ListenerList < PatchEditorLiveModeClicked > > () -> add (
-                                                                                     this );
-    SharedResourcePointer < ListenerList < ShowExportManager > > () -> add (
-                                                                            this );
-    SharedResourcePointer < ListenerList < LivePatchListChanged > > () -> add (
-                                                                               this );
-    SharedResourcePointer < ListenerList < LiveTitleChanged > > () -> add (
-                                                                           this );
-    SharedResourcePointer < ListenerList < LiveArtistChanged > > () -> add (
-                                                                            this );
-    SharedResourcePointer < ListenerList < QuarterNoteTick > > () -> add (
-                                                                          this );
-    SharedResourcePointer < ListenerList < LiveDoneExporting > > () -> add (
-                                                                            this );
+    dispatcher -> bankProgramChangedListeners -> add (
+                                                      this );
+    dispatcher -> attackParameterChangedListeners -> add (
+                                                          this );
+    dispatcher -> bandPassParameterChangedListeners -> add (
+                                                            this );
+    dispatcher -> cutoffParameterChangedListeners -> add (
+                                                          this );
+    dispatcher -> decayParameterChangedListeners -> add (
+                                                         this );
+    dispatcher -> filterVoiceParameterChangedListeners -> add (
+                                                               this );
+    dispatcher -> highPassParameterChangedListeners -> add (
+                                                            this );
+    dispatcher -> lowPassParameterChangedListeners -> add (
+                                                           this );
+    dispatcher -> pitchBendParameterChangedListeners -> add (
+                                                             this );
+    dispatcher -> programParameterChangedListeners -> add (
+                                                           this );
+    dispatcher -> pulseWidthParameterChangedListeners -> add (
+                                                              this );
+    dispatcher -> releaseParameterChangedListeners -> add (
+                                                           this );
+    dispatcher -> resonanceParameterChangedListeners -> add (
+                                                             this );
+    dispatcher -> sustainParameterChangedListeners -> add (
+                                                           this );
+    dispatcher -> vibratoAmountParameterChangedListeners -> add (
+                                                                 this );
+    dispatcher -> vibratoSpeedParameterChangedListeners -> add (
+                                                                this );
+    dispatcher -> vibratoDelayParameterChangedListeners -> add (
+                                                                this );
+    dispatcher -> volumeParameterChangedListeners -> add (
+                                                          this );
+    dispatcher -> patchEditorLiveModeClickedListeners -> add (
+                                                              this );
+    dispatcher -> livePatchListChangedListeners -> add (
+                                                        this );
+    dispatcher -> liveTitleChangedListeners -> add (
+                                                    this );
+    dispatcher -> liveArtistChangedListeners -> add (
+                                                     this );
+    dispatcher -> quarterNoteTickListeners -> add (
+                                                   this );
+    dispatcher -> liveDoneExportingListeners -> add (
+                                                     this );
     //[/UserPreSize]
 
     setSize (
@@ -2401,56 +2406,54 @@ LiveMode::LiveMode ()
 LiveMode::~LiveMode ()
 {
     //[Destructor_pre]. You can add your own custom destruction code here..
-    SharedResourcePointer < ListenerList < BankProgramChanged > > () -> remove (
-                                                                                this );
-    SharedResourcePointer < ListenerList < AttackParameterChanged > > () -> remove (
-                                                                                    this );
-    SharedResourcePointer < ListenerList < BandPassParameterChanged > > () -> remove (
-                                                                                      this );
-    SharedResourcePointer < ListenerList < CutoffParameterChanged > > () -> remove (
-                                                                                    this );
-    SharedResourcePointer < ListenerList < DecayParameterChanged > > () -> remove (
-                                                                                   this );
-    SharedResourcePointer < ListenerList < FilterVoiceParameterChanged > > () -> remove (
-                                                                                         this );
-    SharedResourcePointer < ListenerList < HighPassParameterChanged > > () -> remove (
-                                                                                      this );
-    SharedResourcePointer < ListenerList < LowPassParameterChanged > > () -> remove (
-                                                                                     this );
-    SharedResourcePointer < ListenerList < PitchBendParameterChanged > > () -> remove (
-                                                                                       this );
-    SharedResourcePointer < ListenerList < ProgramParameterChanged > > () -> remove (
-                                                                                     this );
-    SharedResourcePointer < ListenerList < PulseWidthParameterChanged > > () -> remove (
-                                                                                        this );
-    SharedResourcePointer < ListenerList < ReleaseParameterChanged > > () -> remove (
-                                                                                     this );
-    SharedResourcePointer < ListenerList < ResonanceParameterChanged > > () -> remove (
-                                                                                       this );
-    SharedResourcePointer < ListenerList < SustainParameterChanged > > () -> remove (
-                                                                                     this );
-    SharedResourcePointer < ListenerList < VibratoAmountParameterChanged > > () -> remove (
-                                                                                           this );
-    SharedResourcePointer < ListenerList < VibratoSpeedParameterChanged > > () -> remove (
-                                                                                          this );
-    SharedResourcePointer < ListenerList < VibratoDelayParameterChanged > > () -> remove (
-                                                                                          this );
-    SharedResourcePointer < ListenerList < VolumeParameterChanged > > () -> remove (
-                                                                                    this );
-    SharedResourcePointer < ListenerList < PatchEditorLiveModeClicked > > () -> remove (
-                                                                                        this );
-    SharedResourcePointer < ListenerList < ShowExportManager > > () -> remove (
-                                                                               this );
-    SharedResourcePointer < ListenerList < LivePatchListChanged > > () -> remove (
-                                                                                  this );
-    SharedResourcePointer < ListenerList < LiveTitleChanged > > () -> remove (
-                                                                              this );
-    SharedResourcePointer < ListenerList < LiveArtistChanged > > () -> remove (
-                                                                               this );
-    SharedResourcePointer < ListenerList < QuarterNoteTick > > () -> remove (
-                                                                             this );
-    SharedResourcePointer < ListenerList < LiveDoneExporting > > () -> remove (
-                                                                               this );
+    dispatcher -> bankProgramChangedListeners -> remove ( 
+                                                         this );
+    dispatcher -> attackParameterChangedListeners -> remove (
+                                                             this );
+    dispatcher -> bandPassParameterChangedListeners -> remove (
+                                                               this );
+    dispatcher -> cutoffParameterChangedListeners -> remove (
+                                                             this );
+    dispatcher -> decayParameterChangedListeners -> remove (
+                                                            this );
+    dispatcher -> filterVoiceParameterChangedListeners -> remove (
+                                                                  this );
+    dispatcher -> highPassParameterChangedListeners -> remove (
+                                                               this );
+    dispatcher -> lowPassParameterChangedListeners -> remove (
+                                                              this );
+    dispatcher -> pitchBendParameterChangedListeners -> remove (
+                                                                this );
+    dispatcher -> programParameterChangedListeners -> remove (
+                                                              this );
+    dispatcher -> pulseWidthParameterChangedListeners -> remove (
+                                                                 this );
+    dispatcher -> releaseParameterChangedListeners -> remove (
+                                                              this );
+    dispatcher -> resonanceParameterChangedListeners -> remove (
+                                                                this );
+    dispatcher -> sustainParameterChangedListeners -> remove (
+                                                              this );
+    dispatcher -> vibratoAmountParameterChangedListeners -> remove (
+                                                                    this );
+    dispatcher -> vibratoSpeedParameterChangedListeners -> remove (
+                                                                   this );
+    dispatcher -> vibratoDelayParameterChangedListeners -> remove (
+                                                                   this );
+    dispatcher -> volumeParameterChangedListeners -> remove (
+                                                             this );
+    dispatcher -> patchEditorLiveModeClickedListeners -> remove (
+                                                                 this );
+    dispatcher -> livePatchListChangedListeners -> remove (
+                                                           this );
+    dispatcher -> liveTitleChangedListeners -> remove (
+                                                       this );
+    dispatcher -> liveArtistChangedListeners -> remove (
+                                                        this );
+    dispatcher -> quarterNoteTickListeners -> remove (
+                                                      this );
+    dispatcher -> liveDoneExportingListeners -> remove (
+                                                        this );
     patches = nullptr;
     //[/Destructor_pre]
 
@@ -2679,12 +2682,12 @@ void
                                 volumeSlider -> getTextFromValue (
                                                                   volumeSlider -> getValue () )
                               , dontSendNotification );
-        SharedResourcePointer < ListenerList < LiveVolumeChanged > > () -> call (
-                                                                                 &LiveVolumeChanged::onLiveVolumeChanged
-                                                                               , static_cast < unsigned int > ( volumeSlider -> getValue () ) );
-        SharedResourcePointer < ListenerList < ExportVolumeChanged > > () -> call (
-                                                                                   &ExportVolumeChanged::onExportVolumeChanged
-                                                                                 , static_cast < unsigned int > ( volumeSlider -> getValue () ) );
+        dispatcher -> liveVolumeChangedListeners -> call (
+                                                          &LiveVolumeChanged::onLiveVolumeChanged
+                                                        , static_cast < unsigned int > ( volumeSlider -> getValue () ) );
+        dispatcher -> exportVolumeChanged -> call (
+                                                   &ExportVolumeChanged::onExportVolumeChanged
+                                                 , static_cast < unsigned int > ( volumeSlider -> getValue () ) );
         //[/UserSliderCode_volumeSlider]
     }
     else if ( slider_that_was_moved == patch1Slider . get () )
@@ -2694,14 +2697,14 @@ void
                                 patch1Slider -> getTextFromValue (
                                                                   patch1Slider -> getValue () )
                               , dontSendNotification );
-        SharedResourcePointer < ListenerList < LivePatchChanged > > () -> call (
-                                                                                &LivePatchChanged::onLivePatchChanged
-                                                                              , SID_VOICE_1
-                                                                              , static_cast < unsigned int > ( patch1Slider -> getValue () ) - 1 );
-        SharedResourcePointer < ListenerList < ExportPatchChanged > > () -> call (
-                                                                                  &ExportPatchChanged::onExportPatchChanged
-                                                                                , SID_VOICE_1
-                                                                                , static_cast < unsigned int > ( patch1Slider -> getValue () ) - 1 );
+        dispatcher -> livePatchChangedListeners -> call (
+                                                         &LivePatchChanged::onLivePatchChanged
+                                                       , SID_VOICE_1
+                                                       , static_cast < unsigned int > ( patch1Slider -> getValue () ) - 1 );
+        dispatcher -> exportPatchChanged -> call (
+                                                  &ExportPatchChanged::onExportPatchChanged
+                                                , SID_VOICE_1
+                                                , static_cast < unsigned int > ( patch1Slider -> getValue () ) - 1 );
         //[/UserSliderCode_patch1Slider]
     }
     else if ( slider_that_was_moved == attack1Slider . get () )
@@ -2711,14 +2714,14 @@ void
                                  attack1Slider -> getTextFromValue (
                                                                     attack1Slider -> getValue () )
                                , dontSendNotification );
-        SharedResourcePointer < ListenerList < LiveAttackChanged > > () -> call (
-                                                                                 &LiveAttackChanged::onLiveAttackChanged
-                                                                               , SID_VOICE_1
-                                                                               , static_cast < unsigned int > ( attack1Slider -> getValue () ) );
-        SharedResourcePointer < ListenerList < ExportAttackChanged > > () -> call (
-                                                                                   &ExportAttackChanged::onExportAttackChanged
-                                                                                 , SID_VOICE_1
-                                                                                 , static_cast < unsigned int > ( attack1Slider -> getValue () ) );
+        dispatcher -> liveAttackChangedListeners -> call (
+                                                          &LiveAttackChanged::onLiveAttackChanged
+                                                        , SID_VOICE_1
+                                                        , static_cast < unsigned int > ( attack1Slider -> getValue () ) );
+        dispatcher -> exportAttackChanged -> call (
+                                                   &ExportAttackChanged::onExportAttackChanged
+                                                 , SID_VOICE_1
+                                                 , static_cast < unsigned int > ( attack1Slider -> getValue () ) );
         //[/UserSliderCode_attack1Slider]
     }
     else if ( slider_that_was_moved == decay1Slider . get () )
@@ -2728,14 +2731,14 @@ void
                                 decay1Slider -> getTextFromValue (
                                                                   decay1Slider -> getValue () )
                               , dontSendNotification );
-        SharedResourcePointer < ListenerList < LiveDecayChanged > > () -> call (
-                                                                                &LiveDecayChanged::onLiveDecayChanged
-                                                                              , SID_VOICE_1
-                                                                              , static_cast < unsigned int > ( decay1Slider -> getValue () ) );
-        SharedResourcePointer < ListenerList < ExportDecayChanged > > () -> call (
-                                                                                  &ExportDecayChanged::onExportDecayChanged
-                                                                                , SID_VOICE_1
-                                                                                , static_cast < unsigned int > ( decay1Slider -> getValue () ) );
+        dispatcher -> liveDecayChangedListeners -> call (
+                                                         &LiveDecayChanged::onLiveDecayChanged
+                                                       , SID_VOICE_1
+                                                       , static_cast < unsigned int > ( decay1Slider -> getValue () ) );
+        dispatcher -> exportDecayChanged -> call (
+                                                  &ExportDecayChanged::onExportDecayChanged
+                                                , SID_VOICE_1
+                                                , static_cast < unsigned int > ( decay1Slider -> getValue () ) );
         //[/UserSliderCode_decay1Slider]
     }
     else if ( slider_that_was_moved == sustain1Slider . get () )
@@ -2745,14 +2748,14 @@ void
                                   sustain1Slider -> getTextFromValue (
                                                                       sustain1Slider -> getValue () )
                                 , dontSendNotification );
-        SharedResourcePointer < ListenerList < LiveSustainChanged > > () -> call (
-                                                                                  &LiveSustainChanged::onLiveSustainChanged
-                                                                                , SID_VOICE_1
-                                                                                , static_cast < unsigned int > ( sustain1Slider -> getValue () ) );
-        SharedResourcePointer < ListenerList < ExportSustainChanged > > () -> call (
-                                                                                    &ExportSustainChanged::onExportSustainChanged
-                                                                                  , SID_VOICE_1
-                                                                                  , static_cast < unsigned int > ( sustain1Slider -> getValue () ) );
+        dispatcher -> liveSustainChangedListeners -> call (
+                                                           &LiveSustainChanged::onLiveSustainChanged
+                                                         , SID_VOICE_1
+                                                         , static_cast < unsigned int > ( sustain1Slider -> getValue () ) );
+        dispatcher -> exportSustainChanged -> call (
+                                                    &ExportSustainChanged::onExportSustainChanged
+                                                  , SID_VOICE_1
+                                                  , static_cast < unsigned int > ( sustain1Slider -> getValue () ) );
         //[/UserSliderCode_sustain1Slider]
     }
     else if ( slider_that_was_moved == release1Slider . get () )
@@ -2762,14 +2765,14 @@ void
                                   release1Slider -> getTextFromValue (
                                                                       release1Slider -> getValue () )
                                 , dontSendNotification );
-        SharedResourcePointer < ListenerList < LiveReleaseChanged > > () -> call (
-                                                                                  &LiveReleaseChanged::onLiveReleaseChanged
-                                                                                , SID_VOICE_1
-                                                                                , static_cast < unsigned int > ( release1Slider -> getValue () ) );
-        SharedResourcePointer < ListenerList < ExportReleaseChanged > > () -> call (
-                                                                                    &ExportReleaseChanged::onExportReleaseChanged
-                                                                                  , SID_VOICE_1
-                                                                                  , static_cast < unsigned int > ( release1Slider -> getValue () ) );
+        dispatcher -> liveReleaseChangedListeners -> call (
+                                                           &LiveReleaseChanged::onLiveReleaseChanged
+                                                         , SID_VOICE_1
+                                                         , static_cast < unsigned int > ( release1Slider -> getValue () ) );
+        dispatcher -> exportReleaseChanged -> call (
+                                                    &ExportReleaseChanged::onExportReleaseChanged
+                                                  , SID_VOICE_1
+                                                  , static_cast < unsigned int > ( release1Slider -> getValue () ) );
         //[/UserSliderCode_release1Slider]
     }
     else if ( slider_that_was_moved == pitchBend1Slider . get () )
@@ -2779,14 +2782,14 @@ void
                                     pitchBend1Slider -> getTextFromValue (
                                                                           pitchBend1Slider -> getValue () ) + "%"
                                   , dontSendNotification );
-        SharedResourcePointer < ListenerList < LivePitchBendChanged > > () -> call (
-                                                                                    &LivePitchBendChanged::onLivePitchBendChanged
-                                                                                  , SID_VOICE_1
-                                                                                  , static_cast < float > ( pitchBend1Slider -> getValue () / 100.0 ) );
-        SharedResourcePointer < ListenerList < ExportPitchBendChanged > > () -> call (
-                                                                                      &ExportPitchBendChanged::onExportPitchBendChanged
-                                                                                    , SID_VOICE_1
-                                                                                    , static_cast < float > ( pitchBend1Slider -> getValue () / 100.0 ) );
+        dispatcher -> livePitchBendChangedListeners -> call (
+                                                             &LivePitchBendChanged::onLivePitchBendChanged
+                                                           , SID_VOICE_1
+                                                           , static_cast < float > ( pitchBend1Slider -> getValue () / 100.0 ) );
+        dispatcher -> exportPitchBendChanged -> call (
+                                                      &ExportPitchBendChanged::onExportPitchBendChanged
+                                                    , SID_VOICE_1
+                                                    , static_cast < float > ( pitchBend1Slider -> getValue () / 100.0 ) );
         //[/UserSliderCode_pitchBend1Slider]
     }
     else if ( slider_that_was_moved == vibratoAmount1Slider . get () )
@@ -2796,14 +2799,14 @@ void
                                         vibratoAmount1Slider -> getTextFromValue (
                                                                                   vibratoAmount1Slider -> getValue () ) + "%"
                                       , dontSendNotification );
-        SharedResourcePointer < ListenerList < LiveVibratoAmountChanged > > () -> call (
-                                                                                        &LiveVibratoAmountChanged::onLiveVibratoAmountChanged
-                                                                                      , SID_VOICE_1
-                                                                                      , static_cast < float > ( vibratoAmount1Slider -> getValue () / 100.0 ) );
-        SharedResourcePointer < ListenerList < ExportVibratoAmountChanged > > () -> call (
-                                                                                          &ExportVibratoAmountChanged::onExportVibratoAmountChanged
-                                                                                        , SID_VOICE_1
-                                                                                        , static_cast < float > ( vibratoAmount1Slider -> getValue () / 100.0 ) );
+        dispatcher -> liveVibratoAmountChangedListeners -> call (
+                                                                 &LiveVibratoAmountChanged::onLiveVibratoAmountChanged
+                                                               , SID_VOICE_1
+                                                               , static_cast < float > ( vibratoAmount1Slider -> getValue () / 100.0 ) );
+        dispatcher -> exportVibratoAmountChanged -> call (
+                                                          &ExportVibratoAmountChanged::onExportVibratoAmountChanged
+                                                        , SID_VOICE_1
+                                                        , static_cast < float > ( vibratoAmount1Slider -> getValue () / 100.0 ) );
         //[/UserSliderCode_vibratoAmount1Slider]
     }
     else if ( slider_that_was_moved == vibratoSpeed1Slider . get () )
@@ -2813,14 +2816,14 @@ void
                                        vibratoSpeed1Slider -> getTextFromValue (
                                                                                 vibratoSpeed1Slider -> getValue () ) + "%"
                                      , dontSendNotification );
-        SharedResourcePointer < ListenerList < LiveVibratoSpeedChanged > > () -> call (
-                                                                                       &LiveVibratoSpeedChanged::onLiveVibratoSpeedChanged
-                                                                                     , SID_VOICE_1
-                                                                                     , static_cast < float > ( vibratoSpeed1Slider -> getValue () / 100.0 ) );
-        SharedResourcePointer < ListenerList < ExportVibratoSpeedChanged > > () -> call (
-                                                                                         &ExportVibratoSpeedChanged::onExportVibratoSpeedChanged
-                                                                                       , SID_VOICE_1
-                                                                                       , static_cast < float > ( vibratoSpeed1Slider -> getValue () / 100.0 ) );
+        dispatcher -> liveVibratoSpeedChangedListeners -> call (
+                                                                &LiveVibratoSpeedChanged::onLiveVibratoSpeedChanged
+                                                              , SID_VOICE_1
+                                                              , static_cast < float > ( vibratoSpeed1Slider -> getValue () / 100.0 ) );
+        dispatcher -> exportVibratoSpeedChanged -> call (
+                                                         &ExportVibratoSpeedChanged::onExportVibratoSpeedChanged
+                                                       , SID_VOICE_1
+                                                       , static_cast < float > ( vibratoSpeed1Slider -> getValue () / 100.0 ) );
         //[/UserSliderCode_vibratoSpeed1Slider]
     }
     else if ( slider_that_was_moved == pulseWidth1Slider . get () )
@@ -2830,14 +2833,14 @@ void
                                      pulseWidth1Slider -> getTextFromValue (
                                                                             pulseWidth1Slider -> getValue () ) + "%"
                                    , dontSendNotification );
-        SharedResourcePointer < ListenerList < LivePulseWidthChanged > > () -> call (
-                                                                                     &LivePulseWidthChanged::onLivePulseWidthChanged
-                                                                                   , SID_VOICE_1
-                                                                                   , static_cast < float > ( pulseWidth1Slider -> getValue () / 100.0 ) );
-        SharedResourcePointer < ListenerList < ExportPulseWidthChanged > > () -> call (
-                                                                                       &ExportPulseWidthChanged::onExportPulseWidthChanged
-                                                                                     , SID_VOICE_1
-                                                                                     , static_cast < float > ( pulseWidth1Slider -> getValue () / 100.0 ) );
+        dispatcher -> livePulseWidthChangedListeners -> call (
+                                                              &LivePulseWidthChanged::onLivePulseWidthChanged
+                                                            , SID_VOICE_1
+                                                            , static_cast < float > ( pulseWidth1Slider -> getValue () / 100.0 ) );
+        dispatcher -> exportPulseWidthChanged -> call (
+                                                       &ExportPulseWidthChanged::onExportPulseWidthChanged
+                                                     , SID_VOICE_1
+                                                     , static_cast < float > ( pulseWidth1Slider -> getValue () / 100.0 ) );
         //[/UserSliderCode_pulseWidth1Slider]
     }
     else if ( slider_that_was_moved == vibratoDelay1Slider . get () )
@@ -2847,10 +2850,10 @@ void
                                        vibratoDelay1Slider -> getTextFromValue (
                                                                                 vibratoDelay1Slider -> getValue () )
                                      , dontSendNotification );
-        SharedResourcePointer < ListenerList < LiveVibratoDelayChanged > > () -> call (
-                                                                                       &LiveVibratoDelayChanged::onLiveVibratoDelayChanged
-                                                                                     , SID_VOICE_1
-                                                                                     , static_cast < unsigned int > ( vibratoDelay1Slider -> getValue () ) );
+        dispatcher -> liveVibratoDelayChangedListeners -> call (
+                                                                &LiveVibratoDelayChanged::onLiveVibratoDelayChanged
+                                                              , SID_VOICE_1
+                                                              , static_cast < unsigned int > ( vibratoDelay1Slider -> getValue () ) );
         //[/UserSliderCode_vibratoDelay1Slider]
     }
     else if ( slider_that_was_moved == patch2Slider . get () )
@@ -2860,14 +2863,14 @@ void
                                 patch2Slider -> getTextFromValue (
                                                                   patch2Slider -> getValue () )
                               , dontSendNotification );
-        SharedResourcePointer < ListenerList < LivePatchChanged > > () -> call (
-                                                                                &LivePatchChanged::onLivePatchChanged
-                                                                              , SID_VOICE_2
-                                                                              , static_cast < unsigned int > ( patch2Slider -> getValue () ) - 1 );
-        SharedResourcePointer < ListenerList < ExportPatchChanged > > () -> call (
-                                                                                  &ExportPatchChanged::onExportPatchChanged
-                                                                                , SID_VOICE_2
-                                                                                , static_cast < unsigned int > ( patch2Slider -> getValue () ) - 1 );
+        dispatcher -> livePatchChangedListeners -> call (
+                                                         &LivePatchChanged::onLivePatchChanged
+                                                       , SID_VOICE_2
+                                                       , static_cast < unsigned int > ( patch2Slider -> getValue () ) - 1 );
+        dispatcher -> exportPatchChanged -> call (
+                                                  &ExportPatchChanged::onExportPatchChanged
+                                                , SID_VOICE_2
+                                                , static_cast < unsigned int > ( patch2Slider -> getValue () ) - 1 );
         //[/UserSliderCode_patch2Slider]
     }
     else if ( slider_that_was_moved == attack2Slider . get () )
@@ -2877,14 +2880,14 @@ void
                                  attack2Slider -> getTextFromValue (
                                                                     attack2Slider -> getValue () )
                                , dontSendNotification );
-        SharedResourcePointer < ListenerList < LiveAttackChanged > > () -> call (
-                                                                                 &LiveAttackChanged::onLiveAttackChanged
-                                                                               , SID_VOICE_2
-                                                                               , static_cast < unsigned int > ( attack2Slider -> getValue () ) );
-        SharedResourcePointer < ListenerList < ExportAttackChanged > > () -> call (
-                                                                                   &ExportAttackChanged::onExportAttackChanged
-                                                                                 , SID_VOICE_2
-                                                                                 , static_cast < unsigned int > ( attack2Slider -> getValue () ) );
+        dispatcher -> liveAttackChangedListeners -> call (
+                                                          &LiveAttackChanged::onLiveAttackChanged
+                                                        , SID_VOICE_2
+                                                        , static_cast < unsigned int > ( attack2Slider -> getValue () ) );
+        dispatcher -> exportAttackChanged -> call (
+                                                   &ExportAttackChanged::onExportAttackChanged
+                                                 , SID_VOICE_2
+                                                 , static_cast < unsigned int > ( attack2Slider -> getValue () ) );
         //[/UserSliderCode_attack2Slider]
     }
     else if ( slider_that_was_moved == decay2Slider . get () )
@@ -2894,14 +2897,14 @@ void
                                 decay2Slider -> getTextFromValue (
                                                                   decay2Slider -> getValue () )
                               , dontSendNotification );
-        SharedResourcePointer < ListenerList < LiveDecayChanged > > () -> call (
-                                                                                &LiveDecayChanged::onLiveDecayChanged
-                                                                              , SID_VOICE_2
-                                                                              , static_cast < unsigned int > ( decay2Slider -> getValue () ) );
-        SharedResourcePointer < ListenerList < ExportDecayChanged > > () -> call (
-                                                                                  &ExportDecayChanged::onExportDecayChanged
-                                                                                , SID_VOICE_2
-                                                                                , static_cast < unsigned int > ( decay2Slider -> getValue () ) );
+        dispatcher -> liveDecayChangedListeners -> call (
+                                                         &LiveDecayChanged::onLiveDecayChanged
+                                                       , SID_VOICE_2
+                                                       , static_cast < unsigned int > ( decay2Slider -> getValue () ) );
+        dispatcher -> exportDecayChanged -> call (
+                                                  &ExportDecayChanged::onExportDecayChanged
+                                                , SID_VOICE_2
+                                                , static_cast < unsigned int > ( decay2Slider -> getValue () ) );
         //[/UserSliderCode_decay2Slider]
     }
     else if ( slider_that_was_moved == sustain2Slider . get () )
@@ -2911,14 +2914,14 @@ void
                                   sustain2Slider -> getTextFromValue (
                                                                       sustain2Slider -> getValue () )
                                 , dontSendNotification );
-        SharedResourcePointer < ListenerList < LiveSustainChanged > > () -> call (
-                                                                                  &LiveSustainChanged::onLiveSustainChanged
-                                                                                , SID_VOICE_2
-                                                                                , static_cast < unsigned int > ( sustain2Slider -> getValue () ) );
-        SharedResourcePointer < ListenerList < ExportSustainChanged > > () -> call (
-                                                                                    &ExportSustainChanged::onExportSustainChanged
-                                                                                  , SID_VOICE_2
-                                                                                  , static_cast < unsigned int > ( sustain2Slider -> getValue () ) );
+        dispatcher -> liveSustainChangedListeners -> call (
+                                                           &LiveSustainChanged::onLiveSustainChanged
+                                                         , SID_VOICE_2
+                                                         , static_cast < unsigned int > ( sustain2Slider -> getValue () ) );
+        dispatcher -> exportSustainChanged -> call (
+                                                    &ExportSustainChanged::onExportSustainChanged
+                                                  , SID_VOICE_2
+                                                  , static_cast < unsigned int > ( sustain2Slider -> getValue () ) );
         //[/UserSliderCode_sustain2Slider]
     }
     else if ( slider_that_was_moved == release2Slider . get () )
@@ -2928,14 +2931,14 @@ void
                                   release2Slider -> getTextFromValue (
                                                                       release2Slider -> getValue () )
                                 , dontSendNotification );
-        SharedResourcePointer < ListenerList < LiveReleaseChanged > > () -> call (
-                                                                                  &LiveReleaseChanged::onLiveReleaseChanged
-                                                                                , SID_VOICE_2
-                                                                                , static_cast < unsigned int > ( release2Slider -> getValue () ) );
-        SharedResourcePointer < ListenerList < ExportReleaseChanged > > () -> call (
-                                                                                    &ExportReleaseChanged::onExportReleaseChanged
-                                                                                  , SID_VOICE_2
-                                                                                  , static_cast < unsigned int > ( release2Slider -> getValue () ) );
+        dispatcher -> liveReleaseChangedListeners -> call (
+                                                           &LiveReleaseChanged::onLiveReleaseChanged
+                                                         , SID_VOICE_2
+                                                         , static_cast < unsigned int > ( release2Slider -> getValue () ) );
+        dispatcher -> exportReleaseChanged -> call (
+                                                    &ExportReleaseChanged::onExportReleaseChanged
+                                                  , SID_VOICE_2
+                                                  , static_cast < unsigned int > ( release2Slider -> getValue () ) );
         //[/UserSliderCode_release2Slider]
     }
     else if ( slider_that_was_moved == pitchBend2Slider . get () )
@@ -2945,14 +2948,14 @@ void
                                     pitchBend2Slider -> getTextFromValue (
                                                                           pitchBend2Slider -> getValue () ) + "%"
                                   , dontSendNotification );
-        SharedResourcePointer < ListenerList < LivePitchBendChanged > > () -> call (
-                                                                                    &LivePitchBendChanged::onLivePitchBendChanged
-                                                                                  , SID_VOICE_2
-                                                                                  , static_cast < float > ( pitchBend2Slider -> getValue () / 100.0 ) );
-        SharedResourcePointer < ListenerList < ExportPitchBendChanged > > () -> call (
-                                                                                      &ExportPitchBendChanged::onExportPitchBendChanged
-                                                                                    , SID_VOICE_2
-                                                                                    , static_cast < float > ( pitchBend2Slider -> getValue () / 100.0 ) );
+        dispatcher -> livePitchBendChangedListeners -> call (
+                                                             &LivePitchBendChanged::onLivePitchBendChanged
+                                                           , SID_VOICE_2
+                                                           , static_cast < float > ( pitchBend2Slider -> getValue () / 100.0 ) );
+        dispatcher -> exportPitchBendChanged -> call (
+                                                      &ExportPitchBendChanged::onExportPitchBendChanged
+                                                    , SID_VOICE_2
+                                                    , static_cast < float > ( pitchBend2Slider -> getValue () / 100.0 ) );
         //[/UserSliderCode_pitchBend2Slider]
     }
     else if ( slider_that_was_moved == vibratoAmount2Slider . get () )
@@ -2962,14 +2965,14 @@ void
                                         vibratoAmount2Slider -> getTextFromValue (
                                                                                   vibratoAmount2Slider -> getValue () ) + "%"
                                       , dontSendNotification );
-        SharedResourcePointer < ListenerList < LiveVibratoAmountChanged > > () -> call (
-                                                                                        &LiveVibratoAmountChanged::onLiveVibratoAmountChanged
-                                                                                      , SID_VOICE_2
-                                                                                      , static_cast < float > ( vibratoAmount2Slider -> getValue () / 100.0 ) );
-        SharedResourcePointer < ListenerList < ExportVibratoAmountChanged > > () -> call (
-                                                                                          &ExportVibratoAmountChanged::onExportVibratoAmountChanged
-                                                                                        , SID_VOICE_2
-                                                                                        , static_cast < float > ( vibratoAmount2Slider -> getValue () / 100.0 ) );
+        dispatcher -> liveVibratoAmountChangedListeners -> call (
+                                                                 &LiveVibratoAmountChanged::onLiveVibratoAmountChanged
+                                                               , SID_VOICE_2
+                                                               , static_cast < float > ( vibratoAmount2Slider -> getValue () / 100.0 ) );
+        dispatcher -> exportVibratoAmountChanged -> call (
+                                                          &ExportVibratoAmountChanged::onExportVibratoAmountChanged
+                                                        , SID_VOICE_2
+                                                        , static_cast < float > ( vibratoAmount2Slider -> getValue () / 100.0 ) );
         //[/UserSliderCode_vibratoAmount2Slider]
     }
     else if ( slider_that_was_moved == vibratoSpeed2Slider . get () )
@@ -2979,14 +2982,14 @@ void
                                        vibratoSpeed2Slider -> getTextFromValue (
                                                                                 vibratoSpeed2Slider -> getValue () ) + "%"
                                      , dontSendNotification );
-        SharedResourcePointer < ListenerList < LiveVibratoSpeedChanged > > () -> call (
-                                                                                       &LiveVibratoSpeedChanged::onLiveVibratoSpeedChanged
-                                                                                     , SID_VOICE_2
-                                                                                     , static_cast < float > ( vibratoSpeed2Slider -> getValue () / 100.0 ) );
-        SharedResourcePointer < ListenerList < ExportVibratoSpeedChanged > > () -> call (
-                                                                                         &ExportVibratoSpeedChanged::onExportVibratoSpeedChanged
-                                                                                       , SID_VOICE_2
-                                                                                       , static_cast < float > ( vibratoSpeed2Slider -> getValue () / 100.0 ) );
+        dispatcher -> liveVibratoSpeedChangedListeners -> call (
+                                                                &LiveVibratoSpeedChanged::onLiveVibratoSpeedChanged
+                                                              , SID_VOICE_2
+                                                              , static_cast < float > ( vibratoSpeed2Slider -> getValue () / 100.0 ) );
+        dispatcher -> exportVibratoSpeedChanged -> call (
+                                                         &ExportVibratoSpeedChanged::onExportVibratoSpeedChanged
+                                                       , SID_VOICE_2
+                                                       , static_cast < float > ( vibratoSpeed2Slider -> getValue () / 100.0 ) );
         //[/UserSliderCode_vibratoSpeed2Slider]
     }
     else if ( slider_that_was_moved == pulseWidth2Slider . get () )
@@ -2996,14 +2999,14 @@ void
                                      pulseWidth2Slider -> getTextFromValue (
                                                                             pulseWidth2Slider -> getValue () ) + "%"
                                    , dontSendNotification );
-        SharedResourcePointer < ListenerList < LivePulseWidthChanged > > () -> call (
-                                                                                     &LivePulseWidthChanged::onLivePulseWidthChanged
-                                                                                   , SID_VOICE_2
-                                                                                   , static_cast < float > ( pulseWidth2Slider -> getValue () / 100.0 ) );
-        SharedResourcePointer < ListenerList < ExportPulseWidthChanged > > () -> call (
-                                                                                       &ExportPulseWidthChanged::onExportPulseWidthChanged
-                                                                                     , SID_VOICE_2
-                                                                                     , static_cast < float > ( pulseWidth2Slider -> getValue () / 100.0 ) );
+        dispatcher -> livePulseWidthChangedListeners -> call (
+                                                              &LivePulseWidthChanged::onLivePulseWidthChanged
+                                                            , SID_VOICE_2
+                                                            , static_cast < float > ( pulseWidth2Slider -> getValue () / 100.0 ) );
+        dispatcher -> exportPulseWidthChanged -> call (
+                                                       &ExportPulseWidthChanged::onExportPulseWidthChanged
+                                                     , SID_VOICE_2
+                                                     , static_cast < float > ( pulseWidth2Slider -> getValue () / 100.0 ) );
         //[/UserSliderCode_pulseWidth2Slider]
     }
     else if ( slider_that_was_moved == vibratoDelay2Slider . get () )
@@ -3013,10 +3016,10 @@ void
                                        vibratoDelay2Slider -> getTextFromValue (
                                                                                 vibratoDelay2Slider -> getValue () )
                                      , dontSendNotification );
-        SharedResourcePointer < ListenerList < LiveVibratoDelayChanged > > () -> call (
-                                                                                       &LiveVibratoDelayChanged::onLiveVibratoDelayChanged
-                                                                                     , SID_VOICE_2
-                                                                                     , static_cast < unsigned int > ( vibratoAmount2Slider -> getValue () ) );
+        dispatcher -> liveVibratoDelayChangedListeners -> call (
+                                                                &LiveVibratoDelayChanged::onLiveVibratoDelayChanged
+                                                              , SID_VOICE_2
+                                                              , static_cast < unsigned int > ( vibratoAmount2Slider -> getValue () ) );
         //[/UserSliderCode_vibratoDelay2Slider]
     }
     else if ( slider_that_was_moved == patch3Slider . get () )
@@ -3026,14 +3029,14 @@ void
                                 patch3Slider -> getTextFromValue (
                                                                   patch3Slider -> getValue () )
                               , dontSendNotification );
-        SharedResourcePointer < ListenerList < LivePatchChanged > > () -> call (
-                                                                                &LivePatchChanged::onLivePatchChanged
-                                                                              , SID_VOICE_3
-                                                                              , static_cast < unsigned int > ( patch3Slider -> getValue () ) - 1 );
-        SharedResourcePointer < ListenerList < ExportPatchChanged > > () -> call (
-                                                                                  &ExportPatchChanged::onExportPatchChanged
-                                                                                , SID_VOICE_3
-                                                                                , static_cast < unsigned int > ( patch3Slider -> getValue () ) - 1 );
+        dispatcher -> livePatchChangedListeners -> call (
+                                                         &LivePatchChanged::onLivePatchChanged
+                                                       , SID_VOICE_3
+                                                       , static_cast < unsigned int > ( patch3Slider -> getValue () ) - 1 );
+        dispatcher -> exportPatchChanged -> call (
+                                                  &ExportPatchChanged::onExportPatchChanged
+                                                , SID_VOICE_3
+                                                , static_cast < unsigned int > ( patch3Slider -> getValue () ) - 1 );
         //[/UserSliderCode_patch3Slider]
     }
     else if ( slider_that_was_moved == attack3Slider . get () )
@@ -3043,14 +3046,14 @@ void
                                  attack3Slider -> getTextFromValue (
                                                                     attack3Slider -> getValue () )
                                , dontSendNotification );
-        SharedResourcePointer < ListenerList < LiveAttackChanged > > () -> call (
-                                                                                 &LiveAttackChanged::onLiveAttackChanged
-                                                                               , SID_VOICE_3
-                                                                               , static_cast < unsigned int > ( attack3Slider -> getValue () ) );
-        SharedResourcePointer < ListenerList < ExportAttackChanged > > () -> call (
-                                                                                   &ExportAttackChanged::onExportAttackChanged
-                                                                                 , SID_VOICE_3
-                                                                                 , static_cast < unsigned int > ( attack3Slider -> getValue () ) );
+        dispatcher -> liveAttackChangedListeners -> call (
+                                                          &LiveAttackChanged::onLiveAttackChanged
+                                                        , SID_VOICE_3
+                                                        , static_cast < unsigned int > ( attack3Slider -> getValue () ) );
+        dispatcher -> exportAttackChanged -> call (
+                                                   &ExportAttackChanged::onExportAttackChanged
+                                                 , SID_VOICE_3
+                                                 , static_cast < unsigned int > ( attack3Slider -> getValue () ) );
         //[/UserSliderCode_attack3Slider]
     }
     else if ( slider_that_was_moved == decay3Slider . get () )
@@ -3060,14 +3063,14 @@ void
                                 decay3Slider -> getTextFromValue (
                                                                   decay3Slider -> getValue () )
                               , dontSendNotification );
-        SharedResourcePointer < ListenerList < LiveDecayChanged > > () -> call (
-                                                                                &LiveDecayChanged::onLiveDecayChanged
-                                                                              , SID_VOICE_3
-                                                                              , static_cast < unsigned int > ( decay3Slider -> getValue () ) );
-        SharedResourcePointer < ListenerList < ExportDecayChanged > > () -> call (
-                                                                                  &ExportDecayChanged::onExportDecayChanged
-                                                                                , SID_VOICE_3
-                                                                                , static_cast < unsigned int > ( decay3Slider -> getValue () ) );
+        dispatcher -> liveDecayChangedListeners -> call (
+                                                         &LiveDecayChanged::onLiveDecayChanged
+                                                       , SID_VOICE_3
+                                                       , static_cast < unsigned int > ( decay3Slider -> getValue () ) );
+        dispatcher -> exportDecayChanged -> call (
+                                                  &ExportDecayChanged::onExportDecayChanged
+                                                , SID_VOICE_3
+                                                , static_cast < unsigned int > ( decay3Slider -> getValue () ) );
         //[/UserSliderCode_decay3Slider]
     }
     else if ( slider_that_was_moved == sustain3Slider . get () )
@@ -3077,14 +3080,14 @@ void
                                   sustain3Slider -> getTextFromValue (
                                                                       sustain3Slider -> getValue () )
                                 , dontSendNotification );
-        SharedResourcePointer < ListenerList < LiveSustainChanged > > () -> call (
-                                                                                  &LiveSustainChanged::onLiveSustainChanged
-                                                                                , SID_VOICE_3
-                                                                                , static_cast < unsigned int > ( sustain3Slider -> getValue () ) );
-        SharedResourcePointer < ListenerList < ExportSustainChanged > > () -> call (
-                                                                                    &ExportSustainChanged::onExportSustainChanged
-                                                                                  , SID_VOICE_3
-                                                                                  , static_cast < unsigned int > ( sustain3Slider -> getValue () ) );
+        dispatcher -> liveSustainChangedListeners -> call (
+                                                           &LiveSustainChanged::onLiveSustainChanged
+                                                         , SID_VOICE_3
+                                                         , static_cast < unsigned int > ( sustain3Slider -> getValue () ) );
+        dispatcher -> exportSustainChanged -> call (
+                                                    &ExportSustainChanged::onExportSustainChanged
+                                                  , SID_VOICE_3
+                                                  , static_cast < unsigned int > ( sustain3Slider -> getValue () ) );
         //[/UserSliderCode_sustain3Slider]
     }
     else if ( slider_that_was_moved == release3Slider . get () )
@@ -3094,14 +3097,14 @@ void
                                   release3Slider -> getTextFromValue (
                                                                       release3Slider -> getValue () )
                                 , dontSendNotification );
-        SharedResourcePointer < ListenerList < LiveReleaseChanged > > () -> call (
-                                                                                  &LiveReleaseChanged::onLiveReleaseChanged
-                                                                                , SID_VOICE_3
-                                                                                , static_cast < unsigned int > ( release3Slider -> getValue () ) );
-        SharedResourcePointer < ListenerList < ExportReleaseChanged > > () -> call (
-                                                                                    &ExportReleaseChanged::onExportReleaseChanged
-                                                                                  , SID_VOICE_3
-                                                                                  , static_cast < unsigned int > ( release3Slider -> getValue () ) );
+        dispatcher -> liveReleaseChangedListeners -> call (
+                                                           &LiveReleaseChanged::onLiveReleaseChanged
+                                                         , SID_VOICE_3
+                                                         , static_cast < unsigned int > ( release3Slider -> getValue () ) );
+        dispatcher -> exportReleaseChanged -> call (
+                                                    &ExportReleaseChanged::onExportReleaseChanged
+                                                  , SID_VOICE_3
+                                                  , static_cast < unsigned int > ( release3Slider -> getValue () ) );
         //[/UserSliderCode_release3Slider]
     }
     else if ( slider_that_was_moved == pitchBend3Slider . get () )
@@ -3111,14 +3114,14 @@ void
                                     pitchBend3Slider -> getTextFromValue (
                                                                           pitchBend3Slider -> getValue () ) + "%"
                                   , dontSendNotification );
-        SharedResourcePointer < ListenerList < LivePitchBendChanged > > () -> call (
-                                                                                    &LivePitchBendChanged::onLivePitchBendChanged
-                                                                                  , SID_VOICE_3
-                                                                                  , static_cast < float > ( pitchBend3Slider -> getValue () / 100.0 ) );
-        SharedResourcePointer < ListenerList < ExportPitchBendChanged > > () -> call (
-                                                                                      &ExportPitchBendChanged::onExportPitchBendChanged
-                                                                                    , SID_VOICE_3
-                                                                                    , static_cast < float > ( pitchBend3Slider -> getValue () / 100.0 ) );
+        dispatcher -> livePitchBendChangedListeners -> call (
+                                                             &LivePitchBendChanged::onLivePitchBendChanged
+                                                           , SID_VOICE_3
+                                                           , static_cast < float > ( pitchBend3Slider -> getValue () / 100.0 ) );
+        dispatcher -> exportPitchBendChanged -> call (
+                                                      &ExportPitchBendChanged::onExportPitchBendChanged
+                                                    , SID_VOICE_3
+                                                    , static_cast < float > ( pitchBend3Slider -> getValue () / 100.0 ) );
         //[/UserSliderCode_pitchBend3Slider]
     }
     else if ( slider_that_was_moved == vibratoAmount3Slider . get () )
@@ -3128,14 +3131,14 @@ void
                                         vibratoAmount3Slider -> getTextFromValue (
                                                                                   vibratoAmount3Slider -> getValue () ) + "%"
                                       , dontSendNotification );
-        SharedResourcePointer < ListenerList < LiveVibratoAmountChanged > > () -> call (
-                                                                                        &LiveVibratoAmountChanged::onLiveVibratoAmountChanged
-                                                                                      , SID_VOICE_3
-                                                                                      , static_cast < float > ( vibratoAmount3Slider -> getValue () / 100.0 ) );
-        SharedResourcePointer < ListenerList < ExportVibratoAmountChanged > > () -> call (
-                                                                                          &ExportVibratoAmountChanged::onExportVibratoAmountChanged
-                                                                                        , SID_VOICE_3
-                                                                                        , static_cast < float > ( vibratoAmount3Slider -> getValue () / 100.0 ) );
+        dispatcher -> liveVibratoAmountChangedListeners -> call (
+                                                                 &LiveVibratoAmountChanged::onLiveVibratoAmountChanged
+                                                               , SID_VOICE_3
+                                                               , static_cast < float > ( vibratoAmount3Slider -> getValue () / 100.0 ) );
+        dispatcher -> exportVibratoAmountChanged -> call (
+                                                          &ExportVibratoAmountChanged::onExportVibratoAmountChanged
+                                                        , SID_VOICE_3
+                                                        , static_cast < float > ( vibratoAmount3Slider -> getValue () / 100.0 ) );
         //[/UserSliderCode_vibratoAmount3Slider]
     }
     else if ( slider_that_was_moved == vibratoSpeed3Slider . get () )
@@ -3145,14 +3148,14 @@ void
                                        vibratoSpeed3Slider -> getTextFromValue (
                                                                                 vibratoSpeed3Slider -> getValue () ) + "%"
                                      , dontSendNotification );
-        SharedResourcePointer < ListenerList < LiveVibratoSpeedChanged > > () -> call (
-                                                                                       &LiveVibratoSpeedChanged::onLiveVibratoSpeedChanged
-                                                                                     , SID_VOICE_3
-                                                                                     , static_cast < float > ( vibratoSpeed3Slider -> getValue () / 100.0 ) );
-        SharedResourcePointer < ListenerList < ExportVibratoSpeedChanged > > () -> call (
-                                                                                         &ExportVibratoSpeedChanged::onExportVibratoSpeedChanged
-                                                                                       , SID_VOICE_3
-                                                                                       , static_cast < float > ( vibratoSpeed3Slider -> getValue () / 100.0 ) );
+        dispatcher -> liveVibratoSpeedChangedListeners -> call (
+                                                                &LiveVibratoSpeedChanged::onLiveVibratoSpeedChanged
+                                                              , SID_VOICE_3
+                                                              , static_cast < float > ( vibratoSpeed3Slider -> getValue () / 100.0 ) );
+        dispatcher -> exportVibratoSpeedChanged -> call (
+                                                         &ExportVibratoSpeedChanged::onExportVibratoSpeedChanged
+                                                       , SID_VOICE_3
+                                                       , static_cast < float > ( vibratoSpeed3Slider -> getValue () / 100.0 ) );
         //[/UserSliderCode_vibratoSpeed3Slider]
     }
     else if ( slider_that_was_moved == pulseWidth3Slider . get () )
@@ -3162,14 +3165,14 @@ void
                                      pulseWidth3Slider -> getTextFromValue (
                                                                             pulseWidth3Slider -> getValue () ) + "%"
                                    , dontSendNotification );
-        SharedResourcePointer < ListenerList < LivePulseWidthChanged > > () -> call (
-                                                                                     &LivePulseWidthChanged::onLivePulseWidthChanged
-                                                                                   , SID_VOICE_3
-                                                                                   , static_cast < float > ( pulseWidth3Slider -> getValue () / 100.0 ) );
-        SharedResourcePointer < ListenerList < ExportPulseWidthChanged > > () -> call (
-                                                                                       &ExportPulseWidthChanged::onExportPulseWidthChanged
-                                                                                     , SID_VOICE_3
-                                                                                     , static_cast < float > ( pulseWidth3Slider -> getValue () / 100.0 ) );
+        dispatcher -> livePulseWidthChangedListeners -> call (
+                                                              &LivePulseWidthChanged::onLivePulseWidthChanged
+                                                            , SID_VOICE_3
+                                                            , static_cast < float > ( pulseWidth3Slider -> getValue () / 100.0 ) );
+        dispatcher -> exportPulseWidthChanged -> call (
+                                                       &ExportPulseWidthChanged::onExportPulseWidthChanged
+                                                     , SID_VOICE_3
+                                                     , static_cast < float > ( pulseWidth3Slider -> getValue () / 100.0 ) );
         //[/UserSliderCode_pulseWidth3Slider]
     }
     else if ( slider_that_was_moved == vibratoDelay3Slider . get () )
@@ -3179,10 +3182,10 @@ void
                                        vibratoDelay3Slider -> getTextFromValue (
                                                                                 vibratoDelay3Slider -> getValue () )
                                      , dontSendNotification );
-        SharedResourcePointer < ListenerList < LiveVibratoDelayChanged > > () -> call (
-                                                                                       &LiveVibratoDelayChanged::onLiveVibratoDelayChanged
-                                                                                     , SID_VOICE_3
-                                                                                     , static_cast < unsigned int > ( vibratoAmount3Slider -> getValue () ) );
+        dispatcher -> liveVibratoDelayChangedListeners -> call (
+                                                                &LiveVibratoDelayChanged::onLiveVibratoDelayChanged
+                                                              , SID_VOICE_3
+                                                              , static_cast < unsigned int > ( vibratoAmount3Slider -> getValue () ) );
         //[/UserSliderCode_vibratoDelay3Slider]
     }
     else if ( slider_that_was_moved == cutoffSlider . get () )
@@ -3192,12 +3195,12 @@ void
                                 cutoffSlider -> getTextFromValue (
                                                                   cutoffSlider -> getValue () )
                               , dontSendNotification );
-        SharedResourcePointer < ListenerList < LiveCutoffChanged > > () -> call (
-                                                                                 &LiveCutoffChanged::onLiveCutoffChanged
-                                                                               , static_cast < unsigned int > ( cutoffSlider -> getValue () ) );
-        SharedResourcePointer < ListenerList < ExportCutoffChanged > > () -> call (
-                                                                                   &ExportCutoffChanged::onExportCutoffChanged
-                                                                                 , static_cast < unsigned int > ( cutoffSlider -> getValue () ) );
+        dispatcher -> liveCutoffChangedListeners -> call (
+                                                          &LiveCutoffChanged::onLiveCutoffChanged
+                                                        , static_cast < unsigned int > ( cutoffSlider -> getValue () ) );
+        dispatcher -> exportCutoffChanged -> call (
+                                                   &ExportCutoffChanged::onExportCutoffChanged
+                                                 , static_cast < unsigned int > ( cutoffSlider -> getValue () ) );
         //[/UserSliderCode_cutoffSlider]
     }
     else if ( slider_that_was_moved == resonanceSlider . get () )
@@ -3207,12 +3210,12 @@ void
                                    resonanceSlider -> getTextFromValue (
                                                                         resonanceSlider -> getValue () )
                                  , dontSendNotification );
-        SharedResourcePointer < ListenerList < LiveResonanceChanged > > () -> call (
-                                                                                    &LiveResonanceChanged::onLiveResonanceChanged
-                                                                                  , static_cast < unsigned int > ( resonanceSlider -> getValue () ) );
-        SharedResourcePointer < ListenerList < ExportResonanceChanged > > () -> call (
-                                                                                      &ExportResonanceChanged::onExportResonanceChanged
-                                                                                    , static_cast < unsigned int > ( resonanceSlider -> getValue () ) );
+        dispatcher -> liveResonanceChangedListeners -> call (
+                                                             &LiveResonanceChanged::onLiveResonanceChanged
+                                                           , static_cast < unsigned int > ( resonanceSlider -> getValue () ) );
+        dispatcher -> exportResonanceChanged -> call (
+                                                      &ExportResonanceChanged::onExportResonanceChanged
+                                                    , static_cast < unsigned int > ( resonanceSlider -> getValue () ) );
         //[/UserSliderCode_resonanceSlider]
     }
 
@@ -3231,17 +3234,17 @@ void
     if ( labelThatHasChanged == titleLabel . get () )
     {
         //[UserLabelCode_titleLabel] -- add your label text handling code here..
-        SharedResourcePointer < ListenerList < LiveTitleChanged > > () -> call (
-                                                                                &LiveTitleChanged::onLiveTitleChanged
-                                                                              , titleLabel -> getText () );
+        dispatcher -> liveTitleChangedListeners -> call (
+                                                         &LiveTitleChanged::onLiveTitleChanged
+                                                       , titleLabel -> getText () );
         //[/UserLabelCode_titleLabel]
     }
     else if ( labelThatHasChanged == artistLabel . get () )
     {
         //[UserLabelCode_artistLabel] -- add your label text handling code here..
-        SharedResourcePointer < ListenerList < LiveArtistChanged > > () -> call (
-                                                                                 &LiveArtistChanged::onLiveArtistChanged
-                                                                               , artistLabel -> getText () );
+        dispatcher -> liveArtistChangedListeners -> call (
+                                                          &LiveArtistChanged::onLiveArtistChanged
+                                                        , artistLabel -> getText () );
         //[/UserLabelCode_artistLabel]
     }
 
@@ -3263,8 +3266,8 @@ void
         // arm for recording
         armed             = true;
         quarterNoteTicked = true;
-        SharedResourcePointer < ListenerList < LiveExportArmed > > () -> call (
-                                                                               &LiveExportArmed::onLiveExportArmed );
+        dispatcher -> liveExportArmedListeners -> call (
+                                                        &LiveExportArmed::onLiveExportArmed );
         SendInit ();
         repaint ();
         //[/UserButtonCode_exportButton]
@@ -3272,80 +3275,80 @@ void
     else if ( buttonThatWasClicked == filter1Checkbox . get () )
     {
         //[UserButtonCode_filter1Checkbox] -- add your button handler code here..
-        SharedResourcePointer < ListenerList < LiveVoiceFilterChanged > > () -> call (
-                                                                                      &LiveVoiceFilterChanged::onLiveVoiceFilterChanged
-                                                                                    , SID_VOICE_1
-                                                                                    , filter1Checkbox -> getToggleState () );
-        SharedResourcePointer < ListenerList < ExportVoiceFilterChanged > > () -> call (
-                                                                                        &ExportVoiceFilterChanged::onExportVoiceFilterChanged
-                                                                                      , SID_VOICE_1
-                                                                                      , filter1Checkbox -> getToggleState () );
+        dispatcher -> liveVoiceFilterChangedListeners -> call (
+                                                               &LiveVoiceFilterChanged::onLiveVoiceFilterChanged
+                                                             , SID_VOICE_1
+                                                             , filter1Checkbox -> getToggleState () );
+        dispatcher -> exportVoiceFilterChanged -> call (
+                                                        &ExportVoiceFilterChanged::onExportVoiceFilterChanged
+                                                      , SID_VOICE_1
+                                                      , filter1Checkbox -> getToggleState () );
         //[/UserButtonCode_filter1Checkbox]
     }
     else if ( buttonThatWasClicked == filter2Checkbox . get () )
     {
         //[UserButtonCode_filter2Checkbox] -- add your button handler code here..
-        SharedResourcePointer < ListenerList < LiveVoiceFilterChanged > > () -> call (
-                                                                                      &LiveVoiceFilterChanged::onLiveVoiceFilterChanged
-                                                                                    , SID_VOICE_2
-                                                                                    , filter2Checkbox -> getToggleState () );
-        SharedResourcePointer < ListenerList < ExportVoiceFilterChanged > > () -> call (
-                                                                                        &ExportVoiceFilterChanged::onExportVoiceFilterChanged
-                                                                                      , SID_VOICE_2
-                                                                                      , filter2Checkbox -> getToggleState () );
+        dispatcher -> liveVoiceFilterChangedListeners -> call (
+                                                               &LiveVoiceFilterChanged::onLiveVoiceFilterChanged
+                                                             , SID_VOICE_2
+                                                             , filter2Checkbox -> getToggleState () );
+        dispatcher -> exportVoiceFilterChanged -> call (
+                                                        &ExportVoiceFilterChanged::onExportVoiceFilterChanged
+                                                      , SID_VOICE_2
+                                                      , filter2Checkbox -> getToggleState () );
         //[/UserButtonCode_filter2Checkbox]
     }
     else if ( buttonThatWasClicked == filter3Checkbox . get () )
     {
         //[UserButtonCode_filter3Checkbox] -- add your button handler code here..
-        SharedResourcePointer < ListenerList < LiveVoiceFilterChanged > > () -> call (
-                                                                                      &LiveVoiceFilterChanged::onLiveVoiceFilterChanged
-                                                                                    , SID_VOICE_3
-                                                                                    , filter3Checkbox -> getToggleState () );
-        SharedResourcePointer < ListenerList < ExportVoiceFilterChanged > > () -> call (
-                                                                                        &ExportVoiceFilterChanged::onExportVoiceFilterChanged
-                                                                                      , SID_VOICE_3
-                                                                                      , filter3Checkbox -> getToggleState () );
+        dispatcher -> liveVoiceFilterChangedListeners -> call (
+                                                               &LiveVoiceFilterChanged::onLiveVoiceFilterChanged
+                                                             , SID_VOICE_3
+                                                             , filter3Checkbox -> getToggleState () );
+        dispatcher -> exportVoiceFilterChanged -> call (
+                                                        &ExportVoiceFilterChanged::onExportVoiceFilterChanged
+                                                      , SID_VOICE_3
+                                                      , filter3Checkbox -> getToggleState () );
         //[/UserButtonCode_filter3Checkbox]
     }
     else if ( buttonThatWasClicked == filterLowPassCheckbox . get () )
     {
         //[UserButtonCode_filterLowPassCheckbox] -- add your button handler code here..
-        SharedResourcePointer < ListenerList < LiveLowPassChanged > > () -> call (
-                                                                                  &LiveLowPassChanged::onLiveLowPassChanged
-                                                                                , filterLowPassCheckbox -> getToggleState () );
-        SharedResourcePointer < ListenerList < ExportLowPassChanged > > () -> call (
-                                                                                    &ExportLowPassChanged::onExportLowPassChanged
-                                                                                  , filterLowPassCheckbox -> getToggleState () );
+        dispatcher -> liveLowPassChangedListeners -> call (
+                                                           &LiveLowPassChanged::onLiveLowPassChanged
+                                                         , filterLowPassCheckbox -> getToggleState () );
+        dispatcher -> exportLowPassChanged -> call (
+                                                    &ExportLowPassChanged::onExportLowPassChanged
+                                                  , filterLowPassCheckbox -> getToggleState () );
         //[/UserButtonCode_filterLowPassCheckbox]
     }
     else if ( buttonThatWasClicked == filterBandPassCheckbox . get () )
     {
         //[UserButtonCode_filterBandPassCheckbox] -- add your button handler code here..
-        SharedResourcePointer < ListenerList < LiveBandPassChanged > > () -> call (
-                                                                                   &LiveBandPassChanged::onLiveBandPassChanged
-                                                                                 , filterBandPassCheckbox -> getToggleState () * 2 );
-        SharedResourcePointer < ListenerList < ExportBandPassChanged > > () -> call (
-                                                                                     &ExportBandPassChanged::onExportBandPassChanged
-                                                                                   , filterBandPassCheckbox -> getToggleState () * 2 );
+        dispatcher -> liveBandPassChangedListeners -> call (
+                                                            &LiveBandPassChanged::onLiveBandPassChanged
+                                                          , filterBandPassCheckbox -> getToggleState () );
+        dispatcher -> exportBandPassChanged -> call (
+                                                     &ExportBandPassChanged::onExportBandPassChanged
+                                                   , filterBandPassCheckbox -> getToggleState () );
         //[/UserButtonCode_filterBandPassCheckbox]
     }
     else if ( buttonThatWasClicked == filterHighPassCheckbox . get () )
     {
         //[UserButtonCode_filterHighPassCheckbox] -- add your button handler code here..
-        SharedResourcePointer < ListenerList < LiveHighPassChanged > > () -> call (
-                                                                                   &LiveHighPassChanged::onLiveHighPassChanged
-                                                                                 , filterHighPassCheckbox -> getToggleState () * 4 );
-        SharedResourcePointer < ListenerList < ExportHighPassChanged > > () -> call (
-                                                                                     &ExportHighPassChanged::onExportHighPassChanged
-                                                                                   , filterHighPassCheckbox -> getToggleState () * 4 );
+        dispatcher -> liveHighPassChangedListeners -> call (
+                                                            &LiveHighPassChanged::onLiveHighPassChanged
+                                                          , filterHighPassCheckbox -> getToggleState () );
+        dispatcher -> exportHighPassChanged -> call (
+                                                     &ExportHighPassChanged::onExportHighPassChanged
+                                                   , filterHighPassCheckbox -> getToggleState () );
         //[/UserButtonCode_filterHighPassCheckbox]
     }
     else if ( buttonThatWasClicked == patchEditorButton . get () )
     {
         //[UserButtonCode_patchEditorButton] -- add your button handler code here..
-        SharedResourcePointer < ListenerList < LivePatchEditorModeClicked > > () -> call (
-                                                                                          &LivePatchEditorModeClicked::onLivePatchEditorModeClicked );
+        dispatcher -> livePatchEditorModeClickedListeners -> call (
+                                                                   &LivePatchEditorModeClicked::onLivePatchEditorModeClicked );
         setVisible (
                     false );
         //[/UserButtonCode_patchEditorButton]
@@ -3357,18 +3360,18 @@ void
         {
             patchSelector -> setVisible (
                                          true );
-            SharedResourcePointer < ListenerList < LivePatchListMode > > () -> call (
-                                                                                     &LivePatchListMode::onLivePatchListMode
-                                                                                   , 1 );
+            dispatcher -> livePatchListModeListeners -> call (
+                                                              &LivePatchListMode::onLivePatchListMode
+                                                            , 1 );
             //patchListMode = 1;
         }
         else
         {
             patchSelector -> setVisible (
                                          false );
-            SharedResourcePointer < ListenerList < LivePatchListMode > > () -> call (
-                                                                                     &LivePatchListMode::onLivePatchListMode
-                                                                                   , -1 );
+            dispatcher -> livePatchListModeListeners -> call (
+                                                              &LivePatchListMode::onLivePatchListMode
+                                                            , -1 );
             //patchListMode = -1;
         }
         //[/UserButtonCode_addPatchButton]
@@ -3380,18 +3383,18 @@ void
         {
             patchSelector -> setVisible (
                                          true );
-            SharedResourcePointer < ListenerList < LivePatchListMode > > () -> call (
-                                                                                     &LivePatchListMode::onLivePatchListMode
-                                                                                   , 2 );
+            dispatcher -> livePatchListModeListeners -> call (
+                                                              &LivePatchListMode::onLivePatchListMode
+                                                            , 2 );
             //patchListMode = 2;
         }
         else
         {
             patchSelector -> setVisible (
                                          false );
-            SharedResourcePointer < ListenerList < LivePatchListMode > > () -> call (
-                                                                                     &LivePatchListMode::onLivePatchListMode
-                                                                                   , -1 );
+            dispatcher -> livePatchListModeListeners -> call (
+                                                              &LivePatchListMode::onLivePatchListMode
+                                                            , -1 );
             //patchListMode = -1;
         }
         //[/UserButtonCode_replacePatchButton]
@@ -3399,8 +3402,8 @@ void
     else if ( buttonThatWasClicked == removePatchButton . get () )
     {
         //[UserButtonCode_removePatchButton] -- add your button handler code here..
-        SharedResourcePointer < ListenerList < LiveRemovePatchClicked > > () -> call (
-                                                                                      &LiveRemovePatchClicked::onLiveRemovePatchClicked );
+        dispatcher -> liveRemovePatchClickedListeners -> call (
+                                                               &LiveRemovePatchClicked::onLiveRemovePatchClicked );
         //refreshPatches();
         //[/UserButtonCode_removePatchButton]
     }
@@ -3430,10 +3433,10 @@ void
                                                                    patch1Slider -> getTextFromValue (
                                                                                                      patch1Slider -> getValue () )
                                                                  , dontSendNotification );
-                                           SharedResourcePointer < ListenerList < ExportPatchChanged > > () -> call (
-                                                                                                                     &ExportPatchChanged::onExportPatchChanged
-                                                                                                                   , SID_VOICE_1
-                                                                                                                   , static_cast < unsigned int > ( patch1Slider -> getValue () ) - 1 );
+                                           dispatcher -> exportPatchChanged -> call (
+                                                                                     &ExportPatchChanged::onExportPatchChanged
+                                                                                   , SID_VOICE_1
+                                                                                   , static_cast < unsigned int > ( patch1Slider -> getValue () ) - 1 );
                                            break;
                                        case SID_VOICE_2:
                                            patch2Slider -> setValue (
@@ -3443,10 +3446,10 @@ void
                                                                    patch2Slider -> getTextFromValue (
                                                                                                      patch2Slider -> getValue () )
                                                                  , dontSendNotification );
-                                           SharedResourcePointer < ListenerList < ExportPatchChanged > > () -> call (
-                                                                                                                     &ExportPatchChanged::onExportPatchChanged
-                                                                                                                   , SID_VOICE_2
-                                                                                                                   , static_cast < unsigned int > ( patch2Slider -> getValue () ) - 1 );
+                                           dispatcher -> exportPatchChanged -> call (
+                                                                                     &ExportPatchChanged::onExportPatchChanged
+                                                                                   , SID_VOICE_2
+                                                                                   , static_cast < unsigned int > ( patch2Slider -> getValue () ) - 1 );
                                            break;
                                        case SID_VOICE_3:
                                            patch3Slider -> setValue (
@@ -3456,11 +3459,12 @@ void
                                                                    patch3Slider -> getTextFromValue (
                                                                                                      patch3Slider -> getValue () )
                                                                  , dontSendNotification );
-                                           SharedResourcePointer < ListenerList < ExportPatchChanged > > () -> call (
-                                                                                                                     &ExportPatchChanged::onExportPatchChanged
-                                                                                                                   , SID_VOICE_3
-                                                                                                                   , static_cast < unsigned int > ( patch3Slider -> getValue () ) - 1 );
+                                           dispatcher -> exportPatchChanged -> call (
+                                                                                     &ExportPatchChanged::onExportPatchChanged
+                                                                                   , SID_VOICE_3
+                                                                                   , static_cast < unsigned int > ( patch3Slider -> getValue () ) - 1 );
                                            break;
+                                       default: ;
                                    }
                                } );
 }
@@ -3497,8 +3501,8 @@ void
                                } );
 }
 
-int
-    LiveMode::GetPatchListIndex () const { return patches -> getSelectedIndex (); }
+auto
+    LiveMode::GetPatchListIndex () const -> int { return patches -> getSelectedIndex (); }
 
 void
     LiveMode::SendInit () const
@@ -3506,47 +3510,47 @@ void
     // send volume, patches, etc., here
     // patches
     // filter voices
-    SharedResourcePointer < ListenerList < ExportVoiceFilterChanged > > () -> call (
-                                                                                    &ExportVoiceFilterChanged::onExportVoiceFilterChanged
-                                                                                  , SID_VOICE_1
-                                                                                  , filter1Checkbox -> getToggleState () );
-    SharedResourcePointer < ListenerList < ExportVoiceFilterChanged > > () -> call (
-                                                                                    &ExportVoiceFilterChanged::onExportVoiceFilterChanged
-                                                                                  , SID_VOICE_2
-                                                                                  , filter2Checkbox -> getToggleState () );
-    SharedResourcePointer < ListenerList < ExportVoiceFilterChanged > > () -> call (
-                                                                                    &ExportVoiceFilterChanged::onExportVoiceFilterChanged
-                                                                                  , SID_VOICE_3
-                                                                                  , filter3Checkbox -> getToggleState () );
+    dispatcher -> exportVoiceFilterChanged -> call (
+                                                    &ExportVoiceFilterChanged::onExportVoiceFilterChanged
+                                                  , SID_VOICE_1
+                                                  , filter1Checkbox -> getToggleState () );
+    dispatcher -> exportVoiceFilterChanged -> call (
+                                                    &ExportVoiceFilterChanged::onExportVoiceFilterChanged
+                                                  , SID_VOICE_2
+                                                  , filter2Checkbox -> getToggleState () );
+    dispatcher -> exportVoiceFilterChanged -> call (
+                                                    &ExportVoiceFilterChanged::onExportVoiceFilterChanged
+                                                  , SID_VOICE_3
+                                                  , filter3Checkbox -> getToggleState () );
 
     // volume
-    SharedResourcePointer < ListenerList < ExportVolumeChanged > > () -> call (
-                                                                               &ExportVolumeChanged::onExportVolumeChanged
-                                                                             , static_cast < unsigned int > ( volumeSlider -> getValue () ) );
+    dispatcher -> exportVolumeChanged -> call (
+                                               &ExportVolumeChanged::onExportVolumeChanged
+                                             , static_cast < unsigned int > ( volumeSlider -> getValue () ) );
     // cutoff
-    SharedResourcePointer < ListenerList < ExportCutoffChanged > > () -> call (
-                                                                               &ExportCutoffChanged::onExportCutoffChanged
-                                                                             , static_cast < unsigned int > ( cutoffSlider -> getValue () ) );
+    dispatcher -> exportCutoffChanged -> call (
+                                               &ExportCutoffChanged::onExportCutoffChanged
+                                             , static_cast < unsigned int > ( cutoffSlider -> getValue () ) );
     // resonance
-    SharedResourcePointer < ListenerList < ExportResonanceChanged > > () -> call (
-                                                                                  &ExportResonanceChanged::onExportResonanceChanged
-                                                                                , static_cast < unsigned int > ( resonanceSlider -> getValue () ) );
+    dispatcher -> exportResonanceChanged -> call (
+                                                  &ExportResonanceChanged::onExportResonanceChanged
+                                                , static_cast < unsigned int > ( resonanceSlider -> getValue () ) );
     // filter type
-    SharedResourcePointer < ListenerList < ExportLowPassChanged > > () -> call (
-                                                                                &ExportLowPassChanged::onExportLowPassChanged
-                                                                              , filterLowPassCheckbox -> getToggleState () );
-    SharedResourcePointer < ListenerList < ExportBandPassChanged > > () -> call (
-                                                                                 &ExportBandPassChanged::onExportBandPassChanged
-                                                                               , filterBandPassCheckbox -> getToggleState () );
-    SharedResourcePointer < ListenerList < ExportHighPassChanged > > () -> call (
-                                                                                 &ExportHighPassChanged::onExportHighPassChanged
-                                                                               , filterHighPassCheckbox -> getToggleState () );
+    dispatcher -> exportLowPassChanged -> call (
+                                                &ExportLowPassChanged::onExportLowPassChanged
+                                              , filterLowPassCheckbox -> getToggleState () );
+    dispatcher -> exportBandPassChanged -> call (
+                                                 &ExportBandPassChanged::onExportBandPassChanged
+                                               , filterBandPassCheckbox -> getToggleState () );
+    dispatcher -> exportHighPassChanged -> call (
+                                                 &ExportHighPassChanged::onExportHighPassChanged
+                                               , filterHighPassCheckbox -> getToggleState () );
 }
 
 void
     LiveMode::onPulseWidthParameterChanged (
-            unsigned int voice
-          , float        value
+            const unsigned int voice
+          , float              value
             )
 {
     MessageManager::callAsync (
@@ -3562,10 +3566,10 @@ void
                                                                         pulseWidth1Slider -> getTextFromValue (
                                                                                                                pulseWidth1Slider -> getValue () ) + "%"
                                                                       , dontSendNotification );
-                                           SharedResourcePointer < ListenerList < ExportPulseWidthChanged > > () -> call (
-                                                                                                                          &ExportPulseWidthChanged::onExportPulseWidthChanged
-                                                                                                                        , SID_VOICE_1
-                                                                                                                        , static_cast < float > ( pulseWidth1Slider -> getValue () / 100.0 ) );
+                                           dispatcher -> exportPulseWidthChanged -> call (
+                                                                                          &ExportPulseWidthChanged::onExportPulseWidthChanged
+                                                                                        , SID_VOICE_1
+                                                                                        , static_cast < float > ( pulseWidth1Slider -> getValue () / 100.0 ) );
                                            break;
                                        case SID_VOICE_2:
                                            pulseWidth2Slider -> setValue (
@@ -3575,10 +3579,10 @@ void
                                                                         pulseWidth2Slider -> getTextFromValue (
                                                                                                                pulseWidth2Slider -> getValue () ) + "%"
                                                                       , dontSendNotification );
-                                           SharedResourcePointer < ListenerList < ExportPulseWidthChanged > > () -> call (
-                                                                                                                          &ExportPulseWidthChanged::onExportPulseWidthChanged
-                                                                                                                        , SID_VOICE_2
-                                                                                                                        , static_cast < float > ( pulseWidth2Slider -> getValue () / 100.0 ) );
+                                           dispatcher -> exportPulseWidthChanged -> call (
+                                                                                          &ExportPulseWidthChanged::onExportPulseWidthChanged
+                                                                                        , SID_VOICE_2
+                                                                                        , static_cast < float > ( pulseWidth2Slider -> getValue () / 100.0 ) );
                                            break;
                                        case SID_VOICE_3:
                                            pulseWidth3Slider -> setValue (
@@ -3588,18 +3592,19 @@ void
                                                                         pulseWidth3Slider -> getTextFromValue (
                                                                                                                pulseWidth3Slider -> getValue () ) + "%"
                                                                       , dontSendNotification );
-                                           SharedResourcePointer < ListenerList < ExportPulseWidthChanged > > () -> call (
-                                                                                                                          &ExportPulseWidthChanged::onExportPulseWidthChanged
-                                                                                                                        , SID_VOICE_3
-                                                                                                                        , static_cast < float > ( pulseWidth3Slider -> getValue () / 100.0 ) );
+                                           dispatcher -> exportPulseWidthChanged -> call (
+                                                                                          &ExportPulseWidthChanged::onExportPulseWidthChanged
+                                                                                        , SID_VOICE_3
+                                                                                        , static_cast < float > ( pulseWidth3Slider -> getValue () / 100.0 ) );
                                            break;
+                                       default:;
                                    }
                                } );
 }
 
 void
     LiveMode::onAttackParameterChanged (
-            unsigned int voice
+            const unsigned int voice
           , unsigned int value
             )
 {
@@ -3616,10 +3621,10 @@ void
                                                                     attack1Slider -> getTextFromValue (
                                                                                                        attack1Slider -> getValue () )
                                                                   , dontSendNotification );
-                                           SharedResourcePointer < ListenerList < ExportAttackChanged > > () -> call (
-                                                                                                                      &ExportAttackChanged::onExportAttackChanged
-                                                                                                                    , SID_VOICE_1
-                                                                                                                    , static_cast < unsigned int > ( attack1Slider -> getValue () ) );
+                                           dispatcher -> exportAttackChanged -> call (
+                                                                                      &ExportAttackChanged::onExportAttackChanged
+                                                                                    , SID_VOICE_1
+                                                                                    , static_cast < unsigned int > ( attack1Slider -> getValue () ) );
                                            break;
                                        case SID_VOICE_2:
                                            attack2Slider -> setValue (
@@ -3629,10 +3634,10 @@ void
                                                                     attack2Slider -> getTextFromValue (
                                                                                                        attack2Slider -> getValue () )
                                                                   , dontSendNotification );
-                                           SharedResourcePointer < ListenerList < ExportAttackChanged > > () -> call (
-                                                                                                                      &ExportAttackChanged::onExportAttackChanged
-                                                                                                                    , SID_VOICE_2
-                                                                                                                    , static_cast < unsigned int > ( attack2Slider -> getValue () ) );
+                                           dispatcher -> exportAttackChanged -> call (
+                                                                                      &ExportAttackChanged::onExportAttackChanged
+                                                                                    , SID_VOICE_2
+                                                                                    , static_cast < unsigned int > ( attack2Slider -> getValue () ) );
                                            break;
                                        case SID_VOICE_3:
                                            attack3Slider -> setValue (
@@ -3642,10 +3647,10 @@ void
                                                                     attack3Slider -> getTextFromValue (
                                                                                                        attack3Slider -> getValue () )
                                                                   , dontSendNotification );
-                                           SharedResourcePointer < ListenerList < ExportAttackChanged > > () -> call (
-                                                                                                                      &ExportAttackChanged::onExportAttackChanged
-                                                                                                                    , SID_VOICE_3
-                                                                                                                    , static_cast < unsigned int > ( attack3Slider -> getValue () ) );
+                                           dispatcher -> exportAttackChanged -> call (
+                                                                                      &ExportAttackChanged::onExportAttackChanged
+                                                                                    , SID_VOICE_3
+                                                                                    , static_cast < unsigned int > ( attack3Slider -> getValue () ) );
                                            break;
                                    }
                                } );
@@ -3653,7 +3658,7 @@ void
 
 void
     LiveMode::onDecayParameterChanged (
-            unsigned int voice
+            const unsigned int voice
           , unsigned int value
             )
 {
@@ -3670,10 +3675,10 @@ void
                                                                    decay1Slider -> getTextFromValue (
                                                                                                      decay1Slider -> getValue () )
                                                                  , dontSendNotification );
-                                           SharedResourcePointer < ListenerList < ExportDecayChanged > > () -> call (
-                                                                                                                     &ExportDecayChanged::onExportDecayChanged
-                                                                                                                   , SID_VOICE_1
-                                                                                                                   , static_cast < unsigned int > ( decay1Slider -> getValue () ) );
+                                           dispatcher -> exportDecayChanged -> call (
+                                                                                     &ExportDecayChanged::onExportDecayChanged
+                                                                                   , SID_VOICE_1
+                                                                                   , static_cast < unsigned int > ( decay1Slider -> getValue () ) );
                                            break;
                                        case SID_VOICE_2:
                                            decay2Slider -> setValue (
@@ -3683,10 +3688,10 @@ void
                                                                    decay2Slider -> getTextFromValue (
                                                                                                      decay2Slider -> getValue () )
                                                                  , dontSendNotification );
-                                           SharedResourcePointer < ListenerList < ExportDecayChanged > > () -> call (
-                                                                                                                     &ExportDecayChanged::onExportDecayChanged
-                                                                                                                   , SID_VOICE_2
-                                                                                                                   , static_cast < unsigned int > ( decay2Slider -> getValue () ) );
+                                           dispatcher -> exportDecayChanged -> call (
+                                                                                     &ExportDecayChanged::onExportDecayChanged
+                                                                                   , SID_VOICE_2
+                                                                                   , static_cast < unsigned int > ( decay2Slider -> getValue () ) );
                                            break;
                                        case SID_VOICE_3:
                                            decay3Slider -> setValue (
@@ -3696,10 +3701,10 @@ void
                                                                    decay3Slider -> getTextFromValue (
                                                                                                      decay3Slider -> getValue () )
                                                                  , dontSendNotification );
-                                           SharedResourcePointer < ListenerList < ExportDecayChanged > > () -> call (
-                                                                                                                     &ExportDecayChanged::onExportDecayChanged
-                                                                                                                   , SID_VOICE_3
-                                                                                                                   , static_cast < unsigned int > ( decay3Slider -> getValue () ) );
+                                           dispatcher -> exportDecayChanged -> call (
+                                                                                     &ExportDecayChanged::onExportDecayChanged
+                                                                                   , SID_VOICE_3
+                                                                                   , static_cast < unsigned int > ( decay3Slider -> getValue () ) );
                                            break;
                                    }
                                } );
@@ -3707,7 +3712,7 @@ void
 
 void
     LiveMode::onSustainParameterChanged (
-            unsigned int voice
+            const unsigned int voice
           , unsigned int value
             )
 {
@@ -3724,10 +3729,10 @@ void
                                                                      sustain1Slider -> getTextFromValue (
                                                                                                          sustain1Slider -> getValue () )
                                                                    , dontSendNotification );
-                                           SharedResourcePointer < ListenerList < ExportSustainChanged > > () -> call (
-                                                                                                                       &ExportSustainChanged::onExportSustainChanged
-                                                                                                                     , SID_VOICE_1
-                                                                                                                     , static_cast < unsigned int > ( sustain1Slider -> getValue () ) );
+                                           dispatcher -> exportSustainChanged -> call (
+                                                                                       &ExportSustainChanged::onExportSustainChanged
+                                                                                     , SID_VOICE_1
+                                                                                     , static_cast < unsigned int > ( sustain1Slider -> getValue () ) );
                                            break;
                                        case SID_VOICE_2:
                                            sustain2Slider -> setValue (
@@ -3737,10 +3742,10 @@ void
                                                                      sustain2Slider -> getTextFromValue (
                                                                                                          sustain2Slider -> getValue () )
                                                                    , dontSendNotification );
-                                           SharedResourcePointer < ListenerList < ExportSustainChanged > > () -> call (
-                                                                                                                       &ExportSustainChanged::onExportSustainChanged
-                                                                                                                     , SID_VOICE_2
-                                                                                                                     , static_cast < unsigned int > ( sustain2Slider -> getValue () ) );
+                                           dispatcher -> exportSustainChanged -> call (
+                                                                                       &ExportSustainChanged::onExportSustainChanged
+                                                                                     , SID_VOICE_2
+                                                                                     , static_cast < unsigned int > ( sustain2Slider -> getValue () ) );
                                            break;
                                        case SID_VOICE_3:
                                            sustain3Slider -> setValue (
@@ -3750,10 +3755,10 @@ void
                                                                      sustain3Slider -> getTextFromValue (
                                                                                                          sustain3Slider -> getValue () )
                                                                    , dontSendNotification );
-                                           SharedResourcePointer < ListenerList < ExportSustainChanged > > () -> call (
-                                                                                                                       &ExportSustainChanged::onExportSustainChanged
-                                                                                                                     , SID_VOICE_3
-                                                                                                                     , static_cast < unsigned int > ( sustain3Slider -> getValue () ) );
+                                           dispatcher -> exportSustainChanged -> call (
+                                                                                       &ExportSustainChanged::onExportSustainChanged
+                                                                                     , SID_VOICE_3
+                                                                                     , static_cast < unsigned int > ( sustain3Slider -> getValue () ) );
                                            break;
                                    }
                                } );
@@ -3761,7 +3766,7 @@ void
 
 void
     LiveMode::onReleaseParameterChanged (
-            unsigned int voice
+            const unsigned int voice
           , unsigned int value
             )
 {
@@ -3778,10 +3783,10 @@ void
                                                                      release1Slider -> getTextFromValue (
                                                                                                          release1Slider -> getValue () )
                                                                    , dontSendNotification );
-                                           SharedResourcePointer < ListenerList < ExportReleaseChanged > > () -> call (
-                                                                                                                       &ExportReleaseChanged::onExportReleaseChanged
-                                                                                                                     , SID_VOICE_1
-                                                                                                                     , static_cast < unsigned int > ( release1Slider -> getValue () ) );
+                                           dispatcher -> exportReleaseChanged -> call (
+                                                                                       &ExportReleaseChanged::onExportReleaseChanged
+                                                                                     , SID_VOICE_1
+                                                                                     , static_cast < unsigned int > ( release1Slider -> getValue () ) );
                                            break;
                                        case SID_VOICE_2:
                                            release2Slider -> setValue (
@@ -3791,10 +3796,10 @@ void
                                                                      release2Slider -> getTextFromValue (
                                                                                                          release2Slider -> getValue () )
                                                                    , dontSendNotification );
-                                           SharedResourcePointer < ListenerList < ExportReleaseChanged > > () -> call (
-                                                                                                                       &ExportReleaseChanged::onExportReleaseChanged
-                                                                                                                     , SID_VOICE_2
-                                                                                                                     , static_cast < unsigned int > ( release2Slider -> getValue () ) );
+                                           dispatcher -> exportReleaseChanged -> call (
+                                                                                       &ExportReleaseChanged::onExportReleaseChanged
+                                                                                     , SID_VOICE_2
+                                                                                     , static_cast < unsigned int > ( release2Slider -> getValue () ) );
                                            break;
                                        case SID_VOICE_3:
                                            release3Slider -> setValue (
@@ -3804,18 +3809,19 @@ void
                                                                      release3Slider -> getTextFromValue (
                                                                                                          release3Slider -> getValue () )
                                                                    , dontSendNotification );
-                                           SharedResourcePointer < ListenerList < ExportReleaseChanged > > () -> call (
-                                                                                                                       &ExportReleaseChanged::onExportReleaseChanged
-                                                                                                                     , SID_VOICE_3
-                                                                                                                     , static_cast < unsigned int > ( release3Slider -> getValue () ) );
+                                           dispatcher -> exportReleaseChanged -> call (
+                                                                                       &ExportReleaseChanged::onExportReleaseChanged
+                                                                                     , SID_VOICE_3
+                                                                                     , static_cast < unsigned int > ( release3Slider -> getValue () ) );
                                            break;
+                                       default: ;
                                    }
                                } );
 }
 
 void
     LiveMode::onFilterVoiceParameterChanged (
-            unsigned int voice
+            const unsigned int voice
           , bool         value
             )
 {
@@ -3828,36 +3834,37 @@ void
                                            filter1Checkbox -> setToggleState (
                                                                               value
                                                                             , dontSendNotification );
-                                           SharedResourcePointer < ListenerList < ExportVoiceFilterChanged > > () -> call (
-                                                                                                                           &ExportVoiceFilterChanged::onExportVoiceFilterChanged
-                                                                                                                         , SID_VOICE_1
-                                                                                                                         , filter1Checkbox -> getToggleState () );
+                                           dispatcher -> exportVoiceFilterChanged -> call (
+                                                                                           &ExportVoiceFilterChanged::onExportVoiceFilterChanged
+                                                                                         , SID_VOICE_1
+                                                                                         , filter1Checkbox -> getToggleState () );
                                            break;
                                        case SID_VOICE_2:
                                            filter2Checkbox -> setToggleState (
                                                                               value
                                                                             , dontSendNotification );
-                                           SharedResourcePointer < ListenerList < ExportVoiceFilterChanged > > () -> call (
-                                                                                                                           &ExportVoiceFilterChanged::onExportVoiceFilterChanged
-                                                                                                                         , SID_VOICE_2
-                                                                                                                         , filter2Checkbox -> getToggleState () );
+                                           dispatcher -> exportVoiceFilterChanged -> call (
+                                                                                           &ExportVoiceFilterChanged::onExportVoiceFilterChanged
+                                                                                         , SID_VOICE_2
+                                                                                         , filter2Checkbox -> getToggleState () );
                                            break;
                                        case SID_VOICE_3:
                                            filter3Checkbox -> setToggleState (
                                                                               value
                                                                             , dontSendNotification );
-                                           SharedResourcePointer < ListenerList < ExportVoiceFilterChanged > > () -> call (
-                                                                                                                           &ExportVoiceFilterChanged::onExportVoiceFilterChanged
-                                                                                                                         , SID_VOICE_3
-                                                                                                                         , filter3Checkbox -> getToggleState () );
+                                           dispatcher -> exportVoiceFilterChanged -> call (
+                                                                                           &ExportVoiceFilterChanged::onExportVoiceFilterChanged
+                                                                                         , SID_VOICE_3
+                                                                                         , filter3Checkbox -> getToggleState () );
                                            break;
+                                       default: ;
                                    }
                                } );
 }
 
 void
     LiveMode::onCutoffParameterChanged (
-            unsigned int value
+            const unsigned int value
             )
 {
     MessageManager::callAsync (
@@ -3871,14 +3878,14 @@ void
                                                                                              cutoffSlider -> getValue () )
                                                          , dontSendNotification );
                                } );
-    SharedResourcePointer < ListenerList < ExportCutoffChanged > > () -> call (
-                                                                               &ExportCutoffChanged::onExportCutoffChanged
-                                                                             , static_cast < unsigned int > ( cutoffSlider -> getValue () ) );
+    dispatcher -> exportCutoffChanged -> call (
+                                               &ExportCutoffChanged::onExportCutoffChanged
+                                             , static_cast < unsigned int > ( cutoffSlider -> getValue () ) );
 }
 
 void
     LiveMode::onVolumeParameterChanged (
-            unsigned int value
+            const unsigned int value
             )
 {
     MessageManager::callAsync (
@@ -3892,14 +3899,14 @@ void
                                                                                              volumeSlider -> getValue () )
                                                          , dontSendNotification );
                                } );
-    SharedResourcePointer < ListenerList < ExportVolumeChanged > > () -> call (
-                                                                               &ExportVolumeChanged::onExportVolumeChanged
-                                                                             , static_cast < unsigned int > ( volumeSlider -> getValue () ) );
+    dispatcher -> exportVolumeChanged -> call (
+                                               &ExportVolumeChanged::onExportVolumeChanged
+                                             , static_cast < unsigned int > ( volumeSlider -> getValue () ) );
 }
 
 void
     LiveMode::onPitchBendParameterChanged (
-            unsigned int voice
+            const unsigned int voice
           , float        value
             )
 {
@@ -3916,10 +3923,10 @@ void
                                                                        pitchBend1Slider -> getTextFromValue (
                                                                                                              pitchBend1Slider -> getValue () ) + "%"
                                                                      , dontSendNotification );
-                                           SharedResourcePointer < ListenerList < ExportPitchBendChanged > > () -> call (
-                                                                                                                         &ExportPitchBendChanged::onExportPitchBendChanged
-                                                                                                                       , SID_VOICE_1
-                                                                                                                       , static_cast < float > ( pitchBend1Slider -> getValue () / 100.0 ) );
+                                           dispatcher -> exportPitchBendChanged -> call (
+                                                                                         &ExportPitchBendChanged::onExportPitchBendChanged
+                                                                                       , SID_VOICE_1
+                                                                                       , static_cast < float > ( pitchBend1Slider -> getValue () / 100.0 ) );
                                            break;
                                        case SID_VOICE_2:
                                            pitchBend2Slider -> setValue (
@@ -3929,10 +3936,10 @@ void
                                                                        pitchBend2Slider -> getTextFromValue (
                                                                                                              pitchBend2Slider -> getValue () ) + "%"
                                                                      , dontSendNotification );
-                                           SharedResourcePointer < ListenerList < ExportPitchBendChanged > > () -> call (
-                                                                                                                         &ExportPitchBendChanged::onExportPitchBendChanged
-                                                                                                                       , SID_VOICE_2
-                                                                                                                       , static_cast < float > ( pitchBend2Slider -> getValue () / 100.0 ) );
+                                           dispatcher -> exportPitchBendChanged -> call (
+                                                                                         &ExportPitchBendChanged::onExportPitchBendChanged
+                                                                                       , SID_VOICE_2
+                                                                                       , static_cast < float > ( pitchBend2Slider -> getValue () / 100.0 ) );
                                            break;
                                        case SID_VOICE_3:
                                            pitchBend3Slider -> setValue (
@@ -3942,18 +3949,19 @@ void
                                                                        pitchBend3Slider -> getTextFromValue (
                                                                                                              pitchBend3Slider -> getValue () ) + "%"
                                                                      , dontSendNotification );
-                                           SharedResourcePointer < ListenerList < ExportPitchBendChanged > > () -> call (
-                                                                                                                         &ExportPitchBendChanged::onExportPitchBendChanged
-                                                                                                                       , SID_VOICE_3
-                                                                                                                       , static_cast < float > ( pitchBend3Slider -> getValue () / 100.0 ) );
+                                           dispatcher -> exportPitchBendChanged -> call (
+                                                                                         &ExportPitchBendChanged::onExportPitchBendChanged
+                                                                                       , SID_VOICE_3
+                                                                                       , static_cast < float > ( pitchBend3Slider -> getValue () / 100.0 ) );
                                            break;
+                                       default: ;
                                    }
                                } );
 }
 
 void
     LiveMode::onVibratoAmountParameterChanged (
-            unsigned int voice
+            const unsigned int voice
           , float        value
             )
 {
@@ -3970,10 +3978,10 @@ void
                                                                            vibratoAmount1Slider -> getTextFromValue (
                                                                                                                      vibratoAmount1Slider -> getValue () ) + "%"
                                                                          , dontSendNotification );
-                                           SharedResourcePointer < ListenerList < ExportVibratoAmountChanged > > () -> call (
-                                                                                                                             &ExportVibratoAmountChanged::onExportVibratoAmountChanged
-                                                                                                                           , SID_VOICE_1
-                                                                                                                           , static_cast < float > ( vibratoAmount1Slider -> getValue () / 100.0 ) );
+                                           dispatcher -> exportVibratoAmountChanged -> call (
+                                                                                             &ExportVibratoAmountChanged::onExportVibratoAmountChanged
+                                                                                           , SID_VOICE_1
+                                                                                           , static_cast < float > ( vibratoAmount1Slider -> getValue () / 100.0 ) );
                                            break;
                                        case SID_VOICE_2:
                                            vibratoAmount2Slider -> setValue (
@@ -3983,10 +3991,10 @@ void
                                                                            vibratoAmount2Slider -> getTextFromValue (
                                                                                                                      vibratoAmount2Slider -> getValue () ) + "%"
                                                                          , dontSendNotification );
-                                           SharedResourcePointer < ListenerList < ExportVibratoAmountChanged > > () -> call (
-                                                                                                                             &ExportVibratoAmountChanged::onExportVibratoAmountChanged
-                                                                                                                           , SID_VOICE_2
-                                                                                                                           , static_cast < float > ( vibratoAmount2Slider -> getValue () / 100.0 ) );
+                                           dispatcher -> exportVibratoAmountChanged -> call (
+                                                                                             &ExportVibratoAmountChanged::onExportVibratoAmountChanged
+                                                                                           , SID_VOICE_2
+                                                                                           , static_cast < float > ( vibratoAmount2Slider -> getValue () / 100.0 ) );
                                            break;
                                        case SID_VOICE_3:
                                            vibratoAmount3Slider -> setValue (
@@ -3996,11 +4004,12 @@ void
                                                                            vibratoAmount3Slider -> getTextFromValue (
                                                                                                                      vibratoAmount3Slider -> getValue () ) + "%"
                                                                          , dontSendNotification );
-                                           SharedResourcePointer < ListenerList < ExportVibratoAmountChanged > > () -> call (
-                                                                                                                             &ExportVibratoAmountChanged::onExportVibratoAmountChanged
-                                                                                                                           , SID_VOICE_3
-                                                                                                                           , static_cast < float > ( vibratoAmount3Slider -> getValue () / 100.0 ) );
+                                           dispatcher -> exportVibratoAmountChanged -> call (
+                                                                                             &ExportVibratoAmountChanged::onExportVibratoAmountChanged
+                                                                                           , SID_VOICE_3
+                                                                                           , static_cast < float > ( vibratoAmount3Slider -> getValue () / 100.0 ) );
                                            break;
+                                       default: ;
                                    }
                                } );
 }
@@ -4024,14 +4033,6 @@ void
                                                                           vibratoDelay1Slider -> getTextFromValue (
                                                                                                                    vibratoDelay1Slider -> getValue () )
                                                                         , dontSendNotification );
-                                           //SharedResourcePointer < ListenerList < ExportVibratoDelayChanged > > () -> call (
-                                           //                                                                                  &ExportVibratoDelayChanged::
-                                           //                                                                                  onExportVibratoDelayChanged
-                                           //                                                                                , SID_VOICE_1
-                                           //                                                                                , static_cast < float > (
-                                           //                                                                                      vibratoDelay1Slider ->
-                                           //                                                                                      getValue () / 100.0 )
-                                           //                                                                                 );
                                            break;
                                        case SID_VOICE_2:
                                            vibratoDelay2Slider -> setValue (
@@ -4041,14 +4042,6 @@ void
                                                                           vibratoDelay2Slider -> getTextFromValue (
                                                                                                                    vibratoDelay2Slider -> getValue () )
                                                                         , dontSendNotification );
-                                           //SharedResourcePointer < ListenerList < ExportVibratoDelayChanged > > () -> call (
-                                           //                                                                                  &ExportVibratoDelayChanged::
-                                           //                                                                                  onExportVibratoDelayChanged
-                                           //                                                                                , SID_VOICE_2
-                                           //                                                                                , static_cast < float > (
-                                           //                                                                                      vibratoDelay2Slider ->
-                                           //                                                                                      getValue () / 100.0 )
-                                           //                                                                                 );
                                            break;
                                        case SID_VOICE_3:
                                            vibratoDelay3Slider -> setValue (
@@ -4058,23 +4051,16 @@ void
                                                                           vibratoDelay3Slider -> getTextFromValue (
                                                                                                                    vibratoDelay3Slider -> getValue () )
                                                                         , dontSendNotification );
-                                           //SharedResourcePointer < ListenerList < ExportVibratoDelayChanged > > () -> call (
-                                           //                                                                                  &ExportVibratoDelayChanged::
-                                           //                                                                                  onExportVibratoDelayChanged
-                                           //                                                                                , SID_VOICE_3
-                                           //                                                                                , static_cast < float > (
-                                           //                                                                                      vibratoDelay3Slider ->
-                                           //                                                                                      getValue () / 100.0 )
-                                           //                                                                                 );
                                            break;
+                                       default: ;
                                    }
                                } );
 }
 
 void
     LiveMode::onVibratoSpeedParameterChanged (
-            unsigned int voice
-          , float        value
+            const unsigned int voice
+          , float              value
             )
 {
     MessageManager::callAsync (
@@ -4090,10 +4076,10 @@ void
                                                                           vibratoSpeed1Slider -> getTextFromValue (
                                                                                                                    vibratoSpeed1Slider -> getValue () ) + "%"
                                                                         , dontSendNotification );
-                                           SharedResourcePointer < ListenerList < ExportVibratoSpeedChanged > > () -> call (
-                                                                                                                            &ExportVibratoSpeedChanged::onExportVibratoSpeedChanged
-                                                                                                                          , SID_VOICE_1
-                                                                                                                          , static_cast < float > ( vibratoSpeed1Slider -> getValue () / 100.0 ) );
+                                           dispatcher -> exportVibratoSpeedChanged -> call (
+                                                                                            &ExportVibratoSpeedChanged::onExportVibratoSpeedChanged
+                                                                                          , SID_VOICE_1
+                                                                                          , static_cast < float > ( vibratoSpeed1Slider -> getValue () / 100.0 ) );
                                            break;
                                        case SID_VOICE_2:
                                            vibratoSpeed2Slider -> setValue (
@@ -4103,10 +4089,10 @@ void
                                                                           vibratoSpeed2Slider -> getTextFromValue (
                                                                                                                    vibratoSpeed2Slider -> getValue () ) + "%"
                                                                         , dontSendNotification );
-                                           SharedResourcePointer < ListenerList < ExportVibratoSpeedChanged > > () -> call (
-                                                                                                                            &ExportVibratoSpeedChanged::onExportVibratoSpeedChanged
-                                                                                                                          , SID_VOICE_2
-                                                                                                                          , static_cast < float > ( vibratoSpeed2Slider -> getValue () / 100.0 ) );
+                                           dispatcher -> exportVibratoSpeedChanged -> call (
+                                                                                            &ExportVibratoSpeedChanged::onExportVibratoSpeedChanged
+                                                                                          , SID_VOICE_2
+                                                                                          , static_cast < float > ( vibratoSpeed2Slider -> getValue () / 100.0 ) );
                                            break;
                                        case SID_VOICE_3:
                                            vibratoSpeed3Slider -> setValue (
@@ -4116,11 +4102,12 @@ void
                                                                           vibratoSpeed3Slider -> getTextFromValue (
                                                                                                                    vibratoSpeed3Slider -> getValue () ) + "%"
                                                                         , dontSendNotification );
-                                           SharedResourcePointer < ListenerList < ExportVibratoSpeedChanged > > () -> call (
-                                                                                                                            &ExportVibratoSpeedChanged::onExportVibratoSpeedChanged
-                                                                                                                          , SID_VOICE_3
-                                                                                                                          , static_cast < float > ( vibratoSpeed3Slider -> getValue () / 100.0 ) );
+                                           dispatcher -> exportVibratoSpeedChanged -> call (
+                                                                                            &ExportVibratoSpeedChanged::onExportVibratoSpeedChanged
+                                                                                          , SID_VOICE_3
+                                                                                          , static_cast < float > ( vibratoSpeed3Slider -> getValue () / 100.0 ) );
                                            break;
+                                       default: ;
                                    }
                                } );
 }
@@ -4153,7 +4140,7 @@ void
 
 void
     LiveMode::onLivePatchListChanged (
-            Array < String > names
+            const Array < String > names
             )
 {
     MessageManager::callAsync (
@@ -4179,7 +4166,7 @@ void
 
 void
     LiveMode::onLiveTitleChanged (
-            String value
+            const String value
             )
 {
     titleLabel -> setText (
@@ -4189,7 +4176,7 @@ void
 
 void
     LiveMode::onLiveArtistChanged (
-            String value
+            const String value
             )
 {
     artistLabel -> setText (
@@ -4246,7 +4233,7 @@ void
 
 void
     LiveMode::onResonanceParameterChanged (
-            unsigned int value
+            const unsigned int value
             )
 {
     MessageManager::callAsync (
@@ -4259,15 +4246,15 @@ void
                                                               resonanceSlider -> getTextFromValue (
                                                                                                    resonanceSlider -> getValue () )
                                                             , dontSendNotification );
+                                   dispatcher -> exportResonanceChanged -> call (
+                                                                                 &ExportResonanceChanged::onExportResonanceChanged
+                                                                               , static_cast < unsigned int > ( resonanceSlider -> getValue () ) );
                                } );
-    SharedResourcePointer < ListenerList < ExportResonanceChanged > > () -> call (
-                                                                                  &ExportResonanceChanged::onExportResonanceChanged
-                                                                                , static_cast < unsigned int > ( resonanceSlider -> getValue () ) );
 }
 
 void
     LiveMode::onLowPassParameterChanged (
-            bool value
+            const bool value
             )
 {
     MessageManager::callAsync (
@@ -4276,15 +4263,15 @@ void
                                    filterLowPassCheckbox -> setToggleState (
                                                                             value
                                                                           , dontSendNotification );
+                                   dispatcher -> exportLowPassChanged -> call (
+                                                                               &ExportLowPassChanged::onExportLowPassChanged
+                                                                             , filterLowPassCheckbox -> getToggleState () );
                                } );
-    SharedResourcePointer < ListenerList < ExportLowPassChanged > > () -> call (
-                                                                                &ExportLowPassChanged::onExportLowPassChanged
-                                                                              , filterLowPassCheckbox -> getToggleState () );
 }
 
 void
     LiveMode::onBandPassParameterChanged (
-            bool value
+            const bool value
             )
 {
     MessageManager::callAsync (
@@ -4293,15 +4280,15 @@ void
                                    filterBandPassCheckbox -> setToggleState (
                                                                              value
                                                                            , dontSendNotification );
+                                   dispatcher -> exportBandPassChanged -> call (
+                                                                                &ExportBandPassChanged::onExportBandPassChanged
+                                                                              , filterBandPassCheckbox -> getToggleState () );
                                } );
-    SharedResourcePointer < ListenerList < ExportBandPassChanged > > () -> call (
-                                                                                 &ExportBandPassChanged::onExportBandPassChanged
-                                                                               , filterBandPassCheckbox -> getToggleState () * 2 );
 }
 
 void
     LiveMode::onHighPassParameterChanged (
-            bool value
+            const bool value
             )
 {
     MessageManager::callAsync (
@@ -4310,10 +4297,10 @@ void
                                    filterHighPassCheckbox -> setToggleState (
                                                                              value
                                                                            , dontSendNotification );
+                                   dispatcher -> exportHighPassChanged -> call (
+                                                                                &ExportHighPassChanged::onExportHighPassChanged
+                                                                              , filterHighPassCheckbox -> getToggleState () );
                                } );
-    SharedResourcePointer < ListenerList < ExportHighPassChanged > > () -> call (
-                                                                                 &ExportHighPassChanged::onExportHighPassChanged
-                                                                               , filterHighPassCheckbox -> getToggleState () * 4 );
 }
 
 

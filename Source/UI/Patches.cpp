@@ -29,7 +29,12 @@
 //[/MiscUserDefs]
 
 //==============================================================================
-Patches::Patches ()
+Patches::Patches (
+        const std::shared_ptr < EventDispatcher >& dispatcher
+        )
+    :
+    dispatcher (
+                dispatcher ) 
 {
     //[Constructor_pre] You can add your own custom stuff here..
     //[/Constructor_pre]
@@ -47,17 +52,16 @@ Patches::Patches ()
     addMouseListener (
                       this
                     , true );
-    SharedResourcePointer < ListenerList < LivePatchListChanged > > () -> add (
-                                                                               this );
+    dispatcher -> livePatchListChangedListeners -> add (
+                                                        this );
     //[/Constructor]
 }
 
 Patches::~Patches ()
 {
     //[Destructor_pre]. You can add your own custom destruction code here..
-    SharedResourcePointer < ListenerList < LivePatchListChanged > > () -> remove (
-                                                                                  this
-                                                                                 );
+    dispatcher -> livePatchListChangedListeners -> remove (
+                                                           this );
     //[/Destructor_pre]
 
 
@@ -128,11 +132,9 @@ void
         selectedRow -> setSelected (
                                     true
                                    );
-
-        livePatchListSelectedIndexChangedListeners -> call (
-                                                            &LivePatchListSelectedIndexChanged::onLivePatchListSelectedIndexChanged
-                                                          , getSelectedIndex ()
-                                                           );
+        dispatcher -> livePatchListSelectedIndexChangedListeners -> call (
+                                                                          &LivePatchListSelectedIndexChanged::onLivePatchListSelectedIndexChanged
+                                                                        , getSelectedIndex () );
 
         repaint ();
     }

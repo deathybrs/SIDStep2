@@ -21,12 +21,10 @@
 
 //[Headers]     -- You can add your own extra header files here --
 #include <JuceHeader.h>
-
 #include "AbstractNoteTableRow.h"
 
 
 //[/Headers]
-
 
 
 //==============================================================================
@@ -37,14 +35,19 @@
     Describe your class and how it works here!
                                                                     //[/Comments]
 */
-class NoteTableCommandRow  : public AbstractNoteTableRow,
-                             public juce::ComboBox::Listener,
-                             public juce::Label::Listener
+class NoteTableCommandRow final
+        : public AbstractNoteTableRow
+        , public ComboBox::Listener
+        , public Label::Listener
 {
 public:
     //==============================================================================
-    NoteTableCommandRow ();
-    ~NoteTableCommandRow() override;
+    explicit
+        NoteTableCommandRow (
+                const std::shared_ptr < EventDispatcher >& dispatcher
+                );
+
+    ~NoteTableCommandRow () override;
 
     //==============================================================================
     //[UserMethods]     -- You can add your own custom methods in this section.
@@ -59,27 +62,38 @@ public:
 
     //[/UserMethods]
 
-    void paint (juce::Graphics& g) override;
-    void resized() override;
-    void comboBoxChanged (juce::ComboBox* comboBoxThatHasChanged) override;
-    void labelTextChanged (juce::Label* labelThatHasChanged) override;
+    void
+        paint (
+                Graphics& g
+                ) override;
 
+    void
+        resized () override;
 
+    void
+        comboBoxChanged (
+                ComboBox* combo_box_that_has_changed
+                ) override;
+
+    void
+        labelTextChanged (
+                Label* label_that_has_changed
+                ) override;
 
 private:
     //[UserVariables]   -- You can add your own custom variables in this section.
     //[/UserVariables]
 
     //==============================================================================
-    std::unique_ptr<juce::ComboBox> commandSelector;
-    std::unique_ptr<juce::Label> rowLabel;
-    std::unique_ptr<juce::Label> argumentLabel;
+    std::unique_ptr < ComboBox > commandSelector;
+    std::unique_ptr < Label >    rowLabel;
+    std::unique_ptr < Label >    argumentLabel;
 
 
     //==============================================================================
-    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (NoteTableCommandRow)
+    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (
+                                                  NoteTableCommandRow )
 };
 
 //[EndFile] You can add extra defines here...
 //[/EndFile]
-

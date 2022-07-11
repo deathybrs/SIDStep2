@@ -40,7 +40,10 @@ class ParameterProcessor final
         , public LivePatchChanged
 {
 public:
-    ParameterProcessor ();
+    explicit
+        ParameterProcessor (
+                std::shared_ptr < EventDispatcher > dispatcher
+                );
 
     ParameterProcessor (
             const ParameterProcessor& other
@@ -181,4 +184,7 @@ public:
         ProcessVoiceParameters (
                 int v
                 ) const;
+
+private:
+    std::shared_ptr < EventDispatcher > dispatcher;
 };

@@ -13,11 +13,15 @@ class SidProgram final
         , public PatchEditorNameChanged
 {
 public:
-    SidProgram ();
+    explicit
+        SidProgram (
+                const std::shared_ptr < EventDispatcher >& dispatcher
+                );
 
     explicit
         SidProgram (
-                XmlElement* e
+                const std::shared_ptr < EventDispatcher >& dispatcher
+              , XmlElement*                                e
                 );
 
     SidProgram (
@@ -45,7 +49,7 @@ public:
 
     void
         SetName (
-                String value
+                const String& value
                 );
 
     auto
@@ -71,13 +75,14 @@ public:
 
     static auto
         LoadState (
-                MemoryInputStream& stream
+                const std::shared_ptr < EventDispatcher >& dispatcher
+              , MemoryInputStream&                         stream
                 ) -> ReferenceCountedObjectPtr < SidProgram >;
 
     static auto
         LoadCopyState (
-                MemoryInputStream&                       stream
-              , ReferenceCountedObjectPtr < SidProgram > original
+                MemoryInputStream&                         stream
+              , const ReferenceCountedObjectPtr < SidProgram >& original
                 ) -> ReferenceCountedObjectPtr < SidProgram >;
 
     auto
@@ -129,6 +134,7 @@ public:
                 ) override;
 
 private:
+    std::shared_ptr < EventDispatcher >       dispatcher;
     String                                    name;
     Uuid                                      id;
     ReferenceCountedObjectPtr < sEnvelope >   envelope;

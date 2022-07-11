@@ -1,11 +1,6 @@
 #pragma once
-
-
 #include <JuceHeader.h>
-
 #include "Listeners/ListenerInitializer.h"
-
-
 class SidStep2;
 class ExportManager;
 class LiveMode;
@@ -14,7 +9,6 @@ class ParameterProcessor;
 // ReSharper disable once CppInconsistentNaming
 class MidiProcessor;
 class SharedProperties;
-
 
 class Sidstep2AudioProcessor final : public AudioProcessor
 {
@@ -101,18 +95,21 @@ public:
                 ) override;
 
     auto
-        GetCore () const -> ReferenceCountedObjectPtr < SidStep2 >;
+        GetCore () const -> std::shared_ptr < SidStep2 >;
 
 private:
-    ScopedPointer < ListenerInitializer >                        listeners;
-    ReferenceCountedObjectPtr < SidStep2 >                       core;
-    ScopedPointer < LiveMode >                                   liveMode;
-    ScopedPointer < PatchEditor >                                patchEditor;
-    ScopedPointer < ExportManager >                              exportManager;
-    ScopedPointer < ParameterProcessor >                         parameterProcessor;
-    ReferenceCountedObjectPtr < MidiProcessor >                  midiProcessor;
-    SharedResourcePointer < ListenerList < SampleRateChanged > > sampleRateChangedListeners;
-    SharedResourcePointer < SharedProperties >                   properties;
+    // Keeping this as a shared resource pointer because it is static during
+    // runtime, so all instances can refer to the same property set.
+    SharedResourcePointer < SharedProperties > properties;
+    std::shared_ptr < EventDispatcher >        dispatcher;
+    std::shared_ptr < SidStep2 >               core;
+    std::shared_ptr < LiveMode >               liveMode;
+    std::shared_ptr < PatchEditor >            patchEditor;
+    std::shared_ptr < ParameterProcessor >     parameterProcessor;
+    std::shared_ptr < MidiProcessor >          midiProcessor;
+
+    //std::shared_ptr < ExportManager >          exportManager;
+
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (
                                                   Sidstep2AudioProcessor )
 };

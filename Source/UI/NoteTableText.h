@@ -21,8 +21,9 @@
 
 //[Headers]     -- You can add your own extra header files here --
 #include <JuceHeader.h>
-//[/Headers]
+#include "../Listeners/ListenerInitializer.h"
 
+//[/Headers]
 
 
 //==============================================================================
@@ -33,39 +34,51 @@
     Describe your class and how it works here!
                                                                     //[/Comments]
 */
-class NoteTableText  : public juce::Component
+class NoteTableText : public Component
 {
 public:
     //==============================================================================
-    NoteTableText ();
-    ~NoteTableText() override;
+    explicit
+        NoteTableText (
+                std::shared_ptr < EventDispatcher > dispatcher
+                );
+
+    ~NoteTableText () override;
 
     //==============================================================================
     //[UserMethods]     -- You can add your own custom methods in this section.
     //[/UserMethods]
 
-    void paint (juce::Graphics& g) override;
-    void resized() override;
-    void mouseUp (const juce::MouseEvent& e) override;
+    void
+        paint (
+                Graphics& g
+                ) override;
+
+    void
+        resized () override;
+
+    void
+        mouseUp (
+                const MouseEvent& e
+                ) override;
 
     // Binary resources:
     static const char* noteTable_png;
-    static const int noteTable_pngSize;
-
-
+    static const int   noteTable_pngSize;
 private:
     //[UserVariables]   -- You can add your own custom variables in this section.
-    int selectedRow;
+    std::shared_ptr < EventDispatcher > dispatcher;
+    int                                 selectedRow;
     //[/UserVariables]
 
     //==============================================================================
-    juce::Image cachedImage_noteTable_png_1;
+    Image cachedImage_noteTable_png_1;
 
 
     //==============================================================================
-    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (NoteTableText)
+    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (
+                                                  NoteTableText )
 };
 
 //[EndFile] You can add extra defines here...
 //[/EndFile]
-

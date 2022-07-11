@@ -27,168 +27,121 @@
 //[/MiscUserDefs]
 
 //==============================================================================
-PulseTableCommandRow::PulseTableCommandRow ()
+PulseTableCommandRow::PulseTableCommandRow (
+        const std::shared_ptr < EventDispatcher >& dispatcher
+        )
+    :
+    AbstractPulseTableRow (
+                           dispatcher )
 {
     //[Constructor_pre] You can add your own custom stuff here..
     //[/Constructor_pre]
 
     commandSelector . reset (
-                             new juce::ComboBox (
-                                                 "new combo box"
-                                                )
-                            );
+                             new ComboBox (
+                                           "new combo box" ) );
     addAndMakeVisible (
-                       commandSelector . get ()
-                      );
+                       commandSelector . get () );
     commandSelector -> setEditableText (
-                                        false
-                                       );
+                                        false );
     commandSelector -> setJustificationType (
-                                             juce::Justification::centredLeft
-                                            );
+                                             Justification::centredLeft );
     commandSelector -> setTextWhenNothingSelected (
-                                                   juce::String ()
-                                                  );
+                                                   String () );
     commandSelector -> setTextWhenNoChoicesAvailable (
                                                       TRANS (
-                                                             "(no choices)"
-                                                            )
-                                                     );
+                                                             "(no choices)" ) );
     commandSelector -> addItem (
                                 TRANS (
-                                       "Goto"
-                                      )
-                              , 1
-                               );
+                                       "Goto" )
+                              , 1 );
     commandSelector -> addItem (
                                 TRANS (
-                                       "Sustain To"
-                                      )
-                              , 2
-                               );
+                                       "Sustain To" )
+                              , 2 );
     commandSelector -> addItem (
                                 TRANS (
-                                       "End"
-                                      )
-                              , 3
-                               );
+                                       "End" )
+                              , 3 );
     commandSelector -> addListener (
-                                    this
-                                   );
-
+                                    this );
     commandSelector -> setBounds (
                                   54
                                 , 0
                                 , 160
-                                , 24
-                                 );
-
+                                , 24 );
     rowLabel . reset (
-                      new juce::Label (
-                                       "new label"
-                                     , TRANS (
-                                              "01"
-                                             )
-                                      )
-                     );
+                      new Label (
+                                 "new label"
+                               , TRANS (
+                                        "01" ) ) );
     addAndMakeVisible (
-                       rowLabel . get ()
-                      );
+                       rowLabel . get () );
     rowLabel -> setFont (
-                         juce::Font (
-                                     "C64 Pro Mono"
-                                   , 12.00f
-                                   , juce::Font::plain
-                                    ) . withTypefaceStyle (
-                                                           "Regular"
-                                                          )
-                        );
+                         Font (
+                               "C64 Pro Mono"
+                             , 12.00F
+                             , Font::plain ) . withTypefaceStyle (
+                                                                  "Regular" ) );
     rowLabel -> setJustificationType (
-                                      juce::Justification::centredRight
-                                     );
+                                      Justification::centredRight );
     rowLabel -> setEditable (
                              false
                            , false
-                           , false
-                            );
+                           , false );
     rowLabel -> setColour (
-                           juce::Label::textColourId
-                         , juce::Colour (
-                                         0xff5090d0
-                                        )
-                          );
+                           Label::textColourId
+                         , Colour (
+                                   0xff5090d0 ) );
     rowLabel -> setColour (
-                           juce::TextEditor::textColourId
-                         , juce::Colours::black
-                          );
+                           TextEditor::textColourId
+                         , Colours::black );
     rowLabel -> setColour (
-                           juce::TextEditor::backgroundColourId
-                         , juce::Colour (
-                                         0x00000000
-                                        )
-                          );
-
+                           TextEditor::backgroundColourId
+                         , Colour (
+                                   0x00000000 ) );
     rowLabel -> setBounds (
                            0
                          , 4
                          , 44
-                         , 18
-                          );
-
+                         , 18 );
     argumentLabel . reset (
-                           new juce::Label (
-                                            "new label"
-                                          , TRANS (
-                                                   "01"
-                                                  )
-                                           )
-                          );
+                           new Label (
+                                      "new label"
+                                    , TRANS (
+                                             "01" ) ) );
     addAndMakeVisible (
-                       argumentLabel . get ()
-                      );
+                       argumentLabel . get () );
     argumentLabel -> setFont (
-                              juce::Font (
-                                          "C64 Pro Mono"
-                                        , 12.00f
-                                        , juce::Font::plain
-                                         ) . withTypefaceStyle (
-                                                                "Regular"
-                                                               )
-                             );
+                              Font (
+                                    "C64 Pro Mono"
+                                  , 12.00F
+                                  , Font::plain ) . withTypefaceStyle (
+                                                                       "Regular" ) );
     argumentLabel -> setJustificationType (
-                                           juce::Justification::centredLeft
-                                          );
+                                           Justification::centredLeft );
     argumentLabel -> setEditable (
                                   true
                                 , true
-                                , false
-                                 );
+                                , false );
     argumentLabel -> setColour (
-                                juce::Label::textColourId
-                              , juce::Colour (
-                                              0xff5090d0
-                                             )
-                               );
+                                Label::textColourId
+                              , Colour (
+                                        0xff5090d0 ) );
     argumentLabel -> setColour (
-                                juce::TextEditor::textColourId
-                              , juce::Colours::black
-                               );
+                                TextEditor::textColourId
+                              , Colours::black );
     argumentLabel -> setColour (
-                                juce::TextEditor::backgroundColourId
-                              , juce::Colour (
-                                              0x00000000
-                                             )
-                               );
+                                TextEditor::backgroundColourId
+                              , Colour (
+                                        0x00000000 ) );
     argumentLabel -> addListener (
-                                  this
-                                 );
-
+                                  this );
     argumentLabel -> setBounds (
                                 224
                               , 4
                               , 44
-                              , 18
-                               );
+                              , 18 );
 
 
     //[UserPreSize]
@@ -196,14 +149,12 @@ PulseTableCommandRow::PulseTableCommandRow ()
 
     setSize (
              600
-           , 400
-            );
+           , 400 );
 
 
     //[Constructor] You can add your own custom stuff here..
     //[/Constructor]
 }
-
 
 PulseTableCommandRow::~PulseTableCommandRow ()
 {
@@ -223,7 +174,7 @@ PulseTableCommandRow::~PulseTableCommandRow ()
 //==============================================================================
 void
     PulseTableCommandRow::paint (
-            juce::Graphics& g
+            Graphics& g
             )
 {
     //[UserPrePaint] Add your own custom painting code here..
@@ -233,27 +184,22 @@ void
     if ( selected )
     {
         const Colour lt_blue (
-                              0xff5090d0
-                             );
+                              0xff5090d0 );
         g . setColour (
-                       lt_blue
-                      );
+                       lt_blue );
         Path p;
         p . addTriangle (
-                         0.0f
-                       , 0.0f
-                       , 12.0f
-                       , 12.0f
-                       , 0.0f
-                       , 24.0f
-                        );
+                         0.0F
+                       , 0.0F
+                       , 12.0F
+                       , 12.0F
+                       , 0.0F
+                       , 24.0F );
         g . fillPath (
-                      p
-                     );
+                      p );
     }
     //[/UserPaint]
 }
-
 
 void
     PulseTableCommandRow::resized ()
@@ -265,32 +211,27 @@ void
     //[/UserResized]
 }
 
-
 void
     PulseTableCommandRow::comboBoxChanged (
-            juce::ComboBox* comboBoxThatHasChanged
+            ComboBox* combo_box_that_has_changed
             )
 {
     //[UsercomboBoxChanged_Pre]
     //[/UsercomboBoxChanged_Pre]
 
-    if ( comboBoxThatHasChanged == commandSelector . get () )
+    if ( combo_box_that_has_changed == commandSelector . get () )
     {
         //[UserComboBoxCode_commandSelector] -- add your combo box handling code here..
         argumentLabel -> setVisible (
-                                     commandSelector -> getSelectedItemIndex () < 2
-                                    );
-        SharedResourcePointer < ListenerList < PulseTableSelectionChanged > > () -> call (
-                                                                                          &PulseTableSelectionChanged::onPulseTableSelectionChanged
-                                                                                        , static_cast < unsigned int > ( row )
-                                                                                         );
-        SharedResourcePointer < ListenerList < PulseTableRowChanged > > () -> call (
-                                                                                    &PulseTableRowChanged::onPulseTableRowChanged
-                                                                                  , Get ()
-                                                                                   );
-        SharedResourcePointer < ListenerList < BankRepaintWaveform > > () -> call (
-                                                                                   &BankRepaintWaveform::onBankRepaintWaveform
-                                                                                  );
+                                     commandSelector -> getSelectedItemIndex () < 2 );
+        dispatcher -> pulseTableSelectionChangedListeners -> call (
+                                                                   &PulseTableSelectionChanged::onPulseTableSelectionChanged
+                                                                 , static_cast < unsigned int > ( row ) );
+        dispatcher -> pulseTableRowChangedListeners -> call (
+                                                             &PulseTableRowChanged::onPulseTableRowChanged
+                                                           , Get () );
+        dispatcher -> bankRepaintWaveformListeners -> call (
+                                                            &BankRepaintWaveform::onBankRepaintWaveform );
         //[/UserComboBoxCode_commandSelector]
     }
 
@@ -298,37 +239,31 @@ void
     //[/UsercomboBoxChanged_Post]
 }
 
-
 void
     PulseTableCommandRow::labelTextChanged (
-            juce::Label* labelThatHasChanged
+            Label* label_that_has_changed
             )
 {
     //[UserlabelTextChanged_Pre]
     //[/UserlabelTextChanged_Pre]
 
-    if ( labelThatHasChanged == argumentLabel . get () )
+    if ( label_that_has_changed == argumentLabel . get () )
     {
         //[UserLabelCode_argumentLabel] -- add your label text handling code here..
-        SharedResourcePointer < ListenerList < PulseTableSelectionChanged > > () -> call (
-                                                                                          &PulseTableSelectionChanged::onPulseTableSelectionChanged
-                                                                                        , static_cast < unsigned int > ( row )
-                                                                                         );
-        SharedResourcePointer < ListenerList < PulseTableRowChanged > > () -> call (
-                                                                                    &PulseTableRowChanged::onPulseTableRowChanged
-                                                                                  , Get ()
-                                                                                   );
+        dispatcher -> pulseTableSelectionChangedListeners -> call (
+                                                                   &PulseTableSelectionChanged::onPulseTableSelectionChanged
+                                                                 , static_cast < unsigned int > ( row ) );
+        dispatcher -> pulseTableRowChangedListeners -> call (
+                                                             &PulseTableRowChanged::onPulseTableRowChanged
+                                                           , Get () );
         //bank->getCurrentProgram()->getPulseTable()->setWaveTableEntryAt(row, get());
         argumentLabel -> setText (
                                   argumentLabel -> getText () . paddedLeft (
                                                                             '0'
-                                                                          , 2
-                                                                           )
-                                , dontSendNotification
-                                 );
-        SharedResourcePointer < ListenerList < BankRepaintWaveform > > () -> call (
-                                                                                   &BankRepaintWaveform::onBankRepaintWaveform
-                                                                                  );
+                                                                          , 2 )
+                                , dontSendNotification );
+        dispatcher -> bankRepaintWaveformListeners -> call (
+                                                            &BankRepaintWaveform::onBankRepaintWaveform );
         //[/UserLabelCode_argumentLabel]
     }
 
@@ -342,74 +277,58 @@ auto
     PulseTableCommandRow::Get () const -> unsigned
 {
     unsigned int ret;
-
     switch ( commandSelector -> getSelectedItemIndex () )
     {
-        case 0 :
+        case 0:
             ret = 0x2000;
             break;
-        case 1 :
+        case 1:
             ret = 0x4000;
             break;
-        default :
+        default:
             ret = 0x1000;
     }
     ret |= argumentLabel -> getText () . getIntValue () - 1;
-
     return ret;
 }
 
-
 void
     PulseTableCommandRow::Set (
-            unsigned row_num
-          , unsigned value
+            const unsigned row_num
+          , const unsigned value
             )
 {
-    row            = row_num;
-    auto rowstring = String (
-                             row_num + 1
-                            );
+    row                   = static_cast < int > ( row_num );
+    const auto row_string = String (
+                                    row_num + 1 );
     rowLabel -> setText (
-                         rowstring . paddedLeft (
-                                                 '0'
-                                               , 2
-                                                )
-                       , dontSendNotification
-                        );
-
-    String argustring = String (
-                                ( value & 0x0FFF ) + 1
-                               );
+                         row_string . paddedLeft (
+                                                  '0'
+                                                , 2 )
+                       , dontSendNotification );
+    const auto argument_string = String (
+                                         ( value & 0x0FFF ) + 1 );
     argumentLabel -> setText (
-                              argustring . paddedLeft (
-                                                       '0'
-                                                     , 2
-                                                      )
-                            , dontSendNotification
-                             );
-
-    unsigned int i = ( value & 0xF000 ) >> 12;
+                              argument_string . paddedLeft (
+                                                            '0'
+                                                          , 2 )
+                            , dontSendNotification );
+    const auto i = ( value & 0xF000 ) >> 12;
     switch ( i )
     {
-        case 2 :
-        case 4 :
+        case 2: case 4:
             commandSelector -> setSelectedItemIndex (
-                                                     i / 2 - 1
-                                                   , dontSendNotification
-                                                    );
+                                                     static_cast < int > ( i ) / 2 - 1
+                                                   , dontSendNotification );
             argumentLabel -> setVisible (
-                                         true
-                                        );
+                                         true );
             break;
-        default :
+        default:
             commandSelector -> setSelectedItemIndex (
                                                      2
-                                                   , dontSendNotification
-                                                    );
+                                                   , dontSendNotification );
             argumentLabel -> setVisible (
-                                         false
-                                        );
+                                         false );
             break;
     }
 }

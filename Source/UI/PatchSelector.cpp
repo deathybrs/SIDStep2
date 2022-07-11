@@ -27,36 +27,53 @@
 //[/MiscUserDefs]
 
 //==============================================================================
-PatchSelector::PatchSelector ()
+PatchSelector::PatchSelector (
+        std::shared_ptr < EventDispatcher > dispatcher
+        )
+    :
+    dispatcher (
+                dispatcher )
 {
     //[Constructor_pre] You can add your own custom stuff here..
     //[/Constructor_pre]
 
-    treeView.reset (new juce::TreeView ("new treeview"));
-    addAndMakeVisible (treeView.get());
-    treeView->setRootItemVisible (false);
-
-    treeView->setBounds (10, 2, 300, 172);
+    treeView . reset (
+                      new TreeView (
+                                    "new treeview" ) );
+    addAndMakeVisible (
+                       treeView . get () );
+    treeView -> setRootItemVisible (
+                                    false );
+    treeView -> setBounds (
+                           10
+                         , 2
+                         , 300
+                         , 172 );
 
 
     //[UserPreSize]
     //[/UserPreSize]
 
-    setSize (322, 176);
+    setSize (
+             322
+           , 176 );
 
 
     //[Constructor] You can add your own custom stuff here..
-	SharedResourcePointer<ListenerList<BankTreeChanged>>()->add(this);
-
-	treeView->setRootItem(populateTree());
+    dispatcher -> bankTreeChangedListeners -> add (
+                                                   this );
+    treeView -> setRootItem (
+                             populateTree (
+                                           dispatcher ) );
     //[/Constructor]
 }
 
-PatchSelector::~PatchSelector()
+PatchSelector::~PatchSelector ()
 {
     //[Destructor_pre]. You can add your own custom destruction code here..
-	SharedResourcePointer<ListenerList<BankTreeChanged>>()->remove(this);
-	treeView->deleteRootItem();
+    dispatcher -> bankTreeChangedListeners -> remove (
+                                                      this );
+    treeView -> deleteRootItem ();
     //[/Destructor_pre]
 
     treeView = nullptr;
@@ -67,28 +84,47 @@ PatchSelector::~PatchSelector()
 }
 
 //==============================================================================
-void PatchSelector::paint (juce::Graphics& g)
+void
+    PatchSelector::paint (
+            Graphics& g
+            )
 {
     //[UserPrePaint] Add your own custom painting code here..
     //[/UserPrePaint]
 
     {
-        float x = 2.0f, y = 2.0f, width = 318.0f, height = 172.0f;
-        juce::Colour fillColour = juce::Colour (0xff181090);
-        juce::Colour strokeColour = juce::Colour (0xff5090d0);
+        float  x          = 2.0f, y = 2.0f, width = 318.0f, height = 172.0f;
+        Colour fillColour = Colour (
+                                    0xff181090 );
+        Colour strokeColour = Colour (
+                                      0xff5090d0 );
         //[UserPaintCustomArguments] Customize the painting arguments here..
         //[/UserPaintCustomArguments]
-        g.setColour (fillColour);
-        g.fillRoundedRectangle (x, y, width, height, 10.000f);
-        g.setColour (strokeColour);
-        g.drawRoundedRectangle (x, y, width, height, 10.000f, 2.000f);
+        g . setColour (
+                       fillColour );
+        g . fillRoundedRectangle (
+                                  x
+                                , y
+                                , width
+                                , height
+                                , 10.000f );
+        g . setColour (
+                       strokeColour );
+        g . drawRoundedRectangle (
+                                  x
+                                , y
+                                , width
+                                , height
+                                , 10.000f
+                                , 2.000f );
     }
 
     //[UserPaint] Add your own custom painting code here..
     //[/UserPaint]
 }
 
-void PatchSelector::resized()
+void
+    PatchSelector::resized ()
 {
     //[UserPreResize] Add your own custom resize code here..
     //[/UserPreResize]
@@ -98,11 +134,15 @@ void PatchSelector::resized()
 }
 
 
-
 //[MiscUserCode] You can add your own definitions of your custom methods or any other code here...
-void PatchSelector::onBankTreeChanged() {
-	treeView->setRootItem(populateTree());
+void
+    PatchSelector::onBankTreeChanged ()
+{
+    treeView -> setRootItem (
+                             populateTree (
+                                           dispatcher ) );
 }
+
 //[/MiscUserCode]
 
 
@@ -136,4 +176,3 @@ END_JUCER_METADATA
 
 //[EndFile] You can add extra defines here...
 //[/EndFile]
-

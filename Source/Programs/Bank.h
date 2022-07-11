@@ -1,9 +1,6 @@
 #pragma once
-
 #include <JuceHeader.h>
-
 #include "Categories.h"
-
 #include "../Listeners/ListenerInitializer.h"
 
 
@@ -23,7 +20,9 @@ class Bank final
         , public LivePatchSelected
 {
 public:
-    Bank ();
+    Bank (
+            const std::shared_ptr < EventDispatcher >& dispatcher
+            );
 
     ~Bank () override;
 
@@ -89,28 +88,39 @@ private:
               , int value
                 );
 
-    static String
+    static auto
         GetCategoryElementName (
                 Category c
-                );
+                ) -> String;
 
-    ScopedPointer < SID >                                         sid;
-    ReferenceCountedObjectPtr < SidProgram >                      currentProgram;
-    Array < Note >                                                notes;
-    Array < unsigned int >                                        releasedNotes;
-    int                                                           arpIndex;
-    Array < int >                                                 registers;
-    Array < bool >                                                dirty;
-    int                                                           sampleRate;
-    int                                                           samplesPerFrame;
-    double                                                        cyclesPerSample;
-    long                                                          sampleIndex;
-    SharedResourcePointer < SharedProperties >                    properties;
-    SharedResourcePointer < ListenerList < BankTreeChanged > >    bankTreeChangedListeners;
-    SharedResourcePointer < ListenerList < BankProgramChanged > > bankProgramChangedListeners;
-    SharedResourcePointer < ListenerList < BankNew > >            bankNewListeners;
-    SharedResourcePointer < ListenerList < BankLoad > >           bankLoadListeners;
-    SharedResourcePointer < ListenerList < BankSave > >           bankSaveListeners;
-    SharedResourcePointer < ListenerList < BankStartSaveAs > >    bankStartSaveAsListeners;
-    SharedResourcePointer < ListenerList < BankSaveAs > >         bankSaveAsListeners;
+    std::shared_ptr < EventDispatcher >      dispatcher;
+    std::shared_ptr < SID >                  sid;
+    ReferenceCountedObjectPtr < SidProgram > currentProgram;
+    Array < Note >                           notes;
+    Array < unsigned int >                   releasedNotes;
+    int                                      arpIndex {
+            -1
+    };
+    Array < int >  registers;
+    Array < bool > dirty;
+    int            sampleRate {
+            0
+    };
+    int samplesPerFrame {
+            0
+    };
+    double cyclesPerSample {
+            0
+    };
+    long sampleIndex {
+            0
+    };
+    SharedResourcePointer < SharedProperties > properties;
+    //SharedResourcePointer < ListenerList < BankTreeChanged > >    bankTreeChangedListeners;
+    //SharedResourcePointer < ListenerList < BankProgramChanged > > bankProgramChangedListeners;
+    //SharedResourcePointer < ListenerList < BankNew > >            bankNewListeners;
+    //SharedResourcePointer < ListenerList < BankLoad > >           bankLoadListeners;
+    //SharedResourcePointer < ListenerList < BankSave > >           bankSaveListeners;
+    //SharedResourcePointer < ListenerList < BankStartSaveAs > >    bankStartSaveAsListeners;
+    //SharedResourcePointer < ListenerList < BankSaveAs > >         bankSaveAsListeners;
 };

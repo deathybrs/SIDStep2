@@ -23,11 +23,15 @@ class Wavetable final
         , public WavetableSelectionChanged
 {
 public:
-    Wavetable ();
+    explicit
+        Wavetable (
+                std::shared_ptr < EventDispatcher > dispatcher
+                );
 
     explicit
         Wavetable (
-                XmlElement* e
+                std::shared_ptr < EventDispatcher > dispatcher
+              , XmlElement*                         e
                 );
 
     Wavetable (
@@ -73,13 +77,13 @@ public:
     static void
         LoadState (
                 MemoryInputStream&                       stream
-              , ReferenceCountedObjectPtr < SidProgram > o
+              , const ReferenceCountedObjectPtr < SidProgram >& o
                 );
 
     static void
         LoadCopyState (
                 MemoryInputStream&                       stream
-              , ReferenceCountedObjectPtr < SidProgram > o
+              , const ReferenceCountedObjectPtr < SidProgram >& o
                 );
 
     auto
@@ -169,6 +173,7 @@ public:
         onPatchEditorShowWaveTable () override;
 
 private:
+    std::shared_ptr < EventDispatcher > dispatcher;
     Array < unsigned int > waveTable;
     int                    waveTableIndex {
             0
@@ -183,7 +188,7 @@ private:
             0
     };
     unsigned int                                                   selectedRow;
-    SharedResourcePointer < ListenerList < WavetableRowChanged > > wavetableRowChangedListeners;
+    //SharedResourcePointer < ListenerList < WavetableRowChanged > > wavetableRowChangedListeners;
     int                                                            forVoice {
             -1
     };

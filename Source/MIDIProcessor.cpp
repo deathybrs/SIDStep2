@@ -3,17 +3,21 @@
 
 #include "SIDStep2.h"
 
-
-MidiProcessor::MidiProcessor ()
+MidiProcessor::MidiProcessor (
+        std::shared_ptr < EventDispatcher > dispatcher
+        )
+    :
+    dispatcher (
+                dispatcher )
 {
-    SharedResourcePointer < ListenerList < MIDISignal > > () -> add (
-                                                                     this );
+    dispatcher -> midiSignalListeners -> add (
+                                              this );
 }
 
 MidiProcessor::~MidiProcessor ()
 {
-    SharedResourcePointer < ListenerList < MIDISignal > > () -> remove (
-                                                                        this );
+    dispatcher -> midiSignalListeners -> remove (
+                                                 this );
 }
 
 void
@@ -54,17 +58,17 @@ void
             const unsigned int channel
           , const unsigned int note
           , const unsigned int velocity
-            )
+            ) const
 {
     if ( channel > 2 )
     {
         return;
     }
-    SharedResourcePointer < ListenerList < NoteOff > > () -> call (
-                                                                   &NoteOff::onNoteOff
-                                                                 , channel
-                                                                 , note
-                                                                 , velocity );
+    dispatcher -> noteOffListeners -> call (
+                                            &NoteOff::onNoteOff
+                                          , channel
+                                          , note
+                                          , velocity );
 }
 
 void
@@ -72,17 +76,17 @@ void
             const unsigned int channel
           , const unsigned int note
           , const unsigned int velocity
-            )
+            ) const
 {
     if ( channel > 2 )
     {
         return;
     }
-    SharedResourcePointer < ListenerList < NoteOn > > () -> call (
-                                                                  &NoteOn::onNoteOn
-                                                                , channel
-                                                                , note
-                                                                , velocity );
+    dispatcher -> noteOnListeners -> call (
+                                           &NoteOn::onNoteOn
+                                         , channel
+                                         , note
+                                         , velocity );
 }
 
 void
@@ -95,11 +99,10 @@ void
     {
         return;
     }
-
-    SharedResourcePointer < ListenerList < ProgramParameterChanged > > () -> call (
-                                                                                   &ProgramParameterChanged::onProgramParameterChanged
-                                                                                 , channel
-                                                                                 , program_number );
+    dispatcher -> programParameterChangedListeners -> call (
+                                                            &ProgramParameterChanged::onProgramParameterChanged
+                                                          , channel
+                                                          , program_number );
 }
 
 void
@@ -112,8 +115,8 @@ void
     {
         return;
     }
-    SharedResourcePointer < ListenerList < PitchBend > > () -> call (
-                                                                     &PitchBend::onPitchBend
-                                                                   , channel
-                                                                   , value );
+    dispatcher -> pitchBendListeners -> call (
+                                              &PitchBend::onPitchBend
+                                            , channel
+                                            , value );
 }

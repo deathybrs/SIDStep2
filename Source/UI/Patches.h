@@ -17,16 +17,14 @@
   ==============================================================================
 */
 
-#ifndef __JUCE_HEADER_188841F534497368__
-#define __JUCE_HEADER_188841F534497368__
+#pragma once
 
 //[Headers]     -- You can add your own extra header files here --
 #include "../../JuceLibraryCode/JuceHeader.h"
 #include "../Listeners/ListenerInitializer.h"
-
 class PatchRow;
-//[/Headers]
 
+//[/Headers]
 
 
 //==============================================================================
@@ -37,39 +35,56 @@ class PatchRow;
     Describe your class and how it works here!
                                                                     //[/Comments]
 */
-class Patches  : public Component,
-				 public LivePatchListChanged
+class Patches
+        : public Component
+        , public LivePatchListChanged
 {
 public:
     //==============================================================================
-    Patches ();
-    ~Patches();
-	//==============================================================================
+    Patches (
+            const std::shared_ptr < EventDispatcher >& dispatcher
+            );
+
+    ~Patches ();
+
+    //==============================================================================
     //[UserMethods]     -- You can add your own custom methods in this section.
-	void mouseUp(const MouseEvent &event) override;
-	int getSelectedIndex() const;
-	void onLivePatchListChanged(Array<String> programs) override;
-	//[/UserMethods]
+    void
+        mouseUp (
+                const MouseEvent& event
+                ) override;
 
-    void paint (Graphics& g) override;
-    void resized() override;
+    int
+        getSelectedIndex () const;
 
+    void
+        onLivePatchListChanged (
+                Array < String > programs
+                ) override;
 
+    //[/UserMethods]
+
+    void
+        paint (
+                Graphics& g
+                ) override;
+
+    void
+        resized () override;
 
 private:
     //[UserVariables]   -- You can add your own custom variables in this section.
-	Array<PatchRow *> rows;
-	SharedResourcePointer<ListenerList<LivePatchListSelectedIndexChanged>> livePatchListSelectedIndexChangedListeners;
+    std::shared_ptr < EventDispatcher > dispatcher;
+    Array < PatchRow* >                 rows;
     //[/UserVariables]
 
     //==============================================================================
 
 
     //==============================================================================
-    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (Patches)
+    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (
+                                                  Patches )
 };
 
 //[EndFile] You can add extra defines here...
 //[/EndFile]
-
-#endif   // __JUCE_HEADER_188841F534497368__

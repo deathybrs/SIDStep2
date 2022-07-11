@@ -12,18 +12,23 @@
 #include "Parameters/SignedPercentParameter.h"
 #include "Parameters/UnsignedIntParameter.h"
 #include "Parameters/UnsignedPercentParameter.h"
-#include "UI/ExportManager.h"
+//#include "UI/ExportManager.h"
 
 Sidstep2AudioProcessor::Sidstep2AudioProcessor ()
 {
-    listeners     = new ListenerInitializer ();
-    exportManager = new ExportManager ();
-    patchEditor   = new PatchEditor ();
-    liveMode      = new LiveMode ();
-    core          = new SidStep2 ();
-    midiProcessor = new MidiProcessor ();
+    dispatcher = std::make_shared < EventDispatcher > ();
 
-    parameterProcessor = new ParameterProcessor ();
+    //exportManager = std::make_shared < ExportManager > ();
+    patchEditor = std::make_shared < PatchEditor > (
+                                                    dispatcher );
+    liveMode = std::make_shared < LiveMode > (
+                                              dispatcher );
+    core = std::make_shared < SidStep2 > (
+                                          dispatcher );
+    midiProcessor = std::make_shared < MidiProcessor > (
+                                                        dispatcher );
+    parameterProcessor = std::make_shared < ParameterProcessor > (
+                                                                  dispatcher );
     for ( auto v = 0 ; v < 3 ; v++ )
     {
         CREATE_VOICE_PARAMETER (
@@ -103,10 +108,10 @@ Sidstep2AudioProcessor::Sidstep2AudioProcessor ()
 Sidstep2AudioProcessor::~Sidstep2AudioProcessor ()
 {
     core          = nullptr;
-    exportManager = nullptr;
     liveMode      = nullptr;
     patchEditor   = nullptr;
     midiProcessor = nullptr;
+    //exportManager = nullptr;
 }
 
 
@@ -140,7 +145,7 @@ auto
 auto
     Sidstep2AudioProcessor::getNumPrograms () -> int
 {
-    return 255;
+    return 128;
 }
 
 auto
@@ -170,9 +175,9 @@ void
           , int samples_per_block
             )
 {
-    sampleRateChangedListeners -> call (
-                                        &SampleRateChanged::onSampleRateChanged
-                                      , sample_rate );
+    dispatcher -> sampleRateChangedListeners -> call (
+                                                      &SampleRateChanged::onSampleRateChanged
+                                                    , sample_rate );
 }
 
 void
@@ -235,11 +240,11 @@ auto
     auto ed = new Sidstep2AudioProcessorEditor (
                                                 *this );
     ed -> addAndMakeVisible (
-                             liveMode );
+                             *liveMode );
     ed -> addChildComponent (
-                             patchEditor );
-    ed -> addChildComponent (
-                             exportManager );
+                             *patchEditor );
+    //ed -> addChildComponent (
+    //                         *exportManager );
     return ed;
 }
 
@@ -265,7 +270,7 @@ void
 }
 
 auto
-    Sidstep2AudioProcessor::GetCore () const -> ReferenceCountedObjectPtr < SidStep2 > { return core; }
+    Sidstep2AudioProcessor::GetCore () const -> std::shared_ptr < SidStep2 > { return core; }
 
 
 // ReSharper disable once CppInconsistentNaming

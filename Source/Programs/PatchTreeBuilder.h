@@ -3,15 +3,17 @@
 
 
 #include "../JuceLibraryCode/JuceHeader.h"
-
-
+#include "../Listeners/ListenerInitializer.h"
 #include "Categories.h"
 #include "../SharedProperties.h"
 
 
 class PatchTreeBuilder {
 public:
-	TreeViewItem *populateTree() const;
+    TreeViewItem*
+    populateTree (
+            std::shared_ptr < EventDispatcher > dispatcher
+            ) const;
 
 private:
 	SharedResourcePointer<SharedProperties> properties;

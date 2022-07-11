@@ -42,7 +42,7 @@ class WavetableCommandRow  : public AbstractWavetableRow,
 {
 public:
     //==============================================================================
-    WavetableCommandRow ();
+    WavetableCommandRow (std::shared_ptr < EventDispatcher > dispatcher);
     ~WavetableCommandRow() override;
 
     //==============================================================================

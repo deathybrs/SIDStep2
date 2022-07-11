@@ -1,8 +1,11 @@
 #pragma once
 
+
 #include "JuceHeader.h"
 
+
 #include "../Listeners/ListenerInitializer.h"
+
 
 class PulseTable final
         : public ReferenceCountedObject
@@ -16,11 +19,15 @@ class PulseTable final
         , public PulseTableRowChanged
 {
 public:
-    PulseTable ();
+    explicit
+        PulseTable (
+                std::shared_ptr < EventDispatcher > dispatcher
+                );
 
     explicit
         PulseTable (
-                XmlElement* e
+                std::shared_ptr < EventDispatcher > dispatcher
+              , XmlElement*                         e
                 );
 
     PulseTable (
@@ -65,14 +72,14 @@ public:
 
     static void
         LoadState (
-                MemoryInputStream&                       stream
-              , ReferenceCountedObjectPtr < SidProgram > o
+                MemoryInputStream&                              stream
+              , const ReferenceCountedObjectPtr < SidProgram >& o
                 );
 
     static void
         LoadCopyState (
-                MemoryInputStream&                       stream
-              , ReferenceCountedObjectPtr < SidProgram > o
+                MemoryInputStream&                              stream
+              , const ReferenceCountedObjectPtr < SidProgram >& o
                 );
 
     auto
@@ -162,18 +169,19 @@ public:
         onPatchEditorShowWaveTable () override;
 
 private:
-    Array < unsigned int >                                          table;
-    int                                                             pulseTableIndex = 0;
-    bool                                                            sustained       = false;
-    bool                                                            released        = false;
-    unsigned int                                                    releaseCounter  = 0;
-    unsigned int                                                    selectedRow     = 0;
-    SharedResourcePointer < ListenerList < PulseTableRowChanged > > pulseTableRowChangedListeners;
-    int                                                             forVoice             = 0;
-    static const int                                                END_COMMAND          = 0x1000;
-    static const int                                                GOTO_COMMAND         = 0x2000;
-    static const int                                                SUSTAIN_TO_COMMAND   = 0x4000;
-    static const int                                                CYCLE_CENTER         = 0x0800;
-    static const int                                                COMMAND_NYBBLE_MASK  = 0xF000;
-    static const int                                                ARGUMENT_NYBBLE_MASK = 0x0FFF;
+    std::shared_ptr < EventDispatcher > dispatcher;
+    Array < unsigned int >              table;
+    int                                 pulseTableIndex = 0;
+    bool                                sustained       = false;
+    bool                                released        = false;
+    unsigned int                        releaseCounter  = 0;
+    unsigned int                        selectedRow     = 0;
+    //SharedResourcePointer < ListenerList < PulseTableRowChanged > > pulseTableRowChangedListeners;
+    int              forVoice             = 0;
+    static const int END_COMMAND          = 0x1000;
+    static const int GOTO_COMMAND         = 0x2000;
+    static const int SUSTAIN_TO_COMMAND   = 0x4000;
+    static const int CYCLE_CENTER         = 0x0800;
+    static const int COMMAND_NYBBLE_MASK  = 0xF000;
+    static const int ARGUMENT_NYBBLE_MASK = 0x0FFF;
 };

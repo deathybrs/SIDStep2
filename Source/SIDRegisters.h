@@ -1,7 +1,6 @@
 // ReSharper disable CppInconsistentNaming
 #pragma once
 
-
 #include <JuceHeader.h>
 
 #include "Defines.h"
@@ -10,10 +9,8 @@
 
 #include "Listeners/ListenerInitializer.h"
 
-
 class SID;
 class SidStep2;
-
 
 class SidRegisters final
         : public ReferenceCountedObject
@@ -41,7 +38,10 @@ class SidRegisters final
         , public LiveDoneExporting
 {
 public:
-    SidRegisters ();
+    explicit
+        SidRegisters (
+                std::shared_ptr < EventDispatcher > dispatcher
+                );
 
     SidRegisters (
             SidRegisters& other
@@ -161,38 +161,34 @@ public:
                 ) const -> int;
 
 private:
-    static const int register_array_size       = 0x19;
-    static const int last_register             = 0x18;
-    static const int low_nybble_max            = 0x0f;
-    static const int _8_bits_max               = 0xff;
-    static const int _7_bits_max               = 0x7f;
-    static const int delay_bit                 = 0x80;
-    static const int data_row_length           = 0x10;
-    static const int voice_control_offset      = 4;
-    static const int attack_decay_offset       = 5;
-    static const int sustain_release_offset    = 6;
-    static const int pulse_hi_nybble           = 0xf00;
-    static const int pulse_hi_nybble_bit_shift = 8;
-    static const int voice_register_offset     = 7;
-    static const int wavetable_command_bitmask = 0xfe;
-    static const int pulse_width_default       = 0x08;
-
-    static constexpr double clock_freq          = 985248.0;
-    static constexpr double sample_freq         = 44100.0;
-    static constexpr double pass_freq           = 19845.0;
-    static constexpr double cutoff_base         = 0.9995117188;
-    static constexpr double binary_base         = 2.0;
-    static constexpr double cutoff_divisor      = 0.0833333333;
-    static constexpr double cutoff_range        = 2047.0;
-    static constexpr double cutoff_offset       = 0.0833333333;
-    static constexpr double middle_a            = 440.0;
-    static constexpr double octave              = 12.0;
-    static constexpr double note_middle_offset  = 69.0;
-    static constexpr double binary_bit_13       = 4096.0;
-
-
+    static const int        register_array_size       = 0x19;
+    static const int        last_register             = 0x18;
+    static const int        low_nybble_max            = 0x0f;
+    static const int        _8_bits_max               = 0xff;
+    static const int        _7_bits_max               = 0x7f;
+    static const int        delay_bit                 = 0x80;
+    static const int        data_row_length           = 0x10;
+    static const int        voice_control_offset      = 4;
+    static const int        attack_decay_offset       = 5;
+    static const int        sustain_release_offset    = 6;
+    static const int        pulse_hi_nybble           = 0xf00;
+    static const int        pulse_hi_nybble_bit_shift = 8;
+    static const int        voice_register_offset     = 7;
+    static const int        wavetable_command_bitmask = 0xfe;
+    static const int        pulse_width_default       = 0x08;
+    static constexpr double clock_freq                = 985248.0;
+    static constexpr double sample_freq               = 44100.0;
+    static constexpr double pass_freq                 = 19845.0;
+    static constexpr double cutoff_base               = 0.9995117188;
+    static constexpr double binary_base               = 2.0;
+    static constexpr double cutoff_divisor            = 0.0833333333;
+    static constexpr double cutoff_range              = 2047.0;
+    static constexpr double cutoff_offset             = 0.0833333333;
+    static constexpr double middle_a                  = 440.0;
+    static constexpr double octave                    = 12.0;
+    static constexpr double note_middle_offset        = 69.0;
+    static constexpr double binary_bit_13             = 4096.0;
     friend class SidStep2;
-
 
     void
         SetFrame (
@@ -254,8 +250,8 @@ private:
               , int value
                 );
 
-
-    bool recording {
+    std::shared_ptr < EventDispatcher > dispatcher;
+    bool                                recording {
             false
     };
     FileChooser                                              fileBrowser;
@@ -280,7 +276,7 @@ private:
             0
     };
     std::vector < int > barFrames;
-    unsigned int currentFrame {
+    unsigned int        currentFrame {
             0
     };
     unsigned int lastFrame {

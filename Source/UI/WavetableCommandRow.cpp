@@ -29,7 +29,12 @@
 //[/MiscUserDefs]
 
 //==============================================================================
-WavetableCommandRow::WavetableCommandRow ()
+WavetableCommandRow::WavetableCommandRow (
+        std::shared_ptr < EventDispatcher > dispatcher
+        )
+    :
+    AbstractWavetableRow (
+                          dispatcher ) 
 {
     //[Constructor_pre] You can add your own custom stuff here..
     //[/Constructor_pre]
@@ -170,19 +175,15 @@ void WavetableCommandRow::comboBoxChanged (juce::ComboBox* comboBoxThatHasChange
     {
         //[UserComboBoxCode_commandSelector] -- add your combo box handling code here..
         argumentLabel -> setVisible (
-                                     commandSelector -> getSelectedItemIndex () < 2
-                                    );
-        SharedResourcePointer < ListenerList < WavetableSelectionChanged > > () -> call (
-                                                                                         &WavetableSelectionChanged::onWavetableSelectionChanged
-                                                                                       , static_cast < unsigned int > ( row )
-                                                                                        );
-        SharedResourcePointer < ListenerList < WavetableRowChanged > > () -> call (
-                                                                                   &WavetableRowChanged::onWavetableRowChanged
-                                                                                 , get ()
-                                                                                  );
-        SharedResourcePointer < ListenerList < BankRepaintWaveform > > () -> call (
-                                                                                   &BankRepaintWaveform::onBankRepaintWaveform
-                                                                                  );
+                                     commandSelector -> getSelectedItemIndex () < 2 );
+        dispatcher -> wavetableSelectionChangedListeners -> call (
+                                                                  &WavetableSelectionChanged::onWavetableSelectionChanged
+                                                                , static_cast < unsigned int > ( row ) );
+        dispatcher -> wavetableRowChangedListeners -> call (
+                                                            &WavetableRowChanged::onWavetableRowChanged
+                                                          , get () );
+        dispatcher -> bankRepaintWaveformListeners -> call (
+                                                            &BankRepaintWaveform::onBankRepaintWaveform );
         //[/UserComboBoxCode_commandSelector]
     }
 
@@ -198,11 +199,19 @@ void WavetableCommandRow::labelTextChanged (juce::Label* labelThatHasChanged)
     if (labelThatHasChanged == argumentLabel.get())
     {
         //[UserLabelCode_argumentLabel] -- add your label text handling code here..
-		SharedResourcePointer<ListenerList<WavetableSelectionChanged>>()->call(&WavetableSelectionChanged::onWavetableSelectionChanged, static_cast<unsigned int>(row));
-		SharedResourcePointer<ListenerList<WavetableRowChanged>>()->call(&WavetableRowChanged::onWavetableRowChanged, get());
-		//bank->getCurrentProgram()->getWavetable()->setWaveTableEntryAt(row, get());
-		argumentLabel->setText(argumentLabel->getText().paddedLeft('0', 2), dontSendNotification);
-		SharedResourcePointer<ListenerList<BankRepaintWaveform>>()->call(&BankRepaintWaveform::onBankRepaintWaveform);
+        dispatcher -> wavetableSelectionChangedListeners -> call (
+                                                                  &WavetableSelectionChanged::onWavetableSelectionChanged
+                                                                , static_cast < unsigned int > ( row ) );
+        dispatcher -> wavetableRowChangedListeners -> call (
+                                                            &WavetableRowChanged::onWavetableRowChanged
+                                                          , get () );
+        argumentLabel -> setText (
+                                  argumentLabel -> getText () . paddedLeft (
+                                                                            '0'
+                                                                          , 2 )
+                                , dontSendNotification );
+        dispatcher -> bankRepaintWaveformListeners -> call (
+                                                            &BankRepaintWaveform::onBankRepaintWaveform );
         //[/UserLabelCode_argumentLabel]
     }
 

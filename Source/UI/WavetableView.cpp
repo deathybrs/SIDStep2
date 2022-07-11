@@ -19,23 +19,25 @@
 
 //[Headers] You can add your own extra header files here...
 #include "WavetableView.h"
-
-
 #include "../SIDProgram.h"
-
 #include "WavetableCommandRow.h"
 #include "WavetableRow.h"
 
-//[/Headers]
+//#include "WavetableView.h"
 
-#include "WavetableView.h"
+//[/Headers]
 
 
 //[MiscUserDefs] You can add your own user definitions and misc code here...
 //[/MiscUserDefs]
 
 //==============================================================================
-WavetableView::WavetableView ()
+WavetableView::WavetableView (
+        const std::shared_ptr < EventDispatcher >& dispatcher
+        )
+    :
+    dispatcher (
+                dispatcher )
 {
     //[Constructor_pre] You can add your own custom stuff here..
     //[/Constructor_pre]
@@ -44,58 +46,51 @@ WavetableView::WavetableView ()
     //[UserPreSize]
     //[/UserPreSize]
 
-    setSize (590, 56);
+    setSize (
+             590
+           , 56 );
 
 
     //[Constructor] You can add your own custom stuff here..
     addMouseListener (
                       this
-                    , true
-                     );
-
-    SharedResourcePointer < ListenerList < BankProgramChanged > > () -> add (
-                                                                             this
-                                                                            );
-    SharedResourcePointer < ListenerList < PatchEditorShowNoteTable > > () -> add (
-                                                                                   this
-                                                                                  );
-    SharedResourcePointer < ListenerList < PatchEditorShowPulseTable > > () -> add (
-                                                                                    this
-                                                                                   );
-    SharedResourcePointer < ListenerList < PatchEditorShowWaveTable > > () -> add (
-                                                                                   this
-                                                                                  );
+                    , true );
+    dispatcher -> bankProgramChangedListeners -> add (
+                                                      this );
+    dispatcher -> patchEditorShowNoteTableListeners -> add (
+                                                            this );
+    dispatcher -> patchEditorShowPulseTableListeners -> add (
+                                                             this );
+    dispatcher -> patchEditorShowWaveTableListeners -> add (
+                                                            this );
     //[/Constructor]
 }
 
-WavetableView::~WavetableView()
+WavetableView::~WavetableView ()
 {
     //[Destructor_pre]. You can add your own custom destruction code here..
-    SharedResourcePointer < ListenerList < BankProgramChanged > > () -> remove (
-                                                                                this
-                                                                               );
-    SharedResourcePointer < ListenerList < PatchEditorShowNoteTable > > () -> remove (
-                                                                                      this
-                                                                                     );
-    SharedResourcePointer < ListenerList < PatchEditorShowPulseTable > > () -> remove (
-                                                                                       this
-                                                                                      );
-    SharedResourcePointer < ListenerList < PatchEditorShowWaveTable > > () -> remove (
-                                                                                      this
-                                                                                     );
+    dispatcher -> bankProgramChangedListeners -> remove (
+                                                         this );
+    dispatcher -> patchEditorShowNoteTableListeners -> remove (
+                                                               this );
+    dispatcher -> patchEditorShowPulseTableListeners -> remove (
+                                                                this );
+    dispatcher -> patchEditorShowWaveTableListeners -> remove (
+                                                               this );
     //[/Destructor_pre]
-
 
 
     //[Destructor]. You can add your own custom destruction code here..
     rows . clear (
-                  true
-                 );
+                  true );
     //[/Destructor]
 }
 
 //==============================================================================
-void WavetableView::paint (juce::Graphics& g)
+void
+    WavetableView::paint (
+            Graphics& g
+            )
 {
     //[UserPrePaint] Add your own custom painting code here..
     //[/UserPrePaint]
@@ -104,363 +99,296 @@ void WavetableView::paint (juce::Graphics& g)
     //[/UserPaint]
 }
 
-void WavetableView::resized()
+void
+    WavetableView::resized ()
 {
     //[UserPreResize] Add your own custom resize code here..
     //[/UserPreResize]
 
     //[UserResized] Add your own custom resize handling here..
-    for ( int i = 0 ; i < rows . size () ; i++ )
+    for ( auto i = 0 ; i < rows . size () ; i++ )
+    {
         rows [ i ] -> setBounds (
                                  0
                                , 8 + i * 24
                                , 590
-                               , 24
-                                );
-    int minBounds = static_cast < int > ( 8 + ( rows . size () + 1 ) * 24 );
-    if ( minBounds < 184 )
-        minBounds = 184;
+                               , 24 );
+    }
+    auto min_bounds = static_cast < int > ( 8 + ( rows . size () + 1 ) * 24 );
+    if ( min_bounds < 184 )
+    {
+        min_bounds = 184;
+    }
     setBounds (
                0
              , 0
              , 590
-             , minBounds
-              );
+             , min_bounds );
     //[/UserResized]
 }
 
-void WavetableView::mouseUp (const juce::MouseEvent& e)
+void
+    WavetableView::mouseUp (
+            const MouseEvent& e
+            )
 {
     //[UserCode_mouseUp] -- Add your code here...
     if ( e . mods . isLeftButtonDown () )
     {
-        //selectedRow = rows;
-        Component* clicked = e . originalComponent;
+        const auto clicked = e . originalComponent;
 
-        //int selectedRow = rows.size();
-        //unsigned int i;
-        //for each (AbstractWavetableRow *r in rows) {
         for ( selectedRow = 0 ; selectedRow < rows . size () ; selectedRow++ )
         {
-            AbstractWavetableRow* r = rows [ selectedRow ];
+            const auto r = rows [ selectedRow ];
             if ( r == clicked || r -> isParentOf (
-                                                  clicked
-                                                 ) ) //{
+                                                  clicked ) )
+            {
+                //{
                 break;
-            //	r->setSelected(true);
-            //	//selectedRow = r;
-            //	selectedRow = i;
-            //} else
-            //	r->setSelected(false);
+            }
         }
-
-        wavetableSelectionChangedListeners -> call (
-                                                    &WavetableSelectionChanged::onWavetableSelectionChanged
-                                                  , selectedRow
-                                                   );
-
+        dispatcher -> wavetableSelectionChangedListeners -> call (
+                                                                  &WavetableSelectionChanged::onWavetableSelectionChanged
+                                                                , selectedRow );
         repaint ();
-        //if (waveform != nullptr) waveform->repaint();
         getParentComponent () -> repaint ();
     }
     //[/UserCode_mouseUp]
 }
 
 
-
 //[MiscUserCode] You can add your own definitions of your custom methods or any other code here...
 void
     WavetableView::onBankProgramChanged (
             String                                   old_id
-          , ReferenceCountedObjectPtr < SidProgram > program
+          , const ReferenceCountedObjectPtr < SidProgram > program
             )
 {
     const auto wavetable = program -> GetWavetable ();
-
     if ( rows . size () > 0 )
     {
         removeAllChildren ();
-
         rows . clear ();
     }
 
-    //ReferenceCountedObjectPtr<Wavetable> wt = program->getWavetable();
-
     for ( unsigned int i = 0 ; i < wavetable -> GetWaveTableSize () ; i++ )
     {
-        const int value = wavetable -> GetWaveTableEntryAt (
-                                                            i
-                                                           );
-
+        const auto value = static_cast < int > ( wavetable -> GetWaveTableEntryAt (
+                                                                                   i ) );
         if ( value < 0x100 )
         {
             // row
-            auto wtr = new WavetableRow ();
+            auto wtr = new WavetableRow (
+                                         dispatcher );
             wtr -> set (
                         i
-                      , value
-                       );
+                      , value );
             wtr -> setBounds (
                               0
-                            , 8 + i * 24
+                            , 8 + static_cast < int > ( i ) * 24
                             , 590
-                            , 24
-                             );
+                            , 24 );
             addAndMakeVisible (
-                               wtr
-                              );
+                               wtr );
             rows . add (
-                        wtr
-                       );
+                        wtr );
         }
         else
         {
             // command
-            auto wtc = new WavetableCommandRow ();
+            auto wtc = new WavetableCommandRow (
+                                                dispatcher );
             wtc -> set (
                         i
                       , value & 0xff00
-                      , value & 0xff
-                       );
+                      , value & 0xff );
             wtc -> setBounds (
                               0
-                            , 8 + i * 24
+                            , 8 + static_cast < int > ( i ) * 24
                             , 590
-                            , 24
-                             );
+                            , 24 );
             addAndMakeVisible (
-                               wtc
-                              );
+                               wtc );
             rows . add (
-                        wtc
-                       );
+                        wtc );
         }
     }
 }
-
 
 void
     WavetableView::onPatchEditorNewTableRowClicked ()
 {
-    auto wtr = new WavetableRow ();
-
+    auto wtr = new WavetableRow (
+                                 dispatcher );
     if ( selectedRow >= rows . size () )
     {
-        int i = static_cast < int > ( rows . size () );
+        const auto i = static_cast < int > ( rows . size () );
         wtr -> set (
                     i
-                  , 0
-                   );
+                  , 0 );
         wtr -> setBounds (
                           0
                         , 8 + i * 24
                         , 590
-                        , 24
-                         );
+                        , 24 );
         rows . add (
-                    wtr
-                   );
+                    wtr );
     }
     else
     {
         wtr -> set (
                     selectedRow
-                  , 0
-                   );
+                  , 0 );
         wtr -> setBounds (
                           0
                         , 8 + selectedRow * 24
                         , 590
-                        , 24
-                         );
+                        , 24 );
         rows . insert (
                        selectedRow
-                     , wtr
-                      );
-
-        for ( int i = selectedRow + 1 ; i < rows . size () ; i++ )
+                     , wtr );
+        for ( auto i = selectedRow + 1 ; i < rows . size () ; i++ )
         {
             rows [ i ] -> setBounds (
                                      0
                                    , 8 + i * 24
                                    , 590
-                                   , 24
-                                    );
+                                   , 24 );
             rows [ i ] -> set (
                                i
-                             , rows [ i ] -> get ()
-                              );
+                             , rows [ i ] -> get () );
         }
     }
     setBounds (
                0
              , 0
              , 590
-             , static_cast < int > ( rows . size () * 24 + 16 )
-              );
-
+             , static_cast < int > ( rows . size () * 24 + 16 ) );
     addAndMakeVisible (
-                       wtr
-                      );
+                       wtr );
     repaint ();
     getParentComponent () -> repaint ();
-
     selectedRow++;
-    wavetableSelectionChangedListeners -> call (
-                                                &WavetableSelectionChanged::onWavetableSelectionChanged
-                                              , selectedRow
-                                               );
+    dispatcher -> wavetableSelectionChangedListeners -> call (
+                                                              &WavetableSelectionChanged::onWavetableSelectionChanged
+                                                            , selectedRow );
 }
-
 
 void
     WavetableView::onPatchEditorNewTableCommandClicked ()
 {
-    WavetableCommandRow* wtc = new WavetableCommandRow ();
-
+    auto wtc = new WavetableCommandRow (
+                                        dispatcher );
     if ( selectedRow >= rows . size () )
     {
-        int i = static_cast < int > ( rows . size () );
+        const auto i = static_cast < int > ( rows . size () );
         wtc -> set (
                     i
-                  , 0x100
-                   );
+                  , 0x100 );
         wtc -> setBounds (
                           0
                         , 8 + i * 24
                         , 590
-                        , 24
-                         );
+                        , 24 );
         rows . add (
-                    wtc
-                   );
+                    wtc );
     }
     else
     {
         wtc -> set (
                     selectedRow
-                  , 0x100
-                   );
+                  , 0x100 );
         wtc -> setBounds (
                           0
                         , 8 + selectedRow * 24
                         , 590
-                        , 24
-                         );
+                        , 24 );
         rows . insert (
                        selectedRow
-                     , wtc
-                      );
-
-        for ( int i = selectedRow + 1 ; i < rows . size () ; i++ )
+                     , wtc );
+        for ( auto i = selectedRow + 1 ; i < rows . size () ; i++ )
         {
             rows [ i ] -> setBounds (
                                      0
                                    , 8 + i * 24
                                    , 590
-                                   , 24
-                                    );
+                                   , 24 );
             rows [ i ] -> set (
                                i
-                             , rows [ i ] -> get ()
-                              );
+                             , rows [ i ] -> get () );
         }
     }
     setBounds (
                0
              , 0
              , 590
-             , static_cast < int > ( rows . size () * 24 + 16 )
-              );
-
+             , static_cast < int > ( rows . size () * 24 + 16 ) );
     addAndMakeVisible (
-                       wtc
-                      );
+                       wtc );
     repaint ();
     getParentComponent () -> repaint ();
-
     selectedRow++;
-    wavetableSelectionChangedListeners -> call (
-                                                &WavetableSelectionChanged::onWavetableSelectionChanged
-                                              , selectedRow
-                                               );
+    dispatcher -> wavetableSelectionChangedListeners -> call (
+                                                              &WavetableSelectionChanged::onWavetableSelectionChanged
+                                                            , selectedRow );
 }
-
 
 void
     WavetableView::onPatchEditorDeleteTableRowClicked ()
 {
     removeChildComponent (
-                          rows [ selectedRow ]
-                         );
+                          rows [ selectedRow ] );
     rows . remove (
-                   selectedRow
-                  );
-
-    for ( int i = selectedRow ; i < rows . size () ; i++ )
+                   selectedRow );
+    for ( auto i = selectedRow ; i < rows . size () ; i++ )
     {
         rows [ i ] -> setBounds (
                                  0
                                , 8 + i * 24
                                , 590
-                               , 24
-                                );
+                               , 24 );
         rows [ i ] -> set (
                            i
-                         , rows [ i ] -> get ()
-                          );
+                         , rows [ i ] -> get () );
     }
-
-    wavetableSelectionChangedListeners -> call (
-                                                &WavetableSelectionChanged::onWavetableSelectionChanged
-                                              , selectedRow
-                                               );
+    dispatcher -> wavetableSelectionChangedListeners -> call (
+                                                              &WavetableSelectionChanged::onWavetableSelectionChanged
+                                                            , selectedRow );
 }
-
 
 void
     WavetableView::onPatchEditorShowNoteTable ()
 {
-    SharedResourcePointer < ListenerList < PatchEditorNewTableRowClicked > > () -> remove (
-                                                                                           this
-                                                                                          );
-    SharedResourcePointer < ListenerList < PatchEditorNewTableCommandClicked > > () -> remove (
-                                                                                               this
-                                                                                              );
-    SharedResourcePointer < ListenerList < PatchEditorDeleteTableRowClicked > > () -> remove (
-                                                                                              this
-                                                                                             );
+    dispatcher -> patchEditorNewWavetableRowClickedListeners -> remove (
+                                                                        this );
+    dispatcher -> patchEditorNewWavetableCommandClickedListeners -> remove (
+                                                                            this );
+    dispatcher -> patchEditorDeleteWavetableRowClickedListeners -> remove (
+                                                                           this );
 }
-
 
 void
     WavetableView::onPatchEditorShowPulseTable ()
 {
-    SharedResourcePointer < ListenerList < PatchEditorNewTableRowClicked > > () -> remove (
-                                                                                           this
-                                                                                          );
-    SharedResourcePointer < ListenerList < PatchEditorNewTableCommandClicked > > () -> remove (
-                                                                                               this
-                                                                                              );
-    SharedResourcePointer < ListenerList < PatchEditorDeleteTableRowClicked > > () -> remove (
-                                                                                              this
-                                                                                             );
+    dispatcher -> patchEditorNewWavetableRowClickedListeners -> remove (
+                                                                        this );
+    dispatcher -> patchEditorNewWavetableCommandClickedListeners -> remove (
+                                                                            this );
+    dispatcher -> patchEditorDeleteWavetableRowClickedListeners -> remove (
+                                                                           this );
 }
-
 
 void
     WavetableView::onPatchEditorShowWaveTable ()
 {
-    SharedResourcePointer < ListenerList < PatchEditorNewTableRowClicked > > () -> add (
-                                                                                        this
-                                                                                       );
-    SharedResourcePointer < ListenerList < PatchEditorNewTableCommandClicked > > () -> add (
-                                                                                            this
-                                                                                           );
-    SharedResourcePointer < ListenerList < PatchEditorDeleteTableRowClicked > > () -> add (
-                                                                                           this
-                                                                                          );
+    dispatcher -> patchEditorNewWavetableRowClickedListeners -> add (
+                                                                     this );
+    dispatcher -> patchEditorNewWavetableCommandClickedListeners -> add (
+                                                                         this );
+    dispatcher -> patchEditorDeleteWavetableRowClickedListeners -> add (
+                                                                        this );
 }
+
 //[/MiscUserCode]
 
 
@@ -491,4 +419,3 @@ END_JUCER_METADATA
 
 //[EndFile] You can add extra defines here...
 //[/EndFile]
-

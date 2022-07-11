@@ -12,7 +12,10 @@ class MidiProcessor final
         , public MIDISignal
 {
 public:
-    MidiProcessor ();
+    explicit
+        MidiProcessor (
+                std::shared_ptr < EventDispatcher > dispatcher
+                );
 
     MidiProcessor (
             const MidiProcessor& other
@@ -40,19 +43,19 @@ public:
                 MidiMessage m
                 ) override;
 
-    static void
+    void
         MidiNoteOff (
                 unsigned int channel
               , unsigned int note
               , unsigned int velocity
-                );
+                ) const;
 
-    static void
+    void
         MidiNoteOn (
                 unsigned int channel
               , unsigned int note
               , unsigned int velocity
-                );
+                ) const;
 
     void
         MidiProgramChange (
@@ -65,4 +68,7 @@ public:
                 unsigned int channel
               , unsigned int value
                 ) const;
+
+private:
+    std::shared_ptr < EventDispatcher > dispatcher;
 };

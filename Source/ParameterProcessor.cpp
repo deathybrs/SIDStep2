@@ -1,10 +1,9 @@
 #include "ParameterProcessor.h"
-
-
 #include "SIDRegisters.h"
 
-
-ParameterProcessor::ParameterProcessor ()
+ParameterProcessor::ParameterProcessor (
+        std::shared_ptr < EventDispatcher > dispatcher
+        )
     :
     _CutoffParameter (
                       nullptr )
@@ -18,6 +17,8 @@ ParameterProcessor::ParameterProcessor ()
                         nullptr )
   , _VolumeParameter (
                       nullptr )
+  , dispatcher (
+                dispatcher )
 {
     for ( auto i = 0 ; i < 3 ; i++ )
     {
@@ -48,90 +49,90 @@ ParameterProcessor::ParameterProcessor ()
         _TremoloSpeedParameters . add (
                                        nullptr );
     }
-    SharedResourcePointer < ListenerList < LivePulseWidthChanged > > () -> add (
-                                                                                this );
-    SharedResourcePointer < ListenerList < LiveAttackChanged > > () -> add (
-                                                                            this );
-    SharedResourcePointer < ListenerList < LiveDecayChanged > > () -> add (
-                                                                           this );
-    SharedResourcePointer < ListenerList < LiveSustainChanged > > () -> add (
-                                                                             this );
-    SharedResourcePointer < ListenerList < LiveReleaseChanged > > () -> add (
-                                                                             this );
-    SharedResourcePointer < ListenerList < LiveVoiceFilterChanged > > () -> add (
-                                                                                 this );
-    SharedResourcePointer < ListenerList < LiveCutoffChanged > > () -> add (
-                                                                            this );
-    SharedResourcePointer < ListenerList < LiveResonanceChanged > > () -> add (
-                                                                               this );
-    SharedResourcePointer < ListenerList < LiveLowPassChanged > > () -> add (
-                                                                             this );
-    SharedResourcePointer < ListenerList < LiveBandPassChanged > > () -> add (
-                                                                              this );
-    SharedResourcePointer < ListenerList < LiveHighPassChanged > > () -> add (
-                                                                              this );
-    SharedResourcePointer < ListenerList < LiveVolumeChanged > > () -> add (
-                                                                            this );
-    SharedResourcePointer < ListenerList < LivePitchBendChanged > > () -> add (
-                                                                               this );
-    SharedResourcePointer < ListenerList < LiveVibratoAmountChanged > > () -> add (
-                                                                                   this );
-    SharedResourcePointer < ListenerList < LiveVibratoDelayChanged > > () -> add (
-                                                                                  this );
-    SharedResourcePointer < ListenerList < LiveVibratoSpeedChanged > > () -> add (
-                                                                                  this );
-    SharedResourcePointer < ListenerList < LiveTremoloAmountChanged > > () -> add (
-                                                                                   this );
-    SharedResourcePointer < ListenerList < LiveTremoloSpeedChanged > > () -> add (
-                                                                                  this );
-    SharedResourcePointer < ListenerList < LiveVolumeChanged > > () -> add (
-                                                                            this );
-    SharedResourcePointer < ListenerList < Frame > > () -> add (
-                                                                this );
+    dispatcher -> livePulseWidthChangedListeners -> add (
+                                                         this );
+    dispatcher -> liveAttackChangedListeners -> add (
+                                                     this );
+    dispatcher -> liveDecayChangedListeners -> add (
+                                                    this );
+    dispatcher -> liveSustainChangedListeners -> add (
+                                                      this );
+    dispatcher -> liveReleaseChangedListeners -> add (
+                                                      this );
+    dispatcher -> liveVoiceFilterChangedListeners -> add (
+                                                          this );
+    dispatcher -> liveCutoffChangedListeners -> add (
+                                                     this );
+    dispatcher -> liveResonanceChangedListeners -> add (
+                                                        this );
+    dispatcher -> liveLowPassChangedListeners -> add (
+                                                      this );
+    dispatcher -> liveBandPassChangedListeners -> add (
+                                                       this );
+    dispatcher -> liveHighPassChangedListeners -> add (
+                                                       this );
+    dispatcher -> liveVolumeChangedListeners -> add (
+                                                     this );
+    dispatcher -> livePitchBendChangedListeners -> add (
+                                                        this );
+    dispatcher -> liveVibratoAmountChangedListeners -> add (
+                                                            this );
+    dispatcher -> liveVibratoDelayChangedListeners -> add (
+                                                           this );
+    dispatcher -> liveVibratoSpeedChangedListeners -> add (
+                                                           this );
+    dispatcher -> liveTremoloAmountChangedListeners -> add (
+                                                            this );
+    dispatcher -> liveTremoloSpeedChangedListeners -> add (
+                                                           this );
+    dispatcher -> liveVolumeChangedListeners -> add (
+                                                     this );
+    dispatcher -> frameListeners -> add (
+                                         this );
 }
 
 ParameterProcessor::~ParameterProcessor ()
 {
-    SharedResourcePointer < ListenerList < Frame > > () -> remove (
-                                                                   this );
-    SharedResourcePointer < ListenerList < LivePulseWidthChanged > > () -> remove (
-                                                                                   this );
-    SharedResourcePointer < ListenerList < LiveAttackChanged > > () -> remove (
-                                                                               this );
-    SharedResourcePointer < ListenerList < LiveDecayChanged > > () -> remove (
-                                                                              this );
-    SharedResourcePointer < ListenerList < LiveSustainChanged > > () -> remove (
-                                                                                this );
-    SharedResourcePointer < ListenerList < LiveReleaseChanged > > () -> remove (
-                                                                                this );
-    SharedResourcePointer < ListenerList < LiveVoiceFilterChanged > > () -> remove (
-                                                                                    this );
-    SharedResourcePointer < ListenerList < LiveCutoffChanged > > () -> remove (
-                                                                               this );
-    SharedResourcePointer < ListenerList < LiveResonanceChanged > > () -> remove (
-                                                                                  this );
-    SharedResourcePointer < ListenerList < LiveLowPassChanged > > () -> remove (
-                                                                                this );
-    SharedResourcePointer < ListenerList < LiveBandPassChanged > > () -> remove (
-                                                                                 this );
-    SharedResourcePointer < ListenerList < LiveHighPassChanged > > () -> remove (
-                                                                                 this );
-    SharedResourcePointer < ListenerList < LiveVolumeChanged > > () -> remove (
-                                                                               this );
-    SharedResourcePointer < ListenerList < LivePitchBendChanged > > () -> remove (
-                                                                                  this );
-    SharedResourcePointer < ListenerList < LiveVibratoAmountChanged > > () -> remove (
-                                                                                      this );
-    SharedResourcePointer < ListenerList < LiveVibratoDelayChanged > > () -> remove (
-                                                                                     this );
-    SharedResourcePointer < ListenerList < LiveVibratoSpeedChanged > > () -> remove (
-                                                                                     this );
-    SharedResourcePointer < ListenerList < LiveTremoloAmountChanged > > () -> remove (
-                                                                                      this );
-    SharedResourcePointer < ListenerList < LiveTremoloSpeedChanged > > () -> remove (
-                                                                                     this );
-    SharedResourcePointer < ListenerList < LiveVolumeChanged > > () -> remove (
-                                                                               this );
+    dispatcher -> livePulseWidthChangedListeners -> remove (
+                                                            this );
+    dispatcher -> liveAttackChangedListeners -> remove (
+                                                        this );
+    dispatcher -> liveDecayChangedListeners -> remove (
+                                                       this );
+    dispatcher -> liveSustainChangedListeners -> remove (
+                                                         this );
+    dispatcher -> liveReleaseChangedListeners -> remove (
+                                                         this );
+    dispatcher -> liveVoiceFilterChangedListeners -> remove (
+                                                             this );
+    dispatcher -> liveCutoffChangedListeners -> remove (
+                                                        this );
+    dispatcher -> liveResonanceChangedListeners -> remove (
+                                                           this );
+    dispatcher -> liveLowPassChangedListeners -> remove (
+                                                         this );
+    dispatcher -> liveBandPassChangedListeners -> remove (
+                                                          this );
+    dispatcher -> liveHighPassChangedListeners -> remove (
+                                                          this );
+    dispatcher -> liveVolumeChangedListeners -> remove (
+                                                        this );
+    dispatcher -> livePitchBendChangedListeners -> remove (
+                                                           this );
+    dispatcher -> liveVibratoAmountChangedListeners -> remove (
+                                                               this );
+    dispatcher -> liveVibratoDelayChangedListeners -> remove (
+                                                              this );
+    dispatcher -> liveVibratoSpeedChangedListeners -> remove (
+                                                              this );
+    dispatcher -> liveTremoloAmountChangedListeners -> remove (
+                                                               this );
+    dispatcher -> liveTremoloSpeedChangedListeners -> remove (
+                                                              this );
+    dispatcher -> liveVolumeChangedListeners -> remove (
+                                                        this );
+    dispatcher -> frameListeners -> remove (
+                                            this );
 }
 
 void
@@ -151,27 +152,33 @@ void
     PROCESS_PARAMETER (
                        Cutoff
                      , UnsignedInt
-                     , CutoffParameterChanged );
+                     , CutoffParameterChanged
+                     , dispatcher->cutoffParameterChangedListeners );
     PROCESS_PARAMETER (
                        Resonance
                      , UnsignedInt
-                     , ResonanceParameterChanged );
+                     , ResonanceParameterChanged
+                     , dispatcher->resonanceParameterChangedListeners );
     PROCESS_PARAMETER (
                        LowPass
                      , Boolean
-                     , LowPassParameterChanged );
+                     , LowPassParameterChanged
+                     , dispatcher->lowPassParameterChangedListeners );
     PROCESS_PARAMETER (
                        BandPass
                      , Boolean
-                     , BandPassParameterChanged );
+                     , BandPassParameterChanged
+                     , dispatcher->bandPassParameterChangedListeners );
     PROCESS_PARAMETER (
                        HighPass
                      , Boolean
-                     , HighPassParameterChanged );
+                     , HighPassParameterChanged
+                     , dispatcher->highPassParameterChangedListeners );
     PROCESS_PARAMETER (
                        Volume
                      , UnsignedInt
-                     , VolumeParameterChanged );
+                     , VolumeParameterChanged
+                     , dispatcher->volumeParameterChangedListeners );
 }
 
 void
@@ -182,53 +189,66 @@ void
     PROCESS_VOICE_PARAMETER (
                              Program
                            , UnsignedInt
-                           , ProgramParameterChanged );
+                           , ProgramParameterChanged
+                           , dispatcher->programParameterChangedListeners );
     PROCESS_VOICE_PARAMETER (
                              PulseWidth
                            , SignedPercent
-                           , PulseWidthParameterChanged );
+                           , PulseWidthParameterChanged
+                           , dispatcher->pulseWidthParameterChangedListeners );
     PROCESS_VOICE_PARAMETER (
                              Attack
                            , UnsignedInt
-                           , AttackParameterChanged );
+                           , AttackParameterChanged
+                           , dispatcher->attackParameterChangedListeners );
     PROCESS_VOICE_PARAMETER (
                              Decay
                            , UnsignedInt
-                           , DecayParameterChanged );
+                           , DecayParameterChanged
+                           , dispatcher->decayParameterChangedListeners );
     PROCESS_VOICE_PARAMETER (
                              Sustain
                            , UnsignedInt
-                           , SustainParameterChanged );
+                           , SustainParameterChanged
+                           , dispatcher->sustainParameterChangedListeners );
     PROCESS_VOICE_PARAMETER (
                              Release
                            , UnsignedInt
-                           , ReleaseParameterChanged );
+                           , ReleaseParameterChanged
+                           , dispatcher->releaseParameterChangedListeners );
     PROCESS_VOICE_PARAMETER (
                              FilterVoice
                            , Boolean
-                           , FilterVoiceParameterChanged );
+                           , FilterVoiceParameterChanged
+                           , dispatcher->filterVoiceParameterChangedListeners );
     PROCESS_VOICE_PARAMETER (
                              PitchBend
                            , SignedPercent
-                           , PitchBendParameterChanged );
+                           , PitchBendParameterChanged
+                           , dispatcher->pitchBendParameterChangedListeners );
     PROCESS_VOICE_PARAMETER (
                              VibratoAmount
                            , UnsignedPercent
-                           , VibratoAmountParameterChanged );
+                           , VibratoAmountParameterChanged
+                           , dispatcher->vibratoAmountParameterChangedListeners );
     PROCESS_VOICE_PARAMETER (
                              VibratoDelay
                            , UnsignedInt
-                           , VibratoDelayParameterChanged );
+                           , VibratoDelayParameterChanged
+                           , dispatcher->vibratoDelayParameterChangedListeners );
     PROCESS_VOICE_PARAMETER (
                              VibratoSpeed
                            , UnsignedPercent
-                           , VibratoSpeedParameterChanged );
+                           , VibratoSpeedParameterChanged
+                           , dispatcher->vibratoSpeedParameterChangedListeners );
     PROCESS_VOICE_PARAMETER (
                              TremoloAmount
                            , UnsignedPercent
-                           , TremoloAmountParameterChanged );
+                           , TremoloAmountParameterChanged
+                           , dispatcher->tremoloAmountParameterChangedListeners );
     PROCESS_VOICE_PARAMETER (
                              TremoloSpeed
                            , UnsignedPercent
-                           , TremoloSpeedParameterChanged );
+                           , TremoloSpeedParameterChanged
+                           , dispatcher->tremoloSpeedParameterChangedListeners );
 }

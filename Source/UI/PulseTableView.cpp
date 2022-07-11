@@ -34,7 +34,12 @@
 //[/MiscUserDefs]
 
 //==============================================================================
-PulseTableView::PulseTableView ()
+PulseTableView::PulseTableView (
+        const std::shared_ptr < EventDispatcher >& dispatcher
+        )
+    :
+    dispatcher (
+                dispatcher )
 {
     //[Constructor_pre] You can add your own custom stuff here..
     //[/Constructor_pre]
@@ -43,47 +48,38 @@ PulseTableView::PulseTableView ()
     //[UserPreSize]
     //[/UserPreSize]
 
-    setSize (600, 400);
+    setSize (
+             600
+           , 400 );
 
 
     //[Constructor] You can add your own custom stuff here..
     addMouseListener (
                       this
-                    , true
-                     );
-
-    SharedResourcePointer < ListenerList < BankProgramChanged > > () -> add (
-                                                                             this
-                                                                            );
-    SharedResourcePointer < ListenerList < PatchEditorShowNoteTable > > () -> add (
-                                                                                   this
-                                                                                  );
-    SharedResourcePointer < ListenerList < PatchEditorShowPulseTable > > () -> add (
-                                                                                    this
-                                                                                   );
-    SharedResourcePointer < ListenerList < PatchEditorShowWaveTable > > () -> add (
-                                                                                   this
-                                                                                  );
+                    , true );
+    dispatcher -> bankProgramChangedListeners -> add (
+                                                      this );
+    dispatcher -> patchEditorShowNoteTableListeners -> add (
+                                                            this );
+    dispatcher -> patchEditorShowPulseTableListeners -> add (
+                                                             this );
+    dispatcher -> patchEditorShowWaveTableListeners -> add (
+                                                            this );
     //[/Constructor]
 }
 
-PulseTableView::~PulseTableView()
+PulseTableView::~PulseTableView ()
 {
     //[Destructor_pre]. You can add your own custom destruction code here..
-    SharedResourcePointer < ListenerList < BankProgramChanged > > () -> remove (
-                                                                                this
-                                                                               );
-    SharedResourcePointer < ListenerList < PatchEditorShowNoteTable > > () -> remove (
-                                                                                      this
-                                                                                     );
-    SharedResourcePointer < ListenerList < PatchEditorShowPulseTable > > () -> remove (
-                                                                                       this
-                                                                                      );
-    SharedResourcePointer < ListenerList < PatchEditorShowWaveTable > > () -> remove (
-                                                                                      this
-                                                                                     );
+    dispatcher -> bankProgramChangedListeners -> remove (
+                                                         this );
+    dispatcher -> patchEditorShowNoteTableListeners -> remove (
+                                                               this );
+    dispatcher -> patchEditorShowPulseTableListeners -> remove (
+                                                                this );
+    dispatcher -> patchEditorShowWaveTableListeners -> remove (
+                                                               this );
     //[/Destructor_pre]
-
 
 
     //[Destructor]. You can add your own custom destruction code here..
@@ -92,7 +88,10 @@ PulseTableView::~PulseTableView()
 }
 
 //==============================================================================
-void PulseTableView::paint (juce::Graphics& g)
+void
+    PulseTableView::paint (
+            Graphics& g
+            )
 {
     //[UserPrePaint] Add your own custom painting code here..
     //[/UserPrePaint]
@@ -101,7 +100,8 @@ void PulseTableView::paint (juce::Graphics& g)
     //[/UserPaint]
 }
 
-void PulseTableView::resized()
+void
+    PulseTableView::resized ()
 {
     //[UserPreResize] Add your own custom resize code here..
     //[/UserPreResize]
@@ -113,45 +113,40 @@ void PulseTableView::resized()
                                  0
                                , 8 + i * 24
                                , 590
-                               , 24
-                                );
+                               , 24 );
     }
     auto min_bounds = static_cast < int > ( 8 + ( rows . size () + 1 ) * 24 );
-    if ( min_bounds < 184 )
-    {
-        min_bounds = 184;
-    }
-
+    if ( min_bounds < 184 ) { min_bounds = 184; }
     setBounds (
                0
              , 0
              , 590
-             , min_bounds
-              );
+             , min_bounds );
     //[/UserResized]
 }
 
-void PulseTableView::mouseUp (const juce::MouseEvent& e)
+void
+    PulseTableView::mouseUp (
+            const MouseEvent& e
+            )
 {
     //[UserCode_mouseUp] -- Add your code here...
     if ( e . mods . isLeftButtonDown () )
     {
         const auto clicked = e . originalComponent;
-
         for ( selectedRow = 0 ; selectedRow < rows . size () ; selectedRow++ )
         {
             const auto r = rows [ selectedRow ];
             if ( r == clicked || r -> isParentOf (
-                                                  clicked
-                                                 ) ) //{
+                                                  clicked ) )
+            {
+                //{
                 break;
+            }
         }
-
-        pulseTableSelectionChangedListeners -> call (
-                                                     &PulseTableSelectionChanged::onPulseTableSelectionChanged
-                                                   , selectedRow
-                                                    );
-
+        dispatcher -> pulseTableSelectionChangedListeners -> call (
+                                                                   &PulseTableSelectionChanged::onPulseTableSelectionChanged
+                                                                 , selectedRow );
         repaint ();
         getParentComponent () -> repaint ();
     }
@@ -159,24 +154,20 @@ void PulseTableView::mouseUp (const juce::MouseEvent& e)
 }
 
 
-
 //[MiscUserCode] You can add your own definitions of your custom methods or any other code here...
 void
     PulseTableView::onBankProgramChanged (
             String                                   old_id
-          , ReferenceCountedObjectPtr < SidProgram > program
+          , const ReferenceCountedObjectPtr < SidProgram > program
             )
 {
     const auto pulse_table = program -> GetPulseTable ();
-
     if ( rows . size () > 0 )
     {
         removeAllChildren ();
-
         rows . clear ();
     }
-
-    if (pulse_table != nullptr)
+    if ( pulse_table != nullptr )
     {
         for ( unsigned int i = 0 ; i < pulse_table -> GetPulseTableSize () ; i++ )
         {
@@ -185,13 +176,14 @@ void
             if ( ( pulse_row & 0xF000 ) == 0x0000 )
             {
                 // row
-                auto ptr = new PulseTableRow ();
+                auto ptr = new PulseTableRow (
+                                              dispatcher );
                 ptr -> Set (
                             i
                           , pulse_row );
                 ptr -> setBounds (
                                   0
-                                , 8 + i * 24
+                                , 8 + static_cast < int > ( i ) * 24
                                 , 590
                                 , 24 );
                 addAndMakeVisible (
@@ -202,13 +194,14 @@ void
             else
             {
                 // command
-                auto ptc = new PulseTableCommandRow ();
+                auto ptc = new PulseTableCommandRow (
+                                                     dispatcher );
                 ptc -> Set (
                             i
                           , pulse_row );
                 ptc -> setBounds (
                                   0
-                                , 8 + i * 24
+                                , 8 + static_cast < int > ( i ) * 24
                                 , 590
                                 , 24 );
                 addAndMakeVisible (
@@ -220,228 +213,178 @@ void
     }
 }
 
-
 void
     PulseTableView::onPatchEditorDeleteTableRowClicked ()
 {
     removeChildComponent (
-                          rows [ selectedRow ]
-                         );
+                          rows [ selectedRow ] );
     rows . remove (
-                   selectedRow
-                  );
-
+                   selectedRow );
     for ( auto i = selectedRow ; i < rows . size () ; i++ )
     {
         rows [ i ] -> setBounds (
                                  0
                                , 8 + i * 24
                                , 590
-                               , 24
-                                );
+                               , 24 );
         rows [ i ] -> Set (
                            i
-                         , rows [ i ] -> Get ()
-                          );
+                         , rows [ i ] -> Get () );
     }
-
-    pulseTableSelectionChangedListeners -> call (
-                                                 &PulseTableSelectionChanged::onPulseTableSelectionChanged
-                                               , selectedRow
-                                                );
+    dispatcher -> pulseTableSelectionChangedListeners -> call (
+                                                               &PulseTableSelectionChanged::onPulseTableSelectionChanged
+                                                             , selectedRow );
 }
-
 
 void
     PulseTableView::onPatchEditorNewTableCommandClicked ()
 {
-    auto ptc = new PulseTableCommandRow ();
-
+    auto ptc = new PulseTableCommandRow (
+                                         dispatcher );
     if ( selectedRow >= rows . size () )
     {
         const auto i = static_cast < int > ( rows . size () );
         ptc -> Set (
                     i
-                  , 0x1000
-                   );
+                  , 0x1000 );
         ptc -> setBounds (
                           0
                         , 8 + i * 24
                         , 590
-                        , 24
-                         );
+                        , 24 );
         rows . add (
-                    ptc
-                   );
+                    ptc );
     }
     else
     {
         ptc -> Set (
                     selectedRow
-                  , 0x1000
-                   );
+                  , 0x1000 );
         ptc -> setBounds (
                           0
                         , 8 + selectedRow * 24
                         , 590
-                        , 24
-                         );
+                        , 24 );
         rows . insert (
                        selectedRow
-                     , ptc
-                      );
-
+                     , ptc );
         for ( auto i = selectedRow + 1 ; i < rows . size () ; i++ )
         {
             rows [ i ] -> setBounds (
                                      0
                                    , 8 + i * 24
                                    , 590
-                                   , 24
-                                    );
+                                   , 24 );
             rows [ i ] -> Set (
                                i
-                             , rows [ i ] -> Get ()
-                              );
+                             , rows [ i ] -> Get () );
         }
     }
     setBounds (
                0
              , 0
              , 590
-             , static_cast < int > ( rows . size () * 24 + 16 )
-              );
-
+             , static_cast < int > ( rows . size () * 24 + 16 ) );
     addAndMakeVisible (
-                       ptc
-                      );
+                       ptc );
     repaint ();
     getParentComponent () -> repaint ();
-
     selectedRow++;
-    pulseTableSelectionChangedListeners -> call (
-                                                 &PulseTableSelectionChanged::onPulseTableSelectionChanged
-                                               , selectedRow
-                                                );
+    dispatcher -> pulseTableSelectionChangedListeners -> call (
+                                                               &PulseTableSelectionChanged::onPulseTableSelectionChanged
+                                                             , selectedRow );
 }
-
 
 void
     PulseTableView::onPatchEditorNewTableRowClicked ()
 {
-    auto ptr = new PulseTableRow ();
-
+    auto ptr = new PulseTableRow (
+                                  dispatcher );
     if ( selectedRow >= rows . size () )
     {
         const auto i = static_cast < int > ( rows . size () );
         ptr -> Set (
                     i
-                  , 2048
-                   );
+                  , 2048 );
         ptr -> setBounds (
                           0
                         , 8 + i * 24
                         , 590
-                        , 24
-                         );
+                        , 24 );
         rows . add (
-                    ptr
-                   );
+                    ptr );
     }
     else
     {
         ptr -> Set (
                     selectedRow
-                  , 2048
-                   );
+                  , 2048 );
         ptr -> setBounds (
                           0
                         , 8 + selectedRow * 24
                         , 590
-                        , 24
-                         );
+                        , 24 );
         rows . insert (
                        selectedRow
-                     , ptr
-                      );
-
+                     , ptr );
         for ( auto i = selectedRow + 1 ; i < rows . size () ; i++ )
         {
             rows [ i ] -> setBounds (
                                      0
                                    , 8 + i * 24
                                    , 590
-                                   , 24
-                                    );
+                                   , 24 );
             rows [ i ] -> Set (
                                i
-                             , rows [ i ] -> Get ()
-                              );
+                             , rows [ i ] -> Get () );
         }
     }
     setBounds (
                0
              , 0
              , 590
-             , static_cast < int > ( rows . size () * 24 + 16 )
-              );
-
+             , static_cast < int > ( rows . size () * 24 + 16 ) );
     addAndMakeVisible (
-                       ptr
-                      );
+                       ptr );
     repaint ();
     getParentComponent () -> repaint ();
-
     selectedRow++;
-    pulseTableSelectionChangedListeners -> call (
-                                                 &PulseTableSelectionChanged::onPulseTableSelectionChanged
-                                               , selectedRow
-                                                );
+    dispatcher -> pulseTableSelectionChangedListeners -> call (
+                                                               &PulseTableSelectionChanged::onPulseTableSelectionChanged
+                                                             , selectedRow );
 }
-
 
 void
     PulseTableView::onPatchEditorShowNoteTable ()
 {
-    SharedResourcePointer < ListenerList < PatchEditorNewTableRowClicked > > () -> remove (
-                                                                                           this
-                                                                                          );
-    SharedResourcePointer < ListenerList < PatchEditorNewTableCommandClicked > > () -> remove (
-                                                                                               this
-                                                                                              );
-    SharedResourcePointer < ListenerList < PatchEditorDeleteTableRowClicked > > () -> remove (
-                                                                                              this
-                                                                                             );
+    dispatcher -> patchEditorNewWavetableRowClickedListeners -> remove (
+                                                                        this );
+    dispatcher -> patchEditorNewWavetableCommandClickedListeners -> remove (
+                                                                            this );
+    dispatcher -> patchEditorDeleteWavetableRowClickedListeners -> remove (
+                                                                           this );
 }
-
 
 void
     PulseTableView::onPatchEditorShowPulseTable ()
 {
-    SharedResourcePointer < ListenerList < PatchEditorNewTableRowClicked > > () -> add (
-                                                                                        this
-                                                                                       );
-    SharedResourcePointer < ListenerList < PatchEditorNewTableCommandClicked > > () -> add (
-                                                                                            this
-                                                                                           );
-    SharedResourcePointer < ListenerList < PatchEditorDeleteTableRowClicked > > () -> add (
-                                                                                           this
-                                                                                          );
+    dispatcher -> patchEditorNewWavetableRowClickedListeners -> add (
+                                                                     this );
+    dispatcher -> patchEditorNewWavetableCommandClickedListeners -> add (
+                                                                         this );
+    dispatcher -> patchEditorDeleteWavetableRowClickedListeners -> add (
+                                                                        this );
 }
-
 
 void
     PulseTableView::onPatchEditorShowWaveTable ()
 {
-    SharedResourcePointer < ListenerList < PatchEditorNewTableRowClicked > > () -> remove (
-                                                                                           this
-                                                                                          );
-    SharedResourcePointer < ListenerList < PatchEditorNewTableCommandClicked > > () -> remove (
-                                                                                               this
-                                                                                              );
-    SharedResourcePointer < ListenerList < PatchEditorDeleteTableRowClicked > > () -> remove (
-                                                                                              this
-                                                                                             );
+    dispatcher -> patchEditorNewWavetableRowClickedListeners -> remove (
+                                                                        this );
+    dispatcher -> patchEditorNewWavetableCommandClickedListeners -> remove (
+                                                                            this );
+    dispatcher -> patchEditorDeleteWavetableRowClickedListeners -> remove (
+                                                                           this );
 }
 
 
@@ -475,4 +418,3 @@ END_JUCER_METADATA
 
 //[EndFile] You can add extra defines here...
 //[/EndFile]
-

@@ -21,11 +21,7 @@
 
 //[Headers]     -- You can add your own extra header files here --
 #include <JuceHeader.h>
-
-
 #include "../Listeners/ListenerInitializer.h"
-
-
 class Patches;
 // ReSharper disable once CppInconsistentNaming
 class SIDStepLookAndFeel;
@@ -110,7 +106,9 @@ class LiveMode final
 {
 public:
     //==============================================================================
-    LiveMode ();
+    LiveMode (
+            std::shared_ptr < EventDispatcher > dispatcher
+            );
 
     ~LiveMode () override;
 
@@ -341,98 +339,99 @@ public:
     static const int   removeButtonDown_pngSize;
 private:
     //[UserVariables]   -- You can add your own custom variables in this section.
-    ScopedPointer < SIDStepLookAndFeel > look;
-    ScopedPointer < Patches >            patches;
-    bool                                 armed;
-    bool                                 quarterNoteTicked {};
+    std::shared_ptr < EventDispatcher >    dispatcher;
+    std::shared_ptr < SIDStepLookAndFeel > look;
+    std::shared_ptr < Patches >            patches;
+    bool                                   armed;
+    bool                                   quarterNoteTicked {};
     //[/UserVariables]
 
     //==============================================================================
-    std::unique_ptr < Slider >       volumeSlider;
-    std::unique_ptr < Label >        volumeLabel;
-    std::unique_ptr < Slider >       patch1Slider;
-    std::unique_ptr < Slider >       attack1Slider;
-    std::unique_ptr < Slider >       decay1Slider;
-    std::unique_ptr < Slider >       sustain1Slider;
-    std::unique_ptr < Slider >       release1Slider;
-    std::unique_ptr < Slider >       pitchBend1Slider;
-    std::unique_ptr < Slider >       vibratoAmount1Slider;
-    std::unique_ptr < Slider >       vibratoSpeed1Slider;
-    std::unique_ptr < Slider >       pulseWidth1Slider;
-    std::unique_ptr < Slider >       vibratoDelay1Slider;
-    std::unique_ptr < Slider >       patch2Slider;
-    std::unique_ptr < Slider >       attack2Slider;
-    std::unique_ptr < Slider >       decay2Slider;
-    std::unique_ptr < Slider >       sustain2Slider;
-    std::unique_ptr < Slider >       release2Slider;
-    std::unique_ptr < Slider >       pitchBend2Slider;
-    std::unique_ptr < Slider >       vibratoAmount2Slider;
-    std::unique_ptr < Slider >       vibratoSpeed2Slider;
-    std::unique_ptr < Slider >       pulseWidth2Slider;
-    std::unique_ptr < Slider >       vibratoDelay2Slider;
-    std::unique_ptr < Slider >       patch3Slider;
-    std::unique_ptr < Slider >       attack3Slider;
-    std::unique_ptr < Slider >       decay3Slider;
-    std::unique_ptr < Slider >       sustain3Slider;
-    std::unique_ptr < Slider >       release3Slider;
-    std::unique_ptr < Slider >       pitchBend3Slider;
-    std::unique_ptr < Slider >       vibratoAmount3Slider;
-    std::unique_ptr < Slider >       vibratoSpeed3Slider;
-    std::unique_ptr < Slider >       pulseWidth3Slider;
-    std::unique_ptr < Slider >       vibratoDelay3Slider;
-    std::unique_ptr < Slider >       cutoffSlider;
-    std::unique_ptr < Slider >       resonanceSlider;
-    std::unique_ptr < Label >        patch1Label;
-    std::unique_ptr < Label >        attack1Label;
-    std::unique_ptr < Label >        decay1Label;
-    std::unique_ptr < Label >        sustain1Label;
-    std::unique_ptr < Label >        release1Label;
-    std::unique_ptr < Label >        pitchBend1Label;
-    std::unique_ptr < Label >        vibratoAmount1Label;
-    std::unique_ptr < Label >        vibratoSpeed1Label;
-    std::unique_ptr < Label >        pulseWidth1Label;
-    std::unique_ptr < Label >        vibratoDelay1Label;
-    std::unique_ptr < Label >        patch2Label;
-    std::unique_ptr < Label >        attack2Label;
-    std::unique_ptr < Label >        decay2Label;
-    std::unique_ptr < Label >        sustain2Label;
-    std::unique_ptr < Label >        release2Label;
-    std::unique_ptr < Label >        pitchBend2Label;
-    std::unique_ptr < Label >        vibratoAmount2Label;
-    std::unique_ptr < Label >        vibratoSpeed2Label;
-    std::unique_ptr < Label >        pulseWidth2Label;
-    std::unique_ptr < Label >        vibratoDelay2Label;
-    std::unique_ptr < Label >        patch3Label;
-    std::unique_ptr < Label >        attack3Label;
-    std::unique_ptr < Label >        decay3Label;
-    std::unique_ptr < Label >        sustain3Label;
-    std::unique_ptr < Label >        release3Label;
-    std::unique_ptr < Label >        pitchBend3Label;
-    std::unique_ptr < Label >        vibratoAmount3Label;
-    std::unique_ptr < Label >        vibratoSpeed3Label;
-    std::unique_ptr < Label >        pulseWidth3Label;
-    std::unique_ptr < Label >        vibratoDelay3Label;
-    std::unique_ptr < Label >        cutoffLabel;
-    std::unique_ptr < Label >        resonanceLabel;
-    std::unique_ptr < Label >        titleLabel;
-    std::unique_ptr < Label >        artistLabel;
-    std::unique_ptr < ImageButton >  exportButton;
-    std::unique_ptr < Viewport >     patchesViewport;
-    std::unique_ptr < ToggleButton > filter1Checkbox;
-    std::unique_ptr < ToggleButton > filter2Checkbox;
-    std::unique_ptr < ToggleButton > filter3Checkbox;
-    std::unique_ptr < ToggleButton > filterLowPassCheckbox;
-    std::unique_ptr < ToggleButton > filterBandPassCheckbox;
-    std::unique_ptr < ToggleButton > filterHighPassCheckbox;
-    std::unique_ptr < ImageButton >  patchEditorButton;
-    std::unique_ptr < ImageButton >  addPatchButton;
-    std::unique_ptr < ImageButton >  replacePatchButton;
-    std::unique_ptr < ImageButton >  removePatchButton;
-    std::unique_ptr < PatchSelector >      patchSelector;
-    Image                            cachedImage_liveModeBackdrop_png_1;
-    Image                            cachedImage_recordIndicator_png_2;
-    Image                            cachedImage_liveModeButtonDown_png_3;
-    Image                            cachedImage_recordIndicatorblink_png_4;
+    std::unique_ptr < Slider >        volumeSlider;
+    std::unique_ptr < Label >         volumeLabel;
+    std::unique_ptr < Slider >        patch1Slider;
+    std::unique_ptr < Slider >        attack1Slider;
+    std::unique_ptr < Slider >        decay1Slider;
+    std::unique_ptr < Slider >        sustain1Slider;
+    std::unique_ptr < Slider >        release1Slider;
+    std::unique_ptr < Slider >        pitchBend1Slider;
+    std::unique_ptr < Slider >        vibratoAmount1Slider;
+    std::unique_ptr < Slider >        vibratoSpeed1Slider;
+    std::unique_ptr < Slider >        pulseWidth1Slider;
+    std::unique_ptr < Slider >        vibratoDelay1Slider;
+    std::unique_ptr < Slider >        patch2Slider;
+    std::unique_ptr < Slider >        attack2Slider;
+    std::unique_ptr < Slider >        decay2Slider;
+    std::unique_ptr < Slider >        sustain2Slider;
+    std::unique_ptr < Slider >        release2Slider;
+    std::unique_ptr < Slider >        pitchBend2Slider;
+    std::unique_ptr < Slider >        vibratoAmount2Slider;
+    std::unique_ptr < Slider >        vibratoSpeed2Slider;
+    std::unique_ptr < Slider >        pulseWidth2Slider;
+    std::unique_ptr < Slider >        vibratoDelay2Slider;
+    std::unique_ptr < Slider >        patch3Slider;
+    std::unique_ptr < Slider >        attack3Slider;
+    std::unique_ptr < Slider >        decay3Slider;
+    std::unique_ptr < Slider >        sustain3Slider;
+    std::unique_ptr < Slider >        release3Slider;
+    std::unique_ptr < Slider >        pitchBend3Slider;
+    std::unique_ptr < Slider >        vibratoAmount3Slider;
+    std::unique_ptr < Slider >        vibratoSpeed3Slider;
+    std::unique_ptr < Slider >        pulseWidth3Slider;
+    std::unique_ptr < Slider >        vibratoDelay3Slider;
+    std::unique_ptr < Slider >        cutoffSlider;
+    std::unique_ptr < Slider >        resonanceSlider;
+    std::unique_ptr < Label >         patch1Label;
+    std::unique_ptr < Label >         attack1Label;
+    std::unique_ptr < Label >         decay1Label;
+    std::unique_ptr < Label >         sustain1Label;
+    std::unique_ptr < Label >         release1Label;
+    std::unique_ptr < Label >         pitchBend1Label;
+    std::unique_ptr < Label >         vibratoAmount1Label;
+    std::unique_ptr < Label >         vibratoSpeed1Label;
+    std::unique_ptr < Label >         pulseWidth1Label;
+    std::unique_ptr < Label >         vibratoDelay1Label;
+    std::unique_ptr < Label >         patch2Label;
+    std::unique_ptr < Label >         attack2Label;
+    std::unique_ptr < Label >         decay2Label;
+    std::unique_ptr < Label >         sustain2Label;
+    std::unique_ptr < Label >         release2Label;
+    std::unique_ptr < Label >         pitchBend2Label;
+    std::unique_ptr < Label >         vibratoAmount2Label;
+    std::unique_ptr < Label >         vibratoSpeed2Label;
+    std::unique_ptr < Label >         pulseWidth2Label;
+    std::unique_ptr < Label >         vibratoDelay2Label;
+    std::unique_ptr < Label >         patch3Label;
+    std::unique_ptr < Label >         attack3Label;
+    std::unique_ptr < Label >         decay3Label;
+    std::unique_ptr < Label >         sustain3Label;
+    std::unique_ptr < Label >         release3Label;
+    std::unique_ptr < Label >         pitchBend3Label;
+    std::unique_ptr < Label >         vibratoAmount3Label;
+    std::unique_ptr < Label >         vibratoSpeed3Label;
+    std::unique_ptr < Label >         pulseWidth3Label;
+    std::unique_ptr < Label >         vibratoDelay3Label;
+    std::unique_ptr < Label >         cutoffLabel;
+    std::unique_ptr < Label >         resonanceLabel;
+    std::unique_ptr < Label >         titleLabel;
+    std::unique_ptr < Label >         artistLabel;
+    std::unique_ptr < ImageButton >   exportButton;
+    std::unique_ptr < Viewport >      patchesViewport;
+    std::unique_ptr < ToggleButton >  filter1Checkbox;
+    std::unique_ptr < ToggleButton >  filter2Checkbox;
+    std::unique_ptr < ToggleButton >  filter3Checkbox;
+    std::unique_ptr < ToggleButton >  filterLowPassCheckbox;
+    std::unique_ptr < ToggleButton >  filterBandPassCheckbox;
+    std::unique_ptr < ToggleButton >  filterHighPassCheckbox;
+    std::unique_ptr < ImageButton >   patchEditorButton;
+    std::unique_ptr < ImageButton >   addPatchButton;
+    std::unique_ptr < ImageButton >   replacePatchButton;
+    std::unique_ptr < ImageButton >   removePatchButton;
+    std::unique_ptr < PatchSelector > patchSelector;
+    Image                             cachedImage_liveModeBackdrop_png_1;
+    Image                             cachedImage_recordIndicator_png_2;
+    Image                             cachedImage_liveModeButtonDown_png_3;
+    Image                             cachedImage_recordIndicatorblink_png_4;
 
 
     //==============================================================================

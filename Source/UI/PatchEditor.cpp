@@ -32,18 +32,22 @@
 //[/MiscUserDefs]
 
 //==============================================================================
-PatchEditor::PatchEditor ()
+PatchEditor::PatchEditor (
+        const std::shared_ptr < EventDispatcher >& dispatcher
+        )
+    :
+    dispatcher (
+                dispatcher )
 {
     //[Constructor_pre] You can add your own custom stuff here..
-    look = new SIDStepLookAndFeel;
+    look = std::make_shared < SIDStepLookAndFeel > ();
     setLookAndFeel (
-                    look );
+                    look . get () );
     //core = nullptr;
     //[/Constructor_pre]
 
-    attackSlider . reset (
-                          new Slider (
-                                      "new slider" ) );
+    attackSlider = std::make_unique < Slider > (
+                                                "new slider" );
     addAndMakeVisible (
                        attackSlider . get () );
     attackSlider -> setRange (
@@ -698,7 +702,8 @@ PatchEditor::PatchEditor ()
                                      , 608
                                      , 184 );
     wavetableText . reset (
-                           new WavetableText () );
+                           new WavetableText (
+                                              dispatcher ) );
     addAndMakeVisible (
                        wavetableText . get () );
     wavetableText -> setBounds (
@@ -809,7 +814,8 @@ PatchEditor::PatchEditor ()
                              , 154
                              , 26 );
     waveformView . reset (
-                          new WaveformView () );
+                          new WaveformView (
+                                            dispatcher ) );
     addAndMakeVisible (
                        waveformView . get () );
     waveformView -> setBounds (
@@ -1058,7 +1064,8 @@ PatchEditor::PatchEditor ()
                                         , 48
                                         , 48 );
     bankMenu . reset (
-                      new BankMenu () );
+                      new BankMenu (
+                                    dispatcher ) );
     addAndMakeVisible (
                        bankMenu . get () );
     bankMenu -> setBounds (
@@ -1067,7 +1074,8 @@ PatchEditor::PatchEditor ()
                          , 324
                          , 448 );
     saveAsDialog . reset (
-                          new SavePatchAsDialog () );
+                          new SavePatchAsDialog (
+                                                 dispatcher ) );
     addAndMakeVisible (
                        saveAsDialog . get () );
     saveAsDialog -> setBounds (
@@ -1076,7 +1084,8 @@ PatchEditor::PatchEditor ()
                              , 476
                              , 98 );
     noteTableText . reset (
-                           new NoteTableText () );
+                           new NoteTableText (
+                                              dispatcher ) );
     addAndMakeVisible (
                        noteTableText . get () );
     noteTableText -> setBounds (
@@ -1085,7 +1094,8 @@ PatchEditor::PatchEditor ()
                               , 131
                               , 17 );
     pulseTableText . reset (
-                            new PulseTableText () );
+                            new PulseTableText (
+                                                dispatcher ) );
     addAndMakeVisible (
                        pulseTableText . get () );
     pulseTableText -> setBounds (
@@ -1101,9 +1111,10 @@ PatchEditor::PatchEditor ()
                                                                        , patchEditorButtonDown_pngSize );
 
     //[UserPreSize]
-    wavetable = new WavetableView ();
+    wavetable = std::make_shared < WavetableView > (
+                                                    dispatcher );
     commandTableViewport -> setViewedComponent (
-                                                wavetable
+                                                wavetable . get ()
                                               , false );
     commandTableViewport -> getVerticalScrollBar () -> setAutoHide (
                                                                     false );
@@ -1111,20 +1122,23 @@ PatchEditor::PatchEditor ()
                             false );
     saveAsDialog -> setVisible (
                                 false );
-    noteTable  = new NoteTableView ();
-    pulseTable = new PulseTableView ();
-    SharedResourcePointer < ListenerList < BankProgramChanged > > () -> add (
-                                                                             this );
-    SharedResourcePointer < ListenerList < BankStartSaveAs > > () -> add (
-                                                                          this );
-    SharedResourcePointer < ListenerList < LivePatchEditorModeClicked > > () -> add (
-                                                                                     this );
-    SharedResourcePointer < ListenerList < PatchEditorShowNoteTable > > () -> add (
-                                                                                   this );
-    SharedResourcePointer < ListenerList < PatchEditorShowPulseTable > > () -> add (
-                                                                                    this );
-    SharedResourcePointer < ListenerList < PatchEditorShowWaveTable > > () -> add (
-                                                                                   this );
+    noteTable = std::make_shared < NoteTableView > (
+                                                    dispatcher );
+    pulseTable = std::make_shared < PulseTableView > (
+                                                      dispatcher );
+
+    dispatcher -> bankProgramChangedListeners -> add (
+                                                      this );
+    dispatcher -> bankStartSaveAsListeners -> add (
+                                                   this );
+    dispatcher -> livePatchEditorModeClickedListeners -> add (
+                                                              this );
+    dispatcher -> patchEditorShowNoteTableListeners -> add (
+                                                            this );
+    dispatcher -> patchEditorShowPulseTableListeners -> add (
+                                                             this );
+    dispatcher -> patchEditorShowWaveTableListeners -> add (
+                                                            this );
     //[/UserPreSize]
 
     setSize (
@@ -1139,18 +1153,18 @@ PatchEditor::PatchEditor ()
 PatchEditor::~PatchEditor ()
 {
     //[Destructor_pre]. You can add your own custom destruction code here..
-    SharedResourcePointer < ListenerList < BankProgramChanged > > () -> remove (
-                                                                                this );
-    SharedResourcePointer < ListenerList < BankStartSaveAs > > () -> remove (
-                                                                             this );
-    SharedResourcePointer < ListenerList < LivePatchEditorModeClicked > > () -> remove (
-                                                                                        this );
-    SharedResourcePointer < ListenerList < PatchEditorShowNoteTable > > () -> remove (
-                                                                                      this );
-    SharedResourcePointer < ListenerList < PatchEditorShowPulseTable > > () -> remove (
-                                                                                       this );
-    SharedResourcePointer < ListenerList < PatchEditorShowWaveTable > > () -> remove (
-                                                                                      this );
+    dispatcher -> bankProgramChangedListeners -> remove (
+                                                         this );
+    dispatcher -> bankStartSaveAsListeners -> remove (
+                                                      this );
+    dispatcher -> livePatchEditorModeClickedListeners -> remove (
+                                                                 this );
+    dispatcher -> patchEditorShowNoteTableListeners -> remove (
+                                                               this );
+    dispatcher -> patchEditorShowPulseTableListeners -> remove (
+                                                                this );
+    dispatcher -> patchEditorShowWaveTableListeners -> remove (
+                                                               this );
     //[/Destructor_pre]
 
     attackSlider               = nullptr;
@@ -1214,7 +1228,10 @@ void
     g . fillAll (
                  Colours::white );
     {
-        int x = 0, y = 0, width = 1024, height = 576;
+        const auto x = 0;
+        const auto y = 0;
+        const auto width = 1024;
+        const auto height = 576;
         //[UserPaintCustomArguments] Customize the painting arguments here..
         //[/UserPaintCustomArguments]
         g . setColour (
@@ -1231,7 +1248,10 @@ void
                      , cachedImage_patchEditorBackdrop_png_1 . getHeight () );
     }
     {
-        int x = 208, y = 544, width = 154, height = 26;
+        const auto x = 208;
+        const auto y = 544;
+        const auto width = 154;
+        const auto height = 26;
         //[UserPaintCustomArguments] Customize the painting arguments here..
         //[/UserPaintCustomArguments]
         g . setColour (
@@ -1277,11 +1297,11 @@ void
                                 attackSlider -> getTextFromValue (
                                                                   attackSlider -> getValue () )
                               , dontSendNotification );
-        patchEditorAttackChangedListeners -> call (
-                                                   &PatchEditorAttackChanged::onPatchEditorAttackChanged
-                                                 , static_cast < unsigned int > ( attackSlider -> getValue () ) );
-        SharedResourcePointer < ListenerList < BankRepaintWaveform > > () -> call (
-                                                                                   &BankRepaintWaveform::onBankRepaintWaveform );
+        dispatcher -> patchEditorAttackChangedListeners -> call (
+                                                                 &PatchEditorAttackChanged::onPatchEditorAttackChanged
+                                                               , static_cast < unsigned int > ( attackSlider -> getValue () ) );
+        dispatcher -> bankRepaintWaveformListeners -> call (
+                                                            &BankRepaintWaveform::onBankRepaintWaveform );
         //[/UserSliderCode_attackSlider]
     }
     else if ( slider_that_was_moved == decaySlider . get () )
@@ -1291,11 +1311,11 @@ void
                                decaySlider -> getTextFromValue (
                                                                 decaySlider -> getValue () )
                              , dontSendNotification );
-        patchEditorDecayChangedListeners -> call (
-                                                  &PatchEditorDecayChanged::onPatchEditorDecayChanged
-                                                , static_cast < unsigned int > ( decaySlider -> getValue () ) );
-        SharedResourcePointer < ListenerList < BankRepaintWaveform > > () -> call (
-                                                                                   &BankRepaintWaveform::onBankRepaintWaveform );
+        dispatcher -> patchEditorDecayChangedListeners -> call (
+                                                                &PatchEditorDecayChanged::onPatchEditorDecayChanged
+                                                              , static_cast < unsigned int > ( decaySlider -> getValue () ) );
+        dispatcher -> bankRepaintWaveformListeners -> call (
+                                                            &BankRepaintWaveform::onBankRepaintWaveform );
         //[/UserSliderCode_decaySlider]
     }
     else if ( slider_that_was_moved == sustainSlider . get () )
@@ -1305,11 +1325,11 @@ void
                                  sustainSlider -> getTextFromValue (
                                                                     sustainSlider -> getValue () )
                                , dontSendNotification );
-        patchEditorSustainChangedListeners -> call (
-                                                    &PatchEditorSustainChanged::onPatchEditorSustainChanged
-                                                  , static_cast < unsigned int > ( sustainSlider -> getValue () ) );
-        SharedResourcePointer < ListenerList < BankRepaintWaveform > > () -> call (
-                                                                                   &BankRepaintWaveform::onBankRepaintWaveform );
+        dispatcher -> patchEditorSustainChangedListeners -> call (
+                                                                  &PatchEditorSustainChanged::onPatchEditorSustainChanged
+                                                                , static_cast < unsigned int > ( sustainSlider -> getValue () ) );
+        dispatcher -> bankRepaintWaveformListeners -> call (
+                                                            &BankRepaintWaveform::onBankRepaintWaveform );
         //[/UserSliderCode_sustainSlider]
     }
     else if ( slider_that_was_moved == releaseSlider . get () )
@@ -1319,11 +1339,11 @@ void
                                  releaseSlider -> getTextFromValue (
                                                                     releaseSlider -> getValue () )
                                , dontSendNotification );
-        patchEditorReleaseChangedListeners -> call (
-                                                    &PatchEditorReleaseChanged::onPatchEditorReleaseChanged
-                                                  , static_cast < unsigned int > ( releaseSlider -> getValue () ) );
-        SharedResourcePointer < ListenerList < BankRepaintWaveform > > () -> call (
-                                                                                   &BankRepaintWaveform::onBankRepaintWaveform );
+        dispatcher -> patchEditorReleaseChangedListeners -> call (
+                                                                  &PatchEditorReleaseChanged::onPatchEditorReleaseChanged
+                                                                , static_cast < unsigned int > ( releaseSlider -> getValue () ) );
+        dispatcher -> bankRepaintWaveformListeners -> call (
+                                                            &BankRepaintWaveform::onBankRepaintWaveform );
         //[/UserSliderCode_releaseSlider]
     }
     else if ( slider_that_was_moved == pitchBendRangeSlider . get () )
@@ -1333,11 +1353,11 @@ void
                                         pitchBendRangeSlider -> getTextFromValue (
                                                                                   pitchBendRangeSlider -> getValue () )
                                       , dontSendNotification );
-        patchEditorPitchBendRangeChangedListeners -> call (
-                                                           &PatchEditorPitchBendRangeChanged::onPatchEditorPitchBendRangeChanged
-                                                         , static_cast < unsigned int > ( pitchBendRangeSlider -> getValue () ) );
-        SharedResourcePointer < ListenerList < BankRepaintWaveform > > () -> call (
-                                                                                   &BankRepaintWaveform::onBankRepaintWaveform );
+        dispatcher -> patchEditorPitchBendRangeChangedListeners -> call (
+                                                                         &PatchEditorPitchBendRangeChanged::onPatchEditorPitchBendRangeChanged
+                                                                       , static_cast < unsigned int > ( pitchBendRangeSlider -> getValue () ) );
+        dispatcher -> bankRepaintWaveformListeners -> call (
+                                                            &BankRepaintWaveform::onBankRepaintWaveform );
         //[/UserSliderCode_pitchBendRangeSlider]
     }
     else if ( slider_that_was_moved == vibratoRangeSlider . get () )
@@ -1347,11 +1367,11 @@ void
                                       vibratoRangeSlider -> getTextFromValue (
                                                                               vibratoRangeSlider -> getValue () )
                                     , dontSendNotification );
-        patchEditorVibratoRangeChangedListeners -> call (
-                                                         &PatchEditorVibratoRangeChanged::onPatchEditorVibratoRangeChanged
-                                                       , static_cast < unsigned int > ( vibratoRangeSlider -> getValue () ) );
-        SharedResourcePointer < ListenerList < BankRepaintWaveform > > () -> call (
-                                                                                   &BankRepaintWaveform::onBankRepaintWaveform );
+        dispatcher -> patchEditorVibratoRangeChangedListeners -> call (
+                                                                       &PatchEditorVibratoRangeChanged::onPatchEditorVibratoRangeChanged
+                                                                     , static_cast < unsigned int > ( vibratoRangeSlider -> getValue () ) );
+        dispatcher -> bankRepaintWaveformListeners -> call (
+                                                            &BankRepaintWaveform::onBankRepaintWaveform );
         //[/UserSliderCode_vibratoRangeSlider]
     }
     else if ( slider_that_was_moved == vibratoSpeedSlider . get () )
@@ -1361,11 +1381,11 @@ void
                                       vibratoSpeedSlider -> getTextFromValue (
                                                                               vibratoSpeedSlider -> getValue () )
                                     , dontSendNotification );
-        patchEditorVibratoSpeedChangedListeners -> call (
-                                                         &PatchEditorVibratoSpeedChanged::onPatchEditorVibratoSpeedChanged
-                                                       , static_cast < unsigned int > ( vibratoSpeedSlider -> getValue () ) );
-        SharedResourcePointer < ListenerList < BankRepaintWaveform > > () -> call (
-                                                                                   &BankRepaintWaveform::onBankRepaintWaveform );
+        dispatcher -> patchEditorVibratoSpeedChangedListeners -> call (
+                                                                       &PatchEditorVibratoSpeedChanged::onPatchEditorVibratoSpeedChanged
+                                                                     , static_cast < unsigned int > ( vibratoSpeedSlider -> getValue () ) );
+        dispatcher -> bankRepaintWaveformListeners -> call (
+                                                            &BankRepaintWaveform::onBankRepaintWaveform );
         //[/UserSliderCode_vibratoSpeedSlider]
     }
     else if ( slider_that_was_moved == pulseWidthRangeSlider . get () )
@@ -1375,11 +1395,11 @@ void
                                          pulseWidthRangeSlider -> getTextFromValue (
                                                                                     pulseWidthRangeSlider -> getValue () )
                                        , dontSendNotification );
-        patchEditorPulseWidthRangeChangedListeners -> call (
-                                                            &PatchEditorPulseWidthRangeChanged::onPatchEditorPulseWidthRangeChanged
-                                                          , static_cast < unsigned int > ( pulseWidthRangeSlider -> getValue () ) );
-        SharedResourcePointer < ListenerList < BankRepaintWaveform > > () -> call (
-                                                                                   &BankRepaintWaveform::onBankRepaintWaveform );
+        dispatcher -> patchEditorPulseWidthRangeChangedListeners -> call (
+                                                                          &PatchEditorPulseWidthRangeChanged::onPatchEditorPulseWidthRangeChanged
+                                                                        , static_cast < unsigned int > ( pulseWidthRangeSlider -> getValue () ) );
+        dispatcher -> bankRepaintWaveformListeners -> call (
+                                                            &BankRepaintWaveform::onBankRepaintWaveform );
         //[/UserSliderCode_pulseWidthRangeSlider]
     }
     else if ( slider_that_was_moved == vibratoDelaySlider . get () )
@@ -1389,11 +1409,11 @@ void
                                       vibratoDelaySlider -> getTextFromValue (
                                                                               vibratoDelaySlider -> getValue () )
                                     , dontSendNotification );
-        patchEditorVibratoDelayChangedListeners -> call (
-                                                         &PatchEditorVibratoDelayChanged::onPatchEditorVibratoDelayChanged
-                                                       , static_cast < unsigned int > ( vibratoDelaySlider -> getValue () ) );
-        SharedResourcePointer < ListenerList < BankRepaintWaveform > > () -> call (
-                                                                                   &BankRepaintWaveform::onBankRepaintWaveform );
+        dispatcher -> patchEditorVibratoDelayChangedListeners -> call (
+                                                                       &PatchEditorVibratoDelayChanged::onPatchEditorVibratoDelayChanged
+                                                                     , static_cast < unsigned int > ( vibratoDelaySlider -> getValue () ) );
+        dispatcher -> bankRepaintWaveformListeners -> call (
+                                                            &BankRepaintWaveform::onBankRepaintWaveform );
         //[/UserSliderCode_vibratoDelaySlider]
     }
     else if ( slider_that_was_moved == vibratoDefaultAmountSlider . get () )
@@ -1403,11 +1423,11 @@ void
                                               vibratoDefaultAmountSlider -> getTextFromValue (
                                                                                               vibratoDefaultAmountSlider -> getValue () ) + "%"
                                             , dontSendNotification );
-        patchEditorVibratoDefaultAmountChangedListeners -> call (
-                                                                 &PatchEditorVibratoDefaultAmountChanged::onPatchEditorVibratoDefaultAmountChanged
-                                                               , static_cast < float > ( vibratoDefaultAmountSlider -> getValue () / 100.0 ) );
-        SharedResourcePointer < ListenerList < BankRepaintWaveform > > () -> call (
-                                                                                   &BankRepaintWaveform::onBankRepaintWaveform );
+        dispatcher -> patchEditorVibratoDefaultAmountChangedListeners -> call (
+                                                                               &PatchEditorVibratoDefaultAmountChanged::onPatchEditorVibratoDefaultAmountChanged
+                                                                             , static_cast < float > ( vibratoDefaultAmountSlider -> getValue () / 100.0 ) );
+        dispatcher -> bankRepaintWaveformListeners -> call (
+                                                            &BankRepaintWaveform::onBankRepaintWaveform );
         //[/UserSliderCode_vibratoDefaultAmountSlider]
     }
     else if ( slider_that_was_moved == vibratoDefaultSpeedSlider . get () )
@@ -1417,11 +1437,11 @@ void
                                              vibratoDefaultSpeedSlider -> getTextFromValue (
                                                                                             vibratoDefaultSpeedSlider -> getValue () ) + "%"
                                            , dontSendNotification );
-        patchEditorVibratoDefaultSpeedChangedListeners -> call (
-                                                                &PatchEditorVibratoDefaultSpeedChanged::onPatchEditorVibratoDefaultSpeedChanged
-                                                              , static_cast < float > ( vibratoDefaultSpeedSlider -> getValue () / 100.0 ) );
-        SharedResourcePointer < ListenerList < BankRepaintWaveform > > () -> call (
-                                                                                   &BankRepaintWaveform::onBankRepaintWaveform );
+        dispatcher -> patchEditorVibratoDefaultSpeedChangedListeners -> call (
+                                                                              &PatchEditorVibratoDefaultSpeedChanged::onPatchEditorVibratoDefaultSpeedChanged
+                                                                            , static_cast < float > ( vibratoDefaultSpeedSlider -> getValue () / 100.0 ) );
+        dispatcher -> bankRepaintWaveformListeners -> call (
+                                                            &BankRepaintWaveform::onBankRepaintWaveform );
         //[/UserSliderCode_vibratoDefaultSpeedSlider]
     }
     else if ( slider_that_was_moved == pulseWidthCenterSlider . get () )
@@ -1431,11 +1451,11 @@ void
                                           pulseWidthCenterSlider -> getTextFromValue (
                                                                                       pulseWidthCenterSlider -> getValue () )
                                         , dontSendNotification );
-        patchEditorPulseWidthCenterChangedListeners -> call (
-                                                             &PatchEditorPulseWidthCenterChanged::onPatchEditorPulseWidthCenterChanged
-                                                           , static_cast < unsigned int > ( pulseWidthCenterSlider -> getValue () ) );
-        SharedResourcePointer < ListenerList < BankRepaintWaveform > > () -> call (
-                                                                                   &BankRepaintWaveform::onBankRepaintWaveform );
+        dispatcher -> patchEditorPulseWidthCenterChangedListeners -> call (
+                                                                           &PatchEditorPulseWidthCenterChanged::onPatchEditorPulseWidthCenterChanged
+                                                                         , static_cast < unsigned int > ( pulseWidthCenterSlider -> getValue () ) );
+        dispatcher -> bankRepaintWaveformListeners -> call (
+                                                            &BankRepaintWaveform::onBankRepaintWaveform );
         //[/UserSliderCode_pulseWidthCenterSlider]
     }
     else if ( slider_that_was_moved == pulseWidthDefaultSlider . get () )
@@ -1445,11 +1465,11 @@ void
                                            pulseWidthDefaultSlider -> getTextFromValue (
                                                                                         pulseWidthDefaultSlider -> getValue () ) + "%"
                                          , dontSendNotification );
-        patchEditorPulseWidthDefaultChangedListeners -> call (
-                                                              &PatchEditorPulseWidthDefaultChanged::onPatchEditorPulseWidthDefaultChanged
-                                                            , static_cast < float > ( pulseWidthDefaultSlider -> getValue () / 100.0 ) );
-        SharedResourcePointer < ListenerList < BankRepaintWaveform > > () -> call (
-                                                                                   &BankRepaintWaveform::onBankRepaintWaveform );
+        dispatcher -> patchEditorPulseWidthDefaultChangedListeners -> call (
+                                                                            &PatchEditorPulseWidthDefaultChanged::onPatchEditorPulseWidthDefaultChanged
+                                                                          , static_cast < float > ( pulseWidthDefaultSlider -> getValue () / 100.0 ) );
+        dispatcher -> bankRepaintWaveformListeners -> call (
+                                                            &BankRepaintWaveform::onBankRepaintWaveform );
         //[/UserSliderCode_pulseWidthDefaultSlider]
     }
 
@@ -1531,9 +1551,9 @@ void
     else if ( label_that_has_changed == patchName . get () )
     {
         //[UserLabelCode_patchName] -- add your label text handling code here..
-        patchEditorNameChangedListeners -> call (
-                                                 &PatchEditorNameChanged::onPatchEditorNameChanged
-                                               , patchName -> getText () );
+        dispatcher -> patchEditorNameChangedListeners -> call (
+                                                               &PatchEditorNameChanged::onPatchEditorNameChanged
+                                                             , patchName -> getText () );
         //[/UserLabelCode_patchName]
     }
     else if ( label_that_has_changed == vibratoDefaultAmountLabel . get () )
@@ -1584,10 +1604,10 @@ void
         // In order to do this, Bank will need to respond to the PatchEditorLiveModeClicked event.  Not sure how to manage
         // the timing yet, but SIDStep2 will STILL need to respond to the PatchEditorLiveModeClicked event as WELL, because
         // a refresh during a save as must be executed immediately to allow for properly refreshing oldID.
-        SharedResourcePointer < ListenerList < BankRefreshLive > > () -> call (
-                                                                               &BankRefreshLive::onBankRefreshLive );
-        patchEditorLiveModeClickedListeners -> call (
-                                                     &PatchEditorLiveModeClicked::onPatchEditorLiveModeClicked );
+        dispatcher -> bankRefreshLive -> call (
+                                               &BankRefreshLive::onBankRefreshLive );
+        dispatcher -> patchEditorLiveModeClickedListeners -> call (
+                                                                   &PatchEditorLiveModeClicked::onPatchEditorLiveModeClicked );
         setVisible (
                     false );
         //[/UserButtonCode_liveModeButton]
@@ -1602,28 +1622,28 @@ void
     else if ( button_that_was_clicked == newRowButton . get () )
     {
         //[UserButtonCode_newRowButton] -- add your button handler code here..
-        patchEditorNewWavetableRowClickedListeners -> call (
-                                                            &PatchEditorNewTableRowClicked::onPatchEditorNewTableRowClicked );
-        SharedResourcePointer < ListenerList < BankRepaintWaveform > > () -> call (
-                                                                                   &BankRepaintWaveform::onBankRepaintWaveform );
+        dispatcher -> patchEditorNewWavetableRowClickedListeners -> call (
+                                                                          &PatchEditorNewTableRowClicked::onPatchEditorNewTableRowClicked );
+        dispatcher -> bankRepaintWaveformListeners -> call (
+                                                            &BankRepaintWaveform::onBankRepaintWaveform );
         //[/UserButtonCode_newRowButton]
     }
     else if ( button_that_was_clicked == newCommandButton . get () )
     {
         //[UserButtonCode_newCommandButton] -- add your button handler code here..
-        patchEditorNewWavetableCommandClickedListeners -> call (
-                                                                &PatchEditorNewTableCommandClicked::onPatchEditorNewTableCommandClicked );
-        SharedResourcePointer < ListenerList < BankRepaintWaveform > > () -> call (
-                                                                                   &BankRepaintWaveform::onBankRepaintWaveform );
+        dispatcher -> patchEditorNewWavetableCommandClickedListeners -> call (
+                                                                              &PatchEditorNewTableCommandClicked::onPatchEditorNewTableCommandClicked );
+        dispatcher -> bankRepaintWaveformListeners -> call (
+                                                            &BankRepaintWaveform::onBankRepaintWaveform );
         //[/UserButtonCode_newCommandButton]
     }
     else if ( button_that_was_clicked == deleteButton . get () )
     {
         //[UserButtonCode_deleteButton] -- add your button handler code here..
-        patchEditorDeleteWavetableRowClickedListeners -> call (
-                                                               &PatchEditorDeleteTableRowClicked::onPatchEditorDeleteTableRowClicked );
-        SharedResourcePointer < ListenerList < BankRepaintWaveform > > () -> call (
-                                                                                   &BankRepaintWaveform::onBankRepaintWaveform );
+        dispatcher -> patchEditorDeleteWavetableRowClickedListeners -> call (
+                                                                             &PatchEditorDeleteTableRowClicked::onPatchEditorDeleteTableRowClicked );
+        dispatcher -> bankRepaintWaveformListeners -> call (
+                                                            &BankRepaintWaveform::onBankRepaintWaveform );
         //[/UserButtonCode_deleteButton]
     }
 
@@ -1639,15 +1659,12 @@ void
           , const ReferenceCountedObjectPtr < SidProgram > program
             )
 {
-    //currentProgram = program;
-
     patchName -> setText (
                           program -> GetName ()
                         , dontSendNotification );
     const auto e  = program -> GetEnvelope ();
     const auto ex = program -> GetExpression ();
     const auto v  = ex -> getVibrato ();
-    const auto t  = ex -> getTremolo ();
     attackSlider -> setValue (
                               e -> getAttack ()
                             , dontSendNotification );
@@ -1736,8 +1753,8 @@ void
     MessageManager::callAsync (
                                [=] ()
                                {
-                                   SharedResourcePointer < ListenerList < PatchEditorShowWaveTable > > () -> call (
-                                                                                                                   &PatchEditorShowWaveTable::onPatchEditorShowWaveTable );
+                                   //dispatcher -> patchEditorShowWaveTableListeners -> call (
+                                   //                                                         &PatchEditorShowWaveTable::onPatchEditorShowWaveTable );
                                } );
 }
 
@@ -1763,7 +1780,7 @@ void
     PatchEditor::onPatchEditorShowNoteTable ()
 {
     commandTableViewport -> setViewedComponent (
-                                                noteTable
+                                                noteTable . get ()
                                               , false );
     noteTable -> resized ();
 }
@@ -1772,7 +1789,7 @@ void
     PatchEditor::onPatchEditorShowPulseTable ()
 {
     commandTableViewport -> setViewedComponent (
-                                                pulseTable
+                                                pulseTable . get ()
                                               , false );
     pulseTable -> resized ();
 }
@@ -1781,7 +1798,7 @@ void
     PatchEditor::onPatchEditorShowWaveTable ()
 {
     commandTableViewport -> setViewedComponent (
-                                                wavetable
+                                                wavetable . get ()
                                               , false );
     wavetable -> resized ();
 }

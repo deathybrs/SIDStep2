@@ -72,7 +72,7 @@ AudioProcessor* JUCE_API JUCE_CALLTYPE createPluginFilterOfType (AudioProcessor:
 {
     AudioProcessor::setTypeOfNextNewPlugin (type);
     AudioProcessor* const pluginInstance = createPluginFilter();
-    AudioProcessor::setTypeOfNextNewPlugin (AudioProcessor::wrapperType_Undefined);
+    AudioProcessor::setTypeOfNextNewPlugin(AudioProcessor::wrapperType_Undefined);
 
     // your createPluginFilter() method must return an object!
     jassert (pluginInstance != nullptr && pluginInstance->wrapperType == type);

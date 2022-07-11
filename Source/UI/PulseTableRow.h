@@ -21,8 +21,6 @@
 
 //[Headers]     -- You can add your own extra header files here --
 #include <JuceHeader.h>
-
-
 #include "AbstractPulseTableRow.h"
 
 
@@ -37,13 +35,16 @@
     Describe your class and how it works here!
                                                                     //[/Comments]
 */
-class PulseTableRow
-        : public AbstractPulseTableRow ,
-          public juce::Label::Listener
+class PulseTableRow final
+        : public AbstractPulseTableRow
+        , public Label::Listener
 {
 public:
     //==============================================================================
-    PulseTableRow ();
+    explicit
+        PulseTableRow (
+                const std::shared_ptr < EventDispatcher >& dispatcher
+                );
 
     ~PulseTableRow () override;
 
@@ -62,7 +63,7 @@ public:
 
     void
         paint (
-                juce::Graphics& g
+                Graphics& g
                 ) override;
 
     void
@@ -70,28 +71,25 @@ public:
 
     void
         labelTextChanged (
-                juce::Label* labelThatHasChanged
+                Label* label_that_has_changed
                 ) override;
 
     // Binary resources:
     static const char* pulseTableRow_png;
     static const int   pulseTableRow_pngSize;
-
-
 private:
     //[UserVariables]   -- You can add your own custom variables in this section.
     //[/UserVariables]
 
     //==============================================================================
-    std::unique_ptr < juce::Label > rowLabel;
-    std::unique_ptr < juce::Label > pulseCycle;
-    juce::Image                     cachedImage_pulseTableRow_png_1;
+    std::unique_ptr < Label > rowLabel;
+    std::unique_ptr < Label > pulseCycle;
+    Image                     cachedImage_pulseTableRow_png_1;
 
 
     //==============================================================================
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (
-                                                  PulseTableRow
-                                                 )
+                                                  PulseTableRow )
 };
 
 

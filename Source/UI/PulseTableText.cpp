@@ -28,7 +28,12 @@
 //[/MiscUserDefs]
 
 //==============================================================================
-PulseTableText::PulseTableText ()
+PulseTableText::PulseTableText (
+        std::shared_ptr < EventDispatcher > dispatcher
+        )
+    :
+    dispatcher (
+                dispatcher )
 {
     //[Constructor_pre] You can add your own custom stuff here..
     //[/Constructor_pre]
@@ -89,9 +94,8 @@ void PulseTableText::resized()
 void PulseTableText::mouseUp (const juce::MouseEvent& e)
 {
     //[UserCode_mouseUp] -- Add your code here...
-    SharedResourcePointer < ListenerList < PatchEditorShowPulseTable > > () -> call (
-                                                                                     &PatchEditorShowPulseTable::onPatchEditorShowPulseTable
-                                                                                    );
+    dispatcher -> patchEditorShowPulseTableListeners -> call (
+                                                              &PatchEditorShowPulseTable::onPatchEditorShowPulseTable );
     //[/UserCode_mouseUp]
 }
 

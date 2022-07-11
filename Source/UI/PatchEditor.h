@@ -62,7 +62,10 @@ class PatchEditor final
 {
 public:
     //==============================================================================
-    PatchEditor ();
+    explicit
+        PatchEditor (
+                const std::shared_ptr < EventDispatcher >& dispatcher
+                );
 
     ~PatchEditor () override;
 
@@ -147,76 +150,55 @@ public:
     static const int   deleteDown_pngSize;
 private:
     //[UserVariables]   -- You can add your own custom variables in this section.
-    ScopedPointer < SIDStepLookAndFeel >                                              look;
-    ScopedPointer < WavetableView >                                                   wavetable;
-    ScopedPointer < NoteTableView >                                                   noteTable;
-    ScopedPointer < PulseTableView >                                                  pulseTable;
-    SharedResourcePointer < ListenerList < PatchEditorNameChanged > >                 patchEditorNameChangedListeners;
-    SharedResourcePointer < ListenerList < PatchEditorAttackChanged > >               patchEditorAttackChangedListeners;
-    SharedResourcePointer < ListenerList < PatchEditorDecayChanged > >                patchEditorDecayChangedListeners;
-    SharedResourcePointer < ListenerList < PatchEditorSustainChanged > >              patchEditorSustainChangedListeners;
-    SharedResourcePointer < ListenerList < PatchEditorReleaseChanged > >              patchEditorReleaseChangedListeners;
-    SharedResourcePointer < ListenerList < PatchEditorPitchBendRangeChanged > >       patchEditorPitchBendRangeChangedListeners;
-    SharedResourcePointer < ListenerList < PatchEditorPulseWidthRangeChanged > >      patchEditorPulseWidthRangeChangedListeners;
-    SharedResourcePointer < ListenerList < PatchEditorPulseWidthCenterChanged > >     patchEditorPulseWidthCenterChangedListeners;
-    SharedResourcePointer < ListenerList < PatchEditorPulseWidthDefaultChanged > >    patchEditorPulseWidthDefaultChangedListeners;
-    SharedResourcePointer < ListenerList < PatchEditorTremoloRangeChanged > >         patchEditorTremoloRangeChangedListeners;
-    SharedResourcePointer < ListenerList < PatchEditorTremoloSpeedChanged > >         patchEditorTremoloSpeedChangedListeners;
-    SharedResourcePointer < ListenerList < PatchEditorTremoloDefaultAmountChanged > > patchEditorTremoloDefaultAmountChangedListeners;
-    SharedResourcePointer < ListenerList < PatchEditorTremoloDefaultSpeedChanged > >  patchEditorTremoloDefaultSpeedChangedListeners;
-    SharedResourcePointer < ListenerList < PatchEditorVibratoRangeChanged > >         patchEditorVibratoRangeChangedListeners;
-    SharedResourcePointer < ListenerList < PatchEditorVibratoSpeedChanged > >         patchEditorVibratoSpeedChangedListeners;
-    SharedResourcePointer < ListenerList < PatchEditorVibratoDelayChanged > >         patchEditorVibratoDelayChangedListeners;
-    SharedResourcePointer < ListenerList < PatchEditorVibratoDefaultAmountChanged > > patchEditorVibratoDefaultAmountChangedListeners;
-    SharedResourcePointer < ListenerList < PatchEditorVibratoDefaultSpeedChanged > >  patchEditorVibratoDefaultSpeedChangedListeners;
-    SharedResourcePointer < ListenerList < PatchEditorNewTableRowClicked > >          patchEditorNewWavetableRowClickedListeners;
-    SharedResourcePointer < ListenerList < PatchEditorNewTableCommandClicked > >      patchEditorNewWavetableCommandClickedListeners;
-    SharedResourcePointer < ListenerList < PatchEditorDeleteTableRowClicked > >       patchEditorDeleteWavetableRowClickedListeners;
-    SharedResourcePointer < ListenerList < PatchEditorLiveModeClicked > >             patchEditorLiveModeClickedListeners;
+    std::shared_ptr < EventDispatcher >    dispatcher;
+    std::shared_ptr < SIDStepLookAndFeel > look;
+    std::shared_ptr < WavetableView >      wavetable;
+    std::shared_ptr < NoteTableView >      noteTable;
+    std::shared_ptr < PulseTableView >     pulseTable;
     //[/UserVariables]
 
     //==============================================================================
-    std::unique_ptr < Slider >      attackSlider;
-    std::unique_ptr < Slider >      decaySlider;
-    std::unique_ptr < Slider >      sustainSlider;
-    std::unique_ptr < Slider >      releaseSlider;
-    std::unique_ptr < Slider >      pitchBendRangeSlider;
-    std::unique_ptr < Slider >      vibratoRangeSlider;
-    std::unique_ptr < Slider >      vibratoSpeedSlider;
-    std::unique_ptr < Slider >      pulseWidthRangeSlider;
-    std::unique_ptr < Slider >      vibratoDelaySlider;
-    std::unique_ptr < Label >       attackLabel;
-    std::unique_ptr < Label >       decayLabel;
-    std::unique_ptr < Label >       sustainLabel;
-    std::unique_ptr < Label >       releaseLabel;
-    std::unique_ptr < Label >       pitchBendRangeLabel;
-    std::unique_ptr < Label >       vibratoRangeLabel;
-    std::unique_ptr < Label >       vibratoSpeedLabel;
-    std::unique_ptr < Label >       pulseWidthRangeLabel;
-    std::unique_ptr < Label >       vibratoDelayLabel;
-    std::unique_ptr < Label >       patchName;
-    std::unique_ptr < ImageButton > liveModeButton;
-    std::unique_ptr < ImageButton > menuButton;
-    std::unique_ptr < Viewport >    commandTableViewport;
+    std::unique_ptr < Slider >            attackSlider;
+    std::unique_ptr < Slider >            decaySlider;
+    std::unique_ptr < Slider >            sustainSlider;
+    std::unique_ptr < Slider >            releaseSlider;
+    std::unique_ptr < Slider >            pitchBendRangeSlider;
+    std::unique_ptr < Slider >            vibratoRangeSlider;
+    std::unique_ptr < Slider >            vibratoSpeedSlider;
+    std::unique_ptr < Slider >            pulseWidthRangeSlider;
+    std::unique_ptr < Slider >            vibratoDelaySlider;
+    std::unique_ptr < Label >             attackLabel;
+    std::unique_ptr < Label >             decayLabel;
+    std::unique_ptr < Label >             sustainLabel;
+    std::unique_ptr < Label >             releaseLabel;
+    std::unique_ptr < Label >             pitchBendRangeLabel;
+    std::unique_ptr < Label >             vibratoRangeLabel;
+    std::unique_ptr < Label >             vibratoSpeedLabel;
+    std::unique_ptr < Label >             pulseWidthRangeLabel;
+    std::unique_ptr < Label >             vibratoDelayLabel;
+    std::unique_ptr < Label >             patchName;
+    std::unique_ptr < ImageButton >       liveModeButton;
+    std::unique_ptr < ImageButton >       menuButton;
+    std::unique_ptr < Viewport >          commandTableViewport;
     std::unique_ptr < WavetableText >     wavetableText;
-    std::unique_ptr < ImageButton > newRowButton;
-    std::unique_ptr < ImageButton > newCommandButton;
-    std::unique_ptr < ImageButton > deleteButton;
+    std::unique_ptr < ImageButton >       newRowButton;
+    std::unique_ptr < ImageButton >       newCommandButton;
+    std::unique_ptr < ImageButton >       deleteButton;
     std::unique_ptr < WaveformView >      waveformView;
-    std::unique_ptr < Label >       vibratoDefaultAmountLabel;
-    std::unique_ptr < Label >       vibratoDefaultSpeedLabel;
-    std::unique_ptr < Label >       pulseWidthCenterLabel;
-    std::unique_ptr < Label >       pulseWidthDefaultLabel;
-    std::unique_ptr < Slider >      vibratoDefaultAmountSlider;
-    std::unique_ptr < Slider >      vibratoDefaultSpeedSlider;
-    std::unique_ptr < Slider >      pulseWidthCenterSlider;
-    std::unique_ptr < Slider >      pulseWidthDefaultSlider;
+    std::unique_ptr < Label >             vibratoDefaultAmountLabel;
+    std::unique_ptr < Label >             vibratoDefaultSpeedLabel;
+    std::unique_ptr < Label >             pulseWidthCenterLabel;
+    std::unique_ptr < Label >             pulseWidthDefaultLabel;
+    std::unique_ptr < Slider >            vibratoDefaultAmountSlider;
+    std::unique_ptr < Slider >            vibratoDefaultSpeedSlider;
+    std::unique_ptr < Slider >            pulseWidthCenterSlider;
+    std::unique_ptr < Slider >            pulseWidthDefaultSlider;
     std::unique_ptr < BankMenu >          bankMenu;
     std::unique_ptr < SavePatchAsDialog > saveAsDialog;
     std::unique_ptr < NoteTableText >     noteTableText;
     std::unique_ptr < PulseTableText >    pulseTableText;
-    Image                           cachedImage_patchEditorBackdrop_png_1;
-    Image                           cachedImage_patchEditorButtonDown_png_2;
+    Image                                 cachedImage_patchEditorBackdrop_png_1;
+    Image                                 cachedImage_patchEditorButtonDown_png_2;
 
 
     //==============================================================================

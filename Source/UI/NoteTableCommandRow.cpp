@@ -29,92 +29,159 @@
 //[/MiscUserDefs]
 
 //==============================================================================
-NoteTableCommandRow::NoteTableCommandRow ()
+NoteTableCommandRow::NoteTableCommandRow (
+        const std::shared_ptr < EventDispatcher >& dispatcher
+        )
+    :
+    AbstractNoteTableRow (
+                          dispatcher )
 {
     //[Constructor_pre] You can add your own custom stuff here..
     //[/Constructor_pre]
 
-    commandSelector.reset (new juce::ComboBox ("new combo box"));
-    addAndMakeVisible (commandSelector.get());
-    commandSelector->setEditableText (false);
-    commandSelector->setJustificationType (juce::Justification::centredLeft);
-    commandSelector->setTextWhenNothingSelected (juce::String());
-    commandSelector->setTextWhenNoChoicesAvailable (TRANS("(no choices)"));
-    commandSelector->addItem (TRANS("Goto"), 1);
-    commandSelector->addItem (TRANS("Sustain To"), 2);
-    commandSelector->addItem (TRANS("End"), 3);
-    commandSelector->addListener (this);
-
-    commandSelector->setBounds (54, 0, 160, 24);
-
-    rowLabel.reset (new juce::Label ("new label",
-                                     TRANS("01")));
-    addAndMakeVisible (rowLabel.get());
-    rowLabel->setFont (juce::Font ("C64 Pro Mono", 12.00f, juce::Font::plain).withTypefaceStyle ("Regular"));
-    rowLabel->setJustificationType (juce::Justification::centredRight);
-    rowLabel->setEditable (false, false, false);
-    rowLabel->setColour (juce::Label::textColourId, juce::Colour (0xff5090d0));
-    rowLabel->setColour (juce::TextEditor::textColourId, juce::Colours::black);
-    rowLabel->setColour (juce::TextEditor::backgroundColourId, juce::Colour (0x00000000));
-
-    rowLabel->setBounds (0, 4, 44, 18);
-
-    argumentLabel.reset (new juce::Label ("new label",
-                                          TRANS("01")));
-    addAndMakeVisible (argumentLabel.get());
-    argumentLabel->setFont (juce::Font ("C64 Pro Mono", 12.00f, juce::Font::plain).withTypefaceStyle ("Regular"));
-    argumentLabel->setJustificationType (juce::Justification::centredLeft);
-    argumentLabel->setEditable (true, true, false);
-    argumentLabel->setColour (juce::Label::textColourId, juce::Colour (0xff5090d0));
-    argumentLabel->setColour (juce::TextEditor::textColourId, juce::Colours::black);
-    argumentLabel->setColour (juce::TextEditor::backgroundColourId, juce::Colour (0x00000000));
-    argumentLabel->addListener (this);
-
-    argumentLabel->setBounds (224, 4, 44, 18);
+    commandSelector . reset (
+                             new ComboBox (
+                                           "new combo box" ) );
+    addAndMakeVisible (
+                       commandSelector . get () );
+    commandSelector -> setEditableText (
+                                        false );
+    commandSelector -> setJustificationType (
+                                             Justification::centredLeft );
+    commandSelector -> setTextWhenNothingSelected (
+                                                   String () );
+    commandSelector -> setTextWhenNoChoicesAvailable (
+                                                      TRANS (
+                                                             "(no choices)" ) );
+    commandSelector -> addItem (
+                                TRANS (
+                                       "Goto" )
+                              , 1 );
+    commandSelector -> addItem (
+                                TRANS (
+                                       "Sustain To" )
+                              , 2 );
+    commandSelector -> addItem (
+                                TRANS (
+                                       "End" )
+                              , 3 );
+    commandSelector -> addListener (
+                                    this );
+    commandSelector -> setBounds (
+                                  54
+                                , 0
+                                , 160
+                                , 24 );
+    rowLabel . reset (
+                      new Label (
+                                 "new label"
+                               , TRANS (
+                                        "01" ) ) );
+    addAndMakeVisible (
+                       rowLabel . get () );
+    rowLabel -> setFont (
+                         Font (
+                               "C64 Pro Mono"
+                             , 12.00F
+                             , Font::plain ) . withTypefaceStyle (
+                                                                  "Regular" ) );
+    rowLabel -> setJustificationType (
+                                      Justification::centredRight );
+    rowLabel -> setEditable (
+                             false
+                           , false
+                           , false );
+    rowLabel -> setColour (
+                           Label::textColourId
+                         , Colour (
+                                   0xff5090d0 ) );
+    rowLabel -> setColour (
+                           TextEditor::textColourId
+                         , Colours::black );
+    rowLabel -> setColour (
+                           TextEditor::backgroundColourId
+                         , Colour (
+                                   0x00000000 ) );
+    rowLabel -> setBounds (
+                           0
+                         , 4
+                         , 44
+                         , 18 );
+    argumentLabel . reset (
+                           new Label (
+                                      "new label"
+                                    , TRANS (
+                                             "01" ) ) );
+    addAndMakeVisible (
+                       argumentLabel . get () );
+    argumentLabel -> setFont (
+                              Font (
+                                    "C64 Pro Mono"
+                                  , 12.00F
+                                  , Font::plain ) . withTypefaceStyle (
+                                                                       "Regular" ) );
+    argumentLabel -> setJustificationType (
+                                           Justification::centredLeft );
+    argumentLabel -> setEditable (
+                                  true
+                                , true
+                                , false );
+    argumentLabel -> setColour (
+                                Label::textColourId
+                              , Colour (
+                                        0xff5090d0 ) );
+    argumentLabel -> setColour (
+                                TextEditor::textColourId
+                              , Colours::black );
+    argumentLabel -> setColour (
+                                TextEditor::backgroundColourId
+                              , Colour (
+                                        0x00000000 ) );
+    argumentLabel -> addListener (
+                                  this );
+    argumentLabel -> setBounds (
+                                224
+                              , 4
+                              , 44
+                              , 18 );
 
 
     //[UserPreSize]
     //[/UserPreSize]
 
-    setSize (600, 400);
+    setSize (
+             600
+           , 400 );
 
 
     //[Constructor] You can add your own custom stuff here..
     commandSelector -> setColour (
                                   ComboBox::backgroundColourId
                                 , Colour (
-                                          0xff5090d0
-                                         )
-                                 );
+                                          0xff5090d0 ) );
     commandSelector -> setColour (
                                   ComboBox::textColourId
                                 , Colour (
-                                          0xff181090
-                                         )
-                                 );
+                                          0xff181090 ) );
     commandSelector -> setColour (
                                   ComboBox::buttonColourId
                                 , Colour (
-                                          0xff5090d0
-                                         )
-                                 );
+                                          0xff5090d0 ) );
     commandSelector -> setColour (
                                   ComboBox::arrowColourId
                                 , Colour (
-                                          0xff181090
-                                         )
-                                 );
+                                          0xff181090 ) );
     //[/Constructor]
 }
 
-NoteTableCommandRow::~NoteTableCommandRow()
+NoteTableCommandRow::~NoteTableCommandRow ()
 {
     //[Destructor_pre]. You can add your own custom destruction code here..
     //[/Destructor_pre]
 
     commandSelector = nullptr;
-    rowLabel = nullptr;
-    argumentLabel = nullptr;
+    rowLabel        = nullptr;
+    argumentLabel   = nullptr;
 
 
     //[Destructor]. You can add your own custom destruction code here..
@@ -122,7 +189,10 @@ NoteTableCommandRow::~NoteTableCommandRow()
 }
 
 //==============================================================================
-void NoteTableCommandRow::paint (juce::Graphics& g)
+void
+    NoteTableCommandRow::paint (
+            Graphics& g
+            )
 {
     //[UserPrePaint] Add your own custom painting code here..
     //[/UserPrePaint]
@@ -131,28 +201,25 @@ void NoteTableCommandRow::paint (juce::Graphics& g)
     if ( selected )
     {
         const Colour lt_blue (
-                              0xff5090d0
-                             );
+                              0xff5090d0 );
         g . setColour (
-                       lt_blue
-                      );
+                       lt_blue );
         Path p;
         p . addTriangle (
-                         0.0f
-                       , 0.0f
-                       , 12.0f
-                       , 12.0f
-                       , 0.0f
-                       , 24.0f
-                        );
+                         0.0F
+                       , 0.0F
+                       , 12.0F
+                       , 12.0F
+                       , 0.0F
+                       , 24.0F );
         g . fillPath (
-                      p
-                     );
+                      p );
     }
     //[/UserPaint]
 }
 
-void NoteTableCommandRow::resized()
+void
+    NoteTableCommandRow::resized ()
 {
     //[UserPreResize] Add your own custom resize code here..
     //[/UserPreResize]
@@ -161,28 +228,28 @@ void NoteTableCommandRow::resized()
     //[/UserResized]
 }
 
-void NoteTableCommandRow::comboBoxChanged (juce::ComboBox* comboBoxThatHasChanged)
+void
+    NoteTableCommandRow::comboBoxChanged (
+            ComboBox* combo_box_that_has_changed
+            )
 {
     //[UsercomboBoxChanged_Pre]
     //[/UsercomboBoxChanged_Pre]
 
-    if (comboBoxThatHasChanged == commandSelector.get())
+    if ( combo_box_that_has_changed == commandSelector . get () )
     {
         //[UserComboBoxCode_commandSelector] -- add your combo box handling code here..
         argumentLabel -> setVisible (
-                                     commandSelector -> getSelectedItemIndex () < 2
-                                    );
-        SharedResourcePointer < ListenerList < NoteTableSelectionChanged > > () -> call (
-                                                                                         &NoteTableSelectionChanged::onNoteTableSelectionChanged
-                                                                                       , static_cast < unsigned int > ( row )
-                                                                                        );
-        SharedResourcePointer < ListenerList < NoteTableRowChanged > > () -> call (
-                                                                                   &NoteTableRowChanged::onNoteTableRowChanged
-                                                                                 , Get ()
-                                                                                  );
-        SharedResourcePointer < ListenerList < BankRepaintWaveform > > () -> call (
-                                                                                   &BankRepaintWaveform::onBankRepaintWaveform
-                                                                                  );
+                                     commandSelector -> getSelectedItemIndex () < 2 );
+        dispatcher -> noteTableSelectionChangedListeners -> call (
+                                                                  &NoteTableSelectionChanged::onNoteTableSelectionChanged
+                                                                , static_cast < unsigned int > ( row ) );
+        auto get = Get ();
+        dispatcher -> noteTableRowChangedListeners -> call (
+                                                            &NoteTableRowChanged::onNoteTableRowChanged
+                                                          , get );
+        dispatcher -> bankRepaintWaveformListeners -> call (
+                                                            &BankRepaintWaveform::onBankRepaintWaveform );
         //[/UserComboBoxCode_commandSelector]
     }
 
@@ -190,32 +257,31 @@ void NoteTableCommandRow::comboBoxChanged (juce::ComboBox* comboBoxThatHasChange
     //[/UsercomboBoxChanged_Post]
 }
 
-void NoteTableCommandRow::labelTextChanged (juce::Label* labelThatHasChanged)
+void
+    NoteTableCommandRow::labelTextChanged (
+            Label* label_that_has_changed
+            )
 {
     //[UserlabelTextChanged_Pre]
     //[/UserlabelTextChanged_Pre]
 
-    if (labelThatHasChanged == argumentLabel.get())
+    if ( label_that_has_changed == argumentLabel . get () )
     {
         //[UserLabelCode_argumentLabel] -- add your label text handling code here..
-        SharedResourcePointer < ListenerList < NoteTableSelectionChanged > > () -> call (
-                                                                                         &NoteTableSelectionChanged::onNoteTableSelectionChanged
-                                                                                       , static_cast < unsigned int > ( row )
-                                                                                        );
-        SharedResourcePointer < ListenerList < NoteTableRowChanged > > () -> call (
-                                                                                   &NoteTableRowChanged::onNoteTableRowChanged
-                                                                                 , Get ()
-                                                                                  );
+        dispatcher -> noteTableSelectionChangedListeners -> call (
+                                                                  &NoteTableSelectionChanged::onNoteTableSelectionChanged
+                                                                , static_cast < unsigned int > ( row ) );
+        auto get = Get ();
+        dispatcher -> noteTableRowChangedListeners -> call (
+                                                            &NoteTableRowChanged::onNoteTableRowChanged
+                                                          , get );
         argumentLabel -> setText (
                                   argumentLabel -> getText () . paddedLeft (
                                                                             '0'
-                                                                          , 2
-                                                                           )
-                                , dontSendNotification
-                                 );
-        SharedResourcePointer < ListenerList < BankRepaintWaveform > > () -> call (
-                                                                                   &BankRepaintWaveform::onBankRepaintWaveform
-                                                                                  );
+                                                                          , 2 )
+                                , dontSendNotification );
+        dispatcher -> bankRepaintWaveformListeners -> call (
+                                                            &BankRepaintWaveform::onBankRepaintWaveform );
         //[/UserLabelCode_argumentLabel]
     }
 
@@ -224,83 +290,66 @@ void NoteTableCommandRow::labelTextChanged (juce::Label* labelThatHasChanged)
 }
 
 
-
 //[MiscUserCode] You can add your own definitions of your custom methods or any other code here...
 auto
     NoteTableCommandRow::Get () const -> ArpRow
 {
     ArpRow ret {
-                    COMMAND
-                  , 0
-            };
-
+            COMMAND
+          , 0
+    };
     switch ( commandSelector -> getSelectedItemIndex () )
     {
-        case 0 :
+        case 0:
             ret . value = 0x200;
             break;
-        case 1 :
+        case 1:
             ret . value = 0x400;
             break;
-        default :
+        default:
             ret . value = 0x100;
     }
     ret . value |= argumentLabel -> getText () . getIntValue () - 1;
-
     return ret;
 }
-
 
 void
     NoteTableCommandRow::Set (
             const unsigned row_num
-          , const ArpRow value
+          , const ArpRow   value
             )
 {
-    row              = static_cast < int > ( row_num );
+    row                   = static_cast < int > ( row_num );
     const auto row_string = String (
-                                    row_num + 1
-                                   );
+                                    row_num + 1 );
     rowLabel -> setText (
                          row_string . paddedLeft (
                                                   '0'
-                                                , 2
-                                                 )
-                       , dontSendNotification
-                        );
-
+                                                , 2 )
+                       , dontSendNotification );
     const auto argument_string = String (
-                                         value . value + 1
-                                        );
+                                         value . value + 1 );
     argumentLabel -> setText (
                               argument_string . paddedLeft (
                                                             '0'
-                                                          , 2
-                                                           )
-                            , dontSendNotification
-                             );
-
+                                                          , 2 )
+                            , dontSendNotification );
     const auto i = ( value . value & 0xf00 ) >> 8;
     switch ( i )
     {
-        case 2 :
-        case 4 :
+        case 2: case 4:
             commandSelector -> setSelectedItemIndex (
                                                      i / 2 - 1
-                                                   , dontSendNotification
-                                                    );
+                                                   , dontSendNotification );
             argumentLabel -> setVisible (
-                                         true
-                                        );
+                                         true );
             break;
-        default :
+        default:
             commandSelector -> setSelectedItemIndex (
                                                      2
-                                                   , dontSendNotification
-                                                    );
+                                                   , dontSendNotification );
             argumentLabel -> setVisible (
-                                         false
-                                        );
+                                         false );
             break;
     }
 }
@@ -346,4 +395,3 @@ END_JUCER_METADATA
 
 //[EndFile] You can add extra defines here...
 //[/EndFile]
-

@@ -128,153 +128,152 @@
 #include "WavetableSelectionChanged.h"
 
 
-class ListenerInitializer
+class EventDispatcher
 {
 public:
-    ListenerInitializer ();
+    EventDispatcher ();
 
-    ~ListenerInitializer () = default;
+    ~EventDispatcher () = default;
 
-    ListenerInitializer (
-            const ListenerInitializer& other
+    EventDispatcher (
+            const EventDispatcher& other
             ) = delete;
 
-    ListenerInitializer (
-            ListenerInitializer&& other
+    EventDispatcher (
+            EventDispatcher&& other
             ) = delete;
 
     auto
         operator= (
-                const ListenerInitializer& other
-                ) -> ListenerInitializer& = delete;
+                const EventDispatcher& other
+                ) -> EventDispatcher& = delete;
 
     auto
         operator= (
-                ListenerInitializer&& other
-                ) -> ListenerInitializer& = delete;
+                EventDispatcher&& other
+                ) -> EventDispatcher& = delete;
 
-private:
-    SharedResourcePointer < ListenerList < BankLoad > >            bankLoadListeners;
-    SharedResourcePointer < ListenerList < BankNew > >             bankNewListeners;
-    SharedResourcePointer < ListenerList < BankProgramChanged > >  bankProgramChangedListeners;
-    SharedResourcePointer < ListenerList < BankRefreshLive > >     bankRefreshLive;
-    SharedResourcePointer < ListenerList < BankRepaintWaveform > > bankRepaintWaveformListeners;
-    SharedResourcePointer < ListenerList < BankSave > >            bankSaveListeners;
-    SharedResourcePointer < ListenerList < BankSaveAs > >          bankSaveAsListeners;
-    SharedResourcePointer < ListenerList < BankStartSaveAs > >     bankStartSaveAsListeners;
-    SharedResourcePointer < ListenerList < BankTreeChanged > >     bankTreeChangedListeners;
+    std::shared_ptr < ListenerList < BankLoad > >            bankLoadListeners;
+    std::shared_ptr < ListenerList < BankNew > >             bankNewListeners;
+    std::shared_ptr < ListenerList < BankProgramChanged > >  bankProgramChangedListeners;
+    std::shared_ptr < ListenerList < BankRefreshLive > >     bankRefreshLive;
+    std::shared_ptr < ListenerList < BankRepaintWaveform > > bankRepaintWaveformListeners;
+    std::shared_ptr < ListenerList < BankSave > >            bankSaveListeners;
+    std::shared_ptr < ListenerList < BankSaveAs > >          bankSaveAsListeners;
+    std::shared_ptr < ListenerList < BankStartSaveAs > >     bankStartSaveAsListeners;
+    std::shared_ptr < ListenerList < BankTreeChanged > >     bankTreeChangedListeners;
 
-    SharedResourcePointer < ListenerList < ExportAttackChanged > >        exportAttackChanged;
-    SharedResourcePointer < ListenerList < ExportBandPassChanged > >      exportBandPassChanged;
-    SharedResourcePointer < ListenerList < ExportCutoffChanged > >        exportCutoffChanged;
-    SharedResourcePointer < ListenerList < ExportDecayChanged > >         exportDecayChanged;
-    SharedResourcePointer < ListenerList < ExportHighPassChanged > >      exportHighPassChanged;
-    SharedResourcePointer < ListenerList < ExportLowPassChanged > >       exportLowPassChanged;
-    SharedResourcePointer < ListenerList < ExportPatchChanged > >         exportPatchChanged;
-    SharedResourcePointer < ListenerList < ExportPitchBendChanged > >     exportPitchBendChanged;
-    SharedResourcePointer < ListenerList < ExportPulseWidthChanged > >    exportPulseWidthChanged;
-    SharedResourcePointer < ListenerList < ExportReleaseChanged > >       exportReleaseChanged;
-    SharedResourcePointer < ListenerList < ExportResonanceChanged > >     exportResonanceChanged;
-    SharedResourcePointer < ListenerList < ExportSustainChanged > >       exportSustainChanged;
-    SharedResourcePointer < ListenerList < ExportTremoloAmountChanged > > exportTremoloAmountChanged;
-    SharedResourcePointer < ListenerList < ExportTremoloSpeedChanged > >  exportTremoloSpeedChanged;
-    SharedResourcePointer < ListenerList < ExportVibratoAmountChanged > > exportVibratoAmountChanged;
-    SharedResourcePointer < ListenerList < ExportVibratoSpeedChanged > >  exportVibratoSpeedChanged;
-    SharedResourcePointer < ListenerList < ExportVoiceFilterChanged > >   exportVoiceFilterChanged;
-    SharedResourcePointer < ListenerList < ExportVolumeChanged > >        exportVolumeChanged;
-    SharedResourcePointer < ListenerList < ShowExportManager > >          showExportManager;
+    std::shared_ptr < ListenerList < ExportAttackChanged > >        exportAttackChanged;
+    std::shared_ptr < ListenerList < ExportBandPassChanged > >      exportBandPassChanged;
+    std::shared_ptr < ListenerList < ExportCutoffChanged > >        exportCutoffChanged;
+    std::shared_ptr < ListenerList < ExportDecayChanged > >         exportDecayChanged;
+    std::shared_ptr < ListenerList < ExportHighPassChanged > >      exportHighPassChanged;
+    std::shared_ptr < ListenerList < ExportLowPassChanged > >       exportLowPassChanged;
+    std::shared_ptr < ListenerList < ExportPatchChanged > >         exportPatchChanged;
+    std::shared_ptr < ListenerList < ExportPitchBendChanged > >     exportPitchBendChanged;
+    std::shared_ptr < ListenerList < ExportPulseWidthChanged > >    exportPulseWidthChanged;
+    std::shared_ptr < ListenerList < ExportReleaseChanged > >       exportReleaseChanged;
+    std::shared_ptr < ListenerList < ExportResonanceChanged > >     exportResonanceChanged;
+    std::shared_ptr < ListenerList < ExportSustainChanged > >       exportSustainChanged;
+    std::shared_ptr < ListenerList < ExportTremoloAmountChanged > > exportTremoloAmountChanged;
+    std::shared_ptr < ListenerList < ExportTremoloSpeedChanged > >  exportTremoloSpeedChanged;
+    std::shared_ptr < ListenerList < ExportVibratoAmountChanged > > exportVibratoAmountChanged;
+    std::shared_ptr < ListenerList < ExportVibratoSpeedChanged > >  exportVibratoSpeedChanged;
+    std::shared_ptr < ListenerList < ExportVoiceFilterChanged > >   exportVoiceFilterChanged;
+    std::shared_ptr < ListenerList < ExportVolumeChanged > >        exportVolumeChanged;
+    std::shared_ptr < ListenerList < ShowExportManager > >          showExportManager;
 
-    SharedResourcePointer < ListenerList < LiveAddPatchClicked > >               liveAddPatchClickedListeners;
-    SharedResourcePointer < ListenerList < LiveArtistChanged > >                 liveArtistChangedListeners;
-    SharedResourcePointer < ListenerList < LiveAttackChanged > >                 liveAttackChangedListeners;
-    SharedResourcePointer < ListenerList < LiveBandPassChanged > >               liveBandPassChangedListeners;
-    SharedResourcePointer < ListenerList < LiveCutoffChanged > >                 liveCutoffChangedListeners;
-    SharedResourcePointer < ListenerList < LiveDecayChanged > >                  liveDecayChangedListeners;
-    SharedResourcePointer < ListenerList < LiveDoneExporting > >                 liveDoneExportingListeners;
-    SharedResourcePointer < ListenerList < LiveExportArmed > >                   liveExportArmedListeners;
-    SharedResourcePointer < ListenerList < LiveHighPassChanged > >               liveHighPassChangedListeners;
-    SharedResourcePointer < ListenerList < LiveLowPassChanged > >                liveLowPassChangedListeners;
-    SharedResourcePointer < ListenerList < LivePatchChanged > >                  livePatchChangedListeners;
-    SharedResourcePointer < ListenerList < LivePatchEditorModeClicked > >        livePatchEditorModeClickedListeners;
-    SharedResourcePointer < ListenerList < LivePatchListChanged > >              livePatchListChangedListeners;
-    SharedResourcePointer < ListenerList < LivePatchListMode > >                 livePatchListModeListeners;
-    SharedResourcePointer < ListenerList < LivePatchListSelectedIndexChanged > > livePatchListSelectedIndexChangedListeners;
-    SharedResourcePointer < ListenerList < LivePatchSelected > >                 livePatchSelectedListeners;
-    SharedResourcePointer < ListenerList < LivePitchBendChanged > >              livePitchBendChangedListeners;
-    SharedResourcePointer < ListenerList < LivePulseWidthChanged > >             livePulseWidthChangedListeners;
-    SharedResourcePointer < ListenerList < LiveReleaseChanged > >                liveReleaseChangedListeners;
-    SharedResourcePointer < ListenerList < LiveRemovePatchClicked > >            liveRemovePatchClickedListeners;
-    SharedResourcePointer < ListenerList < LiveReplacePatchClicked > >           liveReplacePatchClickedListeners;
-    SharedResourcePointer < ListenerList < LiveResonanceChanged > >              liveResonanceChangedListeners;
-    SharedResourcePointer < ListenerList < LiveSustainChanged > >                liveSustainChangedListeners;
-    SharedResourcePointer < ListenerList < LiveTitleChanged > >                  liveTitleChangedListeners;
-    SharedResourcePointer < ListenerList < LiveTremoloAmountChanged > >          liveTremoloAmountChangedListeners;
-    SharedResourcePointer < ListenerList < LiveTremoloSpeedChanged > >           liveTremoloSpeedChangedListeners;
-    SharedResourcePointer < ListenerList < LiveVibratoAmountChanged > >          liveVibratoAmountChangedListeners;
-    SharedResourcePointer < ListenerList < LiveVibratoDelayChanged > >           liveVibratoDelayChangedListeners;
-    SharedResourcePointer < ListenerList < LiveVibratoSpeedChanged > >           liveVibratoSpeedChangedListeners;
-    SharedResourcePointer < ListenerList < LiveVoiceFilterChanged > >            liveVoiceFilterChangedListeners;
-    SharedResourcePointer < ListenerList < LiveVolumeChanged > >                 liveVolumeChangedListeners;
-    SharedResourcePointer < ListenerList < LoadLivePatch > >                     loadLivePatchListeners;
+    std::shared_ptr < ListenerList < LiveAddPatchClicked > >               liveAddPatchClickedListeners;
+    std::shared_ptr < ListenerList < LiveArtistChanged > >                 liveArtistChangedListeners;
+    std::shared_ptr < ListenerList < LiveAttackChanged > >                 liveAttackChangedListeners;
+    std::shared_ptr < ListenerList < LiveBandPassChanged > >               liveBandPassChangedListeners;
+    std::shared_ptr < ListenerList < LiveCutoffChanged > >                 liveCutoffChangedListeners;
+    std::shared_ptr < ListenerList < LiveDecayChanged > >                  liveDecayChangedListeners;
+    std::shared_ptr < ListenerList < LiveDoneExporting > >                 liveDoneExportingListeners;
+    std::shared_ptr < ListenerList < LiveExportArmed > >                   liveExportArmedListeners;
+    std::shared_ptr < ListenerList < LiveHighPassChanged > >               liveHighPassChangedListeners;
+    std::shared_ptr < ListenerList < LiveLowPassChanged > >                liveLowPassChangedListeners;
+    std::shared_ptr < ListenerList < LivePatchChanged > >                  livePatchChangedListeners;
+    std::shared_ptr < ListenerList < LivePatchEditorModeClicked > >        livePatchEditorModeClickedListeners;
+    std::shared_ptr < ListenerList < LivePatchListChanged > >              livePatchListChangedListeners;
+    std::shared_ptr < ListenerList < LivePatchListMode > >                 livePatchListModeListeners;
+    std::shared_ptr < ListenerList < LivePatchListSelectedIndexChanged > > livePatchListSelectedIndexChangedListeners;
+    std::shared_ptr < ListenerList < LivePatchSelected > >                 livePatchSelectedListeners;
+    std::shared_ptr < ListenerList < LivePitchBendChanged > >              livePitchBendChangedListeners;
+    std::shared_ptr < ListenerList < LivePulseWidthChanged > >             livePulseWidthChangedListeners;
+    std::shared_ptr < ListenerList < LiveReleaseChanged > >                liveReleaseChangedListeners;
+    std::shared_ptr < ListenerList < LiveRemovePatchClicked > >            liveRemovePatchClickedListeners;
+    std::shared_ptr < ListenerList < LiveReplacePatchClicked > >           liveReplacePatchClickedListeners;
+    std::shared_ptr < ListenerList < LiveResonanceChanged > >              liveResonanceChangedListeners;
+    std::shared_ptr < ListenerList < LiveSustainChanged > >                liveSustainChangedListeners;
+    std::shared_ptr < ListenerList < LiveTitleChanged > >                  liveTitleChangedListeners;
+    std::shared_ptr < ListenerList < LiveTremoloAmountChanged > >          liveTremoloAmountChangedListeners;
+    std::shared_ptr < ListenerList < LiveTremoloSpeedChanged > >           liveTremoloSpeedChangedListeners;
+    std::shared_ptr < ListenerList < LiveVibratoAmountChanged > >          liveVibratoAmountChangedListeners;
+    std::shared_ptr < ListenerList < LiveVibratoDelayChanged > >           liveVibratoDelayChangedListeners;
+    std::shared_ptr < ListenerList < LiveVibratoSpeedChanged > >           liveVibratoSpeedChangedListeners;
+    std::shared_ptr < ListenerList < LiveVoiceFilterChanged > >            liveVoiceFilterChangedListeners;
+    std::shared_ptr < ListenerList < LiveVolumeChanged > >                 liveVolumeChangedListeners;
+    std::shared_ptr < ListenerList < LoadLivePatch > >                     loadLivePatchListeners;
 
-    SharedResourcePointer < ListenerList < MIDISignal > >      midiSignalListeners;
-    SharedResourcePointer < ListenerList < NoteOn > >          noteOnListeners;
-    SharedResourcePointer < ListenerList < NoteOff > >         noteOffListeners;
-    SharedResourcePointer < ListenerList < PitchBend > >       pitchBendListeners;
-    SharedResourcePointer < ListenerList < QuarterNoteTick > > quarterNoteTickListeners;
+    std::shared_ptr < ListenerList < MIDISignal > >      midiSignalListeners;
+    std::shared_ptr < ListenerList < NoteOn > >          noteOnListeners;
+    std::shared_ptr < ListenerList < NoteOff > >         noteOffListeners;
+    std::shared_ptr < ListenerList < PitchBend > >       pitchBendListeners;
+    std::shared_ptr < ListenerList < QuarterNoteTick > > quarterNoteTickListeners;
 
-    SharedResourcePointer < ListenerList < AttackParameterChanged > >        attackParameterChangedListeners;
-    SharedResourcePointer < ListenerList < BandPassParameterChanged > >      bandPassParameterChangedListeners;
-    SharedResourcePointer < ListenerList < CutoffParameterChanged > >        cutoffParameterChangedListeners;
-    SharedResourcePointer < ListenerList < DecayParameterChanged > >         decayParameterChangedListeners;
-    SharedResourcePointer < ListenerList < FilterVoiceParameterChanged > >   filterVoiceParameterChangedListeners;
-    SharedResourcePointer < ListenerList < HighPassParameterChanged > >      highPassParameterChangedListeners;
-    SharedResourcePointer < ListenerList < LowPassParameterChanged > >       lowPassParameterChangedListeners;
-    SharedResourcePointer < ListenerList < PitchBendParameterChanged > >     pitchBendParameterChangedListeners;
-    SharedResourcePointer < ListenerList < ProgramParameterChanged > >       programParameterChangedListeners;
-    SharedResourcePointer < ListenerList < PulseWidthParameterChanged > >    pulseWidthParameterChangedListeners;
-    SharedResourcePointer < ListenerList < ReleaseParameterChanged > >       releaseParameterChangedListeners;
-    SharedResourcePointer < ListenerList < ResonanceParameterChanged > >     resonanceParameterChangedListeners;
-    SharedResourcePointer < ListenerList < SustainParameterChanged > >       sustainParameterChangedListeners;
-    SharedResourcePointer < ListenerList < TremoloAmountParameterChanged > > tremoloAmountParameterChangedListeners;
-    SharedResourcePointer < ListenerList < TremoloSpeedParameterChanged > >  tremoloSpeedParameterChangedListeners;
-    SharedResourcePointer < ListenerList < VibratoAmountParameterChanged > > vibratoAmountParameterChangedListeners;
-    SharedResourcePointer < ListenerList < VibratoDelayParameterChanged > >  vibratoDelayParameterChangedListeners;
-    SharedResourcePointer < ListenerList < VibratoSpeedParameterChanged > >  vibratoSpeedParameterChangedListeners;
-    SharedResourcePointer < ListenerList < VolumeParameterChanged > >        volumeParameterChangedListeners;
+    std::shared_ptr < ListenerList < AttackParameterChanged > >        attackParameterChangedListeners;
+    std::shared_ptr < ListenerList < BandPassParameterChanged > >      bandPassParameterChangedListeners;
+    std::shared_ptr < ListenerList < CutoffParameterChanged > >        cutoffParameterChangedListeners;
+    std::shared_ptr < ListenerList < DecayParameterChanged > >         decayParameterChangedListeners;
+    std::shared_ptr < ListenerList < FilterVoiceParameterChanged > >   filterVoiceParameterChangedListeners;
+    std::shared_ptr < ListenerList < HighPassParameterChanged > >      highPassParameterChangedListeners;
+    std::shared_ptr < ListenerList < LowPassParameterChanged > >       lowPassParameterChangedListeners;
+    std::shared_ptr < ListenerList < PitchBendParameterChanged > >     pitchBendParameterChangedListeners;
+    std::shared_ptr < ListenerList < ProgramParameterChanged > >       programParameterChangedListeners;
+    std::shared_ptr < ListenerList < PulseWidthParameterChanged > >    pulseWidthParameterChangedListeners;
+    std::shared_ptr < ListenerList < ReleaseParameterChanged > >       releaseParameterChangedListeners;
+    std::shared_ptr < ListenerList < ResonanceParameterChanged > >     resonanceParameterChangedListeners;
+    std::shared_ptr < ListenerList < SustainParameterChanged > >       sustainParameterChangedListeners;
+    std::shared_ptr < ListenerList < TremoloAmountParameterChanged > > tremoloAmountParameterChangedListeners;
+    std::shared_ptr < ListenerList < TremoloSpeedParameterChanged > >  tremoloSpeedParameterChangedListeners;
+    std::shared_ptr < ListenerList < VibratoAmountParameterChanged > > vibratoAmountParameterChangedListeners;
+    std::shared_ptr < ListenerList < VibratoDelayParameterChanged > >  vibratoDelayParameterChangedListeners;
+    std::shared_ptr < ListenerList < VibratoSpeedParameterChanged > >  vibratoSpeedParameterChangedListeners;
+    std::shared_ptr < ListenerList < VolumeParameterChanged > >        volumeParameterChangedListeners;
 
-    SharedResourcePointer < ListenerList < PatchEditorAttackChanged > >               patchEditorAttackChangedListeners;
-    SharedResourcePointer < ListenerList < PatchEditorDecayChanged > >                patchEditorDecayChangedListeners;
-    SharedResourcePointer < ListenerList < PatchEditorDeleteTableRowClicked > >       patchEditorDeleteWavetableRowClickedListeners;
-    SharedResourcePointer < ListenerList < PatchEditorLiveModeClicked > >             patchEditorLiveModeClickedListeners;
-    SharedResourcePointer < ListenerList < PatchEditorNameChanged > >                 patchEditorNameChangedListeners;
-    SharedResourcePointer < ListenerList < PatchEditorNewTableCommandClicked > >      patchEditorNewWavetableCommandClickedListeners;
-    SharedResourcePointer < ListenerList < PatchEditorNewTableRowClicked > >          patchEditorNewWavetableRowClickedListeners;
-    SharedResourcePointer < ListenerList < PatchEditorPitchBendRangeChanged > >       patchEditorPitchBendRangeChangedListeners;
-    SharedResourcePointer < ListenerList < PatchEditorPulseWidthCenterChanged > >     patchEditorPulseWidthCenterChangedListeners;
-    SharedResourcePointer < ListenerList < PatchEditorPulseWidthDefaultChanged > >    patchEditorPulseWidthDefaultChangedListeners;
-    SharedResourcePointer < ListenerList < PatchEditorPulseWidthRangeChanged > >      patchEditorPulseWidthRangeChangedListeners;
-    SharedResourcePointer < ListenerList < PatchEditorReleaseChanged > >              patchEditorReleaseChangedListeners;
-    SharedResourcePointer < ListenerList < PatchEditorShowNoteTable > >               patchEditorShowNoteTableListeners;
-    SharedResourcePointer < ListenerList < PatchEditorShowPulseTable > >              patchEditorShowPulseTableListeners;
-    SharedResourcePointer < ListenerList < PatchEditorShowWaveTable > >               patchEditorShowWaveTableListeners;
-    SharedResourcePointer < ListenerList < PatchEditorSustainChanged > >              patchEditorSustainChangedListeners;
-    SharedResourcePointer < ListenerList < PatchEditorTremoloDefaultAmountChanged > > patchEditorTremoloDefaultAmountChangedListeners;
-    SharedResourcePointer < ListenerList < PatchEditorTremoloDefaultSpeedChanged > >  patchEditorTremoloDefaultSpeedChangedListeners;
-    SharedResourcePointer < ListenerList < PatchEditorTremoloRangeChanged > >         patchEditorTremoloRangeChangedListeners;
-    SharedResourcePointer < ListenerList < PatchEditorTremoloSpeedChanged > >         patchEditorTremoloSpeedChangedListeners;
-    SharedResourcePointer < ListenerList < PatchEditorVibratoDefaultAmountChanged > > patchEditorVibratoDefaultAmountChangedListeners;
-    SharedResourcePointer < ListenerList < PatchEditorVibratoDefaultSpeedChanged > >  patchEditorVibratoDefaultSpeedChangedListeners;
-    SharedResourcePointer < ListenerList < PatchEditorVibratoDelayChanged > >         patchEditorVibratoDelayChangedListeners;
-    SharedResourcePointer < ListenerList < PatchEditorVibratoRangeChanged > >         patchEditorVibratoRangeChangedListeners;
-    SharedResourcePointer < ListenerList < PatchEditorVibratoSpeedChanged > >         patchEditorVibratoSpeedChangedListeners;
+    std::shared_ptr < ListenerList < PatchEditorAttackChanged > >               patchEditorAttackChangedListeners;
+    std::shared_ptr < ListenerList < PatchEditorDecayChanged > >                patchEditorDecayChangedListeners;
+    std::shared_ptr < ListenerList < PatchEditorDeleteTableRowClicked > >       patchEditorDeleteWavetableRowClickedListeners;
+    std::shared_ptr < ListenerList < PatchEditorLiveModeClicked > >             patchEditorLiveModeClickedListeners;
+    std::shared_ptr < ListenerList < PatchEditorNameChanged > >                 patchEditorNameChangedListeners;
+    std::shared_ptr < ListenerList < PatchEditorNewTableCommandClicked > >      patchEditorNewWavetableCommandClickedListeners;
+    std::shared_ptr < ListenerList < PatchEditorNewTableRowClicked > >          patchEditorNewWavetableRowClickedListeners;
+    std::shared_ptr < ListenerList < PatchEditorPitchBendRangeChanged > >       patchEditorPitchBendRangeChangedListeners;
+    std::shared_ptr < ListenerList < PatchEditorPulseWidthCenterChanged > >     patchEditorPulseWidthCenterChangedListeners;
+    std::shared_ptr < ListenerList < PatchEditorPulseWidthDefaultChanged > >    patchEditorPulseWidthDefaultChangedListeners;
+    std::shared_ptr < ListenerList < PatchEditorPulseWidthRangeChanged > >      patchEditorPulseWidthRangeChangedListeners;
+    std::shared_ptr < ListenerList < PatchEditorReleaseChanged > >              patchEditorReleaseChangedListeners;
+    std::shared_ptr < ListenerList < PatchEditorShowNoteTable > >               patchEditorShowNoteTableListeners;
+    std::shared_ptr < ListenerList < PatchEditorShowPulseTable > >              patchEditorShowPulseTableListeners;
+    std::shared_ptr < ListenerList < PatchEditorShowWaveTable > >               patchEditorShowWaveTableListeners;
+    std::shared_ptr < ListenerList < PatchEditorSustainChanged > >              patchEditorSustainChangedListeners;
+    std::shared_ptr < ListenerList < PatchEditorTremoloDefaultAmountChanged > > patchEditorTremoloDefaultAmountChangedListeners;
+    std::shared_ptr < ListenerList < PatchEditorTremoloDefaultSpeedChanged > >  patchEditorTremoloDefaultSpeedChangedListeners;
+    std::shared_ptr < ListenerList < PatchEditorTremoloRangeChanged > >         patchEditorTremoloRangeChangedListeners;
+    std::shared_ptr < ListenerList < PatchEditorTremoloSpeedChanged > >         patchEditorTremoloSpeedChangedListeners;
+    std::shared_ptr < ListenerList < PatchEditorVibratoDefaultAmountChanged > > patchEditorVibratoDefaultAmountChangedListeners;
+    std::shared_ptr < ListenerList < PatchEditorVibratoDefaultSpeedChanged > >  patchEditorVibratoDefaultSpeedChangedListeners;
+    std::shared_ptr < ListenerList < PatchEditorVibratoDelayChanged > >         patchEditorVibratoDelayChangedListeners;
+    std::shared_ptr < ListenerList < PatchEditorVibratoRangeChanged > >         patchEditorVibratoRangeChangedListeners;
+    std::shared_ptr < ListenerList < PatchEditorVibratoSpeedChanged > >         patchEditorVibratoSpeedChangedListeners;
 
-    SharedResourcePointer < ListenerList < Frame > >                      frameListeners;
-    SharedResourcePointer < ListenerList < NoteTableRowChanged > >        noteTableRowChangedListeners;
-    SharedResourcePointer < ListenerList < NoteTableSelectionChanged > >  noteTableSelectionChangedListeners;
-    SharedResourcePointer < ListenerList < PulseTableRowChanged > >       pulseTableRowChangedListeners;
-    SharedResourcePointer < ListenerList < PulseTableSelectionChanged > > pulseTableSelectionChangedListeners;
-    SharedResourcePointer < ListenerList < SampleRateChanged > >          sampleRateChangedListeners;
-    SharedResourcePointer < ListenerList < WavetableRowChanged > >        wavetableRowChangedListeners;
-    SharedResourcePointer < ListenerList < WavetableSelectionChanged > >  wavetableSelectionChangedListeners;
+    std::shared_ptr < ListenerList < Frame > >                      frameListeners;
+    std::shared_ptr < ListenerList < NoteTableRowChanged > >        noteTableRowChangedListeners;
+    std::shared_ptr < ListenerList < NoteTableSelectionChanged > >  noteTableSelectionChangedListeners;
+    std::shared_ptr < ListenerList < PulseTableRowChanged > >       pulseTableRowChangedListeners;
+    std::shared_ptr < ListenerList < PulseTableSelectionChanged > > pulseTableSelectionChangedListeners;
+    std::shared_ptr < ListenerList < SampleRateChanged > >          sampleRateChangedListeners;
+    std::shared_ptr < ListenerList < WavetableRowChanged > >        wavetableRowChangedListeners;
+    std::shared_ptr < ListenerList < WavetableSelectionChanged > >  wavetableSelectionChangedListeners;
 };

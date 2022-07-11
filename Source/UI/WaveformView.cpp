@@ -67,7 +67,12 @@ double decay_release[] = {
 //[/MiscUserDefs]
 
 //==============================================================================
-WaveformView::WaveformView ()
+WaveformView::WaveformView (
+        std::shared_ptr < EventDispatcher > dispatcher
+        )
+    :
+    dispatcher (
+                dispatcher )
 {
     //[Constructor_pre] You can add your own custom stuff here..
     //currentProgram = nullptr;
@@ -83,10 +88,10 @@ WaveformView::WaveformView ()
 
 
     //[Constructor] You can add your own custom stuff here..
-    SharedResourcePointer < ListenerList < BankProgramChanged > > () -> add (
-                                                                             this );
-    SharedResourcePointer < ListenerList < BankRepaintWaveform > > () -> add (
-                                                                              this );
+    dispatcher -> bankProgramChangedListeners -> add (
+                                                      this );
+    dispatcher -> bankRepaintWaveformListeners -> add (
+                                                       this );
     //[/Constructor]
 }
 
@@ -97,10 +102,10 @@ WaveformView::~WaveformView ()
 
 
     //[Destructor]. You can add your own custom destruction code here..
-    SharedResourcePointer < ListenerList < BankProgramChanged > > () -> remove (
-                                                                                this );
-    SharedResourcePointer < ListenerList < BankRepaintWaveform > > () -> remove (
-                                                                                 this );
+    dispatcher -> bankProgramChangedListeners -> remove (
+                                                         this );
+    dispatcher -> bankRepaintWaveformListeners -> remove (
+                                                          this );
     //[/Destructor]
 }
 

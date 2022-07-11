@@ -1,33 +1,31 @@
 #include "Bank.h"
 
+
 #include "../Note.h"
 #include "../SIDProgram.h"
 
-#include "../SharedProperties.h"
 
 #include "../Requirements/resid-0.16/sid.h"
+
+
+#include "../SharedProperties.h"
 // ReSharper restore CppUnusedIncludeDirective
 
 
 using namespace juce;
 
-Bank::Bank ()
-    :
-    sid (
+Bank::Bank (
+        const std::shared_ptr < EventDispatcher >& dispatcher
+        )
+    : 
+    dispatcher (
+                dispatcher )
+  , sid (
          new SID )
   , currentProgram (
-                    new SidProgram )
-  , arpIndex (
-              -1 )
-  , sampleRate (
-                0 )
-  , samplesPerFrame (
-                     0 )
-  , cyclesPerSample (
-                     0 )
-  , sampleIndex (
-                 0 )
-{
+                    new SidProgram (
+                                    dispatcher ) )
+{ 
     sid -> set_chip_model (
                            MOS8580 );
     sid -> enable_filter (
@@ -51,43 +49,43 @@ Bank::Bank ()
     DirtyWrite (
                 0x03
               , 0x08 );
-    bankNewListeners -> add (
-                             this );
-    bankLoadListeners -> add (
-                              this );
-    bankSaveListeners -> add (
-                              this );
-    bankSaveAsListeners -> add (
-                                this );
-    SharedResourcePointer < ListenerList < BankRefreshLive > > () -> add (
-                                                                          this );
-    SharedResourcePointer < ListenerList < SampleRateChanged > > () -> add (
-                                                                            this );
-    SharedResourcePointer < ListenerList < LivePatchSelected > > () -> add (
-                                                                            this );
-    bankProgramChangedListeners -> call (
-                                         &BankProgramChanged::onBankProgramChanged
-                                       , currentProgram -> GetId () . toDashedString ()
-                                       , currentProgram );
+    dispatcher -> bankNewListeners -> add (
+                                           this );
+    dispatcher -> bankLoadListeners -> add (
+                                            this );
+    dispatcher -> bankSaveListeners -> add (
+                                            this );
+    dispatcher -> bankSaveAsListeners -> add (
+                                              this );
+    dispatcher -> bankRefreshLive -> add (
+                                          this );
+    dispatcher -> sampleRateChangedListeners -> add (
+                                                     this );
+    dispatcher -> livePatchSelectedListeners -> add (
+                                                     this );
+    dispatcher -> bankProgramChangedListeners -> call (
+                                                       &BankProgramChanged::onBankProgramChanged
+                                                     , currentProgram -> GetId () . toDashedString ()
+                                                     , currentProgram );
 }
 
 Bank::~Bank ()
 {
     properties -> saveIfNeeded ();
-    bankNewListeners -> remove (
-                                this );
-    bankLoadListeners -> remove (
-                                 this );
-    bankSaveListeners -> remove (
-                                 this );
-    bankSaveAsListeners -> remove (
-                                   this );
-    SharedResourcePointer < ListenerList < BankRefreshLive > > () -> remove (
-                                                                             this );
-    SharedResourcePointer < ListenerList < SampleRateChanged > > () -> remove (
-                                                                               this );
-    SharedResourcePointer < ListenerList < LivePatchSelected > > () -> remove (
-                                                                               this );
+    dispatcher -> bankNewListeners -> remove (
+                                              this );
+    dispatcher -> bankLoadListeners -> remove (
+                                               this );
+    dispatcher -> bankSaveListeners -> remove (
+                                               this );
+    dispatcher -> bankSaveAsListeners -> remove (
+                                                 this );
+    dispatcher -> bankRefreshLive -> remove (
+                                             this );
+    dispatcher -> sampleRateChangedListeners -> remove (
+                                                        this );
+    dispatcher -> livePatchSelectedListeners -> remove (
+                                                        this );
 }
 
 void
@@ -102,43 +100,34 @@ void
     MidiMessage m;
     int         next_message_sample;
     short       buf[16];
-    if ( position_info . isPlaying )
-        sampleIndex = static_cast < long > ( position_info . timeInSamples );
+    if ( position_info . isPlaying ) { sampleIndex = static_cast < long > ( position_info . timeInSamples ); }
     if ( !it . getNextEvent (
                              m
-                           , next_message_sample ) )
-        next_message_sample = buffer . getNumSamples ();
+                           , next_message_sample ) ) { next_message_sample = buffer . getNumSamples (); }
     for ( auto i = 0 ; i < buffer . getNumSamples () ; )
     {
         sampleIndex++;
-        if ( sampleIndex % samplesPerFrame == 0 )
-            Frame ();
+        if ( sampleIndex % samplesPerFrame == 0 ) { Frame (); }
         auto cycles = 0;
         while ( i >= next_message_sample )
         {
             if ( m . isNoteOff () )
             {
                 int rit;
-                for ( rit = 0 ; rit < releasedNotes . size () ; rit++ )
-                {
-                    if ( releasedNotes [ rit ] == static_cast < unsigned int > ( m . getNoteNumber () ) )
-                        break;
-                }
+                for ( rit = 0 ; rit < releasedNotes . size () ; rit++ ) { if ( releasedNotes [ rit ] == static_cast < unsigned int > ( m . getNoteNumber () ) ) { break; } }
                 if ( rit == releasedNotes . size () )
+                {
                     releasedNotes . add (
                                          m . getNoteNumber () );
+                }
             }
             else if ( m . isNoteOn () )
             {
                 int nit;
-                for ( nit = 0 ; nit < notes . size () ; nit++ )
-                {
-                    if ( notes [ nit ] . note == static_cast < unsigned int > ( m . getNoteNumber () ) )
-                        break;
-                }
+                for ( nit = 0 ; nit < notes . size () ; nit++ ) { if ( notes [ nit ] . note == static_cast < unsigned int > ( m . getNoteNumber () ) ) { break; } }
                 if ( nit == notes . size () )
                 {
-                    Note n;
+                    Note n {};
                     n . note     = m . getNoteNumber ();
                     n . velocity = m . getVelocity ();
                     notes . add (
@@ -147,20 +136,17 @@ void
                 else
                 {
                     int rit;
-                    for ( rit = 0 ; rit < releasedNotes . size () ; rit++ )
-                    {
-                        if ( releasedNotes [ rit ] == static_cast < unsigned int > ( m . getNoteNumber () ) )
-                            break;
-                    }
+                    for ( rit = 0 ; rit < releasedNotes . size () ; rit++ ) { if ( releasedNotes [ rit ] == static_cast < unsigned int > ( m . getNoteNumber () ) ) { break; } }
                     if ( rit == releasedNotes . size () )
+                    {
                         releasedNotes . remove (
                                                 rit );
+                    }
                 }
             }
             if ( !it . getNextEvent (
                                      m
-                                   , next_message_sample ) )
-                next_message_sample = buffer . getNumSamples ();
+                                   , next_message_sample ) ) { next_message_sample = buffer . getNumSamples (); }
         }
         cycles += cyclesPerSample;
         //int s = sid->clock(static_cast<unsigned int>(cyclesPerSample), buf);
@@ -169,12 +155,14 @@ void
                                    , buf
                                    , 1 );
         for ( auto j = 0 ; j < s ; j++ )
+        {
             buffer . setSample (
                                 0
                               , i + j
                               , float (
                                        buf [ j ] ) / float (
                                                             0x8000 ) );
+        }
         //buffer.setSample(0, i, float(buf[0]) / float(0x8000));
 
         i += s;
@@ -184,11 +172,12 @@ void
 void
     Bank::onBankNew ()
 {
-    currentProgram = new SidProgram ();
-    bankProgramChangedListeners -> call (
-                                         &BankProgramChanged::onBankProgramChanged
-                                       , currentProgram -> GetId () . toDashedString ()
-                                       , currentProgram );
+    currentProgram = new SidProgram (
+                                     dispatcher );
+    dispatcher -> bankProgramChangedListeners -> call (
+                                                       &BankProgramChanged::onBankProgramChanged
+                                                     , currentProgram -> GetId () . toDashedString ()
+                                                     , currentProgram );
 }
 
 void
@@ -207,17 +196,20 @@ void
                                                                                                   "id"
                                                                                                 , id );
         if ( current_program_element != nullptr )
+        {
             break;
+        }
     }
     if ( current_program_element != nullptr )
     {
         currentProgram = new SidProgram (
-                                         current_program_element );
+                                         dispatcher
+                                       , current_program_element );
     }
-    bankProgramChangedListeners -> call (
-                                         &BankProgramChanged::onBankProgramChanged
-                                       , currentProgram -> GetId () . toDashedString ()
-                                       , currentProgram );
+    dispatcher -> bankProgramChangedListeners -> call (
+                                                       &BankProgramChanged::onBankProgramChanged
+                                                     , currentProgram -> GetId () . toDashedString ()
+                                                     , currentProgram );
 }
 
 void
@@ -237,8 +229,8 @@ void
     }
     if ( currentProgram -> IsFactoryPreset () || current_program_element == nullptr )
     {
-        bankStartSaveAsListeners -> call (
-                                          &BankStartSaveAs::onBankStartSaveAs );
+        dispatcher -> bankStartSaveAsListeners -> call (
+                                                        &BankStartSaveAs::onBankStartSaveAs );
         return;
     }
     currentProgram -> Write (
@@ -246,12 +238,12 @@ void
     properties -> setValue (
                             "patches"
                           , patches_element );
-    bankProgramChangedListeners -> call (
-                                         &BankProgramChanged::onBankProgramChanged
-                                       , currentProgram -> GetId () . toDashedString ()
-                                       , currentProgram );
-    bankTreeChangedListeners -> call (
-                                      &BankTreeChanged::onBankTreeChanged );
+    dispatcher -> bankProgramChangedListeners -> call (
+                                                       &BankProgramChanged::onBankProgramChanged
+                                                     , currentProgram -> GetId () . toDashedString ()
+                                                     , currentProgram );
+    dispatcher -> bankTreeChangedListeners -> call (
+                                                    &BankTreeChanged::onBankTreeChanged );
 }
 
 void
@@ -276,12 +268,12 @@ void
     properties -> setValue (
                             "patches"
                           , patches_element );
-    bankProgramChangedListeners -> call (
-                                         &BankProgramChanged::onBankProgramChanged
-                                       , old_id
-                                       , currentProgram );
-    bankTreeChangedListeners -> call (
-                                      &BankTreeChanged::onBankTreeChanged );
+    dispatcher -> bankProgramChangedListeners -> call (
+                                                       &BankProgramChanged::onBankProgramChanged
+                                                     , old_id
+                                                     , currentProgram );
+    dispatcher -> bankTreeChangedListeners -> call (
+                                                    &BankTreeChanged::onBankTreeChanged );
 }
 
 void
@@ -302,10 +294,10 @@ void
 void
     Bank::onBankRefreshLive ()
 {
-    bankProgramChangedListeners -> call (
-                                         &BankProgramChanged::onBankProgramChanged
-                                       , currentProgram -> GetId () . toDashedString ()
-                                       , currentProgram );
+    dispatcher -> bankProgramChangedListeners -> call (
+                                                       &BankProgramChanged::onBankProgramChanged
+                                                     , currentProgram -> GetId () . toDashedString ()
+                                                     , currentProgram );
 }
 
 void
@@ -314,10 +306,10 @@ void
             )
 {
     currentProgram = program;
-    bankProgramChangedListeners -> call (
-                                         &BankProgramChanged::onBankProgramChanged
-                                       , currentProgram -> GetId () . toDashedString ()
-                                       , currentProgram );
+    dispatcher -> bankProgramChangedListeners -> call (
+                                                       &BankProgramChanged::onBankProgramChanged
+                                                     , currentProgram -> GetId () . toDashedString ()
+                                                     , currentProgram );
 }
 
 void
@@ -353,18 +345,24 @@ void
                  notes [ arpIndex ] . note );
         DirtyWrite (
                     4
-                  , wt -> GetCurrentWaveTableEntry () );
+                  , static_cast < int > ( wt -> GetCurrentWaveTableEntry () ) );
         arpIndex++;
     }
     for ( auto i = 0x15 ; i < 0x19 ; i++ )
+    {
         DirtyWrite (
                     i );
+    }
     for ( auto v = 0 ; v < 3 ; v++ )
     {
         for ( auto j = 0 ; j < 7 ; j++ )
+        {
             if ( j != 4 )
+            {
                 DirtyWrite (
                             v * 7 + j );
+            }
+        }
         DirtyWrite (
                     v * 7 + 4 );
     }
@@ -410,7 +408,9 @@ void
     {
         NotesOff ();
         if ( currentProgram -> GetWavetable () -> Released () )
+        {
             arpIndex = -1;
+        }
         return;
     }
     // otherwise, if all notes are releasing, check to see if the wavetable has finished releasing
@@ -424,7 +424,7 @@ void
             NotesOff ();
             DirtyWrite (
                         4
-                      , wt -> GetCurrentWaveTableEntry () & 0xfe );
+                      , static_cast < int > ( wt -> GetCurrentWaveTableEntry () & 0xfe ) );
             arpIndex = -1;
         }
     }
@@ -454,7 +454,9 @@ void
             )
 {
     if ( !dirty [ index ] )
+    {
         return;
+    }
     sid -> write (
                   index
                 , static_cast < unsigned char > ( registers [ index ] ) );
@@ -470,7 +472,9 @@ void
             )
 {
     if ( registers [ index ] == value )
+    {
         return;
+    }
     registers . set (
                      index
                    , value );
@@ -481,10 +485,10 @@ void
 
 
 // TODO: Move this into a better place for it
-String
+auto
     Bank::GetCategoryElementName (
             const Category c
-            )
+            ) -> String
 {
     switch ( c )
     {

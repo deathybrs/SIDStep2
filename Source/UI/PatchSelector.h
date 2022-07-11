@@ -20,11 +20,12 @@
 #pragma once
 
 //[Headers]     -- You can add your own extra header files here --
-#include "../../JuceLibraryCode/JuceHeader.h"
-#include "../Programs/PatchTreeBuilder.h"
-#include "../Listeners/ListenerInitializer.h"
-//[/Headers]
+#include <JuceHeader.h>
 
+
+#include "../Listeners/ListenerInitializer.h"
+#include "../Programs/PatchTreeBuilder.h"
+//[/Headers]
 
 
 //==============================================================================
@@ -35,38 +36,49 @@
     Describe your class and how it works here!
                                                                     //[/Comments]
 */
-class PatchSelector  : public Component,
-                       public BankTreeChanged,
-                       public PatchTreeBuilder
+class PatchSelector
+        : public Component
+        , public BankTreeChanged
+        , public PatchTreeBuilder
 {
 public:
     //==============================================================================
-    PatchSelector ();
-    ~PatchSelector() override;
+    explicit
+        PatchSelector (
+                std::shared_ptr < EventDispatcher > dispatcher
+                );
+
+    ~PatchSelector () override;
 
     //==============================================================================
     //[UserMethods]     -- You can add your own custom methods in this section.
-	//void setPatchSelectorRoot(TreeViewItem *root) const;
-	void onBankTreeChanged() override;
+    //void setPatchSelectorRoot(TreeViewItem *root) const;
+    void
+        onBankTreeChanged () override;
+
     //[/UserMethods]
 
-    void paint (juce::Graphics& g) override;
-    void resized() override;
+    void
+        paint (
+                Graphics& g
+                ) override;
 
-
+    void
+        resized () override;
 
 private:
     //[UserVariables]   -- You can add your own custom variables in this section.
+    std::shared_ptr < EventDispatcher > dispatcher;
     //[/UserVariables]
 
     //==============================================================================
-    std::unique_ptr<juce::TreeView> treeView;
+    std::unique_ptr < TreeView > treeView;
 
 
     //==============================================================================
-    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (PatchSelector)
+    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (
+                                                  PatchSelector )
 };
 
 //[EndFile] You can add extra defines here...
 //[/EndFile]
-

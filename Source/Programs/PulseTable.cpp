@@ -1,11 +1,19 @@
 #include "PulseTable.h"
 
+
 #include <array>
+#include <utility>
+
 
 #include "../SIDProgram.h"
 #include "Wavetable.h"
 
-PulseTable::PulseTable ()
+PulseTable::PulseTable (
+        std::shared_ptr < EventDispatcher > dispatcher
+        )
+    :
+    dispatcher (
+                dispatcher )
 {
     table . add (
                  CYCLE_CENTER );
@@ -14,8 +22,12 @@ PulseTable::PulseTable ()
 }
 
 PulseTable::PulseTable (
-        XmlElement* e
+        std::shared_ptr < EventDispatcher > dispatcher
+      , XmlElement*                         e
         )
+    :
+    dispatcher (
+                dispatcher )
 {
     for ( auto i = 0 ; i < e -> getNumChildElements () ; i++ )
     {
@@ -147,29 +159,29 @@ void
 {
     if ( value )
     {
-        SharedResourcePointer < ListenerList < PatchEditorShowPulseTable > > () -> add (
-                                                                                        this );
-        SharedResourcePointer < ListenerList < PatchEditorShowNoteTable > > () -> add (
-                                                                                       this );
-        SharedResourcePointer < ListenerList < PatchEditorShowWaveTable > > () -> add (
-                                                                                       this );
-        SharedResourcePointer < ListenerList < PulseTableSelectionChanged > > () -> add (
-                                                                                         this );
-        pulseTableRowChangedListeners -> add (
-                                              this );
+        dispatcher -> patchEditorShowPulseTableListeners -> add (
+                                                                 this );
+        dispatcher -> patchEditorShowNoteTableListeners -> add (
+                                                                this );
+        dispatcher -> patchEditorShowWaveTableListeners -> add (
+                                                                this );
+        dispatcher -> pulseTableSelectionChangedListeners -> add (
+                                                                  this );
+        dispatcher -> pulseTableRowChangedListeners -> add (
+                                                            this );
     }
-    else
+    else if ( dispatcher != nullptr )
     {
-        SharedResourcePointer < ListenerList < PatchEditorShowNoteTable > > () -> remove (
-                                                                                          this );
-        SharedResourcePointer < ListenerList < PatchEditorShowPulseTable > > () -> remove (
-                                                                                           this );
-        SharedResourcePointer < ListenerList < PatchEditorShowWaveTable > > () -> remove (
-                                                                                          this );
-        SharedResourcePointer < ListenerList < PulseTableSelectionChanged > > () -> remove (
-                                                                                            this );
-        pulseTableRowChangedListeners -> remove (
-                                                 this );
+        dispatcher -> patchEditorShowPulseTableListeners -> remove (
+                                                                    this );
+        dispatcher -> patchEditorShowNoteTableListeners -> remove (
+                                                                   this );
+        dispatcher -> patchEditorShowWaveTableListeners -> remove (
+                                                                   this );
+        dispatcher -> pulseTableSelectionChangedListeners -> remove (
+                                                                     this );
+        dispatcher -> pulseTableRowChangedListeners -> remove (
+                                                               this );
     }
 }
 
@@ -263,7 +275,7 @@ void
 void
     PulseTable::LoadState (
             MemoryInputStream&                             stream
-          , const ReferenceCountedObjectPtr < SidProgram > o
+          , const ReferenceCountedObjectPtr < SidProgram >& o
             )
 {
     auto nt = o -> GetPulseTable ();
@@ -287,14 +299,11 @@ void
 void
     PulseTable::LoadCopyState (
             MemoryInputStream&                       stream
-          , ReferenceCountedObjectPtr < SidProgram > o
+          , const ReferenceCountedObjectPtr < SidProgram >& o
             ) {}
 
 auto
-    PulseTable::GetPulseTableSize () const -> unsigned
-{
-    return static_cast < unsigned > ( table . size () );
-}
+    PulseTable::GetPulseTableSize () const -> unsigned { return static_cast < unsigned > ( table . size () ); }
 
 auto
     PulseTable::GetPulseTableEntryAt (
@@ -324,7 +333,7 @@ void
           , const unsigned value
             )
 {
-    if ( table . size () > index )
+    if ( table . size () > static_cast < int > ( index ) )
     {
         table . set (
                      static_cast < int > ( index )
@@ -338,7 +347,7 @@ void
           , const unsigned value
             )
 {
-    if ( table . size () > index )
+    if ( table . size () > static_cast < int > ( index ) )
     {
         table . insert (
                         static_cast < int > ( index )
@@ -351,7 +360,7 @@ void
             const unsigned index
             )
 {
-    if ( table . size () > index )
+    if ( table . size () > static_cast < int > ( index ) )
     {
         table . remove (
                         static_cast < int > ( index ) );
@@ -372,7 +381,7 @@ void
 {
     if ( Released () && DoneReleasing () ) { return; }
     pulseTableIndex++;
-    if ( pulseTableIndex == static_cast < unsigned int > ( table . size () ) ) { pulseTableIndex--; }
+    if ( pulseTableIndex == table . size () ) { pulseTableIndex--; }
     const auto row = table [ pulseTableIndex ];
     if ( ( row & END_COMMAND ) == END_COMMAND ) { pulseTableIndex--; }
     else if ( ( row & GOTO_COMMAND ) == GOTO_COMMAND ) { pulseTableIndex = static_cast < int > ( table [ pulseTableIndex ] ) & ARGUMENT_NYBBLE_MASK; }
@@ -381,7 +390,7 @@ void
         sustained = true;
         if ( !released ) { pulseTableIndex = static_cast < int > ( table [ pulseTableIndex ] ) & ARGUMENT_NYBBLE_MASK; }
         else { pulseTableIndex++; }
-        if ( pulseTableIndex == static_cast < unsigned int > ( table . size () ) ) { pulseTableIndex -= 2; }
+        if ( pulseTableIndex == table . size () ) { pulseTableIndex -= 2; }
     }
     if ( releaseCounter > 0 ) { releaseCounter--; }
 }
@@ -391,7 +400,8 @@ void
             const unsigned release
             )
 {
-    releaseCounter = Wavetable::DECAY_RELEASE_FRAMES [ release ];
+    releaseCounter = Wavetable::DECAY_RELEASE_FRAMES . at (
+                                                           release );
     released       = true;
 }
 
@@ -468,32 +478,32 @@ void
 void
     PulseTable::onPatchEditorShowNoteTable ()
 {
-    SharedResourcePointer < ListenerList < PatchEditorNewTableRowClicked > > () -> remove (
-                                                                                           this );
-    SharedResourcePointer < ListenerList < PatchEditorNewTableCommandClicked > > () -> remove (
-                                                                                               this );
-    SharedResourcePointer < ListenerList < PatchEditorDeleteTableRowClicked > > () -> remove (
-                                                                                              this );
+    dispatcher -> patchEditorNewWavetableRowClickedListeners -> remove (
+                                                                        this );
+    dispatcher -> patchEditorNewWavetableCommandClickedListeners -> remove (
+                                                                            this );
+    dispatcher -> patchEditorDeleteWavetableRowClickedListeners -> remove (
+                                                                           this );
 }
 
 void
     PulseTable::onPatchEditorShowPulseTable ()
 {
-    SharedResourcePointer < ListenerList < PatchEditorNewTableRowClicked > > () -> add (
-                                                                                        this );
-    SharedResourcePointer < ListenerList < PatchEditorNewTableCommandClicked > > () -> add (
-                                                                                            this );
-    SharedResourcePointer < ListenerList < PatchEditorDeleteTableRowClicked > > () -> add (
-                                                                                           this );
+    dispatcher -> patchEditorNewWavetableRowClickedListeners -> add (
+                                                                     this );
+    dispatcher -> patchEditorNewWavetableCommandClickedListeners -> add (
+                                                                         this );
+    dispatcher -> patchEditorDeleteWavetableRowClickedListeners -> add (
+                                                                        this );
 }
 
 void
     PulseTable::onPatchEditorShowWaveTable ()
 {
-    SharedResourcePointer < ListenerList < PatchEditorNewTableRowClicked > > () -> remove (
-                                                                                           this );
-    SharedResourcePointer < ListenerList < PatchEditorNewTableCommandClicked > > () -> remove (
-                                                                                               this );
-    SharedResourcePointer < ListenerList < PatchEditorDeleteTableRowClicked > > () -> remove (
-                                                                                              this );
+    dispatcher -> patchEditorNewWavetableRowClickedListeners -> remove (
+                                                                        this );
+    dispatcher -> patchEditorNewWavetableCommandClickedListeners -> remove (
+                                                                            this );
+    dispatcher -> patchEditorDeleteWavetableRowClickedListeners -> remove (
+                                                                           this );
 }

@@ -28,7 +28,12 @@
 //[/MiscUserDefs]
 
 //==============================================================================
-NoteTableText::NoteTableText ()
+NoteTableText::NoteTableText (
+        std::shared_ptr < EventDispatcher > dispatcher
+        )
+    :
+    dispatcher (
+                dispatcher )
 {
     //[Constructor_pre] You can add your own custom stuff here..
     //[/Constructor_pre]
@@ -89,9 +94,8 @@ void NoteTableText::resized()
 void NoteTableText::mouseUp (const juce::MouseEvent& e)
 {
     //[UserCode_mouseUp] -- Add your code here...
-    SharedResourcePointer < ListenerList < PatchEditorShowNoteTable > > () -> call (
-                                                                                    &PatchEditorShowNoteTable::onPatchEditorShowNoteTable
-                                                                                   );
+    dispatcher -> patchEditorShowNoteTableListeners -> call (
+                                                             &PatchEditorShowNoteTable::onPatchEditorShowNoteTable );
     //[/UserCode_mouseUp]
 }
 

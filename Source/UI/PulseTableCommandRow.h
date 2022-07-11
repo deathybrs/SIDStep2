@@ -22,7 +22,6 @@
 //[Headers]     -- You can add your own extra header files here --
 #include <JuceHeader.h>
 
-
 #include "AbstractPulseTableRow.h"
 
 
@@ -37,14 +36,17 @@
     Describe your class and how it works here!
                                                                     //[/Comments]
 */
-class PulseTableCommandRow
-        : public AbstractPulseTableRow ,
-          public juce::ComboBox::Listener ,
-          public juce::Label::Listener
+class PulseTableCommandRow final
+        : public AbstractPulseTableRow
+        , public ComboBox::Listener
+        , public Label::Listener
 {
 public:
     //==============================================================================
-    PulseTableCommandRow ();
+    explicit
+        PulseTableCommandRow (
+                const std::shared_ptr < EventDispatcher >& dispatcher
+                );
 
     ~PulseTableCommandRow () override;
 
@@ -63,7 +65,7 @@ public:
 
     void
         paint (
-                juce::Graphics& g
+                Graphics& g
                 ) override;
 
     void
@@ -71,29 +73,27 @@ public:
 
     void
         comboBoxChanged (
-                juce::ComboBox* comboBoxThatHasChanged
+                ComboBox* combo_box_that_has_changed
                 ) override;
 
     void
         labelTextChanged (
-                juce::Label* labelThatHasChanged
+                Label* label_that_has_changed
                 ) override;
-
 
 private:
     //[UserVariables]   -- You can add your own custom variables in this section.
     //[/UserVariables]
 
     //==============================================================================
-    std::unique_ptr < juce::ComboBox > commandSelector;
-    std::unique_ptr < juce::Label >    rowLabel;
-    std::unique_ptr < juce::Label >    argumentLabel;
+    std::unique_ptr < ComboBox > commandSelector;
+    std::unique_ptr < Label >    rowLabel;
+    std::unique_ptr < Label >    argumentLabel;
 
 
     //==============================================================================
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (
-                                                  PulseTableCommandRow
-                                                 )
+                                                  PulseTableCommandRow )
 };
 
 

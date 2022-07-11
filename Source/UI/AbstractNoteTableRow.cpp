@@ -1,19 +1,21 @@
 #include "AbstractNoteTableRow.h"
 
-
-AbstractNoteTableRow::AbstractNoteTableRow ()
+AbstractNoteTableRow::AbstractNoteTableRow (
+        const std::shared_ptr < EventDispatcher >& dispatcher
+        )
+    :
+    dispatcher (
+                dispatcher )
 {
-    SharedResourcePointer < ListenerList < NoteTableSelectionChanged > > () -> add (
-                                                                                    this
-                                                                                   );
+    dispatcher -> noteTableSelectionChangedListeners -> add (
+                                                             this );
 }
 
 
 AbstractNoteTableRow::~AbstractNoteTableRow ()
 {
-    SharedResourcePointer < ListenerList < NoteTableSelectionChanged > > () -> remove (
-                                                                                       this
-                                                                                      );
+    dispatcher -> noteTableSelectionChangedListeners -> remove (
+                                                                this );
 }
 
 

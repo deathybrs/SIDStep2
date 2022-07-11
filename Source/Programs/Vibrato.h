@@ -21,11 +21,15 @@ class Vibrato final
         , public VibratoSpeedParameterChanged
 {
 public:
-    Vibrato ();
+    explicit
+        Vibrato (
+                std::shared_ptr < EventDispatcher > dispatcher
+                );
 
     explicit
         Vibrato (
-                XmlElement* e
+                std::shared_ptr < EventDispatcher > dispatcher
+              , XmlElement*                         e
                 );
 
     Vibrato (
@@ -225,6 +229,7 @@ public:
 private:
     static const int VIBRATO_RANGE = 85;
     static const int VIBRATO_SPEED = 5;
+    std::shared_ptr < EventDispatcher > dispatcher;
     unsigned int     vibratoRange {
             VIBRATO_RANGE
     };

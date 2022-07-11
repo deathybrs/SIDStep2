@@ -7,8 +7,12 @@
 
 #include "../SIDProgram.h"
 
-
-NoteTable::NoteTable ()
+NoteTable::NoteTable (
+        const std::shared_ptr < EventDispatcher >& dispatcher
+        )
+    :
+    dispatcher (
+                dispatcher )
 {
     notes . add (
                  new ArpRow {
@@ -23,8 +27,12 @@ NoteTable::NoteTable ()
 }
 
 NoteTable::NoteTable (
-        XmlElement* e
+        const std::shared_ptr < EventDispatcher >& dispatcher
+      , XmlElement*                                e
         )
+    :
+    dispatcher (
+                dispatcher )
 {
     for ( auto i = 0 ; i < e -> getNumChildElements () ; i++ )
     {
@@ -71,7 +79,9 @@ NoteTable::NoteTable (
         const NoteTable& other
         )
     :
-    noteTableIndex (
+    dispatcher (
+                other . dispatcher )
+  , noteTableIndex (
                     other . noteTableIndex )
   , sustained (
                other . sustained )
@@ -97,7 +107,9 @@ NoteTable::NoteTable (
         NoteTable&& other
         ) noexcept
     :
-    noteTableIndex (
+    dispatcher (
+                other . dispatcher )
+  , noteTableIndex (
                     other . noteTableIndex )
   , sustained (
                other . sustained )
@@ -172,29 +184,29 @@ void
 {
     if ( value )
     {
-        SharedResourcePointer < ListenerList < PatchEditorShowNoteTable > > () -> add (
-                                                                                       this );
-        SharedResourcePointer < ListenerList < PatchEditorShowPulseTable > > () -> add (
-                                                                                        this );
-        SharedResourcePointer < ListenerList < PatchEditorShowWaveTable > > () -> add (
-                                                                                       this );
-        SharedResourcePointer < ListenerList < NoteTableSelectionChanged > > () -> add (
-                                                                                        this );
-        noteTableRowChangedListeners -> add (
-                                             this );
+        dispatcher -> patchEditorShowNoteTableListeners -> add (
+                                                                this );
+        dispatcher -> patchEditorShowPulseTableListeners -> add (
+                                                                 this );
+        dispatcher -> patchEditorShowWaveTableListeners -> add (
+                                                                this );
+        dispatcher -> noteTableSelectionChangedListeners -> add (
+                                                                 this );
+        dispatcher -> noteTableRowChangedListeners -> add (
+                                                           this );
     }
     else
     {
-        SharedResourcePointer < ListenerList < PatchEditorShowNoteTable > > () -> remove (
-                                                                                          this );
-        SharedResourcePointer < ListenerList < PatchEditorShowPulseTable > > () -> remove (
-                                                                                           this );
-        SharedResourcePointer < ListenerList < PatchEditorShowWaveTable > > () -> remove (
-                                                                                          this );
-        SharedResourcePointer < ListenerList < NoteTableSelectionChanged > > () -> remove (
-                                                                                           this );
-        noteTableRowChangedListeners -> remove (
-                                                this );
+        dispatcher -> patchEditorShowNoteTableListeners -> add (
+                                                                this );
+        dispatcher -> patchEditorShowPulseTableListeners -> add (
+                                                                 this );
+        dispatcher -> patchEditorShowWaveTableListeners -> add (
+                                                                this );
+        dispatcher -> noteTableSelectionChangedListeners -> add (
+                                                                 this );
+        dispatcher -> noteTableRowChangedListeners -> remove (
+                                                              this );
     }
 }
 
@@ -290,9 +302,6 @@ void
                       , sizeof size );
     for ( const auto& row : notes )
     {
-        //dest_data . append (
-        //                    static_cast < const void* > ( &row )
-        //                  , row_size );
         auto row_type = static_cast < int > ( row -> rowType );
         dest_data . append (
                             static_cast < const void* > ( &row_type )
@@ -312,7 +321,7 @@ void
 void
     NoteTable::LoadState (
             MemoryInputStream&                             stream
-          , const ReferenceCountedObjectPtr < SidProgram > o  // NOLINT(performance-unnecessary-value-param)
+          , const ReferenceCountedObjectPtr < SidProgram > o // NOLINT(performance-unnecessary-value-param)
             )
 {
     auto nt = o -> GetNoteTable ();
@@ -335,7 +344,6 @@ void
         ArpRow row {};
         row . rowType = static_cast < ARP_ROW_TYPE > ( row_type );
         row . value   = value;
-
         nt -> notes . add (
                            new ArpRow (
                                        row ) );
@@ -345,7 +353,7 @@ void
 void
     NoteTable::LoadCopyState (
             MemoryInputStream&                       stream
-          , ReferenceCountedObjectPtr < SidProgram > o  // NOLINT(performance-unnecessary-value-param)
+          , ReferenceCountedObjectPtr < SidProgram > o // NOLINT(performance-unnecessary-value-param)
             ) {}
 
 auto
@@ -459,7 +467,7 @@ void
 {
     releaseCounter = Wavetable::DECAY_RELEASE_FRAMES . at (
                                                            release );
-    released       = true;
+    released = true;
 }
 
 auto
@@ -541,32 +549,32 @@ void
 void
     NoteTable::onPatchEditorShowNoteTable ()
 {
-    SharedResourcePointer < ListenerList < PatchEditorNewTableRowClicked > > () -> add (
-                                                                                        this );
-    SharedResourcePointer < ListenerList < PatchEditorNewTableCommandClicked > > () -> add (
-                                                                                            this );
-    SharedResourcePointer < ListenerList < PatchEditorDeleteTableRowClicked > > () -> add (
-                                                                                           this );
+    dispatcher -> patchEditorNewWavetableRowClickedListeners -> add (
+                                                                     this );
+    dispatcher -> patchEditorNewWavetableCommandClickedListeners -> add (
+                                                                         this );
+    dispatcher -> patchEditorDeleteWavetableRowClickedListeners -> add (
+                                                                        this );
 }
 
 void
     NoteTable::onPatchEditorShowPulseTable ()
 {
-    SharedResourcePointer < ListenerList < PatchEditorNewTableRowClicked > > () -> remove (
-                                                                                           this );
-    SharedResourcePointer < ListenerList < PatchEditorNewTableCommandClicked > > () -> remove (
-                                                                                               this );
-    SharedResourcePointer < ListenerList < PatchEditorDeleteTableRowClicked > > () -> remove (
-                                                                                              this );
+    dispatcher -> patchEditorNewWavetableRowClickedListeners -> remove (
+                                                                        this );
+    dispatcher -> patchEditorNewWavetableCommandClickedListeners -> remove (
+                                                                            this );
+    dispatcher -> patchEditorDeleteWavetableRowClickedListeners -> remove (
+                                                                           this );
 }
 
 void
     NoteTable::onPatchEditorShowWaveTable ()
 {
-    SharedResourcePointer < ListenerList < PatchEditorNewTableRowClicked > > () -> remove (
-                                                                                           this );
-    SharedResourcePointer < ListenerList < PatchEditorNewTableCommandClicked > > () -> remove (
-                                                                                               this );
-    SharedResourcePointer < ListenerList < PatchEditorDeleteTableRowClicked > > () -> remove (
-                                                                                              this );
+    dispatcher -> patchEditorNewWavetableRowClickedListeners -> remove (
+                                                                        this );
+    dispatcher -> patchEditorNewWavetableCommandClickedListeners -> remove (
+                                                                            this );
+    dispatcher -> patchEditorDeleteWavetableRowClickedListeners -> remove (
+                                                                           this );
 }

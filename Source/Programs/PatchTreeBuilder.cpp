@@ -7,7 +7,11 @@
 
 using namespace juce;
 
-TreeViewItem *PatchTreeBuilder::populateTree() const {
+TreeViewItem*
+PatchTreeBuilder::populateTree (
+        std::shared_ptr < EventDispatcher > dispatcher
+        ) const
+{
 	TreeViewItem *root = new PatchTreeViewNode(Misc);
 
 	ScopedPointer<XmlElement> patchesElement = properties->GetPatches();
@@ -20,8 +24,13 @@ TreeViewItem *PatchTreeBuilder::populateTree() const {
 
 		for (int j = 0; j < categoryElement->getNumChildElements(); j++) {
 			XmlElement *patch = categoryElement->getChildElement(j);
-			category->addSubItem(new PatchTreeViewLeaf(patch->getStringAttribute("name"),
-				patch->getStringAttribute("id")));
+            category -> addSubItem (
+                                    new PatchTreeViewLeaf (
+                                                           dispatcher
+                                                         , patch -> getStringAttribute (
+                                                                                        "name" )
+                                                         , patch -> getStringAttribute (
+                                                                                        "id" ) ) );
 		}
 	}
 

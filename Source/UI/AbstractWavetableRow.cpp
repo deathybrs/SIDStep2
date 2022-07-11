@@ -1,18 +1,36 @@
 #include "AbstractWavetableRow.h"
 
-AbstractWavetableRow::AbstractWavetableRow(): selected(false), row(-1) {
-	SharedResourcePointer<ListenerList<WavetableSelectionChanged>>()->add(this);
+AbstractWavetableRow::AbstractWavetableRow (
+        std::shared_ptr < EventDispatcher > dispatcher
+        )
+    :
+    dispatcher (
+                dispatcher )
+  , selected (
+              false )
+  , row (
+         -1 )
+{
+    dispatcher -> wavetableSelectionChangedListeners -> add (
+                                                             this );
 }
 
-AbstractWavetableRow::~AbstractWavetableRow() {
-	SharedResourcePointer<ListenerList<WavetableSelectionChanged>>()->remove(this);
+AbstractWavetableRow::~AbstractWavetableRow ()
+{
+    dispatcher -> wavetableSelectionChangedListeners -> remove (
+                                                                this );
 }
 
 //void AbstractWavetableRow::setSelected(bool value) { selected = value; }
 
-void AbstractWavetableRow::onWavetableSelectionChanged(unsigned selectedRow) {
-	if (static_cast<unsigned int>(row) == selectedRow) selected = true;
-	else selected = false;
-
-	repaint();
+void
+    AbstractWavetableRow::onWavetableSelectionChanged (
+            const unsigned selected_row
+            )
+{
+    if ( static_cast < unsigned int > ( row ) == selected_row )
+        selected = true;
+    else
+        selected = false;
+    repaint ();
 }

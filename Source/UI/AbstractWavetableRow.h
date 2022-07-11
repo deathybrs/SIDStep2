@@ -1,30 +1,36 @@
-#ifndef ABSTRACTWAVETABLEROW_H_INCLUDED
-#define ABSTRACTWAVETABLEROW_H_INCLUDED
-
-
+#pragma once
 #include "../../JuceLibraryCode/JuceHeader.h"
-
-
 #include "../Listeners/ListenerInitializer.h"
 
-
-class AbstractWavetableRow: public Component,
-							public WavetableSelectionChanged
-							{
+class AbstractWavetableRow
+        : public Component
+        , public WavetableSelectionChanged
+{
 public:
-	AbstractWavetableRow();
-	virtual ~AbstractWavetableRow();
+    explicit
+        AbstractWavetableRow (
+                std::shared_ptr < EventDispatcher > dispatcher
+                );
 
-	//void setSelected(bool value);
-	void onWavetableSelectionChanged(unsigned int selectedRow) override;
+    ~AbstractWavetableRow () override;
 
-	virtual unsigned int get() const = 0;
-	virtual void set(unsigned int rownum, unsigned int value) = 0;
+    //void setSelected(bool value);
+    void
+        onWavetableSelectionChanged (
+                unsigned int selected_row
+                ) override;
+
+    virtual unsigned int
+        get () const = 0;
+
+    virtual void
+        set (
+                unsigned int row_num
+              , unsigned int value
+                ) = 0;
 
 protected:
-	bool selected;
-	int row;
+    std::shared_ptr < EventDispatcher > dispatcher;
+    bool                                selected;
+    int                                 row;
 };
-
-
-#endif  // ABSTRACTWAVETABLEROW_H_INCLUDED

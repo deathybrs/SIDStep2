@@ -21,10 +21,9 @@
 
 //[Headers]     -- You can add your own extra header files here --
 #include <JuceHeader.h>
-
 #include <map>
-
 #include "AbstractNoteTableRow.h"
+
 //[/Headers]
 
 
@@ -36,14 +35,17 @@
     Describe your class and how it works here!
                                                                     //[/Comments]
 */
-class NoteTableRow
+class NoteTableRow final
         : public AbstractNoteTableRow
-        , public juce::Button::Listener
-        , public juce::Label::Listener
+        , public Button::Listener
+        , public Label::Listener
 {
 public:
     //==============================================================================
-    NoteTableRow ();
+    explicit
+        NoteTableRow (
+                const std::shared_ptr < EventDispatcher >& dispatcher
+                );
 
     ~NoteTableRow () override;
 
@@ -68,7 +70,7 @@ public:
 
     void
         paint (
-                juce::Graphics& g
+                Graphics& g
                 ) override;
 
     void
@@ -76,12 +78,12 @@ public:
 
     void
         buttonClicked (
-                juce::Button* buttonThatWasClicked
+                Button* button_that_was_clicked
                 ) override;
 
     void
         labelTextChanged (
-                juce::Label* labelThatHasChanged
+                Label* label_that_has_changed
                 ) override;
 
     // Binary resources:
@@ -94,12 +96,12 @@ private:
     //[/UserVariables]
 
     //==============================================================================
-    std::unique_ptr < juce::ToggleButton > relativeAbsolute;
-    std::unique_ptr < juce::Label >        noteOffset;
-    std::unique_ptr < juce::Label >        frequency;
-    std::unique_ptr < juce::Label >        rowLabel;
-    juce::Image                            cachedImage_noteTableAbsoluteRow_png_1;
-    juce::Image                            cachedImage_noteTableRelativeRow_png_2;
+    std::unique_ptr < ToggleButton > relativeAbsolute;
+    std::unique_ptr < Label >        noteOffset;
+    std::unique_ptr < Label >        frequency;
+    std::unique_ptr < Label >        rowLabel;
+    Image                            cachedImage_noteTableAbsoluteRow_png_1;
+    Image                            cachedImage_noteTableRelativeRow_png_2;
 
 
     //==============================================================================

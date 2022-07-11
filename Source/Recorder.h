@@ -34,7 +34,8 @@ class Recorder final
 public:
     explicit
         Recorder (
-                const ReferenceCountedArray < SidProgram >& patch_list
+                std::shared_ptr < EventDispatcher >         dispatcher
+              , const ReferenceCountedArray < SidProgram >& patch_list
                 );
 
     Recorder (
@@ -217,6 +218,7 @@ private:
               , unsigned voice
                 );
 
+    std::shared_ptr < EventDispatcher > dispatcher;
     bool recording {
             false
     };

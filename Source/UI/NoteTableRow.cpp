@@ -29,18 +29,23 @@
 //[/MiscUserDefs]
 
 //==============================================================================
-NoteTableRow::NoteTableRow ()
+NoteTableRow::NoteTableRow (
+        const std::shared_ptr < EventDispatcher >& dispatcher
+        )
+    :
+    AbstractNoteTableRow (
+                          dispatcher )
 {
     //[Constructor_pre] You can add your own custom stuff here..
     //[/Constructor_pre]
 
     relativeAbsolute . reset (
-                              new juce::ToggleButton (
-                                                      "new toggle button" ) );
+                              new ToggleButton (
+                                                "new toggle button" ) );
     addAndMakeVisible (
                        relativeAbsolute . get () );
     relativeAbsolute -> setButtonText (
-                                       juce::String () );
+                                       String () );
     relativeAbsolute -> addListener (
                                      this );
     relativeAbsolute -> setBounds (
@@ -49,34 +54,34 @@ NoteTableRow::NoteTableRow ()
                                  , 14
                                  , 14 );
     noteOffset . reset (
-                        new juce::Label (
-                                         "new label"
-                                       , juce::String () ) );
+                        new Label (
+                                   "new label"
+                                 , String () ) );
     addAndMakeVisible (
                        noteOffset . get () );
     noteOffset -> setFont (
-                           juce::Font (
-                                       "C64 Pro"
-                                     , 15.00f
-                                     , juce::Font::plain ) . withTypefaceStyle (
-                                                                                "Regular" ) );
+                           Font (
+                                 "C64 Pro"
+                               , 15.00f
+                               , Font::plain ) . withTypefaceStyle (
+                                                                    "Regular" ) );
     noteOffset -> setJustificationType (
-                                        juce::Justification::centred );
+                                        Justification::centred );
     noteOffset -> setEditable (
                                true
                              , true
                              , false );
     noteOffset -> setColour (
-                             juce::Label::textColourId
-                           , juce::Colour (
-                                           0xff5090d0 ) );
+                             Label::textColourId
+                           , Colour (
+                                     0xff5090d0 ) );
     noteOffset -> setColour (
-                             juce::TextEditor::textColourId
-                           , juce::Colours::black );
+                             TextEditor::textColourId
+                           , Colours::black );
     noteOffset -> setColour (
-                             juce::TextEditor::backgroundColourId
-                           , juce::Colour (
-                                           0x00000000 ) );
+                             TextEditor::backgroundColourId
+                           , Colour (
+                                     0x00000000 ) );
     noteOffset -> addListener (
                                this );
     noteOffset -> setBounds (
@@ -85,34 +90,34 @@ NoteTableRow::NoteTableRow ()
                            , 56
                            , 20 );
     frequency . reset (
-                       new juce::Label (
-                                        "new label"
-                                      , juce::String () ) );
+                       new Label (
+                                  "new label"
+                                , String () ) );
     addAndMakeVisible (
                        frequency . get () );
     frequency -> setFont (
-                          juce::Font (
-                                      "C64 Pro"
-                                    , 15.00f
-                                    , juce::Font::plain ) . withTypefaceStyle (
-                                                                               "Regular" ) );
+                          Font (
+                                "C64 Pro"
+                              , 15.00f
+                              , Font::plain ) . withTypefaceStyle (
+                                                                   "Regular" ) );
     frequency -> setJustificationType (
-                                       juce::Justification::centredLeft );
+                                       Justification::centredLeft );
     frequency -> setEditable (
                               true
                             , true
                             , false );
     frequency -> setColour (
-                            juce::Label::textColourId
-                          , juce::Colour (
-                                          0xff5090d0 ) );
+                            Label::textColourId
+                          , Colour (
+                                    0xff5090d0 ) );
     frequency -> setColour (
-                            juce::TextEditor::textColourId
-                          , juce::Colours::black );
+                            TextEditor::textColourId
+                          , Colours::black );
     frequency -> setColour (
-                            juce::TextEditor::backgroundColourId
-                          , juce::Colour (
-                                          0x00000000 ) );
+                            TextEditor::backgroundColourId
+                          , Colour (
+                                    0x00000000 ) );
     frequency -> addListener (
                               this );
     frequency -> setBounds (
@@ -121,46 +126,46 @@ NoteTableRow::NoteTableRow ()
                           , 94
                           , 20 );
     rowLabel . reset (
-                      new juce::Label (
-                                       "new label"
-                                     , TRANS (
-                                              "01" ) ) );
+                      new Label (
+                                 "new label"
+                               , TRANS (
+                                        "01" ) ) );
     addAndMakeVisible (
                        rowLabel . get () );
     rowLabel -> setFont (
-                         juce::Font (
-                                     "C64 Pro Mono"
-                                   , 12.00f
-                                   , juce::Font::plain ) . withTypefaceStyle (
-                                                                              "Regular" ) );
+                         Font (
+                               "C64 Pro Mono"
+                             , 12.00f
+                             , Font::plain ) . withTypefaceStyle (
+                                                                  "Regular" ) );
     rowLabel -> setJustificationType (
-                                      juce::Justification::centredRight );
+                                      Justification::centredRight );
     rowLabel -> setEditable (
                              false
                            , false
                            , false );
     rowLabel -> setColour (
-                           juce::Label::textColourId
-                         , juce::Colour (
-                                         0xff5090d0 ) );
+                           Label::textColourId
+                         , Colour (
+                                   0xff5090d0 ) );
     rowLabel -> setColour (
-                           juce::TextEditor::textColourId
-                         , juce::Colours::black );
+                           TextEditor::textColourId
+                         , Colours::black );
     rowLabel -> setColour (
-                           juce::TextEditor::backgroundColourId
-                         , juce::Colour (
-                                         0x00000000 ) );
+                           TextEditor::backgroundColourId
+                         , Colour (
+                                   0x00000000 ) );
     rowLabel -> setBounds (
                            0
                          , 4
                          , 44
                          , 18 );
-    cachedImage_noteTableAbsoluteRow_png_1 = juce::ImageCache::getFromMemory (
-                                                                              noteTableAbsoluteRow_png
-                                                                            , noteTableAbsoluteRow_pngSize );
-    cachedImage_noteTableRelativeRow_png_2 = juce::ImageCache::getFromMemory (
-                                                                              noteTableRelativeRow_png
-                                                                            , noteTableRelativeRow_pngSize );
+    cachedImage_noteTableAbsoluteRow_png_1 = ImageCache::getFromMemory (
+                                                                        noteTableAbsoluteRow_png
+                                                                      , noteTableAbsoluteRow_pngSize );
+    cachedImage_noteTableRelativeRow_png_2 = ImageCache::getFromMemory (
+                                                                        noteTableRelativeRow_png
+                                                                      , noteTableRelativeRow_pngSize );
 
     //[UserPreSize]
     //[/UserPreSize]
@@ -192,18 +197,21 @@ NoteTableRow::~NoteTableRow ()
 //==============================================================================
 void
     NoteTableRow::paint (
-            juce::Graphics& g
+            Graphics& g
             )
 {
     //[UserPrePaint] Add your own custom painting code here..
     //[/UserPrePaint]
 
     {
-        int x = 0, y = 0, width = 592, height = 24;
+        const auto x      = 0;
+        const auto y      = 0;
+        const auto width  = 592;
+        const auto height = 24;
         //[UserPaintCustomArguments] Customize the painting arguments here..
         //[/UserPaintCustomArguments]
         g . setColour (
-                       juce::Colours::black );
+                       Colours::black );
         g . drawImage (
                        cachedImage_noteTableAbsoluteRow_png_1
                      , x
@@ -216,13 +224,16 @@ void
                      , cachedImage_noteTableAbsoluteRow_png_1 . getHeight () );
     }
     {
-        int x = 0, y = 0, width = 592, height = 24;
+        const auto x      = 0;
+        const auto y      = 0;
+        const auto width  = 592;
+        const auto height = 24;
         //[UserPaintCustomArguments] Customize the painting arguments here..
         if ( !relativeAbsolute -> getToggleState () )
         {
             //[/UserPaintCustomArguments]
             g . setColour (
-                           juce::Colours::black );
+                           Colours::black );
             g . drawImage (
                            cachedImage_noteTableRelativeRow_png_2
                          , x
@@ -239,10 +250,10 @@ void
     }
     if ( selected )
     {
-        Colour ltBlue (
-                       0xff5090d0 );
+        const Colour lt_blue (
+                              0xff5090d0 );
         g . setColour (
-                       ltBlue );
+                       lt_blue );
         Path p;
         p . addTriangle (
                          0.0f
@@ -269,13 +280,13 @@ void
 
 void
     NoteTableRow::buttonClicked (
-            juce::Button* buttonThatWasClicked
+            Button* button_that_was_clicked
             )
 {
     //[UserbuttonClicked_Pre]
     //[/UserbuttonClicked_Pre]
 
-    if ( buttonThatWasClicked == relativeAbsolute . get () )
+    if ( button_that_was_clicked == relativeAbsolute . get () )
     {
         //[UserButtonCode_relativeAbsolute] -- add your button handler code here..
         noteOffset -> setText (
@@ -292,33 +303,33 @@ void
     }
 
     //[UserbuttonClicked_Post]
-    SharedResourcePointer < ListenerList < NoteTableSelectionChanged > > () -> call (
-                                                                                     &NoteTableSelectionChanged::onNoteTableSelectionChanged
-                                                                                   , static_cast < unsigned int > ( row ) );
+    dispatcher -> noteTableSelectionChangedListeners -> call (
+                                                              &NoteTableSelectionChanged::onNoteTableSelectionChanged
+                                                            , static_cast < unsigned int > ( row ) );
     auto changed = Get ();
-    SharedResourcePointer < ListenerList < NoteTableRowChanged > > () -> call (
-                                                                               &NoteTableRowChanged::onNoteTableRowChanged
-                                                                             , changed );
-    SharedResourcePointer < ListenerList < BankRepaintWaveform > > () -> call (
-                                                                               &BankRepaintWaveform::onBankRepaintWaveform );
+    dispatcher -> noteTableRowChangedListeners -> call (
+                                                        &NoteTableRowChanged::onNoteTableRowChanged
+                                                      , changed );
+    dispatcher -> bankRepaintWaveformListeners -> call (
+                                                        &BankRepaintWaveform::onBankRepaintWaveform );
     //[/UserbuttonClicked_Post]
 }
 
 void
     NoteTableRow::labelTextChanged (
-            juce::Label* labelThatHasChanged
+            Label* label_that_has_changed
             )
 {
     //[UserlabelTextChanged_Pre]
     //[/UserlabelTextChanged_Pre]
 
-    if ( labelThatHasChanged == noteOffset . get () )
+    if ( label_that_has_changed == noteOffset . get () )
     {
         //[UserLabelCode_noteOffset] -- add your label text handling code here..
         if ( relativeAbsolute -> getToggleState () ) { SetFrequencyFromNote (); }
         //[/UserLabelCode_noteOffset]
     }
-    else if ( labelThatHasChanged == frequency . get () )
+    else if ( label_that_has_changed == frequency . get () )
     {
         //[UserLabelCode_frequency] -- add your label text handling code here..
         if ( relativeAbsolute -> getToggleState () ) { SetNoteFromFrequency (); }
@@ -326,15 +337,15 @@ void
     }
 
     //[UserlabelTextChanged_Post]
-    SharedResourcePointer < ListenerList < NoteTableSelectionChanged > > () -> call (
-                                                                                     &NoteTableSelectionChanged::onNoteTableSelectionChanged
-                                                                                   , static_cast < unsigned int > ( row ) );
+    dispatcher -> noteTableSelectionChangedListeners -> call (
+                                                              &NoteTableSelectionChanged::onNoteTableSelectionChanged
+                                                            , static_cast < unsigned int > ( row ) );
     auto changed = Get ();
-    SharedResourcePointer < ListenerList < NoteTableRowChanged > > () -> call (
-                                                                               &NoteTableRowChanged::onNoteTableRowChanged
-                                                                             , changed );
-    SharedResourcePointer < ListenerList < BankRepaintWaveform > > () -> call (
-                                                                               &BankRepaintWaveform::onBankRepaintWaveform );
+    dispatcher -> noteTableRowChangedListeners -> call (
+                                                        &NoteTableRowChanged::onNoteTableRowChanged
+                                                      , changed );
+    dispatcher -> bankRepaintWaveformListeners -> call (
+                                                        &BankRepaintWaveform::onBankRepaintWaveform );
     //[/UserlabelTextChanged_Post]
 }
 

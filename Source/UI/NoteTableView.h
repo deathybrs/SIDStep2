@@ -48,7 +48,10 @@ class NoteTableView final
 {
 public:
     //==============================================================================
-    NoteTableView ();
+    explicit
+        NoteTableView (
+                const std::shared_ptr < EventDispatcher >& dispatcher
+                );
 
     ~NoteTableView () override;
 
@@ -82,7 +85,7 @@ public:
 
     void
         paint (
-                juce::Graphics& g
+                Graphics& g
                 ) override;
 
     void
@@ -90,14 +93,14 @@ public:
 
     void
         mouseUp (
-                const juce::MouseEvent& e
+                const MouseEvent& e
                 ) override;
 
 private:
     //[UserVariables]   -- You can add your own custom variables in this section.
-    OwnedArray < AbstractNoteTableRow >                                  rows;
-    int                                                                  selectedRow;
-    SharedResourcePointer < ListenerList < NoteTableSelectionChanged > > noteTableSelectionChangedListeners;
+    std::shared_ptr < EventDispatcher > dispatcher;
+    OwnedArray < AbstractNoteTableRow > rows;
+    int                                 selectedRow {};
     //[/UserVariables]
 
     //==============================================================================

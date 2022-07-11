@@ -1,9 +1,6 @@
 #pragma once
-
 #include "../JuceLibraryCode/JuceHeader.h"
-
 #include "../Listeners/ListenerInitializer.h"
-
 class SidProgram;
 
 class sEnvelope
@@ -22,14 +19,19 @@ class sEnvelope
         , public ReleaseParameterChanged
 {
 public:
-    sEnvelope ();
+    explicit
+        sEnvelope (
+                const std::shared_ptr < EventDispatcher >& dispatcher
+                );
 
     sEnvelope (
-            XmlElement* e
+            const std::shared_ptr < EventDispatcher >& dispatcher
+          , XmlElement*                                e
             );
 
     sEnvelope (
-            sEnvelope& original
+            const std::shared_ptr < EventDispatcher >& dispatcher
+          , sEnvelope&                                 original
             );
 
     ~sEnvelope ();
@@ -46,24 +48,24 @@ public:
 
     void
         writeState (
-                MemoryBlock& destData
+                MemoryBlock& dest_data
                 ) const;
 
     void
         writeCopyState (
-                MemoryBlock& destData
+                MemoryBlock& dest_data
                 ) const;
 
     static void
         loadState (
-                MemoryInputStream&                       stream
-              , ReferenceCountedObjectPtr < SidProgram > o
+                MemoryInputStream&                              stream
+              , const ReferenceCountedObjectPtr < SidProgram >& o
                 );
 
     static void
         loadCopyState (
-                MemoryInputStream&                       stream
-              , ReferenceCountedObjectPtr < SidProgram > o
+                MemoryInputStream&                              stream
+              , const ReferenceCountedObjectPtr < SidProgram >& o
                 );
 
     unsigned int
@@ -204,14 +206,14 @@ public:
                 );
 
 private:
-    unsigned int defaultAttack;
-    unsigned int defaultDecay;
-    unsigned int defaultSustain;
-    unsigned int defaultRelease;
-    unsigned int attack;
-    unsigned int decay;
-    unsigned int sustain;
-    unsigned int release;
-    int          forVoice;
+    std::shared_ptr < EventDispatcher > dispatcher;
+    unsigned int                        defaultAttack;
+    unsigned int                        defaultDecay;
+    unsigned int                        defaultSustain;
+    unsigned int                        defaultRelease;
+    unsigned int                        attack;
+    unsigned int                        decay;
+    unsigned int                        sustain;
+    unsigned int                        release;
+    int                                 forVoice;
 };
-

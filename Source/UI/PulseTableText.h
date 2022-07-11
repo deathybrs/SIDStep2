@@ -21,6 +21,9 @@
 
 //[Headers]     -- You can add your own extra header files here --
 #include <JuceHeader.h>
+
+#include "../Listeners/ListenerInitializer.h"
+
 //[/Headers]
 
 
@@ -37,7 +40,9 @@ class PulseTableText  : public juce::Component
 {
 public:
     //==============================================================================
-    PulseTableText ();
+    PulseTableText (
+            std::shared_ptr < EventDispatcher > dispatcher
+            );
     ~PulseTableText() override;
 
     //==============================================================================
@@ -55,6 +60,7 @@ public:
 
 private:
     //[UserVariables]   -- You can add your own custom variables in this section.
+    std::shared_ptr < EventDispatcher > dispatcher;
     //[/UserVariables]
 
     //==============================================================================

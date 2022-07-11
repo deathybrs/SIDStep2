@@ -21,14 +21,11 @@
 
 //[Headers]     -- You can add your own extra header files here --
 #include "../../JuceLibraryCode/JuceHeader.h"
-
 #include "../Listeners/ListenerInitializer.h"
-
 class AbstractWavetableRow;
 
 
 //[/Headers]
-
 
 
 //==============================================================================
@@ -39,19 +36,23 @@ class AbstractWavetableRow;
     Describe your class and how it works here!
                                                                     //[/Comments]
 */
-class WavetableView  : public Component,
-                       public BankProgramChanged,
-                       public PatchEditorNewTableRowClicked,
-                       public PatchEditorNewTableCommandClicked,
-                       public PatchEditorDeleteTableRowClicked,
-                       public PatchEditorShowWaveTable,
-                       public PatchEditorShowNoteTable,
-                       public PatchEditorShowPulseTable
+class WavetableView final
+        : public Component
+        , public BankProgramChanged
+        , public PatchEditorNewTableRowClicked
+        , public PatchEditorNewTableCommandClicked
+        , public PatchEditorDeleteTableRowClicked
+        , public PatchEditorShowWaveTable
+        , public PatchEditorShowNoteTable
+        , public PatchEditorShowPulseTable
 {
 public:
     //==============================================================================
-    WavetableView ();
-    ~WavetableView() override;
+    WavetableView (
+            const std::shared_ptr < EventDispatcher >& dispatcher
+            );
+
+    ~WavetableView () override;
 
     //==============================================================================
     //[UserMethods]     -- You can add your own custom methods in this section.
@@ -81,26 +82,33 @@ public:
 
     //[/UserMethods]
 
-    void paint (juce::Graphics& g) override;
-    void resized() override;
-    void mouseUp (const juce::MouseEvent& e) override;
+    void
+        paint (
+                Graphics& g
+                ) override;
 
+    void
+        resized () override;
 
+    void
+        mouseUp (
+                const MouseEvent& e
+                ) override;
 
 private:
     //[UserVariables]   -- You can add your own custom variables in this section.
-    OwnedArray < AbstractWavetableRow >                                  rows;
-    int                                                                  selectedRow;
-    SharedResourcePointer < ListenerList < WavetableSelectionChanged > > wavetableSelectionChangedListeners;
+    std::shared_ptr < EventDispatcher > dispatcher;
+    OwnedArray < AbstractWavetableRow > rows;
+    int                                 selectedRow {};
     //[/UserVariables]
 
     //==============================================================================
 
 
     //==============================================================================
-    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (WavetableView)
+    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (
+                                                  WavetableView )
 };
 
 //[EndFile] You can add extra defines here...
 //[/EndFile]
-

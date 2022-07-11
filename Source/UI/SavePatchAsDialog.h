@@ -44,7 +44,9 @@ class SavePatchAsDialog  : public Component,
 {
 public:
     //==============================================================================
-    SavePatchAsDialog ();
+    SavePatchAsDialog (
+            std::shared_ptr < EventDispatcher > dispatcher
+            );
     ~SavePatchAsDialog() override;
 
     //==============================================================================
@@ -77,6 +79,7 @@ public:
 private:
     //[UserVariables]   -- You can add your own custom variables in this section.
 	//ReferenceCountedObjectPtr<Bank> bank;
+    std::shared_ptr < EventDispatcher > dispatcher;
     //[/UserVariables]
 
     //==============================================================================

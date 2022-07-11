@@ -10,199 +10,136 @@
 #include "../SIDProgram.h"
 
 
-Wavetable::Wavetable ()
+Wavetable::Wavetable (
+        std::shared_ptr < EventDispatcher > dispatcher
+        )
+    :
+    dispatcher (
+                dispatcher )
 {
     waveTable . add (
-                     DEFAULT_WAVEFORM
-                    );
+                     DEFAULT_WAVEFORM );
     waveTable . add (
-                     END_COMMAND
-                    ); // end
+                     END_COMMAND ); // end
     selectedRow = waveTable . size ();
 }
 
-
 Wavetable::Wavetable (
-        XmlElement* e
+        std::shared_ptr < EventDispatcher > dispatcher
+      , XmlElement*                         e
         )
+    :
+    dispatcher (
+                dispatcher )
 {
     for ( auto i = 0 ; i < e -> getNumChildElements () ; i++ )
     {
         const auto r = e -> getChildElement (
-                                             i
-                                            );
+                                             i );
         unsigned int row = 0;
-
         if ( r -> getTagName () == "row" )
         {
             if ( r -> getBoolAttribute (
-                                        "triangle"
-                                       ) )
-            {
-                row |= TRIANGLE_BIT;
-            }
+                                        "triangle" ) ) { row |= TRIANGLE_BIT; }
             if ( r -> getBoolAttribute (
-                                        "sawtooth"
-                                       ) )
-            {
-                row |= SAWTOOTH_BIT;
-            }
+                                        "sawtooth" ) ) { row |= SAWTOOTH_BIT; }
             if ( r -> getBoolAttribute (
-                                        "pulse"
-                                       ) )
-            {
-                row |= PULSE_BIT;
-            }
+                                        "pulse" ) ) { row |= PULSE_BIT; }
             if ( r -> getBoolAttribute (
-                                        "noise"
-                                       ) )
-            {
-                row |= NOISE_BIT;
-            }
+                                        "noise" ) ) { row |= NOISE_BIT; }
             if ( r -> getBoolAttribute (
-                                        "test"
-                                       ) )
-            {
-                row |= TEST_BIT;
-            }
+                                        "test" ) ) { row |= TEST_BIT; }
             if ( r -> getBoolAttribute (
-                                        "ring"
-                                       ) )
-            {
-                row |= RING_BIT;
-            }
+                                        "ring" ) ) { row |= RING_BIT; }
             if ( r -> getBoolAttribute (
-                                        "sync"
-                                       ) )
-            {
-                row |= SYNC_BIT;
-            }
+                                        "sync" ) ) { row |= SYNC_BIT; }
             if ( r -> getBoolAttribute (
-                                        "gate"
-                                       ) )
-            {
-                row |= GATE_BIT;
-            }
+                                        "gate" ) ) { row |= GATE_BIT; }
         }
         else if ( r -> getTagName () == "command" )
         {
             if ( r -> getStringAttribute (
-                                          "type"
-                                         ) == "end" )
-            {
-                row = END_COMMAND;
-            }
+                                          "type" ) == "end" ) { row = END_COMMAND; }
             else if ( r -> getStringAttribute (
-                                               "type"
-                                              ) == "goto" )
-            {
-                row = GOTO_COMMAND;
-            }
+                                               "type" ) == "goto" ) { row = GOTO_COMMAND; }
             else if ( r -> getStringAttribute (
-                                               "type"
-                                              ) == "sustain-to" )
-            {
-                row = SUSTAIN_TO_COMMAND;
-            }
-
+                                               "type" ) == "sustain-to" ) { row = SUSTAIN_TO_COMMAND; }
             if ( row != END_COMMAND )
             {
                 row |= r -> getIntAttribute (
-                                             "argument"
-                                            ) & UCHAR_MAX;
+                                             "argument" ) & UCHAR_MAX;
             }
         }
-
         waveTable . add (
-                         row
-                        );
+                         row );
     }
     selectedRow = waveTable . size ();
 }
-
 
 Wavetable::Wavetable (
         const Wavetable& other
         )
     :
-    waveTableIndex (
-                    other . waveTableIndex
-                   )
+    dispatcher (
+                other . dispatcher )
+  , waveTableIndex (
+                    other . waveTableIndex )
   , sustained (
-               other . sustained
-              )
+               other . sustained )
   , released (
-              other . released
-             )
+              other . released )
   , releaseCounter (
-                    other . releaseCounter
-                   )
+                    other . releaseCounter )
   , forVoice (
-              other . forVoice
-             )
+              other . forVoice )
 {
     for each ( unsigned int row in other . waveTable )
         waveTable . add (
-                         row
-                        );
+                         row );
     selectedRow = waveTable . size ();
 }
-
 
 Wavetable::Wavetable (
         Wavetable&& other
         ) noexcept
     :
-    waveTableIndex (
-                    other . waveTableIndex
-                   )
+    dispatcher (
+                other . dispatcher )
+  , waveTableIndex (
+                    other . waveTableIndex )
   , sustained (
-               other . sustained
-              )
+               other . sustained )
   , released (
-              other . released
-             )
+              other . released )
   , releaseCounter (
-                    other . releaseCounter
-                   )
+                    other . releaseCounter )
   , forVoice (
-              other . forVoice
-             )
+              other . forVoice )
 {
     for each ( unsigned int row in other . waveTable )
         waveTable . add (
-                         row
-                        );
+                         row );
     selectedRow = waveTable . size ();
 }
 
 Wavetable::~Wavetable ()
 {
-        SharedResourcePointer < ListenerList < PatchEditorShowNoteTable > >()->remove(
-            this
-        );
-        SharedResourcePointer < ListenerList < PatchEditorShowPulseTable > >()->remove(
-            this
-        );
-        SharedResourcePointer < ListenerList < PatchEditorShowWaveTable > >()->remove(
-            this
-        );
-        SharedResourcePointer < ListenerList < WavetableSelectionChanged > >()->remove(
-            this
-        );
-        SharedResourcePointer < ListenerList < PatchEditorNewTableRowClicked > >()->remove(
-            this
-        );
-        SharedResourcePointer < ListenerList < PatchEditorNewTableCommandClicked > >()->remove(
-            this
-        );
-        SharedResourcePointer < ListenerList < PatchEditorDeleteTableRowClicked > >()->remove(
-            this
-        );
-
-        wavetableRowChangedListeners->remove(
-            this
-        );
+    dispatcher -> patchEditorShowNoteTableListeners -> remove (
+                                                               this );
+    dispatcher -> patchEditorShowPulseTableListeners -> remove (
+                                                                this );
+    dispatcher -> patchEditorShowWaveTableListeners -> remove (
+                                                               this );
+    dispatcher -> wavetableSelectionChangedListeners -> remove (
+                                                                this );
+    dispatcher -> patchEditorNewWavetableRowClickedListeners -> remove (
+                                                                        this );
+    dispatcher -> patchEditorNewWavetableCommandClickedListeners -> remove (
+                                                                            this );
+    dispatcher -> patchEditorDeleteWavetableRowClickedListeners -> remove (
+                                                                           this );
+    dispatcher -> wavetableRowChangedListeners -> remove (
+                                                          this );
 }
 
 auto
@@ -210,52 +147,36 @@ auto
             const Wavetable& other
             ) -> Wavetable&
 {
-    if ( &other == this )
-    {
-        return *this;
-    }
-
+    if ( &other == this ) { return *this; }
     waveTableIndex = other . waveTableIndex;
     sustained      = other . sustained;
     released       = other . released;
     releaseCounter = other . releaseCounter;
     forVoice       = other . forVoice;
-
     for each ( unsigned int row in other . waveTable )
         waveTable . add (
-                         row
-                        );
+                         row );
     selectedRow = waveTable . size ();
-
     return *this;
 }
-
 
 auto
     Wavetable::operator= (
             Wavetable&& other
             ) noexcept -> Wavetable&
 {
-    if ( &other == this )
-    {
-        return *this;
-    }
-
+    if ( &other == this ) { return *this; }
     waveTableIndex = other . waveTableIndex;
     sustained      = other . sustained;
     released       = other . released;
     releaseCounter = other . releaseCounter;
     forVoice       = other . forVoice;
-
     for each ( unsigned int row in other . waveTable )
         waveTable . add (
-                         row
-                        );
+                         row );
     selectedRow = waveTable . size ();
-
     return *this;
 }
-
 
 void
     Wavetable::Select (
@@ -264,171 +185,123 @@ void
 {
     if ( value )
     {
-        SharedResourcePointer < ListenerList < PatchEditorShowNoteTable > > () -> add (
-                                                                                       this
-                                                                                      );
-        SharedResourcePointer < ListenerList < PatchEditorShowPulseTable > > () -> add (
-                                                                                        this
-                                                                                       );
-        SharedResourcePointer < ListenerList < PatchEditorShowWaveTable > > () -> add (
-                                                                                       this
-                                                                                      );
-        SharedResourcePointer < ListenerList < WavetableSelectionChanged > > () -> add (
-                                                                                        this
-                                                                                       );
-
-        wavetableRowChangedListeners -> add (
-                                             this
-                                            );
+        dispatcher -> patchEditorShowNoteTableListeners -> add (
+                                                                this );
+        dispatcher -> patchEditorShowPulseTableListeners -> add (
+                                                                 this );
+        dispatcher -> patchEditorShowWaveTableListeners -> add (
+                                                                this );
+        dispatcher -> wavetableSelectionChangedListeners -> add (
+                                                                 this );
+        dispatcher -> wavetableRowChangedListeners -> add (
+                                                           this );
     }
     else
     {
-        SharedResourcePointer < ListenerList < PatchEditorShowNoteTable > > () -> remove (
-                                                                                          this
-                                                                                         );
-        SharedResourcePointer < ListenerList < PatchEditorShowPulseTable > > () -> remove (
-                                                                                           this
-                                                                                          );
-        SharedResourcePointer < ListenerList < PatchEditorShowWaveTable > > () -> remove (
-                                                                                          this
-                                                                                         );
-        SharedResourcePointer < ListenerList < WavetableSelectionChanged > > () -> remove (
-                                                                                           this
-                                                                                          );
-
-        wavetableRowChangedListeners -> remove (
-                                                this
-                                               );
+        dispatcher -> patchEditorShowNoteTableListeners -> remove (
+                                                                   this );
+        dispatcher -> patchEditorShowPulseTableListeners -> remove (
+                                                                    this );
+        dispatcher -> patchEditorShowWaveTableListeners -> remove (
+                                                                   this );
+        dispatcher -> wavetableSelectionChangedListeners -> remove (
+                                                                    this );
+        dispatcher -> wavetableRowChangedListeners -> remove (
+                                                              this );
     }
 }
 
-
 void
-    Wavetable::Write (  // NOLINT(readability-convert-member-functions-to-static)
+    Wavetable::Write (
+            // NOLINT(readability-convert-member-functions-to-static)
             XmlElement* e
             ) const
 {
     auto wt = e -> getChildByName (
-                                   "wavetable"
-                                  );
+                                   "wavetable" );
     if ( wt == nullptr )
     {
         wt = new XmlElement (
-                             "wavetable"
-                            );
+                             "wavetable" );
         e -> addChildElement (
-                              wt
-                             );
+                              wt );
     }
-
     wt -> deleteAllChildElements ();
-
     for each ( unsigned int v in waveTable )
     {
         if ( v < 0x100 )
         {
             auto row = new XmlElement (
-                                       "row"
-                                      );
-
+                                       "row" );
             row -> setAttribute (
                                  "triangle"
                                , String (
-                                         ( v & 0x10 ) == 0x10
-                                        )
-                                );
+                                         ( v & 0x10 ) == 0x10 ) );
             row -> setAttribute (
                                  "sawtooth"
                                , String (
-                                         ( v & 0x20 ) == 0x20
-                                        )
-                                );
+                                         ( v & 0x20 ) == 0x20 ) );
             row -> setAttribute (
                                  "pulse"
                                , String (
-                                         ( v & 0x40 ) == 0x40
-                                        )
-                                );
+                                         ( v & 0x40 ) == 0x40 ) );
             row -> setAttribute (
                                  "noise"
                                , String (
-                                         ( v & 0x80 ) == 0x80
-                                        )
-                                );
+                                         ( v & 0x80 ) == 0x80 ) );
             row -> setAttribute (
                                  "test"
                                , String (
-                                         ( v & 0x08 ) == 0x08
-                                        )
-                                );
+                                         ( v & 0x08 ) == 0x08 ) );
             row -> setAttribute (
                                  "ring"
                                , String (
-                                         ( v & 0x04 ) == 0x04
-                                        )
-                                );
+                                         ( v & 0x04 ) == 0x04 ) );
             row -> setAttribute (
                                  "sync"
                                , String (
-                                         ( v & 0x02 ) == 0x02
-                                        )
-                                );
+                                         ( v & 0x02 ) == 0x02 ) );
             row -> setAttribute (
                                  "gate"
                                , String (
-                                         ( v & 0x01 ) == 0x01
-                                        )
-                                );
-
+                                         ( v & 0x01 ) == 0x01 ) );
             wt -> addChildElement (
-                                   row
-                                  );
+                                   row );
         }
         else
         {
             auto command = new XmlElement (
-                                           "command"
-                                          );
-
+                                           "command" );
             if ( ( v & 0x100 ) == 0x100 )
             {
                 command -> setAttribute (
                                          "type"
-                                       , "end"
-                                        );
+                                       , "end" );
             }
             else if ( ( v & 0x200 ) == 0x200 )
             {
                 command -> setAttribute (
                                          "type"
-                                       , "goto"
-                                        );
+                                       , "goto" );
             }
             else if ( ( v & 0x400 ) == 0x400 )
             {
                 command -> setAttribute (
                                          "type"
-                                       , "sustain-to"
-                                        );
+                                       , "sustain-to" );
             }
-
             if ( ( v & 0x100 ) != 0x100 )
             {
                 command -> setAttribute (
                                          "argument"
                                        , String (
-                                                 v & 0xff
-                                                )
-                                        );
+                                                 v & 0xff ) );
             }
-
             wt -> addChildElement (
-                                   command
-                                  );
+                                   command );
         }
     }
 }
-
 
 void
     Wavetable::WriteState (
@@ -438,18 +311,14 @@ void
     unsigned int size = waveTable . size ();
     dest_data . append (
                         static_cast < const void* > ( &size )
-                      , sizeof size
-                       );
-
+                      , sizeof size );
     for ( const auto& row : waveTable )
     {
         dest_data . append (
                             static_cast < const void* > ( &row )
-                          , sizeof row
-                           );
+                          , sizeof row );
     }
 }
-
 
 void
 // ReSharper disable once CppMemberFunctionMayBeStatic
@@ -457,58 +326,42 @@ void
             MemoryBlock& dest_data
             ) const {}
 
-
 void
     Wavetable::LoadState (
-            MemoryInputStream&                             stream
-          , const ReferenceCountedObjectPtr < SidProgram > o
+            MemoryInputStream&                              stream
+          , const ReferenceCountedObjectPtr < SidProgram >& o
             )
 {
     auto wt = o -> GetWavetable ();
     wt -> waveTable . clear ();
-
     unsigned int size;
     stream . read (
                    &size
-                 , sizeof size
-                  );
-
+                 , sizeof size );
     for ( unsigned int i = 0 ; i < size ; i++ )
     {
         unsigned int row;
         stream . read (
                        &row
-                     , sizeof row
-                      );
+                     , sizeof row );
         wt -> waveTable . add (
-                               row
-                              );
+                               row );
     }
 }
 
-
 void
     Wavetable::LoadCopyState (
-            MemoryInputStream&                       stream
-          , ReferenceCountedObjectPtr < SidProgram > o
+            MemoryInputStream&                              stream
+          , const ReferenceCountedObjectPtr < SidProgram >& o
             ) {}
 
-
 auto
-    Wavetable::GetWaveTableSize () const -> unsigned int
-{
-    return static_cast < unsigned int > ( waveTable . size () );
-}
-
+    Wavetable::GetWaveTableSize () const -> unsigned int { return static_cast < unsigned int > ( waveTable . size () ); }
 
 auto
     Wavetable::GetWaveTableEntryAt (
             const unsigned int index
-            ) const -> unsigned int
-{
-    return waveTable [ static_cast < int > ( index ) ];
-}
-
+            ) const -> unsigned int { return waveTable [ static_cast < int > ( index ) ]; }
 
 auto
     Wavetable::GetCurrentWaveTableEntry () const -> unsigned int
@@ -518,17 +371,14 @@ auto
                                                 : UCHAR_MAX );
 }
 
-
 void
     Wavetable::AddWaveTableEntry (
             const unsigned int value
             )
 {
     waveTable . add (
-                     value
-                    );
+                     value );
 }
-
 
 void
     Wavetable::InsertWaveTableEntryAt (
@@ -538,10 +388,8 @@ void
 {
     waveTable . insert (
                         static_cast < int > ( index )
-                      , value
-                       );
+                      , value );
 }
-
 
 void
     Wavetable::SetWaveTableEntryAt (
@@ -551,26 +399,19 @@ void
 {
     waveTable . set (
                      static_cast < int > ( index )
-                   , value
-                    );
+                   , value );
 }
-
 
 void
     Wavetable::RemoveWaveTableEntryAt (
             const unsigned int index
             )
 {
-    if ( waveTable . size () == 0 )
-    {
-        return;
-    }
+    if ( waveTable . size () == 0 ) { return; }
     waveTable . remove (
-                        static_cast < int > ( index )
-                       );
+                        static_cast < int > ( index ) );
     Start ();
 }
-
 
 void
     Wavetable::Start ()
@@ -623,71 +464,36 @@ void
 void
     Wavetable::Step ()
 {
-    if ( Released () && DoneReleasing () )
-    {
-        return;
-    }
+    if ( Released () && DoneReleasing () ) { return; }
     waveTableIndex++;
-    if ( waveTableIndex == static_cast < unsigned int > ( waveTable . size () ) )
-    {
-        waveTableIndex--;
-    }
-    if ( ( waveTable [ waveTableIndex ] & END_COMMAND ) == END_COMMAND )
-    {
-        waveTableIndex--;
-    }
-    else if ( ( waveTable [ waveTableIndex ] & GOTO_COMMAND ) == GOTO_COMMAND )
-    {
-        waveTableIndex = static_cast < int > ( waveTable [ waveTableIndex ] ) & UCHAR_MAX;
-    }
+    if ( waveTableIndex == waveTable . size () ) { waveTableIndex--; }
+    if ( ( waveTable [ waveTableIndex ] & END_COMMAND ) == END_COMMAND ) { waveTableIndex--; }
+    else if ( ( waveTable [ waveTableIndex ] & GOTO_COMMAND ) == GOTO_COMMAND ) { waveTableIndex = static_cast < int > ( waveTable [ waveTableIndex ] ) & UCHAR_MAX; }
     else if ( ( waveTable [ waveTableIndex ] & SUSTAIN_TO_COMMAND ) == SUSTAIN_TO_COMMAND )
     {
         sustained = true;
-        if ( !released )
-        {
-            waveTableIndex = static_cast < int > ( waveTable [ waveTableIndex ] ) & UCHAR_MAX;
-        }
-        else
-        {
-            waveTableIndex++;
-        }
-
-        if ( waveTableIndex == static_cast < unsigned int > ( waveTable . size () ) )
-        {
-            waveTableIndex -= 2;
-        }
+        if ( !released ) { waveTableIndex = static_cast < int > ( waveTable [ waveTableIndex ] ) & UCHAR_MAX; }
+        else { waveTableIndex++; }
+        if ( waveTableIndex == waveTable . size () ) { waveTableIndex -= 2; }
     }
-
-    if ( releaseCounter > 0 )
-    {
-        releaseCounter--;
-    }
+    if ( releaseCounter > 0 ) { releaseCounter--; }
 }
-
 
 void
     Wavetable::Release (
             const unsigned int release
             )
 {
-    releaseCounter = DECAY_RELEASE_FRAMES [ release ];
-    released       = true;
+    releaseCounter = DECAY_RELEASE_FRAMES . at (
+                                                release );
+    released = true;
 }
-
 
 auto
-    Wavetable::Sustained () const -> bool
-{
-    return sustained;
-}
-
+    Wavetable::Sustained () const -> bool { return sustained; }
 
 auto
-    Wavetable::Released () const -> bool
-{
-    return released;
-}
-
+    Wavetable::Released () const -> bool { return released; }
 
 auto
     Wavetable::DoneReleasing () const -> bool
@@ -697,7 +503,6 @@ auto
     return releaseCounter <= 0;
 }
 
-
 void
     Wavetable::onPatchEditorNewTableRowClicked ()
 {
@@ -705,17 +510,14 @@ void
     {
         InsertWaveTableEntryAt (
                                 selectedRow
-                              , 0
-                               );
+                              , 0 );
     }
     else
     {
         AddWaveTableEntry (
-                           0
-                          );
+                           0 );
     }
 }
-
 
 void
     Wavetable::onPatchEditorNewTableCommandClicked ()
@@ -724,26 +526,21 @@ void
     {
         InsertWaveTableEntryAt (
                                 selectedRow
-                              , END_COMMAND
-                               );
+                              , END_COMMAND );
     }
     else
     {
         AddWaveTableEntry (
-                           END_COMMAND
-                          );
+                           END_COMMAND );
     }
 }
-
 
 void
     Wavetable::onPatchEditorDeleteTableRowClicked ()
 {
     RemoveWaveTableEntryAt (
-                            selectedRow
-                           );
+                            selectedRow );
 }
-
 
 void
     Wavetable::onWavetableRowChanged (
@@ -752,69 +549,48 @@ void
 {
     SetWaveTableEntryAt (
                          selectedRow
-                       , value
-                        );
+                       , value );
 }
-
 
 void
     Wavetable::onWavetableSelectionChanged (
             const unsigned int row
-            )
-{
-    selectedRow = row;
-}
-
+            ) { selectedRow = row; }
 
 void
     Wavetable::onPatchEditorShowNoteTable ()
 {
-    SharedResourcePointer < ListenerList < PatchEditorNewTableRowClicked > > () -> remove (
-                                                                                           this
-                                                                                          );
-    SharedResourcePointer < ListenerList < PatchEditorNewTableCommandClicked > > () -> remove (
-                                                                                               this
-                                                                                              );
-    SharedResourcePointer < ListenerList < PatchEditorDeleteTableRowClicked > > () -> remove (
-                                                                                              this
-                                                                                             );
+    dispatcher -> patchEditorNewWavetableRowClickedListeners -> remove (
+                                                                        this );
+    dispatcher -> patchEditorNewWavetableCommandClickedListeners -> remove (
+                                                                            this );
+    dispatcher -> patchEditorDeleteWavetableRowClickedListeners -> remove (
+                                                                           this );
 }
-
 
 void
     Wavetable::onPatchEditorShowPulseTable ()
 {
-    SharedResourcePointer < ListenerList < PatchEditorNewTableRowClicked > > () -> remove (
-                                                                                           this
-                                                                                          );
-    SharedResourcePointer < ListenerList < PatchEditorNewTableCommandClicked > > () -> remove (
-                                                                                               this
-                                                                                              );
-    SharedResourcePointer < ListenerList < PatchEditorDeleteTableRowClicked > > () -> remove (
-                                                                                              this
-                                                                                             );
+    dispatcher -> patchEditorNewWavetableRowClickedListeners -> remove (
+                                                                        this );
+    dispatcher -> patchEditorNewWavetableCommandClickedListeners -> remove (
+                                                                            this );
+    dispatcher -> patchEditorDeleteWavetableRowClickedListeners -> remove (
+                                                                           this );
 }
-
 
 void
     Wavetable::onPatchEditorShowWaveTable ()
 {
-    SharedResourcePointer < ListenerList < PatchEditorNewTableRowClicked > > () -> add (
-                                                                                        this
-                                                                                       );
-    SharedResourcePointer < ListenerList < PatchEditorNewTableCommandClicked > > () -> add (
-                                                                                            this
-                                                                                           );
-    SharedResourcePointer < ListenerList < PatchEditorDeleteTableRowClicked > > () -> add (
-                                                                                           this
-                                                                                          );
+    dispatcher -> patchEditorNewWavetableRowClickedListeners -> add (
+                                                                     this );
+    dispatcher -> patchEditorNewWavetableCommandClickedListeners -> add (
+                                                                         this );
+    dispatcher -> patchEditorDeleteWavetableRowClickedListeners -> add (
+                                                                        this );
 }
-
 
 void
     Wavetable::SetForVoice (
             const int value
-            )
-{
-    forVoice = value;
-}
+            ) { forVoice = value; }

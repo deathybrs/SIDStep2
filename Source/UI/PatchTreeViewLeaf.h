@@ -1,31 +1,46 @@
-#ifndef PATCHTREEVIEWLEAF_H_INCLUDED
-#define PATCHTREEVIEWLEAF_H_INCLUDED
+#pragma once
 
 
 #include "../JuceLibraryCode/JuceHeader.h"
-
-
-//class Bank;
+#include "../Listeners/ListenerInitializer.h"
 class SidStep2;
 
-
-class PatchTreeViewLeaf : public TreeViewItem {
+class PatchTreeViewLeaf : public TreeViewItem
+{
 public:
-	PatchTreeViewLeaf(/*ReferenceCountedObjectPtr<SIDStep2>core, */String name, String id);
-	~PatchTreeViewLeaf();
+    PatchTreeViewLeaf (
+            std::shared_ptr < EventDispatcher > dispatcher
+           ,
+            /*ReferenceCountedObjectPtr<SIDStep2>core, */String name
+          , String                                              id
+            );
 
-	bool mightContainSubItems() override;
-	void paintItem(Graphics &g, int width, int height) override;
-	void itemClicked(const MouseEvent &e) override;
+    ~PatchTreeViewLeaf ();
 
-	String getName() const;
-	String getID() const;
+    bool
+        mightContainSubItems () override;
+
+    void
+        paintItem (
+                Graphics& g
+              , int       width
+              , int       height
+                ) override;
+
+    void
+        itemClicked (
+                const MouseEvent& e
+                ) override;
+
+    String
+        getName () const;
+
+    String
+        getID () const;
 
 private:
-	//ReferenceCountedObjectPtr<SIDStep2> core;
-	String name;
-	String id;
+    std::shared_ptr < EventDispatcher > dispatcher;
+    //ReferenceCountedObjectPtr<SIDStep2> core;
+    String name;
+    String id;
 };
-
-
-#endif  // PATCHTREEVIEWLEAF_H_INCLUDED

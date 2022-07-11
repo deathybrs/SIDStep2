@@ -61,14 +61,14 @@ public: \
 // code that fires events rather than a direct call.  It is necessary to fire
 // the events here rather than directly in the Parameter object because the
 // Parameter objects don't actually know what they are.
-#define PROCESS_PARAMETER(name,type,evnt) \
+#define PROCESS_PARAMETER(name,type,evnt,listener) \
 	if (_ ## name ## Parameter != nullptr && _ ## name ## Parameter->isDirty()) { \
-		SharedResourcePointer<ListenerList<evnt>>()->call(&evnt::on ## evnt, _ ## name ## Parameter->get ## type()); \
+		listener->call(&evnt::on ## evnt, _ ## name ## Parameter->get ## type()); \
 		_ ## name ## Parameter->setDirty(false); \
 	}
-#define PROCESS_VOICE_PARAMETER(name,type,evnt) \
+#define PROCESS_VOICE_PARAMETER(name,type,evnt,listener) \
 	if (_ ## name ## Parameters[v] != nullptr && _ ## name ## Parameters[v]->isDirty()) { \
-		SharedResourcePointer<ListenerList<evnt>>()->call(&evnt::on ## evnt, v, _ ## name ## Parameters[v]->get ## type()); \
+		listener->call(&evnt::on ## evnt, v, _ ## name ## Parameters[v]->get ## type()); \
 		_ ## name ## Parameters[v]->setDirty(false); \
 	}
 

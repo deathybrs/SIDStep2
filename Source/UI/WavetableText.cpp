@@ -28,7 +28,12 @@
 //[/MiscUserDefs]
 
 //==============================================================================
-WavetableText::WavetableText ()
+WavetableText::WavetableText (
+        std::shared_ptr < EventDispatcher > dispatcher
+        )
+    :
+    dispatcher (
+                dispatcher )
 {
     //[Constructor_pre] You can add your own custom stuff here..
     //[/Constructor_pre]
@@ -88,9 +93,8 @@ void WavetableText::resized()
 void WavetableText::mouseUp (const juce::MouseEvent& e)
 {
     //[UserCode_mouseUp] -- Add your code here...
-    SharedResourcePointer < ListenerList < PatchEditorShowWaveTable > > () -> call (
-                                                                                    &PatchEditorShowWaveTable::onPatchEditorShowWaveTable
-                                                                                   );
+    dispatcher -> patchEditorShowWaveTableListeners -> call (
+                                                             &PatchEditorShowWaveTable::onPatchEditorShowWaveTable );
     //[/UserCode_mouseUp]
 }
 

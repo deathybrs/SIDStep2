@@ -20,13 +20,16 @@
 #pragma once
 
 //[Headers]     -- You can add your own extra header files here --
-#include "../../JuceLibraryCode/JuceHeader.h"
-#include "../Programs/PatchTreeBuilder.h"
+#include <JuceHeader.h>
+
 #include "../Listeners/ListenerInitializer.h"
+#include "../Programs/PatchTreeBuilder.h"
+
 
 class Bank;
-//[/Headers]
 
+
+//[/Headers]
 
 
 //==============================================================================
@@ -37,63 +40,82 @@ class Bank;
     Describe your class and how it works here!
                                                                     //[/Comments]
 */
-class BankMenu  : public Component,
-                  public BankTreeChanged,
-                  public BankLoad,
-                  public PatchTreeBuilder,
-                  public juce::Button::Listener
+class BankMenu
+        : public Component
+        , public BankTreeChanged
+        , public BankLoad
+        , public PatchTreeBuilder
+        , public Button::Listener
 {
 public:
     //==============================================================================
-    BankMenu ();
-    ~BankMenu() override;
+    explicit
+        BankMenu (
+                std::shared_ptr < EventDispatcher > dispatcher
+                );
+
+    ~BankMenu () override;
 
     //==============================================================================
     //[UserMethods]     -- You can add your own custom methods in this section.
-	void onBankTreeChanged() override;
-	void onBankLoad(String id) override;
+    void
+        onBankTreeChanged () override;
+
+    void
+        onBankLoad (
+                String id
+                ) override;
+
     //[/UserMethods]
 
-    void paint (juce::Graphics& g) override;
-    void resized() override;
-    void buttonClicked (juce::Button* buttonThatWasClicked) override;
+    void
+        paint (
+                Graphics& g
+                ) override;
+
+    void
+        resized () override;
+
+    void
+        buttonClicked (
+                Button* button_that_was_clicked
+                ) override;
 
     // Binary resources:
     static const char* newPatchNormal_png;
-    static const int newPatchNormal_pngSize;
+    static const int   newPatchNormal_pngSize;
     static const char* newPatchOver_png;
-    static const int newPatchOver_pngSize;
+    static const int   newPatchOver_pngSize;
     static const char* newPatchDown_png;
-    static const int newPatchDown_pngSize;
+    static const int   newPatchDown_pngSize;
     static const char* savePatchNormal_png;
-    static const int savePatchNormal_pngSize;
+    static const int   savePatchNormal_pngSize;
     static const char* savePatchOver_png;
-    static const int savePatchOver_pngSize;
+    static const int   savePatchOver_pngSize;
     static const char* savePatchDown_png;
-    static const int savePatchDown_pngSize;
+    static const int   savePatchDown_pngSize;
     static const char* savePatchAsNormal_png;
-    static const int savePatchAsNormal_pngSize;
+    static const int   savePatchAsNormal_pngSize;
     static const char* savePatchAsOver_png;
-    static const int savePatchAsOver_pngSize;
+    static const int   savePatchAsOver_pngSize;
     static const char* savePatchAsDown_png;
-    static const int savePatchAsDown_pngSize;
-
-
+    static const int   savePatchAsDown_pngSize;
 private:
     //[UserVariables]   -- You can add your own custom variables in this section.
+    std::shared_ptr < EventDispatcher > dispatcher;
     //[/UserVariables]
 
     //==============================================================================
-    std::unique_ptr<juce::ImageButton> newButton;
-    std::unique_ptr<juce::ImageButton> saveButton;
-    std::unique_ptr<juce::ImageButton> saveAsButton;
-    std::unique_ptr<juce::TreeView> treeView;
+    std::unique_ptr < ImageButton > newButton;
+    std::unique_ptr < ImageButton > saveButton;
+    std::unique_ptr < ImageButton > saveAsButton;
+    std::unique_ptr < TreeView >    treeView;
 
 
     //==============================================================================
-    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (BankMenu)
+    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (
+                                                  BankMenu )
 };
 
 //[EndFile] You can add extra defines here...
 //[/EndFile]
-

@@ -1,18 +1,18 @@
 #include "SIDRegisters.h"
 
-
 #include <array>
-
 
 #include "SIDProgram.h"
 
-
 #include "../Requirements/resid-0.16/sid.h"
 
-
-SidRegisters::SidRegisters ()
+SidRegisters::SidRegisters (
+        const std::shared_ptr < EventDispatcher > dispatcher
+        )
     :
-    fileBrowser (
+    dispatcher (
+                dispatcher )
+  , fileBrowser (
                  "Save SIDDump File" )
   , sid (
          new SID () )
@@ -62,98 +62,98 @@ SidRegisters::SidRegisters ()
         }
         hardRestartReleasedNotesDelayIndex = 0;
     }
-    SharedResourcePointer < ListenerList < LiveCutoffChanged > > () -> add (
-                                                                            this );
-    SharedResourcePointer < ListenerList < LiveResonanceChanged > > () -> add (
-                                                                               this );
-    SharedResourcePointer < ListenerList < LiveVoiceFilterChanged > > () -> add (
-                                                                                 this );
-    SharedResourcePointer < ListenerList < LiveLowPassChanged > > () -> add (
-                                                                             this );
-    SharedResourcePointer < ListenerList < LiveBandPassChanged > > () -> add (
-                                                                              this );
-    SharedResourcePointer < ListenerList < LiveHighPassChanged > > () -> add (
-                                                                              this );
-    SharedResourcePointer < ListenerList < LiveVolumeChanged > > () -> add (
-                                                                            this );
-    SharedResourcePointer < ListenerList < LoadLivePatch > > () -> add (
-                                                                        this );
-    SharedResourcePointer < ListenerList < CutoffParameterChanged > > () -> add (
-                                                                                 this );
-    SharedResourcePointer < ListenerList < ResonanceParameterChanged > > () -> add (
-                                                                                    this );
-    SharedResourcePointer < ListenerList < FilterVoiceParameterChanged > > () -> add (
-                                                                                      this );
-    SharedResourcePointer < ListenerList < LowPassParameterChanged > > () -> add (
-                                                                                  this );
-    SharedResourcePointer < ListenerList < BandPassParameterChanged > > () -> add (
-                                                                                   this );
-    SharedResourcePointer < ListenerList < HighPassParameterChanged > > () -> add (
-                                                                                   this );
-    SharedResourcePointer < ListenerList < VolumeParameterChanged > > () -> add (
-                                                                                 this );
-    SharedResourcePointer < ListenerList < NoteOn > > () -> add (
-                                                                 this );
-    SharedResourcePointer < ListenerList < NoteOff > > () -> add (
-                                                                  this );
-    SharedResourcePointer < ListenerList < LiveExportArmed > > () -> add (
-                                                                          this );
-    SharedResourcePointer < ListenerList < LiveDoneExporting > > () -> add (
-                                                                            this );
-    SharedResourcePointer < ListenerList < LiveTitleChanged > > () -> add (
-                                                                           this );
-    SharedResourcePointer < ListenerList < LiveArtistChanged > > () -> add (
-                                                                            this );
-    SharedResourcePointer < ListenerList < QuarterNoteTick > > () -> add (
-                                                                          this );
+    dispatcher -> liveCutoffChangedListeners -> add (
+                                                     this );
+    dispatcher -> liveResonanceChangedListeners -> add (
+                                                        this );
+    dispatcher -> liveVoiceFilterChangedListeners -> add (
+                                                          this );
+    dispatcher -> liveLowPassChangedListeners -> add (
+                                                      this );
+    dispatcher -> liveBandPassChangedListeners -> add (
+                                                       this );
+    dispatcher -> liveHighPassChangedListeners -> add (
+                                                       this );
+    dispatcher -> liveVolumeChangedListeners -> add (
+                                                     this );
+    dispatcher -> loadLivePatchListeners -> add (
+                                                 this );
+    dispatcher -> cutoffParameterChangedListeners -> add (
+                                                          this );
+    dispatcher -> resonanceParameterChangedListeners -> add (
+                                                             this );
+    dispatcher -> filterVoiceParameterChangedListeners -> add (
+                                                               this );
+    dispatcher -> lowPassParameterChangedListeners -> add (
+                                                           this );
+    dispatcher -> bandPassParameterChangedListeners -> add (
+                                                            this );
+    dispatcher -> highPassParameterChangedListeners -> add (
+                                                            this );
+    dispatcher -> volumeParameterChangedListeners -> add (
+                                                          this );
+    dispatcher -> noteOnListeners -> add (
+                                          this );
+    dispatcher -> noteOffListeners -> add (
+                                           this );
+    dispatcher -> liveExportArmedListeners -> add (
+                                                   this );
+    dispatcher -> liveDoneExportingListeners -> add (
+                                                     this );
+    dispatcher -> liveTitleChangedListeners -> add (
+                                                    this );
+    dispatcher -> liveArtistChangedListeners -> add (
+                                                     this );
+    dispatcher -> quarterNoteTickListeners -> add (
+                                                   this );
 }
 
 SidRegisters::~SidRegisters ()
 {
-    SharedResourcePointer < ListenerList < LiveCutoffChanged > > () -> remove (
-                                                                               this );
-    SharedResourcePointer < ListenerList < LiveResonanceChanged > > () -> remove (
-                                                                                  this );
-    SharedResourcePointer < ListenerList < LiveVoiceFilterChanged > > () -> remove (
-                                                                                    this );
-    SharedResourcePointer < ListenerList < LiveLowPassChanged > > () -> remove (
-                                                                                this );
-    SharedResourcePointer < ListenerList < LiveBandPassChanged > > () -> remove (
-                                                                                 this );
-    SharedResourcePointer < ListenerList < LiveHighPassChanged > > () -> remove (
-                                                                                 this );
-    SharedResourcePointer < ListenerList < LiveVolumeChanged > > () -> remove (
-                                                                               this );
-    SharedResourcePointer < ListenerList < LoadLivePatch > > () -> remove (
-                                                                           this );
-    SharedResourcePointer < ListenerList < CutoffParameterChanged > > () -> remove (
-                                                                                    this );
-    SharedResourcePointer < ListenerList < ResonanceParameterChanged > > () -> remove (
-                                                                                       this );
-    SharedResourcePointer < ListenerList < FilterVoiceParameterChanged > > () -> remove (
-                                                                                         this );
-    SharedResourcePointer < ListenerList < LowPassParameterChanged > > () -> remove (
-                                                                                     this );
-    SharedResourcePointer < ListenerList < BandPassParameterChanged > > () -> remove (
-                                                                                      this );
-    SharedResourcePointer < ListenerList < HighPassParameterChanged > > () -> remove (
-                                                                                      this );
-    SharedResourcePointer < ListenerList < VolumeParameterChanged > > () -> remove (
-                                                                                    this );
-    SharedResourcePointer < ListenerList < NoteOn > > () -> remove (
-                                                                    this );
-    SharedResourcePointer < ListenerList < NoteOff > > () -> remove (
-                                                                     this );
-    SharedResourcePointer < ListenerList < LiveExportArmed > > () -> remove (
-                                                                             this );
-    SharedResourcePointer < ListenerList < LiveDoneExporting > > () -> remove (
-                                                                               this );
-    SharedResourcePointer < ListenerList < LiveTitleChanged > > () -> remove (
-                                                                              this );
-    SharedResourcePointer < ListenerList < LiveArtistChanged > > () -> remove (
-                                                                               this );
-    SharedResourcePointer < ListenerList < QuarterNoteTick > > () -> remove (
-                                                                             this );
+    dispatcher -> liveCutoffChangedListeners -> remove (
+                                                        this );
+    dispatcher -> liveResonanceChangedListeners -> remove (
+                                                           this );
+    dispatcher -> liveVoiceFilterChangedListeners -> remove (
+                                                             this );
+    dispatcher -> liveLowPassChangedListeners -> remove (
+                                                         this );
+    dispatcher -> liveBandPassChangedListeners -> remove (
+                                                          this );
+    dispatcher -> liveHighPassChangedListeners -> remove (
+                                                          this );
+    dispatcher -> liveVolumeChangedListeners -> remove (
+                                                        this );
+    dispatcher -> loadLivePatchListeners -> remove (
+                                                    this );
+    dispatcher -> cutoffParameterChangedListeners -> remove (
+                                                             this );
+    dispatcher -> resonanceParameterChangedListeners -> remove (
+                                                                this );
+    dispatcher -> filterVoiceParameterChangedListeners -> remove (
+                                                                  this );
+    dispatcher -> lowPassParameterChangedListeners -> remove (
+                                                              this );
+    dispatcher -> bandPassParameterChangedListeners -> remove (
+                                                               this );
+    dispatcher -> highPassParameterChangedListeners -> remove (
+                                                               this );
+    dispatcher -> volumeParameterChangedListeners -> remove (
+                                                             this );
+    dispatcher -> noteOnListeners -> remove (
+                                             this );
+    dispatcher -> noteOffListeners -> remove (
+                                              this );
+    dispatcher -> liveExportArmedListeners -> remove (
+                                                      this );
+    dispatcher -> liveDoneExportingListeners -> remove (
+                                                        this );
+    dispatcher -> liveTitleChangedListeners -> remove (
+                                                       this );
+    dispatcher -> liveArtistChangedListeners -> remove (
+                                                        this );
+    dispatcher -> quarterNoteTickListeners -> remove (
+                                                      this );
     sid = nullptr;
     notes . clear ();
     releasedNotes . clear ();
@@ -689,7 +689,7 @@ void
           , bool               playing
             )
 {
-    currentQuarterNote = ppq;
+    currentQuarterNote     = ppq;
     const auto current_bar = currentQuarterNote / 4;
     if ( current_bar >= barFrames . size () )
     {
@@ -710,15 +710,12 @@ void
 {
     if ( recording && frame < currentFrame )
     {
-        SharedResourcePointer < ListenerList < LiveDoneExporting > > () -> call (
-                                                                                 &LiveDoneExporting::onLiveDoneExporting );
+        dispatcher -> liveDoneExportingListeners -> call (
+                                                          &LiveDoneExporting::onLiveDoneExporting );
         return;
     }
-    if ( frame == 0 )
-    {
-        record . clear ();
-    }
-    lastFrame = currentFrame;
+    if ( frame == 0 ) { record . clear (); }
+    lastFrame    = currentFrame;
     currentFrame = frame;
 }
 
@@ -758,7 +755,7 @@ void
     if ( v == 0 )
     {
         hardRestartReleasedNotesDelayIndex++;
-        hardRestartReleasedNotesDelayIndex %= 3; 
+        hardRestartReleasedNotesDelayIndex %= 3;
     }
     for ( auto i = 0 ; i < hardRestartReleasedNotesDelay . getUnchecked (
                                                                          v ) -> getUnchecked (
@@ -773,7 +770,7 @@ void
     hardRestartReleasedNotesDelay . getUnchecked (
                                                   v ) -> getUnchecked (
                                                                        hardRestartReleasedNotesDelayIndex ) -> clear ();
-    const auto p = programs [ v ];
+    const auto         p      = programs [ v ];
     const auto         e      = p -> GetEnvelope ();
     const unsigned int offset = v * 7;
     if ( notes [ v ] -> size () > 0 && arpIndex [ v ] != -1 )
@@ -825,20 +822,18 @@ void
             const int v
             )
 {
-    const auto         p      = programs [ v ];
-    const auto         ex     = p -> GetExpression ();
-    const unsigned int offset = v * 7;
-
-    const auto pulse_cycle       = ex -> getCurrentPulseValue ();
-    const auto pulse_table_cycle = p -> GetPulseTable () -> GetCurrentPulseTableEntry ();
-    const auto pulse_value       = static_cast < int > ( pulse_cycle ) - 2048 + ( static_cast < int > ( pulse_table_cycle ) - 2048 ) + 2048;
+    const auto         p                 = programs [ v ];
+    const auto         ex                = p -> GetExpression ();
+    const unsigned int offset            = v * 7;
+    const auto         pulse_cycle       = ex -> getCurrentPulseValue ();
+    const auto         pulse_table_cycle = p -> GetPulseTable () -> GetCurrentPulseTableEntry ();
+    const auto         pulse_value       = static_cast < int > ( pulse_cycle ) - 2048 + ( static_cast < int > ( pulse_table_cycle ) - 2048 ) + 2048;
     DirtyWrite (
                 static_cast < int > ( offset ) + 2
               , pulse_value & _8_bits_max );
     DirtyWrite (
                 static_cast < int > ( offset ) + 3
               , ( pulse_value & pulse_hi_nybble ) >> pulse_hi_nybble_bit_shift );
-
     p -> Step ();
 }
 
@@ -871,10 +866,7 @@ void
 void
     SidRegisters::WriteRegisters ()
 {
-    if ( lastFrame == currentFrame )
-    {
-        return;
-    }
+    if ( lastFrame == currentFrame ) { return; }
     static const auto                   REGISTER_COUNT = 0x19;
     std::array < int , REGISTER_COUNT > row {};
     row . fill (
@@ -975,7 +967,6 @@ void
             if ( notes [ v ] -> getUnchecked (
                                               nit ) . note == cn ) { break; }
         }
-
         if ( nit != notes [ v ] -> size () )
         {
             notes [ v ] -> remove (

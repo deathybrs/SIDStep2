@@ -1,31 +1,27 @@
 #include "AbstractPulseTableRow.h"
 
-
-AbstractPulseTableRow::AbstractPulseTableRow ()
+AbstractPulseTableRow::AbstractPulseTableRow (
+        const std::shared_ptr < EventDispatcher >& dispatcher
+        )
+    :
+    dispatcher (
+                dispatcher )
 {
-    SharedResourcePointer < ListenerList < PulseTableSelectionChanged > > () -> add (
-                                                                                     this
-                                                                                    );
+    dispatcher -> pulseTableSelectionChangedListeners -> add (
+                                                              this );
 }
-
 
 AbstractPulseTableRow::~AbstractPulseTableRow ()
 {
-    SharedResourcePointer < ListenerList < PulseTableSelectionChanged > > () -> remove (
-                                                                                        this
-                                                                                       );
+    dispatcher -> pulseTableSelectionChangedListeners -> remove (
+                                                                 this );
 }
-
 
 void
     AbstractPulseTableRow::onPulseTableSelectionChanged (
             const unsigned selected_row
             )
 {
-    if ( static_cast < unsigned int > ( row ) == selected_row )
-        selected = true;
-    else
-        selected = false;
-
+    selected = static_cast < unsigned int > ( row ) == selected_row;
     repaint ();
 }

@@ -1,10 +1,6 @@
 #pragma once
-
-
 #include <JuceHeader.h>
-
 #include "../Listeners/ListenerInitializer.h"
-
 #include "../Programs/ArpRow.h"
 
 class NoteTable final
@@ -19,11 +15,15 @@ class NoteTable final
         , public NoteTableRowChanged
 {
 public:
-    NoteTable ();
+    explicit
+        NoteTable (
+                const std::shared_ptr < EventDispatcher >& dispatcher
+                );
 
     explicit
         NoteTable (
-                XmlElement* e
+                const std::shared_ptr < EventDispatcher >& dispatcher
+              , XmlElement*                                e
                 );
 
     NoteTable (
@@ -165,15 +165,16 @@ public:
         onPatchEditorShowWaveTable () override;
 
 private:
-    OwnedArray < ArpRow >                                          notes;
-    int                                                            noteTableIndex = 0;
-    bool                                                           sustained      = false;
-    bool                                                           released       = false;
-    unsigned int                                                   releaseCounter = 0;
-    unsigned int                                                   selectedRow    = 0;
-    SharedResourcePointer < ListenerList < NoteTableRowChanged > > noteTableRowChangedListeners;
-    int                                                            forVoice           = 0;
-    static const int                                               END_COMMAND        = 0x100;
-    static const int                                               GOTO_COMMAND       = 0x200;
-    static const int                                               SUSTAIN_TO_COMMAND = 0x400;
+    std::shared_ptr < EventDispatcher > dispatcher;
+    OwnedArray < ArpRow >               notes;
+    int                                 noteTableIndex = 0;
+    bool                                sustained      = false;
+    bool                                released       = false;
+    unsigned int                        releaseCounter = 0;
+    unsigned int                        selectedRow    = 0;
+    //SharedResourcePointer < ListenerList < NoteTableRowChanged > > noteTableRowChangedListeners;
+    int              forVoice           = 0;
+    static const int END_COMMAND        = 0x100;
+    static const int GOTO_COMMAND       = 0x200;
+    static const int SUSTAIN_TO_COMMAND = 0x400;
 };
