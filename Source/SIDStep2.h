@@ -1,12 +1,21 @@
 #pragma once
+
+
 #include <JuceHeader.h>
+
+
 #include "SIDProgram.h"
+
+
 #include "Listeners/ListenerInitializer.h"
+
+
 class ExportManager;
 class SidRegisters;
 class Renderer;
 class Bank;
 class Recorder;
+
 
 class SidStep2 final
         : public ReferenceCountedObject
@@ -45,6 +54,11 @@ public:
         GetStateInformation (
                 MemoryBlock& dest_data
                 ) const;
+
+    void
+        ReadState20200714 (
+                MemoryInputStream& stream
+                );
 
     void
         ReadState20200708 (
@@ -118,6 +132,8 @@ public:
 private:
     static const int                    SIXTEEN_BIT        = 0x8000;
     static const int                    BUFFER_SIZE        = 16;
+    static const int                    CUTOFF_LO          = 0x15;
+    static const int                    CUTOFF_HI          = 0x16;
     static const int                    FILTER_RES_ROUTE   = 0x17;
     static const int                    VOLUME_FILTER_MODE = 0x18;
     static const int                    LOW_NYBBLE         = 0x0f;

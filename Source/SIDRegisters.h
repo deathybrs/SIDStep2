@@ -91,7 +91,24 @@ public:
                   unsigned int
                 , LiveCutoffChanged
                 , CutoffParameterChanged
-                , { auto log_val = static_cast<unsigned int>( round(cutoff_base * pow(binary_base, 1.0/cutoff_divisor * ((static_cast<double>(value) / cutoff_range) - cutoff_offset)))); DirtyWrite(0x15, (log_val & 0x07)); DirtyWrite(0x16, (log_val & 0x7f8) >> 3); } )
+                , {
+                    auto log_val = static_cast<unsigned int>( 
+                        round(
+                            cutoff_base * pow(
+                                binary_base, 1.0/cutoff_divisor * (
+                                    (
+                                        static_cast<double>(
+                                            value
+                                        ) / cutoff_range
+                                    ) - cutoff_offset
+                                )
+                            )
+                        )
+                    );
+                    DirtyWrite(0x15, (log_val & 0x07));
+                    DirtyWrite(0x16, (log_val & 0x7f8) >> 3);
+                } 
+    )
 
     // Filter Resonance & Routing ($d417)
     SID_REGISTER (
@@ -160,6 +177,12 @@ public:
                 int index
                 ) const -> int;
 
+    static constexpr double cutoff_base = 0.9995117188;
+    static constexpr double binary_base = 2.0;
+    static constexpr double cutoff_divisor = 0.0833333333;
+    static constexpr double cutoff_range = 2047.0;
+    static constexpr double cutoff_offset = 0.0833333333;
+
 private:
     static const int        register_array_size       = 0x19;
     static const int        last_register             = 0x18;
@@ -179,11 +202,6 @@ private:
     static constexpr double clock_freq                = 985248.0;
     static constexpr double sample_freq               = 44100.0;
     static constexpr double pass_freq                 = 19845.0;
-    static constexpr double cutoff_base               = 0.9995117188;
-    static constexpr double binary_base               = 2.0;
-    static constexpr double cutoff_divisor            = 0.0833333333;
-    static constexpr double cutoff_range              = 2047.0;
-    static constexpr double cutoff_offset             = 0.0833333333;
     static constexpr double middle_a                  = 440.0;
     static constexpr double octave                    = 12.0;
     static constexpr double note_middle_offset        = 69.0;

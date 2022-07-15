@@ -356,7 +356,7 @@ void
     //                                , "You can attach the debugger now." );
     // this saves the config
 
-    unsigned int data_version = 0x20200708;
+    unsigned int data_version = 0x20200714;
     dest_data . append (
                         static_cast < const void* > ( &data_version )
                       , sizeof data_version );
@@ -408,6 +408,92 @@ void
     dest_data . append (
                         static_cast < const void* > ( artist_string )
                       , artist_length );
+    // have to calculate backwards to get value.
+    //auto log_val = static_cast<unsigned int>(
+    //    round(
+    //        cutoff_base * pow(
+    //            binary_base, 1.0 / cutoff_divisor * (
+    //                (
+    //                    static_cast<double>(
+    //                        value
+    //                        ) / cutoff_range
+    //                    ) - cutoff_offset
+    //                )
+    //        )
+    //    )
+    //    );
+    const unsigned int cutoff_registers = sidRegisters -> registers [ CUTOFF_LO ] + ( sidRegisters -> registers [ CUTOFF_HI ] << 3 );
+    const auto cutoff1 = cutoff_registers / SidRegisters::cutoff_base;
+    const auto cutoff2 = sqrt (
+                               cutoff1 );
+    const auto cutoff3 = cutoff2 / ( 1.0 / SidRegisters::cutoff_divisor );
+    const auto cutoff4 = cutoff3 - SidRegisters::cutoff_offset;
+    const auto cutoff5 = cutoff4 * SidRegisters::cutoff_range;
+
+    const auto cutoff = static_cast < unsigned int > ( cutoff5 );
+    dest_data . append (
+                        static_cast < const void* > ( &cutoff )
+                      , sizeof cutoff );
+    const unsigned int resonance = sidRegisters -> registers [ FILTER_RES_ROUTE ] >> 4;
+    dest_data . append (
+                        static_cast < const void* > ( &resonance )
+                      , sizeof resonance );
+    const auto lo_pass = ( sidRegisters -> registers [ VOLUME_FILTER_MODE ] & 0x10 ) == 0x10;
+    dest_data . append (
+                        static_cast < const void* > ( &lo_pass )
+                      , sizeof lo_pass );
+    const auto band_pass = ( sidRegisters -> registers [ VOLUME_FILTER_MODE ] & 0x20 ) == 0x20;
+    dest_data . append (
+                        static_cast < const void* > ( &band_pass )
+                      , sizeof band_pass );
+    const auto hi_pass = ( sidRegisters -> registers [ VOLUME_FILTER_MODE ] & 0x40 ) == 0x40;
+    dest_data . append (
+                        static_cast < const void* > ( &hi_pass )
+                      , sizeof hi_pass );
+}
+
+void
+    SidStep2::ReadState20200714 (
+            MemoryInputStream& stream
+            )
+{
+    ReadState20200708 (
+                       stream );
+    unsigned int cutoff;
+    stream . read (
+                   &cutoff
+                 , sizeof cutoff );
+    dispatcher -> cutoffParameterChangedListeners -> call (
+                                                           &CutoffParameterChanged::onCutoffParameterChanged
+                                                         , cutoff );
+    unsigned int resonance;
+    stream . read (
+                   &resonance
+                 , sizeof resonance );
+    dispatcher -> resonanceParameterChangedListeners -> call (
+                                                              &ResonanceParameterChanged::onResonanceParameterChanged
+                                                            , resonance );
+    bool lo_pass;
+    stream . read (
+                   &lo_pass
+                 , sizeof lo_pass );
+    dispatcher -> lowPassParameterChangedListeners -> call (
+                                                            &LowPassParameterChanged::onLowPassParameterChanged
+                                                          , lo_pass );
+    bool band_pass;
+    stream . read (
+                   &band_pass
+                 , sizeof band_pass );
+    dispatcher -> bandPassParameterChangedListeners -> call (
+                                                             &BandPassParameterChanged::onBandPassParameterChanged
+                                                           , band_pass );
+    bool hi_pass;
+    stream . read (
+                   &hi_pass
+                 , sizeof hi_pass );
+    dispatcher -> highPassParameterChangedListeners -> call (
+                                                             &HighPassParameterChanged::onHighPassParameterChanged
+                                                           , hi_pass );
 }
 
 void
@@ -522,9 +608,14 @@ void
     stream . read (
                    &data_version
                  , sizeof data_version );
-    if ( data_version == 0x20200708 )
+    if ( data_version == 0x20200714 )
     {
         // Known current version
+        ReadState20200714 (
+                           stream );
+    }
+    else if ( data_version == 0x20200708 )
+    {
         ReadState20200708 (
                            stream );
     }
