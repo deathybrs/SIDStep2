@@ -8,7 +8,7 @@
 #include "Programs/Expression.h"
 
 Recorder::Recorder (
-        std::shared_ptr < EventDispatcher >         dispatcher
+        const std::shared_ptr < EventDispatcher >         dispatcher  // NOLINT(modernize-pass-by-value, performance-unnecessary-value-param)
       , const ReferenceCountedArray < SidProgram >& patch_list
         )
     :
@@ -582,20 +582,20 @@ void
     programs . at (
                    voice ) = program;
     currentAttack . at (
-                        voice ) = program -> GetEnvelope () -> getAttack ();
+                        voice ) = program -> GetEnvelope () -> getDefaultAttack ();
     currentDecay . at (
-                       voice ) = program -> GetEnvelope () -> getDecay ();
+                       voice ) = program -> GetEnvelope () -> getDefaultDecay ();
     currentSustain . at (
-                         voice ) = program -> GetEnvelope () -> getSustain ();
+                         voice ) = program -> GetEnvelope () -> getDefaultSustain ();
     currentRelease . at (
-                         voice ) = program -> GetEnvelope () -> getRelease ();
-
+                         voice ) = program -> GetEnvelope () -> getDefaultRelease ();
+    const auto vibrato = program -> GetExpression () -> getVibrato ();
     currentVibratoAmount . at (
-                               voice ) = program -> GetExpression () -> getVibrato () -> GetDefaultVibratoAmount ();
+                               voice ) = vibrato -> GetDefaultVibratoAmount () * static_cast < float > ( vibrato -> GetVibratoRange () );
     currentVibratoSpeed . at (
-                              voice ) = program -> GetExpression () -> getVibrato () -> GetDefaultVibratoSpeed ();
+                              voice ) = vibrato -> GetDefaultVibratoSpeed () * static_cast < float > ( vibrato -> GetVibratoSpeed () );
     currentVibratoDelay . at (
-                              voice ) = program -> GetExpression () -> getVibrato () -> GetDefaultVibratoAmount ();
+                              voice ) = vibrato -> GetDefaultVibratoAmount ();
 }
 
 void

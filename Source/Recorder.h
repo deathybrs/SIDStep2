@@ -218,15 +218,24 @@ private:
               , unsigned voice
                 );
 
-    std::shared_ptr < EventDispatcher > dispatcher;
-    bool recording {
-            false
-    };
+    std::shared_ptr < EventDispatcher >                            dispatcher;
     std::vector < std::shared_ptr < Command > >                    globalCommands;
     std::array < std::vector < std::shared_ptr < Command > > , 3 > voiceCommands;
     std::vector < std::shared_ptr < Command > >                    currentGlobalCommands;
     std::array < std::vector < std::shared_ptr < Command > > , 3 > currentVoiceCommands;
     std::array < std::vector < unsigned char > , 3 >               currentNotes;
+    std::vector < std::array < size_t , 4 > >                      patternIndexes {};
+    std::vector < unsigned >                                       patternFrame {};
+    std::array < ReferenceCountedObjectPtr < SidProgram > , 3 >    programs {};
+    std::array < unsigned char , 3 >                               currentAttack {};
+    std::array < unsigned char , 3 >                               currentDecay {};
+    std::array < unsigned char , 3 >                               currentSustain {};
+    std::array < unsigned char , 3 >                               currentRelease {};
+    unsigned short                                                 currentCutoff {};
+
+    bool recording {
+            false
+    };
     std::array < bool , 3 >                                        notesChanged {
             false
           , false
@@ -235,13 +244,6 @@ private:
     unsigned currentFrame {
             0
     };
-    std::vector < std::array < size_t , 4 > >                   patternIndexes {};
-    std::vector < unsigned >                                    patternFrame {};
-    std::array < ReferenceCountedObjectPtr < SidProgram > , 3 > programs {};
-    std::array < unsigned char , 3 >                            currentAttack {};
-    std::array < unsigned char , 3 >                            currentDecay {};
-    std::array < unsigned char , 3 >                            currentSustain {};
-    std::array < unsigned char , 3 >                            currentRelease {};
     int                                                         currentPpq {
             -1
     };
@@ -264,7 +266,6 @@ private:
           , 256
           , 256
     };
-    unsigned short                   currentCutoff {};
     std::array < float , 3 > currentVibratoAmount {
             0
           , 0
