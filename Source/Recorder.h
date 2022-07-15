@@ -286,8 +286,10 @@ private:
           , 0
           , 0
     };
-    int currentPulseWidth {
-            INT32_MIN
+    std::array < int , 3 > currentPulseWidth {
+            0
+          , 0
+          , 0
     };
     unsigned currentResonance {
             UINT32_MAX

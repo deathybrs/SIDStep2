@@ -589,13 +589,15 @@ void
                          voice ) = program -> GetEnvelope () -> getDefaultSustain ();
     currentRelease . at (
                          voice ) = program -> GetEnvelope () -> getDefaultRelease ();
+    currentPulseWidth . at (
+                            voice ) = 0;
     const auto vibrato = program -> GetExpression () -> getVibrato ();
     currentVibratoAmount . at (
                                voice ) = vibrato -> GetDefaultVibratoAmount () * static_cast < float > ( vibrato -> GetVibratoRange () );
     currentVibratoSpeed . at (
                               voice ) = vibrato -> GetDefaultVibratoSpeed () * static_cast < float > ( vibrato -> GetVibratoSpeed () );
     currentVibratoDelay . at (
-                              voice ) = vibrato -> GetDefaultVibratoAmount ();
+                              voice ) = vibrato -> GetVibratoDelay ();
 }
 
 void
@@ -610,8 +612,10 @@ void
     const auto e           = p -> GetExpression ();
     const auto pulse_cycle = static_cast < int > ( value * static_cast < float > ( e -> getPulseWidthRange () ) + static_cast < float > ( e -> getPulseWidthCenter () ) );
     const auto pulse_value = pulse_cycle - 2048;
-    if ( currentPulseWidth == pulse_value ) { return; }
-    currentPulseWidth = pulse_value;
+    if ( currentPulseWidth . at (
+                                 voice ) == pulse_value ) { return; }
+    currentPulseWidth . at (
+                            voice ) = pulse_value;
     RemovePendingVoice (
                         COMMANDS::PULSE_WIDTH
                       , voice );
