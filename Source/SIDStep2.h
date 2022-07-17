@@ -56,7 +56,7 @@ public:
                 ) const;
 
     void
-        ReadState20200714 (
+        ReadState20220714 (
                 MemoryInputStream& stream
                 );
 
@@ -128,7 +128,17 @@ public:
                     unsigned int
                   , LivePatchChanged
                   , ProgramParameterChanged
-                  , { if (value >= static_cast<unsigned int>(programs.size())) return; channelProgramCopies[voice]->getObjectPointer(currentChannelProgram[voice])->SetForVoice(-1); currentChannelProgram.set(voice, value); channelProgramCopies[voice]->getObjectPointer(currentChannelProgram[voice])->SetForVoice(voice); dispatcher->loadLivePatchListeners -> call(&LoadLivePatch::onLoadLivePatch, voice, channelProgramCopies[voice]->getObjectPointer(currentChannelProgram[voice])); } )
+                  , {
+                      if (value >= static_cast<unsigned int>(programs.size())) return;
+
+                      channelProgramCopies[voice]->getObjectPointer(currentChannelProgram[voice])->SetForVoice(-1);
+
+                      currentChannelProgram.set(voice, value);
+
+                      channelProgramCopies[voice]->getObjectPointer(currentChannelProgram[voice])->SetForVoice(voice);
+
+                      dispatcher->loadLivePatchListeners -> call(&LoadLivePatch::onLoadLivePatch, voice, channelProgramCopies[voice]->getObjectPointer(currentChannelProgram[voice]));
+                  } )
 private:
     static const int                    SIXTEEN_BIT        = 0x8000;
     static const int                    BUFFER_SIZE        = 16;

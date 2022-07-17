@@ -4063,6 +4063,16 @@ void
           , float              value
             )
 {
+    if ( value == 0 )
+    {
+        auto i = 0;
+    }
+
+    if ( value != 1 )
+    {
+        auto i = 0;
+    }
+
     MessageManager::callAsync (
                                [=] ()
                                {

@@ -395,6 +395,10 @@ void
     stream . read (
                    &v -> currentVibratoSpeed
                  , sizeof v -> currentVibratoSpeed );
+    if ( v -> currentVibratoSpeed == 1.0F )
+    {
+        auto i = 0;
+    }
     stream . read (
                    &v -> currentVibratoDelay
                  , sizeof v -> currentVibratoDelay );
@@ -655,6 +659,11 @@ void
                                                                       &VibratoAmountParameterChanged::onVibratoAmountParameterChanged
                                                                     , value
                                                                     , GetCurrentVibratoAmount () );
+        const auto v = GetCurrentVibratoSpeed ();
+        if ( v != 1 )
+        {
+            auto i = 0;
+        }
         dispatcher -> vibratoSpeedParameterChangedListeners -> call (
                                                                      &VibratoSpeedParameterChanged::onVibratoSpeedParameterChanged
                                                                    , value

@@ -69,7 +69,7 @@ Sidstep2AudioProcessor::Sidstep2AudioProcessor ()
                               , VibratoAmount );
         CREATE_VOICE_PARAMETER (
                                 UnsignedPercent
-                              , ("V.Speed " + String(v + 1), 0.0F, 100)
+                              , ("V.Speed " + String(v + 1), 1.0F, 100)
                               , VibratoSpeed );
         CREATE_VOICE_PARAMETER (
                                 UnsignedInt

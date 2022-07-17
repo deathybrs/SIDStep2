@@ -1,7 +1,7 @@
 #include "UnsignedPercentParameter.h"
 
 UnsignedPercentParameter::UnsignedPercentParameter(String name, float newValue, int steps) : value(newValue), steps(steps),
-name(name), dirty(true) {}
+name(name), dirty(false) {}
 
 UnsignedPercentParameter::~UnsignedPercentParameter() {}
 

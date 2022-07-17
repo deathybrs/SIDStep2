@@ -66,6 +66,11 @@ public: \
 		listener->call(&evnt::on ## evnt, _ ## name ## Parameter->get ## type()); \
 		_ ## name ## Parameter->setDirty(false); \
 	}
+//PROCESS_VOICE_PARAMETER(
+//	VibratoSpeed
+//	, UnsignedPercent
+//	, VibratoSpeedParameterChanged
+//	, dispatcher->vibratoSpeedParameterChangedListeners);
 #define PROCESS_VOICE_PARAMETER(name,type,evnt,listener) \
 	if (_ ## name ## Parameters[v] != nullptr && _ ## name ## Parameters[v]->isDirty()) { \
 		listener->call(&evnt::on ## evnt, v, _ ## name ## Parameters[v]->get ## type()); \

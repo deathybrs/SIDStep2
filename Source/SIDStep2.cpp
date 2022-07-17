@@ -356,7 +356,7 @@ void
     //                                , "You can attach the debugger now." );
     // this saves the config
 
-    unsigned int data_version = 0x20200714;
+    unsigned int data_version = 0x20220714;
     dest_data . append (
                         static_cast < const void* > ( &data_version )
                       , sizeof data_version );
@@ -453,7 +453,7 @@ void
 }
 
 void
-    SidStep2::ReadState20200714 (
+    SidStep2::ReadState20220714 (
             MemoryInputStream& stream
             )
 {
@@ -608,10 +608,11 @@ void
     stream . read (
                    &data_version
                  , sizeof data_version );
-    if ( data_version == 0x20200714 )
+    // Oops, 2022, not 2020.  I'm stupid.
+    if ( data_version == 0x20200714 || data_version == 0x20220714 )
     {
         // Known current version
-        ReadState20200714 (
+        ReadState20220714 (
                            stream );
     }
     else if ( data_version == 0x20200708 )
@@ -626,6 +627,20 @@ void
         ReadState20200708 (
                            stream );
     }
+    MessageManager::callAsync (
+                               [=] ()
+                               {
+                                   dispatcher -> bankRefreshLive -> call (
+                                                                          &BankRefreshLive::onBankRefreshLive );
+                                   dispatcher -> patchEditorLiveModeClickedListeners -> call (
+                                                                                              &PatchEditorLiveModeClicked::onPatchEditorLiveModeClicked );
+                                   for ( const auto& p : programs )
+                                   {
+                                       dispatcher -> livePatchSelectedListeners -> call (
+                                                                                         &LivePatchSelected::onLivePatchSelected
+                                                                                       , p );
+                                   }
+                               } );
 }
 
 void

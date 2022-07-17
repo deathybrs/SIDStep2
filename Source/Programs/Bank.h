@@ -1,13 +1,21 @@
 #pragma once
+
+
 #include <JuceHeader.h>
+
+
 #include "Categories.h"
+
+
 #include "../Listeners/ListenerInitializer.h"
 
 
 // ReSharper disable once CppInconsistentNaming
 class SID;
 class SharedProperties;
+
 struct Note;
+
 
 class Bank final
         : public ReferenceCountedObject
@@ -20,11 +28,30 @@ class Bank final
         , public LivePatchSelected
 {
 public:
-    Bank (
-            const std::shared_ptr < EventDispatcher >& dispatcher
-            );
+    explicit
+        Bank (
+                const std::shared_ptr < EventDispatcher >& dispatcher
+                );
 
     ~Bank () override;
+
+    Bank (
+            const Bank& other
+            ) = delete;
+
+    Bank (
+            Bank&& other
+            ) = delete;
+
+    auto
+        operator= (
+                const Bank& other
+                ) -> Bank& = delete;
+
+    auto
+        operator= (
+                Bank&& other
+                ) -> Bank& = delete;
 
     void
         Generate (
@@ -116,11 +143,4 @@ private:
             0
     };
     SharedResourcePointer < SharedProperties > properties;
-    //SharedResourcePointer < ListenerList < BankTreeChanged > >    bankTreeChangedListeners;
-    //SharedResourcePointer < ListenerList < BankProgramChanged > > bankProgramChangedListeners;
-    //SharedResourcePointer < ListenerList < BankNew > >            bankNewListeners;
-    //SharedResourcePointer < ListenerList < BankLoad > >           bankLoadListeners;
-    //SharedResourcePointer < ListenerList < BankSave > >           bankSaveListeners;
-    //SharedResourcePointer < ListenerList < BankStartSaveAs > >    bankStartSaveAsListeners;
-    //SharedResourcePointer < ListenerList < BankSaveAs > >         bankSaveAsListeners;
 };
