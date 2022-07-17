@@ -380,6 +380,9 @@ void
     stream . read (
                    &v -> defaultVibratoSpeed
                  , sizeof v -> defaultVibratoSpeed );
+
+    v -> currentVibratoAmount = v -> defaultVibratoAmount;
+    v -> currentVibratoSpeed  = v -> defaultVibratoSpeed;
 }
 
 void
@@ -454,7 +457,7 @@ void
             const float value
             )
 {
-    if ( value >= -1 && value <= 1 ) { defaultVibratoAmount = value; }
+    if ( value >= 0 && value <= 1 ) { defaultVibratoAmount = value; }
     SetCurrentVibratoAmount (
                              value );
 }
@@ -655,15 +658,15 @@ void
 {
     if ( value > -1 && value < 3 )
     {
+        const auto v = GetCurrentVibratoAmount();
+        if (v != 0)
+        {
+            auto i = 0;
+        }
         dispatcher -> vibratoAmountParameterChangedListeners -> call (
                                                                       &VibratoAmountParameterChanged::onVibratoAmountParameterChanged
                                                                     , value
                                                                     , GetCurrentVibratoAmount () );
-        const auto v = GetCurrentVibratoSpeed ();
-        if ( v != 1 )
-        {
-            auto i = 0;
-        }
         dispatcher -> vibratoSpeedParameterChangedListeners -> call (
                                                                      &VibratoSpeedParameterChanged::onVibratoSpeedParameterChanged
                                                                    , value

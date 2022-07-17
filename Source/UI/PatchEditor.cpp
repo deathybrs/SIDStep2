@@ -1666,28 +1666,28 @@ void
     const auto ex = program -> GetExpression ();
     const auto v  = ex -> getVibrato ();
     attackSlider -> setValue (
-                              e -> getAttack ()
+                              e -> getDefaultAttack ()
                             , dontSendNotification );
     attackLabel -> setText (
                             attackSlider -> getTextFromValue (
                                                               attackSlider -> getValue () )
                           , dontSendNotification );
     decaySlider -> setValue (
-                             e -> getDecay ()
+                             e -> getDefaultDecay ()
                            , dontSendNotification );
     decayLabel -> setText (
                            decaySlider -> getTextFromValue (
                                                             decaySlider -> getValue () )
                          , dontSendNotification );
     sustainSlider -> setValue (
-                               e -> getSustain ()
+                               e -> getDefaultSustain ()
                              , dontSendNotification );
     sustainLabel -> setText (
                              sustainSlider -> getTextFromValue (
                                                                 sustainSlider -> getValue () )
                            , dontSendNotification );
     releaseSlider -> setValue (
-                               e -> getRelease ()
+                               e -> getDefaultRelease ()
                              , dontSendNotification );
     releaseLabel -> setText (
                              releaseSlider -> getTextFromValue (
