@@ -91,24 +91,7 @@ public:
                   unsigned int
                 , LiveCutoffChanged
                 , CutoffParameterChanged
-                , {
-                    auto log_val = static_cast<unsigned int>( 
-                        round(
-                            cutoff_base * pow(
-                                binary_base, 1.0/cutoff_divisor * (
-                                    (
-                                        static_cast<double>(
-                                            value
-                                        ) / cutoff_range
-                                    ) - cutoff_offset
-                                )
-                            )
-                        )
-                    );
-                    DirtyWrite(0x15, (log_val & 0x07));
-                    DirtyWrite(0x16, (log_val & 0x7f8) >> 3);
-                } 
-    )
+                , { auto log_val = static_cast<unsigned int>( round( cutoff_base * pow( binary_base, 1.0/cutoff_divisor * ( ( static_cast<double>( value ) / cutoff_range ) - cutoff_offset ) ) ) ); DirtyWrite(0x15, (log_val & 0x07)); DirtyWrite(0x16, (log_val & 0x7f8) >> 3); } )
 
     // Filter Resonance & Routing ($d417)
     SID_REGISTER (

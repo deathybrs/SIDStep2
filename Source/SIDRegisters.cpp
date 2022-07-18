@@ -681,6 +681,19 @@ void
     programs . set (
                     static_cast < int > ( voice )
                   , program );
+    const auto offset = voice * 7;
+    hardRestartCounter . set (
+                              voice
+                            , 3 );
+    DirtyWrite (
+                static_cast < int > ( offset ) + attack_decay_offset
+              , 0 );
+    DirtyWrite (
+                static_cast < int > ( offset ) + sustain_release_offset
+              , 0 );
+    DirtyWrite (
+                static_cast < int > ( offset ) + voice_control_offset
+              , 0 );
 }
 
 void
