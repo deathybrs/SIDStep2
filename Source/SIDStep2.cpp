@@ -58,7 +58,6 @@ SidStep2::SidStep2 (
     patchListMode       = -1;
     patchSelectionIndex = 0;
     armed               = recording = false;
-    sampleIndex         = 0;
 }
 
 SidStep2::~SidStep2 ()
@@ -653,7 +652,7 @@ void
     cyclesPerSample = CPU_FREQUENCY / new_rate;
     sidRegisters -> sid -> set_sampling_parameters (
                                                     static_cast < int > ( CPU_FREQUENCY )
-                                                  , SAMPLE_FAST
+                                                  , SAMPLE_RESAMPLE_INTERPOLATE
                                                   , new_rate
                                                   , FILTER_COEFFICIENT * new_rate / 2 );
 }
@@ -851,11 +850,8 @@ void
 {
     if ( lastFrame == frame ) { return; }
     lastFrame = frame;
-    if ( playing )
-    {
-        sidRegisters -> SetFrame (
-                                  frame );
-    }
+    sidRegisters -> SetFrame (
+                              frame );
     dispatcher -> frameListeners -> call (
                                           &Frame::onFrame );
     for ( auto v = 0 ; v < 3 ; v++ )
