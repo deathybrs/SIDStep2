@@ -38,7 +38,7 @@ public:
             PulseTable&& other
             ) noexcept;
 
-    ~PulseTable () override = default;
+    ~PulseTable () override;
 
     auto
         operator= (

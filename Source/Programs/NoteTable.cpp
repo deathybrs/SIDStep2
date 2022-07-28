@@ -1,11 +1,15 @@
 #include "NoteTable.h"
 
+
 #include <array>
+
 
 #include "ArpRow.h"
 #include "Wavetable.h"
 
+
 #include "../SIDProgram.h"
+
 
 NoteTable::NoteTable (
         const std::shared_ptr < EventDispatcher >& dispatcher
@@ -131,6 +135,16 @@ NoteTable::NoteTable (
                            false );
 }
 
+NoteTable::~NoteTable ()
+{
+    dispatcher -> patchEditorShowNoteTableListeners -> remove (
+                                                               this );
+    dispatcher -> patchEditorShowPulseTableListeners -> remove (
+                                                                this );
+    dispatcher -> patchEditorShowWaveTableListeners -> remove (
+                                                               this );
+}
+
 auto
     NoteTable::operator= (
             const NoteTable& other
@@ -197,14 +211,14 @@ void
     }
     else
     {
-        dispatcher -> patchEditorShowNoteTableListeners -> add (
-                                                                this );
-        dispatcher -> patchEditorShowPulseTableListeners -> add (
-                                                                 this );
-        dispatcher -> patchEditorShowWaveTableListeners -> add (
-                                                                this );
-        dispatcher -> noteTableSelectionChangedListeners -> add (
-                                                                 this );
+        dispatcher -> patchEditorShowNoteTableListeners -> remove (
+                                                                   this );
+        dispatcher -> patchEditorShowPulseTableListeners -> remove (
+                                                                    this );
+        dispatcher -> patchEditorShowWaveTableListeners -> remove (
+                                                                   this );
+        dispatcher -> noteTableSelectionChangedListeners -> remove (
+                                                                    this );
         dispatcher -> noteTableRowChangedListeners -> remove (
                                                               this );
     }

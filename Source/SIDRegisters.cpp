@@ -23,7 +23,7 @@ SidRegisters::SidRegisters (
                           true );
     sid -> set_sampling_parameters (
                                     clock_freq
-                                  , SAMPLE_RESAMPLE_INTERPOLATE
+                                  , SAMPLE_FAST
                                   , sample_freq
                                   , pass_freq );
     for ( auto i = 0 ; i < last_register ; i++ )
@@ -795,7 +795,7 @@ void
     {
         hardRestartCounter . set (
                                   v
-                                , 3 );
+                                , 2 );
         DirtyWrite (
                     static_cast < int > ( offset ) + attack_decay_offset
                   , 0 );

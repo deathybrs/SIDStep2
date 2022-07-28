@@ -652,7 +652,7 @@ void
     cyclesPerSample = CPU_FREQUENCY / new_rate;
     sidRegisters -> sid -> set_sampling_parameters (
                                                     static_cast < int > ( CPU_FREQUENCY )
-                                                  , SAMPLE_RESAMPLE_INTERPOLATE
+                                                  , SAMPLE_FAST
                                                   , new_rate
                                                   , FILTER_COEFFICIENT * new_rate / 2 );
 }

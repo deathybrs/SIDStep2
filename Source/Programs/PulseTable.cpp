@@ -113,6 +113,16 @@ PulseTable::PulseTable (
     other . table . clear ();
 }
 
+PulseTable::~PulseTable ()
+{
+    dispatcher -> patchEditorShowNoteTableListeners -> remove (
+                                                               this );
+    dispatcher -> patchEditorShowPulseTableListeners -> remove (
+                                                                this );
+    dispatcher -> patchEditorShowWaveTableListeners -> remove (
+                                                               this );
+}
+
 auto
     PulseTable::operator= (
             const PulseTable& other

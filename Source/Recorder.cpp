@@ -569,6 +569,21 @@ void
                       , voice );
     currentProgram . at (
                          voice ) = value;
+    if ( !currentNotes . at (
+                             voice ) . empty () )
+    {
+        const auto note_off = std::make_shared < Command > (
+                                                            COMMANDS::NOTE_OFF
+                                                          , currentFrame
+                                                          , std::vector < unsigned char > () );
+        voiceCommands . at (
+                            voice ) . push_back (
+                                                 note_off );
+        currentNotes . at (
+                           voice ) . clear ();
+        notesChanged . at (
+                           voice ) = false;
+    }
     const auto program_change    = std::make_shared < Command > (
                                                                  COMMANDS::PROGRAM_CHANGE
                                                                , currentFrame

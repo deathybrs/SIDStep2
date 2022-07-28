@@ -34,7 +34,7 @@ public:
             NoteTable&& other
             ) noexcept;
 
-    ~NoteTable () override = default;
+    ~NoteTable () override;
 
     auto
         operator= (
