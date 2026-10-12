@@ -16,7 +16,7 @@
 #define CREATE_PARAMETER_BASE(type,arguments,call,call_arguments) \
 	type ## Parameter *parameter = new type ## Parameter arguments; \
 	addParameter(parameter); \
-	parameterProcessor->set ## call ## Parameter ## call_arguments;
+	parameterProcessor->set ## call ## Parameter call_arguments;
 #define CREATE_VOICE_PARAMETER(type,arguments,call) /*,group*/ \
 { \
 	CREATE_PARAMETER_BASE(type, arguments, call, (v, parameter)) \
@@ -36,22 +36,22 @@
 private: \
 	Array<type ## Parameter *> _ ## name ## Parameters; \
 public: \
-	void ParameterProcessor::on ## evnt ## (unsigned int voice, simpletype value) { \
+	void on ## evnt (unsigned int voice, simpletype value) { \
 		_ ## name ## Parameters[voice]->set ## type(value); \
 	} \
 	\
-	void ParameterProcessor::set ## name ## Parameter(unsigned int voice, type ## Parameter *value) { \
+	void set ## name ## Parameter(unsigned int voice, type ## Parameter *value) { \
 		_ ## name ## Parameters.set(voice, value); \
 	}
 #define SET_PARAMETER(name,type,simpletype,evnt) \
 private: \
 	type ## Parameter *_ ## name ## Parameter; \
 public: \
-	void ParameterProcessor::on ## evnt ## (simpletype value) { \
+	void on ## evnt (simpletype value) { \
 		_ ## name ## Parameter->set ## type(value); \
 	} \
 	\
-	void ParameterProcessor::set ## name ## Parameter(type ## Parameter *value) { \
+	void set ## name ## Parameter(type ## Parameter *value) { \
 		_ ## name ## Parameter = value; \
 	}
 
@@ -101,5 +101,5 @@ public: \
 	auto operator=(const evnt& other) -> evnt& = default; \
 	auto operator=(evnt&& other) -> evnt& = default; \
 	\
-	virtual void on ## evnt ## parameters ## = 0; \
+	virtual void on ## evnt parameters = 0; \
 };

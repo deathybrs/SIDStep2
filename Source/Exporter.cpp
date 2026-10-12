@@ -23,7 +23,7 @@ auto
     for ( const auto& command : temp_pattern )
     {
         const auto current_time = command -> GetTime () - static_cast < long > ( first_frame );
-        _ASSERT (
+        jassert (
                  current_time >= 0 );
         while ( static_cast < long > ( current_time ) > static_cast < long > ( current_frame ) )
         {
@@ -146,7 +146,7 @@ void
                 frame_index++;
             }
             str += String::toHexString (
-                                        c -> GetTime () - bar_start ) . paddedLeft (
+                                        static_cast < int64 > ( c -> GetTime () - bar_start ) ) . paddedLeft (
                                                                                     '0'
                                                                                   , 4 ) + ",";
             switch ( c -> GetType () )
@@ -250,7 +250,7 @@ void
                     frame_index++;
                 }
                 str += String::toHexString (
-                                            c -> GetTime () - bar_start ) . paddedLeft (
+                                            static_cast < int64 > ( c -> GetTime () - bar_start ) ) . paddedLeft (
                                                                                         '0'
                                                                                       , 4 ) + ",";
                 switch ( c -> GetType () )
@@ -351,7 +351,7 @@ void
             if ( f != recording -> patternFrame . end () )
             {
                 str = "LOOP_TO " + String::toHexString (
-                                                        f - recording -> patternFrame . begin () ) . paddedLeft (
+                                                        static_cast < int64 > ( f - recording -> patternFrame . begin () ) ) . paddedLeft (
                                                                                                                  '0'
                                                                                                                , 2 ) + "\n";
             }

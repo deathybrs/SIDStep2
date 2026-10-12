@@ -10,6 +10,10 @@
 #include "../SIDProgram.h"
 
 
+constexpr std::array < int , 16 > Wavetable::ATTACK_FRAMES;
+constexpr std::array < int , 16 > Wavetable::DECAY_RELEASE_FRAMES;
+
+
 Wavetable::Wavetable (
         std::shared_ptr < EventDispatcher > dispatcher
         )
@@ -93,7 +97,7 @@ Wavetable::Wavetable (
   , forVoice (
               other . forVoice )
 {
-    for each ( unsigned int row in other . waveTable )
+    for ( unsigned int row : other . waveTable )
         waveTable . add (
                          row );
     selectedRow = waveTable . size ();
@@ -116,7 +120,7 @@ Wavetable::Wavetable (
   , forVoice (
               other . forVoice )
 {
-    for each ( unsigned int row in other . waveTable )
+    for ( unsigned int row : other . waveTable )
         waveTable . add (
                          row );
     selectedRow = waveTable . size ();
@@ -153,7 +157,7 @@ auto
     released       = other . released;
     releaseCounter = other . releaseCounter;
     forVoice       = other . forVoice;
-    for each ( unsigned int row in other . waveTable )
+    for ( unsigned int row : other . waveTable )
         waveTable . add (
                          row );
     selectedRow = waveTable . size ();
@@ -171,7 +175,7 @@ auto
     released       = other . released;
     releaseCounter = other . releaseCounter;
     forVoice       = other . forVoice;
-    for each ( unsigned int row in other . waveTable )
+    for ( unsigned int row : other . waveTable )
         waveTable . add (
                          row );
     selectedRow = waveTable . size ();
@@ -227,7 +231,7 @@ void
                               wt );
     }
     wt -> deleteAllChildElements ();
-    for each ( unsigned int v in waveTable )
+    for ( unsigned int v : waveTable )
     {
         if ( v < 0x100 )
         {

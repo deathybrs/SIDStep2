@@ -112,7 +112,7 @@ void
         PatchRow*  selectedRow = nullptr;
         Component* clicked     = e . originalComponent;
 
-        for each ( PatchRow* r in rows )
+        for ( PatchRow* r : rows )
         {
             //if ( r != nullptr && r -> getSelected () )
             //    selectedRow = r;

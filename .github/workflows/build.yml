@@ -1,0 +1,139 @@
+name: Build
+
+# This workflow compiles the SIDStep2 VST for every supported platform and
+# uploads the resulting binaries as downloadable build artifacts.
+#
+# It is intentionally reusable (see `workflow_call` below): a future release
+# workflow can depend on this workflow, download the artifacts and attach them
+# to a GitHub release. Nothing here publishes anything on its own.
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+  workflow_dispatch:
+  workflow_call:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    name: ${{ matrix.name }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - name: macOS
+            os: macos-latest
+            artifact: SIDStep2-macOS
+          - name: Windows
+            # Pinned: `windows-latest` now maps to VS 2026 (v145) while this
+            # project is a VS 2019 (v142) solution. windows-2022 keeps v142.
+            os: windows-2022
+            artifact: SIDStep2-Windows
+
+    steps:
+      - name: Check out source
+        uses: actions/checkout@v7
+
+      # The third-party dependencies below are git-ignored / not vendored:
+      #   * reSID 0.16, which lives in the ignored "Requirements" folder.
+      #   * The (no longer distributed) VST 2.4 SDK that JUCE's VST2 wrapper
+      #     includes as <public.sdk/source/vst2.x/...>.
+      - name: Fetch build dependencies
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          # Fetch a single, pinned commit of a repository into an empty
+          # directory, so that artifacts are reproducible and cannot be
+          # changed by an upstream push to a moving branch.
+          fetch_pinned() {
+            local repo="$1" commit="$2" dir="$3"
+            git init -q "$dir"
+            git -C "$dir" remote add origin "$repo"
+            git -C "$dir" fetch -q --depth 1 origin "$commit"
+            git -C "$dir" checkout -q --detach FETCH_HEAD
+          }
+
+          # reSID 0.16 source (pinned to an immutable commit)
+          fetch_pinned \
+            https://github.com/Olzaq/reSID.git \
+            13152b680ecb7845005433a2d17d5fd8cb60261d \
+            .deps/resid
+          mkdir -p Requirements/resid-0.16
+          cp .deps/resid/*.cc .deps/resid/*.h Requirements/resid-0.16/
+
+          # reSID expects VERSION to be provided by its own build system.
+          sed -i.bak 's|const char\* resid_version_string = VERSION;|const char* resid_version_string = "0.16";|' Requirements/resid-0.16/siddefs.h
+          rm -f Requirements/resid-0.16/siddefs.h.bak
+
+          # VST 2.4 SDK (pinned to an immutable commit)
+          fetch_pinned \
+            https://github.com/R-Tur/VST_SDK_2.4.git \
+            4610873fa433d263a5c4a68b5b8b59ffcf6ca6db \
+            .deps/vst2-sdk
+
+      - name: Build plugin (macOS)
+        if: runner.os == 'macOS'
+        shell: bash
+        env:
+          CPATH: ${{ github.workspace }}/.deps/vst2-sdk
+        run: |
+          set -euo pipefail
+
+          # The vendored JUCE predates arm64, so only x86_64 can be built.
+          # DEPLOYMENT_LOCATION=NO and a scratch CONFIGURATION_BUILD_DIR are
+          # required to avoid an Xcode dependency cycle in newer Xcode.
+          xcodebuild \
+            -project Builds/MacOSX/SIDStep2.xcodeproj \
+            -scheme "SIDStep2 - VST" \
+            -configuration Release \
+            -derivedDataPath "$RUNNER_TEMP/derived" \
+            CONFIGURATION_BUILD_DIR="$RUNNER_TEMP/build/Release" \
+            DEPLOYMENT_LOCATION=NO \
+            ARCHS="x86_64" \
+            ONLY_ACTIVE_ARCH=NO \
+            build
+
+          mkdir -p "$RUNNER_TEMP/artifact"
+          cp -R "$RUNNER_TEMP/build/Release/SIDStep2.vst" "$RUNNER_TEMP/artifact/"
+
+      - name: Set up MSBuild
+        if: runner.os == 'Windows'
+        uses: microsoft/setup-msbuild@v3
+
+      - name: Build plugin (Windows)
+        if: runner.os == 'Windows'
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = 'Stop'
+
+          # The VS project was exported with absolute paths baked in; mirror
+          # them so no project files need editing. "C:\VST3 SDK" is where the
+          # project looks for the VST 2.4 headers.
+          New-Item -ItemType Directory -Force -Path 'C:\VST3 SDK' | Out-Null
+          New-Item -ItemType Directory -Force -Path 'C:\My Documents\VSTs\64b\Shared Code', 'C:\My Documents\VSTs\64b\VST' | Out-Null
+          Copy-Item -Recurse -Force '.deps\vst2-sdk\*' 'C:\VST3 SDK'
+
+          msbuild Builds\VisualStudio2019\SIDStep2.sln `
+            /m `
+            /p:Configuration=Release `
+            /p:Platform=x64
+
+          New-Item -ItemType Directory -Force -Path "$env:RUNNER_TEMP\artifact" | Out-Null
+          Copy-Item 'C:\My Documents\VSTs\64b\VST\SIDStep2.dll' "$env:RUNNER_TEMP\artifact\"
+
+      - name: Upload build artifact
+        uses: actions/upload-artifact@v7
+        with:
+          name: ${{ matrix.artifact }}
+          path: ${{ runner.temp }}/artifact
+          if-no-files-found: error

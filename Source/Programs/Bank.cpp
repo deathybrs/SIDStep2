@@ -433,7 +433,7 @@ void
 void
     Bank::NotesOff ()
 {
-    for each ( unsigned int cn in releasedNotes )
+    for ( unsigned int cn : releasedNotes )
     {
         int nit;
         for ( nit = 0 ; nit < notes . size () ; nit++ )

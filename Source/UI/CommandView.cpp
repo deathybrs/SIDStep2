@@ -224,11 +224,11 @@ void
                                            }
                                        }
                                    }
-                                   _ASSERT (
+                                   jassert (
                                             global_frames.size() == max_frame );
                                    for ( size_t voice = 0 ; voice < 3 ; voice++ )
                                    {
-                                       _ASSERT (
+                                       jassert (
                                                 global_frames.size() == voice_frames.at(voice).size() );
                                    }
                                    auto width = 0;
